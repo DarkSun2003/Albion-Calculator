@@ -1,5 +1,6 @@
 import React from 'react';
 import { RESOURCES, getItemIdentifier, getItemIconPath } from '../utils/albionMath';
+import ItemIcon from './ItemIcon';
 import { AlertCircle, CheckCircle2, Sparkles } from 'lucide-react';
 
 const TIERS = [
@@ -90,16 +91,13 @@ export default function ResourceSelector({
                   isSelected ? 'active ring-2 ring-albion-gold/80 scale-[1.02]' : 'opacity-85 hover:opacity-100'
                 }`}
               >
-                {/* Local Albion Official Item Icon */}
+                {/* Local or CDN Albion Official Item Icon */}
                 <div className="w-14 h-14 my-1 relative flex items-center justify-center">
-                  <img
+                  <ItemIcon
                     src={iconSrc}
+                    itemId={previewItemId}
                     alt={res.name}
                     className="w-14 h-14 object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.7)]"
-                    onError={(e) => {
-                      // Fallback if not loaded
-                      e.target.style.display = 'none';
-                    }}
                   />
                   <span className="text-2xl absolute opacity-20 pointer-events-none">{res.icon}</span>
                 </div>

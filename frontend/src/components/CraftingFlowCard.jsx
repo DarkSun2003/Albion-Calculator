@@ -1,5 +1,6 @@
 import React from 'react';
 import { getItemIdentifier, getItemIconPath, RESOURCES } from '../utils/albionMath';
+import ItemIcon from './ItemIcon';
 import { ArrowRight, Plus, Sparkles, RotateCcw, Building } from 'lucide-react';
 
 export default function CraftingFlowCard({
@@ -45,7 +46,7 @@ export default function CraftingFlowCard({
         {/* Input 1: Raw Resource (3 cols) */}
         <div className="md:col-span-3 bg-albion-bg/80 border border-albion-border rounded-xl p-3 flex items-center gap-3 relative overflow-hidden">
           <div className="w-14 h-14 shrink-0 bg-albion-surface rounded-lg p-1 border border-albion-border/80 flex items-center justify-center">
-            <img src={rawIcon} alt={rawItemId} className="w-full h-full object-contain" />
+            <ItemIcon src={rawIcon} itemId={rawItemId} alt={rawItemId} className="w-full h-full object-contain" />
           </div>
           <div className="min-w-0">
             <span className="text-[10px] uppercase font-mono text-slate-400 block truncate">
@@ -81,7 +82,7 @@ export default function CraftingFlowCard({
           ) : (
             <>
               <div className="w-14 h-14 shrink-0 bg-albion-surface rounded-lg p-1 border border-albion-border/80 flex items-center justify-center">
-                <img src={prevRefinedIcon} alt={prevRefinedItemId} className="w-full h-full object-contain" />
+                <ItemIcon src={prevRefinedIcon} itemId={prevRefinedItemId} alt={prevRefinedItemId} className="w-full h-full object-contain" />
               </div>
               <div className="min-w-0">
                 <span className="text-[10px] uppercase font-mono text-slate-400 block truncate">
@@ -109,7 +110,7 @@ export default function CraftingFlowCard({
         {/* Output: Refined Item (3 cols) */}
         <div className="md:col-span-3 bg-gradient-to-br from-albion-surface to-albion-card border border-albion-gold/60 rounded-xl p-3 flex items-center gap-3 shadow-gold-glow">
           <div className="w-14 h-14 shrink-0 bg-albion-bg rounded-lg p-1 border border-albion-gold/40 flex items-center justify-center">
-            <img src={refinedIcon} alt={refinedItemId} className="w-full h-full object-contain" />
+            <ItemIcon src={refinedIcon} itemId={refinedItemId} alt={refinedItemId} className="w-full h-full object-contain" />
           </div>
           <div className="min-w-0">
             <span className="text-[10px] uppercase font-mono text-albion-gold block truncate">

@@ -7,6 +7,7 @@ import {
 } from '../utils/farmingMath';
 import { CITIES } from '../utils/albionMath';
 import { calculateFarmingApi, fetchFarmingPricesApi } from '../services/api';
+import ItemIcon from './ItemIcon';
 import {
   Sparkles,
   Wheat,
@@ -392,7 +393,7 @@ export default function FarmingCalculator({ server, hasPremium, useFocus: global
                 }`}
               >
                 <div className="w-16 h-16 rounded-lg bg-slate-950/80 border border-slate-800 p-1 flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform">
-                  <img
+                  <ItemIcon
                     src={`/items/${item.icon}`}
                     alt={item.name}
                     className="w-full h-full object-contain filter drop-shadow-md"
@@ -430,7 +431,7 @@ export default function FarmingCalculator({ server, hasPremium, useFocus: global
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <div className="relative w-20 h-20 rounded-xl bg-slate-950 border-2 border-amber-500/60 p-1 flex items-center justify-center shadow-lg">
-                  <img
+                  <ItemIcon
                     src={`/items/${currentItem.icon}`}
                     alt={currentItem.name}
                     className="w-full h-full object-contain filter drop-shadow-xl"

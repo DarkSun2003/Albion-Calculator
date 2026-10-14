@@ -1,6 +1,7 @@
 import React from 'react';
 import { RefreshCw, Coins, Tag, ArrowRight, Zap, RotateCcw } from 'lucide-react';
 import { RESOURCES, getItemIdentifier, getItemIconPath } from '../utils/albionMath';
+import ItemIcon from './ItemIcon';
 
 function getFreshness(dateString) {
   if (
@@ -136,7 +137,7 @@ export default function PriceInputs({
         {/* Raw Material Price */}
         <div className="bg-albion-bg/80 p-3 rounded-xl border border-albion-border flex items-start gap-3 relative">
           <div className="w-12 h-12 shrink-0 bg-albion-surface rounded-lg p-0.5 border border-albion-border flex items-center justify-center">
-            <img src={rawIcon} alt={rawItemId} className="w-full h-full object-contain" />
+            <ItemIcon src={rawIcon} itemId={rawItemId} alt={rawItemId} className="w-full h-full object-contain" />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-1 mb-1">
@@ -183,7 +184,7 @@ export default function PriceInputs({
           ) : (
             <>
               <div className="w-12 h-12 shrink-0 bg-albion-surface rounded-lg p-0.5 border border-albion-border flex items-center justify-center">
-                <img src={prevRefinedIcon} alt={prevRefinedItemId} className="w-full h-full object-contain" />
+                <ItemIcon src={prevRefinedIcon} itemId={prevRefinedItemId} alt={prevRefinedItemId} className="w-full h-full object-contain" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-1 mb-1">
@@ -225,7 +226,7 @@ export default function PriceInputs({
         {/* Output Refined Selling Price */}
         <div className="bg-albion-bg/80 p-3 rounded-xl border border-albion-border flex items-start gap-3">
           <div className="w-12 h-12 shrink-0 bg-albion-surface rounded-lg p-0.5 border border-albion-gold/40 flex items-center justify-center">
-            <img src={refinedIcon} alt={refinedItemId} className="w-full h-full object-contain" />
+            <ItemIcon src={refinedIcon} itemId={refinedItemId} alt={refinedItemId} className="w-full h-full object-contain" />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-1 mb-1">

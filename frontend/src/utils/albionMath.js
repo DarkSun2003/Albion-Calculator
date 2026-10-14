@@ -74,6 +74,13 @@ export function getItemIdentifier(resourceType, tier, enchantment = 0, isRefined
   return baseId;
 }
 
+export function getItemCdnUrl(itemId) {
+  if (!itemId) return 'https://render.albiononline.com/v1/item/T4_MAIN_SWORD.png';
+  let clean = String(itemId).trim().replace(/^.*[\\\/]/, '').replace(/\.png$/i, '');
+  clean = clean.replace(/_LEVEL([1-4])_([1-4])$/i, '_LEVEL$1@$2');
+  return `https://render.albiononline.com/v1/item/${clean}.png`;
+}
+
 export function getItemIconPath(itemId) {
   if (!itemId) return null;
   const safeName = itemId.replace(/@/g, '_');

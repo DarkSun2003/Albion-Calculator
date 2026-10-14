@@ -45,6 +45,7 @@ import {
   Square,
   PackageCheck
 } from 'lucide-react';
+import ItemIcon from './ItemIcon';
 
 const TIERS = [
   { level: 2, name: 'Novice', color: 'border-amber-700/80 text-amber-500 bg-amber-950/30' },
@@ -1083,11 +1084,10 @@ export default function CraftingCalculator({
                     )}
 
                     <div className="w-12 h-12 my-1 flex items-center justify-center">
-                      <img 
+                      <ItemIcon 
                         src={icon} 
                         alt={item.name} 
                         className="w-full h-full object-contain"
-                        onError={(e) => { e.target.style.opacity = '0.3'; }}
                       />
                     </div>
                     <span className="text-xs font-bold text-slate-200 truncate w-full">{item.name}</span>
@@ -1447,11 +1447,10 @@ export default function CraftingCalculator({
               {/* Primary Refined Material */}
               <div className={`p-3 rounded-xl border flex items-start gap-2.5 transition-all ${getMaterialTactileClass(selectedItem.primaryMatName)}`}>
                 <div className="w-11 h-11 shrink-0 bg-albion-surface/90 rounded-lg p-0.5 border border-albion-border flex items-center justify-center">
-                  <img 
+                  <ItemIcon 
                     src={primaryIconSrc} 
                     alt={selectedItem.primaryMatName} 
                     className="w-full h-full object-contain"
-                    onError={(e) => { e.target.style.opacity = '0.3'; }}
                   />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -1485,11 +1484,10 @@ export default function CraftingCalculator({
                 {selectedItem.secondaryQty > 0 ? (
                   <>
                     <div className="w-11 h-11 shrink-0 bg-albion-surface/90 rounded-lg p-0.5 border border-albion-border flex items-center justify-center">
-                      <img 
+                      <ItemIcon 
                         src={secondaryIconSrc} 
                         alt={selectedItem.secondaryMatName} 
                         className="w-full h-full object-contain"
-                        onError={(e) => { e.target.style.opacity = '0.3'; }}
                       />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -1524,11 +1522,10 @@ export default function CraftingCalculator({
               {selectedItem.isArtifact && (
                 <div className="bg-gradient-to-br from-purple-950/40 to-albion-card p-3 rounded-xl border border-purple-500/40 flex items-start gap-2.5 shadow-md">
                   <div className="w-11 h-11 shrink-0 bg-albion-surface rounded-lg p-0.5 border border-purple-500/40 flex items-center justify-center">
-                    <img 
+                    <ItemIcon 
                       src={artifactIconSrc} 
                       alt={selectedItem.artifactName} 
                       className="w-full h-full object-contain"
-                      onError={(e) => { e.target.style.opacity = '0.3'; }}
                     />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -1557,11 +1554,10 @@ export default function CraftingCalculator({
               {/* Output Item Sale Price */}
               <div className="bg-albion-bg/90 p-3 rounded-xl border border-albion-gold/60 flex items-start gap-2.5 shadow-gold-glow">
                 <div className="w-11 h-11 shrink-0 bg-albion-surface rounded-lg p-0.5 border border-albion-gold/40 flex items-center justify-center">
-                  <img 
+                  <ItemIcon 
                     src={itemIconSrc} 
                     alt="Output" 
                     className="w-full h-full object-contain"
-                    onError={(e) => { e.target.style.opacity = '0.3'; }}
                   />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -2030,11 +2026,10 @@ export default function CraftingCalculator({
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-center pt-1">
                 <div className="flex items-center gap-2.5 bg-albion-bg/60 p-2.5 rounded-lg border border-albion-border">
                   <div className="w-10 h-10 shrink-0 bg-albion-surface rounded p-0.5 border border-albion-border flex items-center justify-center">
-                    <img 
+                    <ItemIcon 
                       src={journalIconSrc} 
                       alt="Journal" 
                       className="w-full h-full object-contain"
-                      onError={(e) => { e.target.style.opacity = '0.3'; }}
                     />
                   </div>
                   <div className="min-w-0">
@@ -2331,11 +2326,10 @@ export default function CraftingCalculator({
                       onChange={() => {}}
                       className="accent-amber-500 rounded cursor-pointer"
                     />
-                    <img 
+                    <ItemIcon 
                       src={primaryIconSrc} 
                       alt="" 
                       className="w-7 h-7 object-contain bg-albion-surface rounded p-0.5 border border-albion-border"
-                      onError={(e) => { e.target.style.opacity = '0.3'; }}
                     />
                     <div className="min-w-0">
                       <span className="text-xs font-bold text-slate-200 block truncate font-mono">
@@ -2371,11 +2365,10 @@ export default function CraftingCalculator({
                         onChange={() => {}}
                         className="accent-amber-500 rounded cursor-pointer"
                       />
-                      <img 
+                      <ItemIcon 
                         src={secondaryIconSrc} 
                         alt="" 
                         className="w-7 h-7 object-contain bg-albion-surface rounded p-0.5 border border-albion-border"
-                        onError={(e) => { e.target.style.opacity = '0.3'; }}
                       />
                       <div className="min-w-0">
                         <span className="text-xs font-bold text-slate-200 block truncate font-mono">
@@ -2412,11 +2405,10 @@ export default function CraftingCalculator({
                         onChange={() => {}}
                         className="accent-purple-500 rounded cursor-pointer"
                       />
-                      <img 
+                      <ItemIcon 
                         src={artifactIconSrc} 
                         alt="" 
                         className="w-7 h-7 object-contain bg-albion-surface rounded p-0.5 border border-purple-500/40"
-                        onError={(e) => { e.target.style.opacity = '0.3'; }}
                       />
                       <div className="min-w-0">
                         <span className="text-xs font-bold text-purple-200 block truncate font-mono">
@@ -2453,11 +2445,10 @@ export default function CraftingCalculator({
                         onChange={() => {}}
                         className="accent-amber-500 rounded cursor-pointer"
                       />
-                      <img 
+                      <ItemIcon 
                         src={journalIconSrc} 
                         alt="" 
                         className="w-7 h-7 object-contain bg-albion-surface rounded p-0.5 border border-albion-border"
-                        onError={(e) => { e.target.style.opacity = '0.3'; }}
                       />
                       <div className="min-w-0">
                         <span className="text-xs font-bold text-slate-200 block truncate font-mono">

@@ -33,6 +33,7 @@ import {
   getRecommendedMount, 
   formatSilver 
 } from '../utils/blackMarketMath';
+import ItemIcon from './ItemIcon';
 
 const TIERS = [
   { level: 4, name: 'T4 Adept', color: 'border-sky-600/80 text-sky-400 bg-sky-950/30' },
@@ -630,10 +631,9 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
                     >
                       <div className="flex items-center gap-3 min-w-[200px]">
                         <div className={`w-10 h-10 rounded-lg bg-stone-900 border p-0.5 flex items-center justify-center relative ${getEnchantmentBorder(item.enchantment)}`}>
-                          <img
+                          <ItemIcon
                             src={getItemIcon(item)}
                             alt={item.name}
-                            onError={e => { e.currentTarget.style.opacity = '0.3'; }}
                             className="w-full h-full object-contain filter drop-shadow"
                           />
                           <span className={`absolute -bottom-1 -right-1 text-[8px] font-mono px-1 rounded font-bold shadow ${getEnchantmentBadge(item.enchantment)}`}>
@@ -832,10 +832,9 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
                   {/* Top Bar: Icon, Name, Tier, Category */}
                   <div className="flex items-start gap-3">
                     <div className={`relative w-14 h-14 rounded-xl bg-stone-950 border p-1 flex items-center justify-center shrink-0 shadow ${getEnchantmentBorder(item.enchantment)}`}>
-                      <img
+                      <ItemIcon
                         src={getItemIcon(item)}
                         alt={item.name}
-                        onError={e => { e.currentTarget.style.opacity = '0.3'; }}
                         className="w-full h-full object-contain filter drop-shadow"
                         loading="lazy"
                       />
@@ -969,10 +968,9 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
                       <td className="py-2.5 px-4">
                         <div className="flex items-center gap-2.5">
                           <div className={`w-9 h-9 rounded-lg bg-stone-950 border p-0.5 flex items-center justify-center shrink-0 ${getEnchantmentBorder(item.enchantment)}`}>
-                            <img
+                            <ItemIcon
                               src={getItemIcon(item)}
                               alt={item.name}
-                              onError={e => { e.currentTarget.style.opacity = '0.3'; }}
                               className="w-full h-full object-contain filter drop-shadow"
                             />
                           </div>

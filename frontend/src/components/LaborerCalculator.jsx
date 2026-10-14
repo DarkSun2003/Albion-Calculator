@@ -8,6 +8,7 @@ import {
 } from '../utils/laborerMath';
 import { CITIES } from '../utils/albionMath';
 import { calculateLaborerApi, fetchLaborerPricesApi } from '../services/api';
+import ItemIcon from './ItemIcon';
 import {
   Users,
   Home,
@@ -345,7 +346,7 @@ export default function LaborerCalculator({ server, hasPremium }) {
                 }`}
               >
                 <div className="w-16 h-16 rounded-lg bg-slate-950/80 border border-slate-800 p-1 flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform">
-                  <img
+                  <ItemIcon
                     src={`/items/${item.fullIcon}`}
                     alt={item.professionName}
                     className="w-full h-full object-contain filter drop-shadow-md"
@@ -381,7 +382,7 @@ export default function LaborerCalculator({ server, hasPremium }) {
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <div className="relative w-20 h-20 rounded-xl bg-slate-950 border-2 border-amber-500/60 p-1 flex items-center justify-center shadow-lg">
-                  <img
+                  <ItemIcon
                     src={`/items/${currentItem.fullIcon}`}
                     alt={currentItem.professionName}
                     className="w-full h-full object-contain filter drop-shadow-xl"
@@ -747,7 +748,7 @@ export default function LaborerCalculator({ server, hasPremium }) {
                 <div key={mat.item} className="flex items-center justify-between p-2.5 rounded-xl bg-albion-surface border border-albion-border text-xs">
                   <div className="flex items-center gap-2.5">
                     <div className="w-8 h-8 rounded-lg bg-slate-950 p-1 border border-slate-800 flex items-center justify-center">
-                      <img src={`/items/${mat.icon}`} alt={mat.name} className="w-full h-full object-contain" />
+                      <ItemIcon src={`/items/${mat.icon}`} alt={mat.name} className="w-full h-full object-contain" />
                     </div>
                     <div>
                       <div className="font-serif font-bold text-slate-200">{mat.name}</div>

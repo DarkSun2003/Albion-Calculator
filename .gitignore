@@ -18,6 +18,7 @@ dist/
 frontend/dist/
 dist-ssr/
 frontend/dist-ssr/
+frontend/public/items/
 *.local
 .env
 .env.local

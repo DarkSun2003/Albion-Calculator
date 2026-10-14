@@ -10,6 +10,7 @@ import {
 } from '../utils/foodMath';
 import { CITIES } from '../utils/albionMath';
 import { calculateFoodApi, fetchFoodPricesApi } from '../services/api';
+import ItemIcon from './ItemIcon';
 import { 
   Flame, 
   Soup, 
@@ -428,10 +429,9 @@ export default function FoodCalculator({ server, hasPremium, useFocus }) {
                 >
                   {/* Item Icon */}
                   <div className="w-16 h-16 rounded-lg bg-slate-950/80 border border-slate-800 p-1 flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform">
-                    <img
+                    <ItemIcon
                       src={`/items/${item.icon}`}
                       alt={item.name}
-                      onError={(e) => { e.currentTarget.src = '/items/T4_MEAL_SOUP.png'; }}
                       className="w-full h-full object-contain filter drop-shadow-md"
                       loading="lazy"
                     />
@@ -478,7 +478,7 @@ export default function FoodCalculator({ server, hasPremium, useFocus }) {
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <div className="relative w-20 h-20 rounded-xl bg-slate-950 border-2 border-amber-500/60 p-1 flex items-center justify-center shadow-lg">
-                  <img
+                  <ItemIcon
                     src={`/items/${calc?.item?.icon || currentItem.icon}`}
                     alt={currentItem.name}
                     className="w-full h-full object-contain filter drop-shadow-xl"
@@ -717,7 +717,7 @@ export default function FoodCalculator({ server, hasPremium, useFocus }) {
                     {/* Icon & Ingredient Name */}
                     <div className="flex items-center gap-3 min-w-[200px]">
                       <div className="w-10 h-10 rounded-lg bg-slate-950 border border-slate-800 p-0.5 flex items-center justify-center">
-                        <img
+                        <ItemIcon
                           src={`/items/${ing.icon}`}
                           alt={ing.name}
                           className="w-full h-full object-contain"

@@ -72,10 +72,42 @@ git push -u origin main
 
 ---
 
+---
+
+## 🖼️ How Images & Icons Work (Why they aren't in Git or Database)
+
+### 1. Are images in the database?
+**No, absolutely not.** Storing 3,428 images (270 MB) inside PostgreSQL or SQLite is an anti-pattern:
+- It would bloat your database from 2 MB to 300+ MB immediately.
+- It would blow through Railway's free database limits.
+- Querying an item would fetch megabytes of binary data over the network, causing massive latency.
+- The database only ever stores item IDs (e.g. `'T4_MAIN_SWORD'`).
+
+### 2. Why is `frontend/public/items/` excluded from GitHub?
+The `frontend/public/items/` directory contains **3,428 local PNG files totaling ~270 MB**.
+- If committed, pushing to GitHub would be painfully slow or time out.
+- Cloning the repo for other developers would take gigabytes of bandwidth.
+- Vercel build times would increase from 20 seconds to 5+ minutes copying 3,400+ assets.
+- Therefore, `frontend/public/items/` is added to `.gitignore`. The files remain safely on your local disk for offline dev, but your GitHub repo stays ultra-fast and lightweight (~3 MB).
+
+### 3. How do images load when hosted on Vercel or when others clone the repo?
+We built an intelligent **Hybrid CDN Fallback System** in `<ItemIcon />`:
+- **In Production (Vercel):** The app automatically streams icons on-demand directly from **Albion Online's official public Render CDN** (`https://render.albiononline.com/v1/item/{ITEM_ID}.png`). It is 100% free, backed by global Cloudflare edge caching, and automatically cached in the player's browser.
+- **When others clone your repo:** They run `npm run dev` and all images appear immediately via the CDN. No setup required!
+- **On your local machine:** It loads from your local `frontend/public/items/` folder with 0ms latency.
+- **Want 100% offline local images?** Anyone can optionally run:
+  ```bash
+  cd frontend
+  npm run download-icons
+  ```
+
+---
+
 ## ✅ Step 4: Verification Checklist
 
 Once deployed:
 1. Open your Vercel URL in your browser.
-2. Look at the top right of the calculator cards: you should see **🟢 Django Engine** instead of Client Math.
-3. Switch between **Europe**, **Americas**, and **Asia** to ensure live AODP price sync responds.
-4. Test the **Guide** button and the **Pre-Craft Planner vs. Post-Craft Ledger** tabs.
+2. Verify that all item images, materials, and food/potions render cleanly (streamed from Albion CDN).
+3. Look at the top right of the calculator cards: you should see **🟢 Django Engine** instead of Client Math.
+4. Switch between **Europe**, **Americas**, and **Asia** to ensure live AODP price sync responds through your Railway backend.
+5. Test the **Guide** button and the **Pre-Craft Planner vs. Post-Craft Ledger** tabs.
