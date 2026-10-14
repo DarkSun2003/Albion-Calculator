@@ -1,0 +1,4426 @@
+[
+  {
+    "id": "T1_MEAL_GRILLEDFISH",
+    "uniqueName": "T1_MEAL_GRILLEDFISH",
+    "name": "Grilled Fish",
+    "tier": 1,
+    "category": "food",
+    "subcategory": "roasts",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 20.0,
+    "baseFocus": 15,
+    "ingredients": [
+      {
+        "uniqueName": "T1_FISHCHOPS",
+        "name": "Chopped Fish",
+        "count": 10,
+        "noRefund": false,
+        "icon": "T1_FISHCHOPS.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T1_MEAL_GRILLEDFISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T1_MEAL_SEAWEEDSALAD",
+    "uniqueName": "T1_MEAL_SEAWEEDSALAD",
+    "name": "Seaweed Salad",
+    "tier": 1,
+    "category": "food",
+    "subcategory": "salads",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 5.0,
+    "baseFocus": 4,
+    "ingredients": [
+      {
+        "uniqueName": "T1_SEAWEED",
+        "name": "Seaweed",
+        "count": 10,
+        "noRefund": false,
+        "icon": "T1_SEAWEED.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T1_MEAL_SEAWEEDSALAD.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T1_MEAL_SOUP",
+    "uniqueName": "T1_MEAL_SOUP",
+    "name": "Carrot Soup",
+    "tier": 1,
+    "category": "food",
+    "subcategory": "soups",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 77.0,
+    "baseFocus": 56,
+    "ingredients": [
+      {
+        "uniqueName": "T1_CARROT",
+        "name": "Carrots",
+        "count": 16,
+        "noRefund": false,
+        "icon": "T1_CARROT.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 78,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 123,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 256,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T1_MEAL_SOUP.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T1_MEAL_SOUP_FISH",
+    "uniqueName": "T1_MEAL_SOUP_FISH",
+    "name": "Greenmoor Clam Soup",
+    "tier": 1,
+    "category": "food",
+    "subcategory": "soups",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 106.0,
+    "baseFocus": 77,
+    "ingredients": [
+      {
+        "uniqueName": "T3_FISH_FRESHWATER_SWAMP_RARE",
+        "name": "Greenmoor Clam",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_FISH_FRESHWATER_SWAMP_RARE.png"
+      },
+      {
+        "uniqueName": "T1_CARROT",
+        "name": "Carrots",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T1_CARROT.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 144,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 278,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 678,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T1_MEAL_SOUP_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T2_MEAL_SALAD",
+    "uniqueName": "T2_MEAL_SALAD",
+    "name": "Bean Salad",
+    "tier": 2,
+    "category": "food",
+    "subcategory": "salads",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 77.0,
+    "baseFocus": 56,
+    "ingredients": [
+      {
+        "uniqueName": "T2_BEAN",
+        "name": "Beans",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T2_BEAN.png"
+      },
+      {
+        "uniqueName": "T1_CARROT",
+        "name": "Carrots",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T1_CARROT.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 78,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 123,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 256,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T2_MEAL_SALAD.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T2_MEAL_SALAD_FISH",
+    "uniqueName": "T2_MEAL_SALAD_FISH",
+    "name": "Shallowshore Squid Salad",
+    "tier": 2,
+    "category": "food",
+    "subcategory": "salads",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 106.0,
+    "baseFocus": 77,
+    "ingredients": [
+      {
+        "uniqueName": "T3_FISH_SALTWATER_ALL_RARE",
+        "name": "Shallowshore Squid",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_FISH_SALTWATER_ALL_RARE.png"
+      },
+      {
+        "uniqueName": "T2_BEAN",
+        "name": "Beans",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T2_BEAN.png"
+      },
+      {
+        "uniqueName": "T2_AGARIC",
+        "name": "Arcane Agaric",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T2_AGARIC.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 144,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 278,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 678,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T2_MEAL_SALAD_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T3_MEAL_OMELETTE",
+    "uniqueName": "T3_MEAL_OMELETTE",
+    "name": "Chicken Omelette",
+    "tier": 3,
+    "category": "food",
+    "subcategory": "omelettes",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 77.0,
+    "baseFocus": 52,
+    "ingredients": [
+      {
+        "uniqueName": "T3_WHEAT",
+        "name": "Sheaf of Wheat",
+        "count": 4,
+        "noRefund": false,
+        "icon": "T3_WHEAT.png"
+      },
+      {
+        "uniqueName": "T3_MEAT",
+        "name": "Raw Chicken",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T3_MEAT.png"
+      },
+      {
+        "uniqueName": "T3_EGG",
+        "name": "Hen Eggs",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T3_EGG.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 74,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 118,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 252,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_MEAL_OMELETTE.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T3_MEAL_OMELETTE_AVALON",
+    "uniqueName": "T3_MEAL_OMELETTE_AVALON",
+    "name": "Avalonian Chicken Omelette",
+    "tier": 3,
+    "category": "food",
+    "subcategory": "omelettes",
+    "isAvalonian": true,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 84.0,
+    "baseFocus": 52,
+    "ingredients": [
+      {
+        "uniqueName": "T4_MILK",
+        "name": "Goat's Milk",
+        "count": 4,
+        "noRefund": false,
+        "icon": "T4_MILK.png"
+      },
+      {
+        "uniqueName": "T3_MEAT",
+        "name": "Raw Chicken",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T3_MEAT.png"
+      },
+      {
+        "uniqueName": "T3_EGG",
+        "name": "Hen Eggs",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T3_EGG.png"
+      },
+      {
+        "uniqueName": "QUESTITEM_TOKEN_AVALON",
+        "name": "Avalonian Energy",
+        "count": 10,
+        "noRefund": true,
+        "icon": "QUESTITEM_TOKEN_AVALON.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 74,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 118,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 252,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_MEAL_OMELETTE_AVALON.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T3_MEAL_OMELETTE_DRAGONAREA",
+    "uniqueName": "T3_MEAL_OMELETTE_DRAGONAREA",
+    "name": "Carefree Leyfin Omelette",
+    "tier": 3,
+    "category": "food",
+    "subcategory": "dragon",
+    "isAvalonian": false,
+    "isDragon": true,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 84.0,
+    "baseFocus": 77,
+    "ingredients": [
+      {
+        "uniqueName": "T3_FISH_FRESHWATER_DRAGON_AREA_RARE",
+        "name": "Carefree Leyfin",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_FISH_FRESHWATER_DRAGON_AREA_RARE.png"
+      },
+      {
+        "uniqueName": "T4_MILK",
+        "name": "Goat's Milk",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T4_MILK.png"
+      },
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      },
+      {
+        "uniqueName": "T3_EGG",
+        "name": "Hen Eggs",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_EGG.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 144,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 278,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 678,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_MEAL_OMELETTE_DRAGONAREA.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T3_MEAL_OMELETTE_FISH",
+    "uniqueName": "T3_MEAL_OMELETTE_FISH",
+    "name": "Lowriver Crab Omelette",
+    "tier": 3,
+    "category": "food",
+    "subcategory": "omelettes",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 116.0,
+    "baseFocus": 77,
+    "ingredients": [
+      {
+        "uniqueName": "T3_FISH_FRESHWATER_STEPPE_RARE",
+        "name": "Lowriver Crab",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_FISH_FRESHWATER_STEPPE_RARE.png"
+      },
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      },
+      {
+        "uniqueName": "T3_EGG",
+        "name": "Hen Eggs",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_EGG.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 144,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 278,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 678,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_MEAL_OMELETTE_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T3_MEAL_PIE",
+    "uniqueName": "T3_MEAL_PIE",
+    "name": "Chicken Pie",
+    "tier": 3,
+    "category": "food",
+    "subcategory": "pies",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 78.0,
+    "baseFocus": 53,
+    "ingredients": [
+      {
+        "uniqueName": "T3_WHEAT",
+        "name": "Sheaf of Wheat",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T3_WHEAT.png"
+      },
+      {
+        "uniqueName": "T3_FLOUR",
+        "name": "Flour",
+        "count": 4,
+        "noRefund": false,
+        "icon": "T3_FLOUR.png"
+      },
+      {
+        "uniqueName": "T3_MEAT",
+        "name": "Raw Chicken",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T3_MEAT.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 75,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 120,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 253,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_MEAL_PIE.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T3_MEAL_PIE_FISH",
+    "uniqueName": "T3_MEAL_PIE_FISH",
+    "name": "Upland Coldeye Pie",
+    "tier": 3,
+    "category": "food",
+    "subcategory": "pies",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 120.0,
+    "baseFocus": 81,
+    "ingredients": [
+      {
+        "uniqueName": "T3_FISH_FRESHWATER_MOUNTAIN_RARE",
+        "name": "Upland Coldeye",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_FISH_FRESHWATER_MOUNTAIN_RARE.png"
+      },
+      {
+        "uniqueName": "T3_FLOUR",
+        "name": "Flour",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_FLOUR.png"
+      },
+      {
+        "uniqueName": "T3_EGG",
+        "name": "Hen Eggs",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_EGG.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 147,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 281,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 681,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_MEAL_PIE_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T3_MEAL_ROAST",
+    "uniqueName": "T3_MEAL_ROAST",
+    "name": "Roast Chicken",
+    "tier": 3,
+    "category": "food",
+    "subcategory": "roasts",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 87.0,
+    "baseFocus": 58,
+    "ingredients": [
+      {
+        "uniqueName": "T3_MEAT",
+        "name": "Raw Chicken",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T3_MEAT.png"
+      },
+      {
+        "uniqueName": "T2_BEAN",
+        "name": "Beans",
+        "count": 4,
+        "noRefund": false,
+        "icon": "T2_BEAN.png"
+      },
+      {
+        "uniqueName": "T4_MILK",
+        "name": "Goat's Milk",
+        "count": 4,
+        "noRefund": false,
+        "icon": "T4_MILK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 81,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 125,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 259,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_MEAL_ROAST.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T3_MEAL_ROAST_FISH",
+    "uniqueName": "T3_MEAL_ROAST_FISH",
+    "name": "Roasted Whitefog Snapper",
+    "tier": 3,
+    "category": "food",
+    "subcategory": "roasts",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 116.0,
+    "baseFocus": 77,
+    "ingredients": [
+      {
+        "uniqueName": "T3_FISH_FRESHWATER_AVALON_RARE",
+        "name": "Whitefog Snapper",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_FISH_FRESHWATER_AVALON_RARE.png"
+      },
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      },
+      {
+        "uniqueName": "T4_MILK",
+        "name": "Goat's Milk",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T4_MILK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 144,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 278,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 678,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_MEAL_ROAST_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T3_MEAL_SOUP",
+    "uniqueName": "T3_MEAL_SOUP",
+    "name": "Wheat Soup",
+    "tier": 3,
+    "category": "food",
+    "subcategory": "soups",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 252.0,
+    "baseFocus": 168,
+    "ingredients": [
+      {
+        "uniqueName": "T3_WHEAT",
+        "name": "Sheaf of Wheat",
+        "count": 48,
+        "noRefund": false,
+        "icon": "T3_WHEAT.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 235,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 368,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 769,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_MEAL_SOUP.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T3_MEAL_SOUP_FISH",
+    "uniqueName": "T3_MEAL_SOUP_FISH",
+    "name": "Murkwater Clam Soup",
+    "tier": 3,
+    "category": "food",
+    "subcategory": "soups",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 345.0,
+    "baseFocus": 231,
+    "ingredients": [
+      {
+        "uniqueName": "T5_FISH_FRESHWATER_SWAMP_RARE",
+        "name": "Murkwater Clam",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T5_FISH_FRESHWATER_SWAMP_RARE.png"
+      },
+      {
+        "uniqueName": "T3_WHEAT",
+        "name": "Sheaf of Wheat",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T3_WHEAT.png"
+      },
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      },
+      {
+        "uniqueName": "T3_MEAT",
+        "name": "Raw Chicken",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T3_MEAT.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 432,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 832,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2033,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_MEAL_SOUP_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T4_MEAL_SALAD",
+    "uniqueName": "T4_MEAL_SALAD",
+    "name": "Turnip Salad",
+    "tier": 4,
+    "category": "food",
+    "subcategory": "salads",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 252.0,
+    "baseFocus": 168,
+    "ingredients": [
+      {
+        "uniqueName": "T4_TURNIP",
+        "name": "Turnips",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T4_TURNIP.png"
+      },
+      {
+        "uniqueName": "T3_WHEAT",
+        "name": "Sheaf of Wheat",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T3_WHEAT.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 235,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 368,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 769,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_MEAL_SALAD.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T4_MEAL_SALAD_FISH",
+    "uniqueName": "T4_MEAL_SALAD_FISH",
+    "name": "Midwater Octopus Salad",
+    "tier": 4,
+    "category": "food",
+    "subcategory": "salads",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 345.0,
+    "baseFocus": 231,
+    "ingredients": [
+      {
+        "uniqueName": "T5_FISH_SALTWATER_ALL_RARE",
+        "name": "Midwater Octopus",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T5_FISH_SALTWATER_ALL_RARE.png"
+      },
+      {
+        "uniqueName": "T4_TURNIP",
+        "name": "Turnips",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T4_TURNIP.png"
+      },
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      },
+      {
+        "uniqueName": "T4_MEAT",
+        "name": "Raw Goat",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T4_MEAT.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 432,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 832,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2033,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_MEAL_SALAD_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T4_MEAL_SANDWICH",
+    "uniqueName": "T4_MEAL_SANDWICH",
+    "name": "Goat Sandwich",
+    "tier": 4,
+    "category": "food",
+    "subcategory": "sandwiches",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 81.0,
+    "baseFocus": 55,
+    "ingredients": [
+      {
+        "uniqueName": "T4_BREAD",
+        "name": "Bread",
+        "count": 4,
+        "noRefund": false,
+        "icon": "T4_BREAD.png"
+      },
+      {
+        "uniqueName": "T4_MEAT",
+        "name": "Raw Goat",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T4_MEAT.png"
+      },
+      {
+        "uniqueName": "T4_BUTTER",
+        "name": "Goat's Butter",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T4_BUTTER.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 77,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 122,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 255,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_MEAL_SANDWICH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T4_MEAL_SANDWICH_AVALON",
+    "uniqueName": "T4_MEAL_SANDWICH_AVALON",
+    "name": "Avalonian Goat Sandwich",
+    "tier": 4,
+    "category": "food",
+    "subcategory": "sandwiches",
+    "isAvalonian": true,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 88.0,
+    "baseFocus": 55,
+    "ingredients": [
+      {
+        "uniqueName": "T4_BREAD",
+        "name": "Bread",
+        "count": 4,
+        "noRefund": false,
+        "icon": "T4_BREAD.png"
+      },
+      {
+        "uniqueName": "T4_MEAT",
+        "name": "Raw Goat",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T4_MEAT.png"
+      },
+      {
+        "uniqueName": "T4_BUTTER",
+        "name": "Goat's Butter",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T4_BUTTER.png"
+      },
+      {
+        "uniqueName": "QUESTITEM_TOKEN_AVALON",
+        "name": "Avalonian Energy",
+        "count": 10,
+        "noRefund": true,
+        "icon": "QUESTITEM_TOKEN_AVALON.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 77,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 122,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 255,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_MEAL_SANDWICH_AVALON.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T4_MEAL_SANDWICH_FISH",
+    "uniqueName": "T4_MEAL_SANDWICH_FISH",
+    "name": "Stonestream Lurcher Sandwich",
+    "tier": 4,
+    "category": "food",
+    "subcategory": "sandwiches",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 120.0,
+    "baseFocus": 81,
+    "ingredients": [
+      {
+        "uniqueName": "T3_FISH_FRESHWATER_HIGHLANDS_RARE",
+        "name": "Stonestream Lurcher",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_FISH_FRESHWATER_HIGHLANDS_RARE.png"
+      },
+      {
+        "uniqueName": "T4_TURNIP",
+        "name": "Turnips",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T4_TURNIP.png"
+      },
+      {
+        "uniqueName": "T4_BUTTER",
+        "name": "Goat's Butter",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T4_BUTTER.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 147,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 281,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 681,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_MEAL_SANDWICH_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T4_MEAL_STEW",
+    "uniqueName": "T4_MEAL_STEW",
+    "name": "Goat Stew",
+    "tier": 4,
+    "category": "food",
+    "subcategory": "stews",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 91.0,
+    "baseFocus": 61,
+    "ingredients": [
+      {
+        "uniqueName": "T4_TURNIP",
+        "name": "Turnips",
+        "count": 4,
+        "noRefund": false,
+        "icon": "T4_TURNIP.png"
+      },
+      {
+        "uniqueName": "T4_BREAD",
+        "name": "Bread",
+        "count": 4,
+        "noRefund": false,
+        "icon": "T4_BREAD.png"
+      },
+      {
+        "uniqueName": "T4_MEAT",
+        "name": "Raw Goat",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T4_MEAT.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 84,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 128,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 262,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_MEAL_STEW.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T4_MEAL_STEW_AVALON",
+    "uniqueName": "T4_MEAL_STEW_AVALON",
+    "name": "Avalonian Goat Stew",
+    "tier": 4,
+    "category": "food",
+    "subcategory": "stews",
+    "isAvalonian": true,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 94.0,
+    "baseFocus": 58,
+    "ingredients": [
+      {
+        "uniqueName": "T1_CARROT",
+        "name": "Carrots",
+        "count": 4,
+        "noRefund": false,
+        "icon": "T1_CARROT.png"
+      },
+      {
+        "uniqueName": "T4_TURNIP",
+        "name": "Turnips",
+        "count": 4,
+        "noRefund": false,
+        "icon": "T4_TURNIP.png"
+      },
+      {
+        "uniqueName": "T4_MEAT",
+        "name": "Raw Goat",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T4_MEAT.png"
+      },
+      {
+        "uniqueName": "QUESTITEM_TOKEN_AVALON",
+        "name": "Avalonian Energy",
+        "count": 10,
+        "noRefund": true,
+        "icon": "QUESTITEM_TOKEN_AVALON.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 81,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 125,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 259,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 10,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_MEAL_STEW_AVALON.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T4_MEAL_STEW_FISH",
+    "uniqueName": "T4_MEAL_STEW_FISH",
+    "name": "Greenriver Eel Stew",
+    "tier": 4,
+    "category": "food",
+    "subcategory": "stews",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 116.0,
+    "baseFocus": 77,
+    "ingredients": [
+      {
+        "uniqueName": "T3_FISH_FRESHWATER_FOREST_RARE",
+        "name": "Greenriver Eel",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_FISH_FRESHWATER_FOREST_RARE.png"
+      },
+      {
+        "uniqueName": "T4_TURNIP",
+        "name": "Turnips",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T4_TURNIP.png"
+      },
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 144,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 278,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 678,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 3,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_MEAL_STEW_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T5_MEAL_OMELETTE",
+    "uniqueName": "T5_MEAL_OMELETTE",
+    "name": "Goose Omelette",
+    "tier": 5,
+    "category": "food",
+    "subcategory": "omelettes",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 230.0,
+    "baseFocus": 155,
+    "ingredients": [
+      {
+        "uniqueName": "T5_CABBAGE",
+        "name": "Cabbage",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T5_CABBAGE.png"
+      },
+      {
+        "uniqueName": "T5_MEAT",
+        "name": "Raw Goose",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T5_MEAT.png"
+      },
+      {
+        "uniqueName": "T5_EGG",
+        "name": "Goose Eggs",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T5_EGG.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 222,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 355,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 755,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_MEAL_OMELETTE.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T5_MEAL_OMELETTE_AVALON",
+    "uniqueName": "T5_MEAL_OMELETTE_AVALON",
+    "name": "Avalonian Goose Omelette",
+    "tier": 5,
+    "category": "food",
+    "subcategory": "omelettes",
+    "isAvalonian": true,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 252.0,
+    "baseFocus": 155,
+    "ingredients": [
+      {
+        "uniqueName": "T6_MILK",
+        "name": "Sheep's Milk",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T6_MILK.png"
+      },
+      {
+        "uniqueName": "T5_MEAT",
+        "name": "Raw Goose",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T5_MEAT.png"
+      },
+      {
+        "uniqueName": "T5_EGG",
+        "name": "Goose Eggs",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T5_EGG.png"
+      },
+      {
+        "uniqueName": "QUESTITEM_TOKEN_AVALON",
+        "name": "Avalonian Energy",
+        "count": 30,
+        "noRefund": true,
+        "icon": "QUESTITEM_TOKEN_AVALON.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 222,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 355,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 755,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_MEAL_OMELETTE_AVALON.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T5_MEAL_OMELETTE_DRAGONAREA",
+    "uniqueName": "T5_MEAL_OMELETTE_DRAGONAREA",
+    "name": "Brightsoul Leyfin Omelette",
+    "tier": 5,
+    "category": "food",
+    "subcategory": "dragon",
+    "isAvalonian": false,
+    "isDragon": true,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 252.0,
+    "baseFocus": 225,
+    "ingredients": [
+      {
+        "uniqueName": "T5_FISH_FRESHWATER_DRAGON_AREA_RARE",
+        "name": "Brightsoul Leyfin",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T5_FISH_FRESHWATER_DRAGON_AREA_RARE.png"
+      },
+      {
+        "uniqueName": "T6_MILK",
+        "name": "Sheep's Milk",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T6_MILK.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T5_EGG",
+        "name": "Goose Eggs",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T5_EGG.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 425,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 825,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2026,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_MEAL_OMELETTE_DRAGONAREA.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T5_MEAL_OMELETTE_FISH",
+    "uniqueName": "T5_MEAL_OMELETTE_FISH",
+    "name": "Drybrook Crab Omelette",
+    "tier": 5,
+    "category": "food",
+    "subcategory": "omelettes",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 337.0,
+    "baseFocus": 225,
+    "ingredients": [
+      {
+        "uniqueName": "T5_FISH_FRESHWATER_STEPPE_RARE",
+        "name": "Drybrook Crab",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T5_FISH_FRESHWATER_STEPPE_RARE.png"
+      },
+      {
+        "uniqueName": "T5_CABBAGE",
+        "name": "Cabbage",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T5_CABBAGE.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T5_EGG",
+        "name": "Goose Eggs",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T5_EGG.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 425,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 825,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2026,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_MEAL_OMELETTE_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T5_MEAL_PIE",
+    "uniqueName": "T5_MEAL_PIE",
+    "name": "Goose Pie",
+    "tier": 5,
+    "category": "food",
+    "subcategory": "pies",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 266.0,
+    "baseFocus": 180,
+    "ingredients": [
+      {
+        "uniqueName": "T5_CABBAGE",
+        "name": "Cabbage",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T5_CABBAGE.png"
+      },
+      {
+        "uniqueName": "T3_FLOUR",
+        "name": "Flour",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T3_FLOUR.png"
+      },
+      {
+        "uniqueName": "T5_MEAT",
+        "name": "Raw Goose",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T5_MEAT.png"
+      },
+      {
+        "uniqueName": "T4_MILK",
+        "name": "Goat's Milk",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T4_MILK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 246,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 380,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 780,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_MEAL_PIE.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T5_MEAL_PIE_FISH",
+    "uniqueName": "T5_MEAL_PIE_FISH",
+    "name": "Mountain Blindeye Pie",
+    "tier": 5,
+    "category": "food",
+    "subcategory": "pies",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 337.0,
+    "baseFocus": 225,
+    "ingredients": [
+      {
+        "uniqueName": "T5_FISH_FRESHWATER_MOUNTAIN_RARE",
+        "name": "Mountain Blindeye",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T5_FISH_FRESHWATER_MOUNTAIN_RARE.png"
+      },
+      {
+        "uniqueName": "T5_CABBAGE",
+        "name": "Cabbage",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T5_CABBAGE.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T5_EGG",
+        "name": "Goose Eggs",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T5_EGG.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 425,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 825,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2026,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_MEAL_PIE_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T5_MEAL_ROAST",
+    "uniqueName": "T5_MEAL_ROAST",
+    "name": "Roast Goose",
+    "tier": 5,
+    "category": "food",
+    "subcategory": "roasts",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 262.0,
+    "baseFocus": 176,
+    "ingredients": [
+      {
+        "uniqueName": "T5_MEAT",
+        "name": "Raw Goose",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T5_MEAT.png"
+      },
+      {
+        "uniqueName": "T5_CABBAGE",
+        "name": "Cabbage",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T5_CABBAGE.png"
+      },
+      {
+        "uniqueName": "T6_MILK",
+        "name": "Sheep's Milk",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T6_MILK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 243,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 376,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 777,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_MEAL_ROAST.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T5_MEAL_ROAST_FISH",
+    "uniqueName": "T5_MEAL_ROAST_FISH",
+    "name": "Roasted Clearhaze Snapper",
+    "tier": 5,
+    "category": "food",
+    "subcategory": "roasts",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 337.0,
+    "baseFocus": 225,
+    "ingredients": [
+      {
+        "uniqueName": "T5_FISH_FRESHWATER_AVALON_RARE",
+        "name": "Clearhaze Snapper",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T5_FISH_FRESHWATER_AVALON_RARE.png"
+      },
+      {
+        "uniqueName": "T5_CABBAGE",
+        "name": "Cabbage",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T5_CABBAGE.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T6_MILK",
+        "name": "Sheep's Milk",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T6_MILK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 425,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 825,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2026,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_MEAL_ROAST_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T5_MEAL_SOUP",
+    "uniqueName": "T5_MEAL_SOUP",
+    "name": "Cabbage Soup",
+    "tier": 5,
+    "category": "food",
+    "subcategory": "soups",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 756.0,
+    "baseFocus": 504,
+    "ingredients": [
+      {
+        "uniqueName": "T5_CABBAGE",
+        "name": "Cabbage",
+        "count": 144,
+        "noRefund": false,
+        "icon": "T5_CABBAGE.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 704,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1105,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2306,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_MEAL_SOUP.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T5_MEAL_SOUP_FISH",
+    "uniqueName": "T5_MEAL_SOUP_FISH",
+    "name": "Blackbog Clam Soup",
+    "tier": 5,
+    "category": "food",
+    "subcategory": "soups",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 1002.0,
+    "baseFocus": 672,
+    "ingredients": [
+      {
+        "uniqueName": "T7_FISH_FRESHWATER_SWAMP_RARE",
+        "name": "Blackbog Clam",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T7_FISH_FRESHWATER_SWAMP_RARE.png"
+      },
+      {
+        "uniqueName": "T5_CABBAGE",
+        "name": "Cabbage",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T5_CABBAGE.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T5_MEAT",
+        "name": "Raw Goose",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T5_MEAT.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1272,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 2473,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 6076,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_MEAL_SOUP_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T6_MEAL_SALAD",
+    "uniqueName": "T6_MEAL_SALAD",
+    "name": "Potato Salad",
+    "tier": 6,
+    "category": "food",
+    "subcategory": "salads",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 756.0,
+    "baseFocus": 504,
+    "ingredients": [
+      {
+        "uniqueName": "T6_POTATO",
+        "name": "Potatoes",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T6_POTATO.png"
+      },
+      {
+        "uniqueName": "T5_CABBAGE",
+        "name": "Cabbage",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T5_CABBAGE.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 704,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1105,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2306,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_MEAL_SALAD.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T6_MEAL_SALAD_FISH",
+    "uniqueName": "T6_MEAL_SALAD_FISH",
+    "name": "Deepwater Kraken Salad",
+    "tier": 6,
+    "category": "food",
+    "subcategory": "salads",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 1002.0,
+    "baseFocus": 672,
+    "ingredients": [
+      {
+        "uniqueName": "T7_FISH_SALTWATER_ALL_RARE",
+        "name": "Deepwater Kraken",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T7_FISH_SALTWATER_ALL_RARE.png"
+      },
+      {
+        "uniqueName": "T6_POTATO",
+        "name": "Potatoes",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T6_POTATO.png"
+      },
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T6_MEAT",
+        "name": "Raw Mutton",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T6_MEAT.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1272,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 2473,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 6076,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_MEAL_SALAD_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T6_MEAL_SANDWICH",
+    "uniqueName": "T6_MEAL_SANDWICH",
+    "name": "Mutton Sandwich",
+    "tier": 6,
+    "category": "food",
+    "subcategory": "sandwiches",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 243.0,
+    "baseFocus": 165,
+    "ingredients": [
+      {
+        "uniqueName": "T4_BREAD",
+        "name": "Bread",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T4_BREAD.png"
+      },
+      {
+        "uniqueName": "T6_MEAT",
+        "name": "Raw Mutton",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T6_MEAT.png"
+      },
+      {
+        "uniqueName": "T6_BUTTER",
+        "name": "Sheep's Butter",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T6_BUTTER.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 231,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 365,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 765,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_MEAL_SANDWICH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T6_MEAL_SANDWICH_AVALON",
+    "uniqueName": "T6_MEAL_SANDWICH_AVALON",
+    "name": "Avalonian Mutton Sandwich",
+    "tier": 6,
+    "category": "food",
+    "subcategory": "sandwiches",
+    "isAvalonian": true,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 265.0,
+    "baseFocus": 165,
+    "ingredients": [
+      {
+        "uniqueName": "T4_BREAD",
+        "name": "Bread",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T4_BREAD.png"
+      },
+      {
+        "uniqueName": "T6_MEAT",
+        "name": "Raw Mutton",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T6_MEAT.png"
+      },
+      {
+        "uniqueName": "T6_BUTTER",
+        "name": "Sheep's Butter",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T6_BUTTER.png"
+      },
+      {
+        "uniqueName": "QUESTITEM_TOKEN_AVALON",
+        "name": "Avalonian Energy",
+        "count": 30,
+        "noRefund": true,
+        "icon": "QUESTITEM_TOKEN_AVALON.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 231,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 365,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 765,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_MEAL_SANDWICH_AVALON.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T6_MEAL_SANDWICH_FISH",
+    "uniqueName": "T6_MEAL_SANDWICH_FISH",
+    "name": "Rushwater Lurcher Sandwich",
+    "tier": 6,
+    "category": "food",
+    "subcategory": "sandwiches",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 345.0,
+    "baseFocus": 231,
+    "ingredients": [
+      {
+        "uniqueName": "T5_FISH_FRESHWATER_HIGHLANDS_RARE",
+        "name": "Rushwater Lurcher",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T5_FISH_FRESHWATER_HIGHLANDS_RARE.png"
+      },
+      {
+        "uniqueName": "T6_POTATO",
+        "name": "Potatoes",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T6_POTATO.png"
+      },
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T6_BUTTER",
+        "name": "Sheep's Butter",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T6_BUTTER.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 432,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 832,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2033,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_MEAL_SANDWICH_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T6_MEAL_STEW",
+    "uniqueName": "T6_MEAL_STEW",
+    "name": "Mutton Stew",
+    "tier": 6,
+    "category": "food",
+    "subcategory": "stews",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 272.0,
+    "baseFocus": 184,
+    "ingredients": [
+      {
+        "uniqueName": "T6_POTATO",
+        "name": "Potatoes",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T6_POTATO.png"
+      },
+      {
+        "uniqueName": "T4_BREAD",
+        "name": "Bread",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T4_BREAD.png"
+      },
+      {
+        "uniqueName": "T6_MEAT",
+        "name": "Raw Mutton",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T6_MEAT.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 251,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 384,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 785,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_MEAL_STEW.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T6_MEAL_STEW_AVALON",
+    "uniqueName": "T6_MEAL_STEW_AVALON",
+    "name": "Avalonian Mutton Stew",
+    "tier": 6,
+    "category": "food",
+    "subcategory": "stews",
+    "isAvalonian": true,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 283.0,
+    "baseFocus": 176,
+    "ingredients": [
+      {
+        "uniqueName": "T5_CABBAGE",
+        "name": "Cabbage",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T5_CABBAGE.png"
+      },
+      {
+        "uniqueName": "T6_POTATO",
+        "name": "Potatoes",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T6_POTATO.png"
+      },
+      {
+        "uniqueName": "T6_MEAT",
+        "name": "Raw Mutton",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T6_MEAT.png"
+      },
+      {
+        "uniqueName": "QUESTITEM_TOKEN_AVALON",
+        "name": "Avalonian Energy",
+        "count": 30,
+        "noRefund": true,
+        "icon": "QUESTITEM_TOKEN_AVALON.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 243,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 376,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 777,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 30,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_MEAL_STEW_AVALON.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T6_MEAL_STEW_FISH",
+    "uniqueName": "T6_MEAL_STEW_FISH",
+    "name": "Redspring Eel Stew",
+    "tier": 6,
+    "category": "food",
+    "subcategory": "stews",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 337.0,
+    "baseFocus": 225,
+    "ingredients": [
+      {
+        "uniqueName": "T5_FISH_FRESHWATER_FOREST_RARE",
+        "name": "Redspring Eel",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T5_FISH_FRESHWATER_FOREST_RARE.png"
+      },
+      {
+        "uniqueName": "T6_POTATO",
+        "name": "Potatoes",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T6_POTATO.png"
+      },
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T6_MILK",
+        "name": "Sheep's Milk",
+        "count": 2,
+        "noRefund": false,
+        "icon": "T6_MILK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 425,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 825,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2026,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 9,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_MEAL_STEW_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T7_MEAL_OMELETTE",
+    "uniqueName": "T7_MEAL_OMELETTE",
+    "name": "Pork Omelette",
+    "tier": 7,
+    "category": "food",
+    "subcategory": "omelettes",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 690.0,
+    "baseFocus": 464,
+    "ingredients": [
+      {
+        "uniqueName": "T7_CORN",
+        "name": "Bundle of Corn",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T7_CORN.png"
+      },
+      {
+        "uniqueName": "T7_MEAT",
+        "name": "Raw Pork",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T7_MEAT.png"
+      },
+      {
+        "uniqueName": "T5_EGG",
+        "name": "Goose Eggs",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T5_EGG.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 665,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1065,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2266,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T7_MEAL_OMELETTE.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T7_MEAL_OMELETTE_AVALON",
+    "uniqueName": "T7_MEAL_OMELETTE_AVALON",
+    "name": "Avalonian Pork Omelette",
+    "tier": 7,
+    "category": "food",
+    "subcategory": "omelettes",
+    "isAvalonian": true,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 755.0,
+    "baseFocus": 464,
+    "ingredients": [
+      {
+        "uniqueName": "T8_MILK",
+        "name": "Cow's Milk",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T8_MILK.png"
+      },
+      {
+        "uniqueName": "T7_MEAT",
+        "name": "Raw Pork",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T7_MEAT.png"
+      },
+      {
+        "uniqueName": "T5_EGG",
+        "name": "Goose Eggs",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T5_EGG.png"
+      },
+      {
+        "uniqueName": "QUESTITEM_TOKEN_AVALON",
+        "name": "Avalonian Energy",
+        "count": 90,
+        "noRefund": true,
+        "icon": "QUESTITEM_TOKEN_AVALON.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 665,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1065,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2266,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T7_MEAL_OMELETTE_AVALON.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T7_MEAL_OMELETTE_DRAGONAREA",
+    "uniqueName": "T7_MEAL_OMELETTE_DRAGONAREA",
+    "name": "Dragonbound Leyfin Omelette",
+    "tier": 7,
+    "category": "food",
+    "subcategory": "dragon",
+    "isAvalonian": false,
+    "isDragon": true,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 755.0,
+    "baseFocus": 672,
+    "ingredients": [
+      {
+        "uniqueName": "T7_FISH_FRESHWATER_DRAGON_AREA_RARE",
+        "name": "Dragonbound Leyfin",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T7_FISH_FRESHWATER_DRAGON_AREA_RARE.png"
+      },
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T5_EGG",
+        "name": "Goose Eggs",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T5_EGG.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1272,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 2473,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 6076,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T7_MEAL_OMELETTE_DRAGONAREA.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T7_MEAL_OMELETTE_FISH",
+    "uniqueName": "T7_MEAL_OMELETTE_FISH",
+    "name": "Dusthole Crab Omelette",
+    "tier": 7,
+    "category": "food",
+    "subcategory": "omelettes",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 1002.0,
+    "baseFocus": 672,
+    "ingredients": [
+      {
+        "uniqueName": "T7_FISH_FRESHWATER_STEPPE_RARE",
+        "name": "Dusthole Crab",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T7_FISH_FRESHWATER_STEPPE_RARE.png"
+      },
+      {
+        "uniqueName": "T7_CORN",
+        "name": "Bundle of Corn",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T7_CORN.png"
+      },
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T7_MEAT",
+        "name": "Raw Pork",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T7_MEAT.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1272,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 2473,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 6076,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T7_MEAL_OMELETTE_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T7_MEAL_PIE",
+    "uniqueName": "T7_MEAL_PIE",
+    "name": "Pork Pie",
+    "tier": 7,
+    "category": "food",
+    "subcategory": "pies",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 799.0,
+    "baseFocus": 540,
+    "ingredients": [
+      {
+        "uniqueName": "T7_CORN",
+        "name": "Bundle of Corn",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T7_CORN.png"
+      },
+      {
+        "uniqueName": "T3_FLOUR",
+        "name": "Flour",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T3_FLOUR.png"
+      },
+      {
+        "uniqueName": "T7_MEAT",
+        "name": "Raw Pork",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T7_MEAT.png"
+      },
+      {
+        "uniqueName": "T6_MILK",
+        "name": "Sheep's Milk",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T6_MILK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 739,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1140,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2341,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T7_MEAL_PIE.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T7_MEAL_PIE_FISH",
+    "uniqueName": "T7_MEAL_PIE_FISH",
+    "name": "Frostpeak Deadeye Pie",
+    "tier": 7,
+    "category": "food",
+    "subcategory": "pies",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 1002.0,
+    "baseFocus": 672,
+    "ingredients": [
+      {
+        "uniqueName": "T7_FISH_FRESHWATER_MOUNTAIN_RARE",
+        "name": "Frostpeak Deadeye",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T7_FISH_FRESHWATER_MOUNTAIN_RARE.png"
+      },
+      {
+        "uniqueName": "T7_CORN",
+        "name": "Bundle of Corn",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T7_CORN.png"
+      },
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T7_MEAT",
+        "name": "Raw Pork",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T7_MEAT.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1272,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 2473,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 6076,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T7_MEAL_PIE_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T7_MEAL_ROAST",
+    "uniqueName": "T7_MEAL_ROAST",
+    "name": "Roast Pork",
+    "tier": 7,
+    "category": "food",
+    "subcategory": "roasts",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 785.0,
+    "baseFocus": 528,
+    "ingredients": [
+      {
+        "uniqueName": "T7_MEAT",
+        "name": "Raw Pork",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T7_MEAT.png"
+      },
+      {
+        "uniqueName": "T7_CORN",
+        "name": "Bundle of Corn",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T7_CORN.png"
+      },
+      {
+        "uniqueName": "T8_MILK",
+        "name": "Cow's Milk",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T8_MILK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 728,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1128,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2329,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T7_MEAL_ROAST.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T7_MEAL_ROAST_FISH",
+    "uniqueName": "T7_MEAL_ROAST_FISH",
+    "name": "Roasted Puremist Snapper",
+    "tier": 7,
+    "category": "food",
+    "subcategory": "roasts",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 978.0,
+    "baseFocus": 652,
+    "ingredients": [
+      {
+        "uniqueName": "T7_FISH_FRESHWATER_AVALON_RARE",
+        "name": "Puremist Snapper",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T7_FISH_FRESHWATER_AVALON_RARE.png"
+      },
+      {
+        "uniqueName": "T7_CORN",
+        "name": "Bundle of Corn",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T7_CORN.png"
+      },
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T8_MILK",
+        "name": "Cow's Milk",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T8_MILK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1253,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 2454,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 6056,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T7_MEAL_ROAST_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T8_MEAL_SANDWICH",
+    "uniqueName": "T8_MEAL_SANDWICH",
+    "name": "Beef Sandwich",
+    "tier": 8,
+    "category": "food",
+    "subcategory": "sandwiches",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 730.0,
+    "baseFocus": 494,
+    "ingredients": [
+      {
+        "uniqueName": "T4_BREAD",
+        "name": "Bread",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T4_BREAD.png"
+      },
+      {
+        "uniqueName": "T8_MEAT",
+        "name": "Raw Beef",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T8_MEAT.png"
+      },
+      {
+        "uniqueName": "T8_BUTTER",
+        "name": "Cow's Butter",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T8_BUTTER.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 694,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1094,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2295,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T8_MEAL_SANDWICH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T8_MEAL_SANDWICH_AVALON",
+    "uniqueName": "T8_MEAL_SANDWICH_AVALON",
+    "name": "Avalonian Beef Sandwich",
+    "tier": 8,
+    "category": "food",
+    "subcategory": "sandwiches",
+    "isAvalonian": true,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 795.0,
+    "baseFocus": 494,
+    "ingredients": [
+      {
+        "uniqueName": "T4_BREAD",
+        "name": "Bread",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T4_BREAD.png"
+      },
+      {
+        "uniqueName": "T8_MEAT",
+        "name": "Raw Beef",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T8_MEAT.png"
+      },
+      {
+        "uniqueName": "T8_BUTTER",
+        "name": "Cow's Butter",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T8_BUTTER.png"
+      },
+      {
+        "uniqueName": "QUESTITEM_TOKEN_AVALON",
+        "name": "Avalonian Energy",
+        "count": 90,
+        "noRefund": true,
+        "icon": "QUESTITEM_TOKEN_AVALON.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 694,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1094,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2295,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T8_MEAL_SANDWICH_AVALON.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T8_MEAL_SANDWICH_FISH",
+    "uniqueName": "T8_MEAL_SANDWICH_FISH",
+    "name": "Thunderfall Lurcher Sandwich",
+    "tier": 8,
+    "category": "food",
+    "subcategory": "sandwiches",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 1002.0,
+    "baseFocus": 672,
+    "ingredients": [
+      {
+        "uniqueName": "T7_FISH_FRESHWATER_HIGHLANDS_RARE",
+        "name": "Thunderfall Lurcher",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T7_FISH_FRESHWATER_HIGHLANDS_RARE.png"
+      },
+      {
+        "uniqueName": "T8_PUMPKIN",
+        "name": "Pumpkin",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T8_PUMPKIN.png"
+      },
+      {
+        "uniqueName": "T8_YARROW",
+        "name": "Ghoul Yarrow",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T8_YARROW.png"
+      },
+      {
+        "uniqueName": "T8_BUTTER",
+        "name": "Cow's Butter",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T8_BUTTER.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1272,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 2473,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 6076,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T8_MEAL_SANDWICH_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T8_MEAL_SPECIAL_FOOD_DRAKE_EGG",
+    "uniqueName": "T8_MEAL_SPECIAL_FOOD_DRAKE_EGG",
+    "name": "Drake Egg Biscuits",
+    "tier": 8,
+    "category": "food",
+    "subcategory": "dragon",
+    "isAvalonian": false,
+    "isDragon": true,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 99,
+    "nutrition": 755.0,
+    "baseFocus": 0,
+    "ingredients": [
+      {
+        "uniqueName": "T3_FLOUR",
+        "name": "Flour",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T3_FLOUR.png"
+      },
+      {
+        "uniqueName": "T8_BUTTER",
+        "name": "Cow's Butter",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T8_BUTTER.png"
+      },
+      {
+        "uniqueName": "T8_MILK",
+        "name": "Cow's Milk",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T8_MILK.png"
+      },
+      {
+        "uniqueName": "T8_FARM_DRAKE_BABY",
+        "name": "Firewing Drake Egg",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T8_FARM_DRAKE_BABY.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T8_MEAL_SPECIAL_FOOD_DRAKE_EGG.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T8_MEAL_STEW",
+    "uniqueName": "T8_MEAL_STEW",
+    "name": "Beef Stew",
+    "tier": 8,
+    "category": "food",
+    "subcategory": "stews",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 817.0,
+    "baseFocus": 551,
+    "ingredients": [
+      {
+        "uniqueName": "T8_PUMPKIN",
+        "name": "Pumpkin",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T8_PUMPKIN.png"
+      },
+      {
+        "uniqueName": "T4_BREAD",
+        "name": "Bread",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T4_BREAD.png"
+      },
+      {
+        "uniqueName": "T8_MEAT",
+        "name": "Raw Beef",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T8_MEAT.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 752,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1152,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2353,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T8_MEAL_STEW.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T8_MEAL_STEW_AVALON",
+    "uniqueName": "T8_MEAL_STEW_AVALON",
+    "name": "Avalonian Beef Stew",
+    "tier": 8,
+    "category": "food",
+    "subcategory": "stews",
+    "isAvalonian": true,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 850.0,
+    "baseFocus": 528,
+    "ingredients": [
+      {
+        "uniqueName": "T7_CORN",
+        "name": "Bundle of Corn",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T7_CORN.png"
+      },
+      {
+        "uniqueName": "T8_PUMPKIN",
+        "name": "Pumpkin",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T8_PUMPKIN.png"
+      },
+      {
+        "uniqueName": "T8_MEAT",
+        "name": "Raw Beef",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T8_MEAT.png"
+      },
+      {
+        "uniqueName": "QUESTITEM_TOKEN_AVALON",
+        "name": "Avalonian Energy",
+        "count": 90,
+        "noRefund": true,
+        "icon": "QUESTITEM_TOKEN_AVALON.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 728,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1128,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2329,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 90,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T8_MEAL_STEW_AVALON.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T8_MEAL_STEW_FISH",
+    "uniqueName": "T8_MEAL_STEW_FISH",
+    "name": "Deadwater Eel Stew",
+    "tier": 8,
+    "category": "food",
+    "subcategory": "stews",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": true,
+    "isIntermediate": false,
+    "amountCrafted": 1,
+    "nutrition": 978.0,
+    "baseFocus": 652,
+    "ingredients": [
+      {
+        "uniqueName": "T7_FISH_FRESHWATER_FOREST_RARE",
+        "name": "Deadwater Eel",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T7_FISH_FRESHWATER_FOREST_RARE.png"
+      },
+      {
+        "uniqueName": "T8_PUMPKIN",
+        "name": "Pumpkin",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T8_PUMPKIN.png"
+      },
+      {
+        "uniqueName": "T8_YARROW",
+        "name": "Ghoul Yarrow",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T8_YARROW.png"
+      },
+      {
+        "uniqueName": "T8_MILK",
+        "name": "Cow's Milk",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T8_MILK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1253,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL1",
+          "name": "Basic Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 2454,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL2",
+          "name": "Fancy Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 6056,
+        "sauce": {
+          "uniqueName": "T1_FISHSAUCE_LEVEL3",
+          "name": "Special Fish Sauce",
+          "count": 27,
+          "icon": "T1_FISHSAUCE_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T8_MEAL_STEW_FISH.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T3_MEAT",
+    "uniqueName": "T3_MEAT",
+    "name": "Raw Chicken",
+    "tier": 3,
+    "category": "food",
+    "subcategory": "butchery",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": true,
+    "amountCrafted": 18,
+    "nutrition": 52.0,
+    "baseFocus": 38,
+    "ingredients": [
+      {
+        "uniqueName": "T3_FARM_CHICKEN_GROWN",
+        "name": "Chicken",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T3_FARM_CHICKEN_GROWN.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T3_MEAT.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T4_MEAT",
+    "uniqueName": "T4_MEAT",
+    "name": "Raw Goat",
+    "tier": 4,
+    "category": "food",
+    "subcategory": "butchery",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": true,
+    "amountCrafted": 18,
+    "nutrition": 52.0,
+    "baseFocus": 38,
+    "ingredients": [
+      {
+        "uniqueName": "T4_FARM_GOAT_GROWN",
+        "name": "Goat",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T4_FARM_GOAT_GROWN.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T4_MEAT.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T5_MEAT",
+    "uniqueName": "T5_MEAT",
+    "name": "Raw Goose",
+    "tier": 5,
+    "category": "food",
+    "subcategory": "butchery",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": true,
+    "amountCrafted": 18,
+    "nutrition": 52.0,
+    "baseFocus": 38,
+    "ingredients": [
+      {
+        "uniqueName": "T5_FARM_GOOSE_GROWN",
+        "name": "Goose",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T5_FARM_GOOSE_GROWN.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T5_MEAT.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T6_MEAT",
+    "uniqueName": "T6_MEAT",
+    "name": "Raw Mutton",
+    "tier": 6,
+    "category": "food",
+    "subcategory": "butchery",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": true,
+    "amountCrafted": 18,
+    "nutrition": 52.0,
+    "baseFocus": 38,
+    "ingredients": [
+      {
+        "uniqueName": "T6_FARM_SHEEP_GROWN",
+        "name": "Sheep",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T6_FARM_SHEEP_GROWN.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T6_MEAT.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T7_MEAT",
+    "uniqueName": "T7_MEAT",
+    "name": "Raw Pork",
+    "tier": 7,
+    "category": "food",
+    "subcategory": "butchery",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": true,
+    "amountCrafted": 18,
+    "nutrition": 52.0,
+    "baseFocus": 38,
+    "ingredients": [
+      {
+        "uniqueName": "T7_FARM_PIG_GROWN",
+        "name": "Pig",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T7_FARM_PIG_GROWN.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T7_MEAT.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T8_MEAT",
+    "uniqueName": "T8_MEAT",
+    "name": "Raw Beef",
+    "tier": 8,
+    "category": "food",
+    "subcategory": "butchery",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": true,
+    "amountCrafted": 18,
+    "nutrition": 52.0,
+    "baseFocus": 38,
+    "ingredients": [
+      {
+        "uniqueName": "T8_FARM_COW_GROWN",
+        "name": "Cow",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T8_FARM_COW_GROWN.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T8_MEAT.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T3_FLOUR",
+    "uniqueName": "T3_FLOUR",
+    "name": "Flour",
+    "tier": 3,
+    "category": "food",
+    "subcategory": "pantry",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": true,
+    "amountCrafted": 1,
+    "nutrition": 52.0,
+    "baseFocus": 38,
+    "ingredients": [
+      {
+        "uniqueName": "T3_WHEAT",
+        "name": "Sheaf of Wheat",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_WHEAT.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T3_FLOUR.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T4_BREAD",
+    "uniqueName": "T4_BREAD",
+    "name": "Bread",
+    "tier": 4,
+    "category": "food",
+    "subcategory": "pantry",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": true,
+    "amountCrafted": 1,
+    "nutrition": 57.0,
+    "baseFocus": 42,
+    "ingredients": [
+      {
+        "uniqueName": "T3_FLOUR",
+        "name": "Flour",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T3_FLOUR.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T4_BREAD.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T4_BUTTER",
+    "uniqueName": "T4_BUTTER",
+    "name": "Goat's Butter",
+    "tier": 4,
+    "category": "food",
+    "subcategory": "pantry",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": true,
+    "amountCrafted": 1,
+    "nutrition": 52.0,
+    "baseFocus": 38,
+    "ingredients": [
+      {
+        "uniqueName": "T4_MILK",
+        "name": "Goat's Milk",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T4_MILK.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T4_BUTTER.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T6_BUTTER",
+    "uniqueName": "T6_BUTTER",
+    "name": "Sheep's Butter",
+    "tier": 6,
+    "category": "food",
+    "subcategory": "pantry",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": true,
+    "amountCrafted": 1,
+    "nutrition": 52.0,
+    "baseFocus": 38,
+    "ingredients": [
+      {
+        "uniqueName": "T6_MILK",
+        "name": "Sheep's Milk",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T6_MILK.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T6_BUTTER.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T8_BUTTER",
+    "uniqueName": "T8_BUTTER",
+    "name": "Cow's Butter",
+    "tier": 8,
+    "category": "food",
+    "subcategory": "pantry",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": true,
+    "amountCrafted": 1,
+    "nutrition": 52.0,
+    "baseFocus": 38,
+    "ingredients": [
+      {
+        "uniqueName": "T8_MILK",
+        "name": "Cow's Milk",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T8_MILK.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T8_BUTTER.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T1_FISHSAUCE_LEVEL1",
+    "uniqueName": "T1_FISHSAUCE_LEVEL1",
+    "name": "Basic Fish Sauce",
+    "tier": 1,
+    "category": "food",
+    "subcategory": "pantry",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": true,
+    "amountCrafted": 1,
+    "nutrition": 0.0,
+    "baseFocus": 0,
+    "ingredients": [
+      {
+        "uniqueName": "T1_FISHCHOPS",
+        "name": "Chopped Fish",
+        "count": 15,
+        "noRefund": false,
+        "icon": "T1_FISHCHOPS.png"
+      },
+      {
+        "uniqueName": "T1_SEAWEED",
+        "name": "Seaweed",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T1_SEAWEED.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T1_FISHSAUCE_LEVEL1.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T1_FISHSAUCE_LEVEL2",
+    "uniqueName": "T1_FISHSAUCE_LEVEL2",
+    "name": "Fancy Fish Sauce",
+    "tier": 1,
+    "category": "food",
+    "subcategory": "pantry",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": true,
+    "amountCrafted": 1,
+    "nutrition": 0.0,
+    "baseFocus": 0,
+    "ingredients": [
+      {
+        "uniqueName": "T1_FISHCHOPS",
+        "name": "Chopped Fish",
+        "count": 45,
+        "noRefund": false,
+        "icon": "T1_FISHCHOPS.png"
+      },
+      {
+        "uniqueName": "T1_SEAWEED",
+        "name": "Seaweed",
+        "count": 3,
+        "noRefund": false,
+        "icon": "T1_SEAWEED.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T1_FISHSAUCE_LEVEL2.png",
+    "bonusCity": "Caerleon"
+  },
+  {
+    "id": "T1_FISHSAUCE_LEVEL3",
+    "uniqueName": "T1_FISHSAUCE_LEVEL3",
+    "name": "Special Fish Sauce",
+    "tier": 1,
+    "category": "food",
+    "subcategory": "pantry",
+    "isAvalonian": false,
+    "isDragon": false,
+    "isFishMeal": false,
+    "isIntermediate": true,
+    "amountCrafted": 1,
+    "nutrition": 0.0,
+    "baseFocus": 0,
+    "ingredients": [
+      {
+        "uniqueName": "T1_FISHCHOPS",
+        "name": "Chopped Fish",
+        "count": 135,
+        "noRefund": false,
+        "icon": "T1_FISHCHOPS.png"
+      },
+      {
+        "uniqueName": "T1_SEAWEED",
+        "name": "Seaweed",
+        "count": 9,
+        "noRefund": false,
+        "icon": "T1_SEAWEED.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T1_FISHSAUCE_LEVEL3.png",
+    "bonusCity": "Caerleon"
+  }
+]

@@ -1,0 +1,3229 @@
+[
+  {
+    "id": "T2_POTION_ENERGY",
+    "uniqueName": "T2_POTION_ENERGY",
+    "name": "Minor Energy Potion",
+    "tier": 2,
+    "category": "potion",
+    "subcategory": "energy",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 56,
+    "ingredients": [
+      {
+        "uniqueName": "T2_AGARIC",
+        "name": "Arcane Agaric",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T2_AGARIC.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 78,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 123,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 256,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T2_POTION_ENERGY.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T2_POTION_HEAL",
+    "uniqueName": "T2_POTION_HEAL",
+    "name": "Minor Healing Potion",
+    "tier": 2,
+    "category": "potion",
+    "subcategory": "healing",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 56,
+    "ingredients": [
+      {
+        "uniqueName": "T2_AGARIC",
+        "name": "Arcane Agaric",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T2_AGARIC.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 78,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 123,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 256,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T2_POTION_HEAL.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T3_POTION_ACID",
+    "uniqueName": "T3_POTION_ACID",
+    "name": "Minor Acid Potion",
+    "tier": 3,
+    "category": "potion",
+    "subcategory": "debuff",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 56,
+    "ingredients": [
+      {
+        "uniqueName": "T3_ALCHEMY_RARE_DIREBEAR",
+        "name": "Rugged Spirit Paws",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T3_ALCHEMY_RARE_DIREBEAR.png"
+      },
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 16,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 78,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 123,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 256,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_POTION_ACID.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T3_POTION_CLEANSE2",
+    "uniqueName": "T3_POTION_CLEANSE2",
+    "name": "Minor Cleansing Potion",
+    "tier": 3,
+    "category": "potion",
+    "subcategory": "utility",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 56,
+    "ingredients": [
+      {
+        "uniqueName": "T3_ALCHEMY_RARE_ENT",
+        "name": "Rugged Sylvian Root",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T3_ALCHEMY_RARE_ENT.png"
+      },
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 16,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 78,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 123,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 256,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_POTION_CLEANSE2.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T3_POTION_MOB_RESET",
+    "uniqueName": "T3_POTION_MOB_RESET",
+    "name": "Minor Calming Potion",
+    "tier": 3,
+    "category": "potion",
+    "subcategory": "utility",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 56,
+    "ingredients": [
+      {
+        "uniqueName": "T3_ALCHEMY_RARE_PANTHER",
+        "name": "Rugged Shadow Claws",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T3_ALCHEMY_RARE_PANTHER.png"
+      },
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 16,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 78,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 123,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 256,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_POTION_MOB_RESET.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T3_POTION_REVIVE",
+    "uniqueName": "T3_POTION_REVIVE",
+    "name": "Minor Gigantify Potion",
+    "tier": 3,
+    "category": "potion",
+    "subcategory": "combat",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 56,
+    "ingredients": [
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 78,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 123,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 256,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_POTION_REVIVE.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T3_POTION_SLOWFIELD",
+    "uniqueName": "T3_POTION_SLOWFIELD",
+    "name": "Minor Sticky Potion",
+    "tier": 3,
+    "category": "potion",
+    "subcategory": "utility",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 56,
+    "ingredients": [
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 78,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 123,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 256,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_POTION_SLOWFIELD.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T3_POTION_STONESKIN",
+    "uniqueName": "T3_POTION_STONESKIN",
+    "name": "Minor Resistance Potion",
+    "tier": 3,
+    "category": "potion",
+    "subcategory": "defense",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 56,
+    "ingredients": [
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 78,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 123,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 256,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T3_POTION_STONESKIN.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T4_POTION_BERSERK",
+    "uniqueName": "T4_POTION_BERSERK",
+    "name": "Minor Berserk Potion",
+    "tier": 4,
+    "category": "potion",
+    "subcategory": "combat",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 56,
+    "ingredients": [
+      {
+        "uniqueName": "T3_ALCHEMY_RARE_WEREWOLF",
+        "name": "Rugged Werewolf Fangs",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T3_ALCHEMY_RARE_WEREWOLF.png"
+      },
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 16,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 78,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 123,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 256,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_POTION_BERSERK.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T4_POTION_COOLDOWN",
+    "uniqueName": "T4_POTION_COOLDOWN",
+    "name": "Minor Poison Potion",
+    "tier": 4,
+    "category": "potion",
+    "subcategory": "debuff",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 84,
+    "ingredients": [
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 8,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      },
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 4,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 106,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 151,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 284,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 5,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_POTION_COOLDOWN.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T4_POTION_ENERGY",
+    "uniqueName": "T4_POTION_ENERGY",
+    "name": "Energy Potion",
+    "tier": 4,
+    "category": "potion",
+    "subcategory": "energy",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 210,
+    "ingredients": [
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      },
+      {
+        "uniqueName": "T4_MILK",
+        "name": "Goat's Milk",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T4_MILK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 277,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 411,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 811,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_POTION_ENERGY.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T4_POTION_GATHER",
+    "uniqueName": "T4_POTION_GATHER",
+    "name": "Minor Gathering Potion",
+    "tier": 4,
+    "category": "potion",
+    "subcategory": "gathering",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 61,
+    "ingredients": [
+      {
+        "uniqueName": "T3_ALCHEMY_RARE_ELEMENTAL",
+        "name": "Rugged Runestone Tooth",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T3_ALCHEMY_RARE_ELEMENTAL.png"
+      },
+      {
+        "uniqueName": "T4_BUTTER",
+        "name": "Goat's Butter",
+        "count": 16,
+        "noRefund": false,
+        "icon": "T4_BUTTER.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 84,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 128,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 262,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_POTION_GATHER.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T4_POTION_HEAL",
+    "uniqueName": "T4_POTION_HEAL",
+    "name": "Healing Potion",
+    "tier": 4,
+    "category": "potion",
+    "subcategory": "healing",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 210,
+    "ingredients": [
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      },
+      {
+        "uniqueName": "T3_EGG",
+        "name": "Hen Eggs",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T3_EGG.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 277,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 411,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 811,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_POTION_HEAL.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T4_POTION_LAVA",
+    "uniqueName": "T4_POTION_LAVA",
+    "name": "Minor Hellfire Potion",
+    "tier": 4,
+    "category": "potion",
+    "subcategory": "debuff",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 56,
+    "ingredients": [
+      {
+        "uniqueName": "T3_ALCHEMY_RARE_IMP",
+        "name": "Rugged Imp's Horn",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T3_ALCHEMY_RARE_IMP.png"
+      },
+      {
+        "uniqueName": "T4_MILK",
+        "name": "Goat's Milk",
+        "count": 16,
+        "noRefund": false,
+        "icon": "T4_MILK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 78,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 123,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 256,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_POTION_LAVA.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T4_POTION_LIFEWARD",
+    "uniqueName": "T4_POTION_LIFEWARD",
+    "name": "Minor Lifeward Potion",
+    "tier": 4,
+    "category": "potion",
+    "subcategory": "dragon",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 56,
+    "ingredients": [
+      {
+        "uniqueName": "T4_ALCHEMY_RARE_DRAGONAREA",
+        "name": "Diluted Dragon Blood",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T4_ALCHEMY_RARE_DRAGONAREA.png"
+      },
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 16,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 78,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 123,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 256,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_POTION_LIFEWARD.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T4_POTION_TORNADO",
+    "uniqueName": "T4_POTION_TORNADO",
+    "name": "Minor Tornado in a Bottle",
+    "tier": 4,
+    "category": "potion",
+    "subcategory": "utility",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 56,
+    "ingredients": [
+      {
+        "uniqueName": "T3_ALCHEMY_RARE_EAGLE",
+        "name": "Rugged Dawnfeather",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T3_ALCHEMY_RARE_EAGLE.png"
+      },
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 16,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 78,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 123,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 256,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 10,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T4_POTION_TORNADO.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T5_POTION_ACID",
+    "uniqueName": "T5_POTION_ACID",
+    "name": "Acid Potion",
+    "tier": 5,
+    "category": "potion",
+    "subcategory": "debuff",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 294,
+    "ingredients": [
+      {
+        "uniqueName": "T5_ALCHEMY_RARE_DIREBEAR",
+        "name": "Fine Spirit Paws",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T5_ALCHEMY_RARE_DIREBEAR.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 48,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      },
+      {
+        "uniqueName": "T4_MILK",
+        "name": "Goat's Milk",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T4_MILK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 361,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 494,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 895,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_POTION_ACID.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T5_POTION_CLEANSE2",
+    "uniqueName": "T5_POTION_CLEANSE2",
+    "name": "Cleansing Potion",
+    "tier": 5,
+    "category": "potion",
+    "subcategory": "utility",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 298,
+    "ingredients": [
+      {
+        "uniqueName": "T5_ALCHEMY_RARE_ENT",
+        "name": "Fine Sylvian Root",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T5_ALCHEMY_RARE_ENT.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 48,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      },
+      {
+        "uniqueName": "T4_BUTTER",
+        "name": "Goat's Butter",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T4_BUTTER.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 365,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 498,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 898,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_POTION_CLEANSE2.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T5_POTION_MOB_RESET",
+    "uniqueName": "T5_POTION_MOB_RESET",
+    "name": "Calming Potion",
+    "tier": 5,
+    "category": "potion",
+    "subcategory": "utility",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 294,
+    "ingredients": [
+      {
+        "uniqueName": "T5_ALCHEMY_RARE_PANTHER",
+        "name": "Fine Shadow Claws",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T5_ALCHEMY_RARE_PANTHER.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 48,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      },
+      {
+        "uniqueName": "T2_AGARIC",
+        "name": "Arcane Agaric",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T2_AGARIC.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 361,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 494,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 895,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_POTION_MOB_RESET.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T5_POTION_REVIVE",
+    "uniqueName": "T5_POTION_REVIVE",
+    "name": "Gigantify Potion",
+    "tier": 5,
+    "category": "potion",
+    "subcategory": "combat",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 294,
+    "ingredients": [
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      },
+      {
+        "uniqueName": "T5_EGG",
+        "name": "Goose Eggs",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T5_EGG.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 361,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 494,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 895,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_POTION_REVIVE.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T5_POTION_SLOWFIELD",
+    "uniqueName": "T5_POTION_SLOWFIELD",
+    "name": "Sticky Potion",
+    "tier": 5,
+    "category": "potion",
+    "subcategory": "utility",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 294,
+    "ingredients": [
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      },
+      {
+        "uniqueName": "T5_EGG",
+        "name": "Goose Eggs",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T5_EGG.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 361,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 494,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 895,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_POTION_SLOWFIELD.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T5_POTION_STONESKIN",
+    "uniqueName": "T5_POTION_STONESKIN",
+    "name": "Resistance Potion",
+    "tier": 5,
+    "category": "potion",
+    "subcategory": "defense",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 294,
+    "ingredients": [
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      },
+      {
+        "uniqueName": "T4_MILK",
+        "name": "Goat's Milk",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T4_MILK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 361,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 494,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 895,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T5_POTION_STONESKIN.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T6_POTION_BERSERK",
+    "uniqueName": "T6_POTION_BERSERK",
+    "name": "Berserk Potion",
+    "tier": 6,
+    "category": "potion",
+    "subcategory": "combat",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 298,
+    "ingredients": [
+      {
+        "uniqueName": "T5_ALCHEMY_RARE_WEREWOLF",
+        "name": "Fine Werewolf Fangs",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T5_ALCHEMY_RARE_WEREWOLF.png"
+      },
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 48,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T2_AGARIC",
+        "name": "Arcane Agaric",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T2_AGARIC.png"
+      },
+      {
+        "uniqueName": "T6_ALCOHOL",
+        "name": "Potato Schnapps",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T6_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 365,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 498,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 898,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_POTION_BERSERK.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T6_POTION_COOLDOWN",
+    "uniqueName": "T6_POTION_COOLDOWN",
+    "name": "Poison Potion",
+    "tier": 6,
+    "category": "potion",
+    "subcategory": "debuff",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 378,
+    "ingredients": [
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      },
+      {
+        "uniqueName": "T6_MILK",
+        "name": "Sheep's Milk",
+        "count": 6,
+        "noRefund": false,
+        "icon": "T6_MILK.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 445,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 578,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 979,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 15,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_POTION_COOLDOWN.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T6_POTION_ENERGY",
+    "uniqueName": "T6_POTION_ENERGY",
+    "name": "Major Energy Potion",
+    "tier": 6,
+    "category": "potion",
+    "subcategory": "energy",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 768,
+    "ingredients": [
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T6_MILK",
+        "name": "Sheep's Milk",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T6_MILK.png"
+      },
+      {
+        "uniqueName": "T6_ALCOHOL",
+        "name": "Potato Schnapps",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T6_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 968,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1369,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2570,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_POTION_ENERGY.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T6_POTION_GATHER",
+    "uniqueName": "T6_POTION_GATHER",
+    "name": "Gathering Potion",
+    "tier": 6,
+    "category": "potion",
+    "subcategory": "gathering",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 310,
+    "ingredients": [
+      {
+        "uniqueName": "T5_ALCHEMY_RARE_ELEMENTAL",
+        "name": "Fine Runestone Tooth",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T5_ALCHEMY_RARE_ELEMENTAL.png"
+      },
+      {
+        "uniqueName": "T6_BUTTER",
+        "name": "Sheep's Butter",
+        "count": 48,
+        "noRefund": false,
+        "icon": "T6_BUTTER.png"
+      },
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 376,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 510,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 910,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_POTION_GATHER.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T6_POTION_HEAL",
+    "uniqueName": "T6_POTION_HEAL",
+    "name": "Major Healing Potion",
+    "tier": 6,
+    "category": "potion",
+    "subcategory": "healing",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 768,
+    "ingredients": [
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T5_EGG",
+        "name": "Goose Eggs",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T5_EGG.png"
+      },
+      {
+        "uniqueName": "T6_ALCOHOL",
+        "name": "Potato Schnapps",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T6_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 968,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1369,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2570,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_POTION_HEAL.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T6_POTION_LAVA",
+    "uniqueName": "T6_POTION_LAVA",
+    "name": "Hellfire Potion",
+    "tier": 6,
+    "category": "potion",
+    "subcategory": "debuff",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 294,
+    "ingredients": [
+      {
+        "uniqueName": "T5_ALCHEMY_RARE_IMP",
+        "name": "Fine Imp's Horn",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T5_ALCHEMY_RARE_IMP.png"
+      },
+      {
+        "uniqueName": "T6_MILK",
+        "name": "Sheep's Milk",
+        "count": 48,
+        "noRefund": false,
+        "icon": "T6_MILK.png"
+      },
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T3_EGG",
+        "name": "Hen Eggs",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T3_EGG.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 361,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 494,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 895,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_POTION_LAVA.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T6_POTION_LIFEWARD",
+    "uniqueName": "T6_POTION_LIFEWARD",
+    "name": "Lifeward Potion",
+    "tier": 6,
+    "category": "potion",
+    "subcategory": "dragon",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 294,
+    "ingredients": [
+      {
+        "uniqueName": "T6_ALCHEMY_RARE_DRAGONAREA",
+        "name": "Dragon Blood",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T6_ALCHEMY_RARE_DRAGONAREA.png"
+      },
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 48,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T2_AGARIC",
+        "name": "Arcane Agaric",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T2_AGARIC.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 361,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 494,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 895,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_POTION_LIFEWARD.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T6_POTION_TORNADO",
+    "uniqueName": "T6_POTION_TORNADO",
+    "name": "Tornado in a Bottle",
+    "tier": 6,
+    "category": "potion",
+    "subcategory": "utility",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 294,
+    "ingredients": [
+      {
+        "uniqueName": "T5_ALCHEMY_RARE_EAGLE",
+        "name": "Fine Dawnfeather",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T5_ALCHEMY_RARE_EAGLE.png"
+      },
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 48,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 24,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T3_EGG",
+        "name": "Hen Eggs",
+        "count": 12,
+        "noRefund": false,
+        "icon": "T3_EGG.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 361,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 494,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 895,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 30,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T6_POTION_TORNADO.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T7_POTION_ACID",
+    "uniqueName": "T7_POTION_ACID",
+    "name": "Major Acid Potion",
+    "tier": 7,
+    "category": "potion",
+    "subcategory": "debuff",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 1296,
+    "ingredients": [
+      {
+        "uniqueName": "T7_ALCHEMY_RARE_DIREBEAR",
+        "name": "Excellent Spirit Paws",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T7_ALCHEMY_RARE_DIREBEAR.png"
+      },
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 144,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T6_ALCOHOL",
+        "name": "Potato Schnapps",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T6_ALCOHOL.png"
+      },
+      {
+        "uniqueName": "T6_MILK",
+        "name": "Sheep's Milk",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T6_MILK.png"
+      },
+      {
+        "uniqueName": "T7_ALCOHOL",
+        "name": "Corn Hooch",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T7_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1496,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1896,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 3097,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T7_POTION_ACID.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T7_POTION_CLEANSE2",
+    "uniqueName": "T7_POTION_CLEANSE2",
+    "name": "Major Cleansing Potion",
+    "tier": 7,
+    "category": "potion",
+    "subcategory": "utility",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 1283,
+    "ingredients": [
+      {
+        "uniqueName": "T7_ALCHEMY_RARE_ENT",
+        "name": "Excellent Sylvian Root",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T7_ALCHEMY_RARE_ENT.png"
+      },
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 144,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      },
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      },
+      {
+        "uniqueName": "T6_BUTTER",
+        "name": "Sheep's Butter",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T6_BUTTER.png"
+      },
+      {
+        "uniqueName": "T7_ALCOHOL",
+        "name": "Corn Hooch",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T7_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1484,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1884,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 3085,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T7_POTION_CLEANSE2.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T7_POTION_MOB_RESET",
+    "uniqueName": "T7_POTION_MOB_RESET",
+    "name": "Major Calming Potion",
+    "tier": 7,
+    "category": "potion",
+    "subcategory": "utility",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 1272,
+    "ingredients": [
+      {
+        "uniqueName": "T7_ALCHEMY_RARE_PANTHER",
+        "name": "Excellent Shadow Claws",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T7_ALCHEMY_RARE_PANTHER.png"
+      },
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 144,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      },
+      {
+        "uniqueName": "T2_AGARIC",
+        "name": "Arcane Agaric",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T2_AGARIC.png"
+      },
+      {
+        "uniqueName": "T7_ALCOHOL",
+        "name": "Corn Hooch",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T7_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1472,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1873,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 3073,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T7_POTION_MOB_RESET.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T7_POTION_REVIVE",
+    "uniqueName": "T7_POTION_REVIVE",
+    "name": "Major Gigantify Potion",
+    "tier": 7,
+    "category": "potion",
+    "subcategory": "combat",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 1020,
+    "ingredients": [
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T5_EGG",
+        "name": "Goose Eggs",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T5_EGG.png"
+      },
+      {
+        "uniqueName": "T7_ALCOHOL",
+        "name": "Corn Hooch",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T7_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1220,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1620,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 2821,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T7_POTION_REVIVE.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T7_POTION_SLOWFIELD",
+    "uniqueName": "T7_POTION_SLOWFIELD",
+    "name": "Major Sticky Potion",
+    "tier": 7,
+    "category": "potion",
+    "subcategory": "utility",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 1272,
+    "ingredients": [
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      },
+      {
+        "uniqueName": "T5_EGG",
+        "name": "Goose Eggs",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T5_EGG.png"
+      },
+      {
+        "uniqueName": "T7_ALCOHOL",
+        "name": "Corn Hooch",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T7_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1472,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1873,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 3073,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T7_POTION_SLOWFIELD.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T7_POTION_STONESKIN",
+    "uniqueName": "T7_POTION_STONESKIN",
+    "name": "Major Resistance Potion",
+    "tier": 7,
+    "category": "potion",
+    "subcategory": "defense",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 1272,
+    "ingredients": [
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T4_BURDOCK",
+        "name": "Crenellated Burdock",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T4_BURDOCK.png"
+      },
+      {
+        "uniqueName": "T6_MILK",
+        "name": "Sheep's Milk",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T6_MILK.png"
+      },
+      {
+        "uniqueName": "T7_ALCOHOL",
+        "name": "Corn Hooch",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T7_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1472,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1873,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 3073,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T7_POTION_STONESKIN.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T8_POTION_BERSERK",
+    "uniqueName": "T8_POTION_BERSERK",
+    "name": "Major Berserk Potion",
+    "tier": 8,
+    "category": "potion",
+    "subcategory": "combat",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 1307,
+    "ingredients": [
+      {
+        "uniqueName": "T7_ALCHEMY_RARE_WEREWOLF",
+        "name": "Excellent Werewolf Fangs",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T7_ALCHEMY_RARE_WEREWOLF.png"
+      },
+      {
+        "uniqueName": "T8_YARROW",
+        "name": "Ghoul Yarrow",
+        "count": 144,
+        "noRefund": false,
+        "icon": "T8_YARROW.png"
+      },
+      {
+        "uniqueName": "T3_COMFREY",
+        "name": "Brightleaf Comfrey",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T3_COMFREY.png"
+      },
+      {
+        "uniqueName": "T6_ALCOHOL",
+        "name": "Potato Schnapps",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T6_ALCOHOL.png"
+      },
+      {
+        "uniqueName": "T7_ALCOHOL",
+        "name": "Corn Hooch",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T7_ALCOHOL.png"
+      },
+      {
+        "uniqueName": "T8_ALCOHOL",
+        "name": "Pumpkin Moonshine",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T8_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1507,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1908,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 3108,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T8_POTION_BERSERK.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T8_POTION_CLEANSE",
+    "uniqueName": "T8_POTION_CLEANSE",
+    "name": "Invisibility Potion",
+    "tier": 8,
+    "category": "potion",
+    "subcategory": "utility",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 1272,
+    "ingredients": [
+      {
+        "uniqueName": "T8_YARROW",
+        "name": "Ghoul Yarrow",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T8_YARROW.png"
+      },
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T8_MILK",
+        "name": "Cow's Milk",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T8_MILK.png"
+      },
+      {
+        "uniqueName": "T8_ALCOHOL",
+        "name": "Pumpkin Moonshine",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T8_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1472,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1873,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 3073,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T8_POTION_CLEANSE.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T8_POTION_COOLDOWN",
+    "uniqueName": "T8_POTION_COOLDOWN",
+    "name": "Major Poison Potion",
+    "tier": 8,
+    "category": "potion",
+    "subcategory": "debuff",
+    "isRare": false,
+    "isIntermediate": false,
+    "amountCrafted": 5,
+    "nutrition": 0.0,
+    "baseFocus": 1272,
+    "ingredients": [
+      {
+        "uniqueName": "T8_YARROW",
+        "name": "Ghoul Yarrow",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T8_YARROW.png"
+      },
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T8_MILK",
+        "name": "Cow's Milk",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T8_MILK.png"
+      },
+      {
+        "uniqueName": "T8_ALCOHOL",
+        "name": "Pumpkin Moonshine",
+        "count": 18,
+        "noRefund": false,
+        "icon": "T8_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1472,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1873,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 3073,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 45,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T8_POTION_COOLDOWN.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T8_POTION_GATHER",
+    "uniqueName": "T8_POTION_GATHER",
+    "name": "Major Gathering Potion",
+    "tier": 8,
+    "category": "potion",
+    "subcategory": "gathering",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 1319,
+    "ingredients": [
+      {
+        "uniqueName": "T7_ALCHEMY_RARE_ELEMENTAL",
+        "name": "Excellent Runestone Tooth",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T7_ALCHEMY_RARE_ELEMENTAL.png"
+      },
+      {
+        "uniqueName": "T8_BUTTER",
+        "name": "Cow's Butter",
+        "count": 144,
+        "noRefund": false,
+        "icon": "T8_BUTTER.png"
+      },
+      {
+        "uniqueName": "T8_YARROW",
+        "name": "Ghoul Yarrow",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T8_YARROW.png"
+      },
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T6_FOXGLOVE",
+        "name": "Elusive Foxglove",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T6_FOXGLOVE.png"
+      },
+      {
+        "uniqueName": "T8_ALCOHOL",
+        "name": "Pumpkin Moonshine",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T8_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1520,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1920,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 3121,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T8_POTION_GATHER.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T8_POTION_LAVA",
+    "uniqueName": "T8_POTION_LAVA",
+    "name": "Major Hellfire Potion",
+    "tier": 8,
+    "category": "potion",
+    "subcategory": "debuff",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 1272,
+    "ingredients": [
+      {
+        "uniqueName": "T7_ALCHEMY_RARE_IMP",
+        "name": "Excellent Imp's Horn",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T7_ALCHEMY_RARE_IMP.png"
+      },
+      {
+        "uniqueName": "T8_MILK",
+        "name": "Cow's Milk",
+        "count": 144,
+        "noRefund": false,
+        "icon": "T8_MILK.png"
+      },
+      {
+        "uniqueName": "T8_YARROW",
+        "name": "Ghoul Yarrow",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T8_YARROW.png"
+      },
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T5_EGG",
+        "name": "Goose Eggs",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T5_EGG.png"
+      },
+      {
+        "uniqueName": "T8_ALCOHOL",
+        "name": "Pumpkin Moonshine",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T8_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1472,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1873,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 3073,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T8_POTION_LAVA.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T8_POTION_LIFEWARD",
+    "uniqueName": "T8_POTION_LIFEWARD",
+    "name": "Major Lifeward Potion",
+    "tier": 8,
+    "category": "potion",
+    "subcategory": "dragon",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 1296,
+    "ingredients": [
+      {
+        "uniqueName": "T8_ALCHEMY_RARE_DRAGONAREA",
+        "name": "Potent Dragon Blood",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T8_ALCHEMY_RARE_DRAGONAREA.png"
+      },
+      {
+        "uniqueName": "T8_YARROW",
+        "name": "Ghoul Yarrow",
+        "count": 144,
+        "noRefund": false,
+        "icon": "T8_YARROW.png"
+      },
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T5_TEASEL",
+        "name": "Dragon Teasel",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T5_TEASEL.png"
+      },
+      {
+        "uniqueName": "T2_AGARIC",
+        "name": "Arcane Agaric",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T2_AGARIC.png"
+      },
+      {
+        "uniqueName": "T8_ALCOHOL",
+        "name": "Pumpkin Moonshine",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T8_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1496,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1896,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 3097,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T8_POTION_LIFEWARD.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T8_POTION_TORNADO",
+    "uniqueName": "T8_POTION_TORNADO",
+    "name": "Major Tornado in a Bottle",
+    "tier": 8,
+    "category": "potion",
+    "subcategory": "utility",
+    "isRare": true,
+    "isIntermediate": false,
+    "amountCrafted": 10,
+    "nutrition": 0.0,
+    "baseFocus": 1296,
+    "ingredients": [
+      {
+        "uniqueName": "T7_ALCHEMY_RARE_EAGLE",
+        "name": "Excellent Dawnfeather",
+        "count": 1,
+        "noRefund": true,
+        "icon": "T7_ALCHEMY_RARE_EAGLE.png"
+      },
+      {
+        "uniqueName": "T8_YARROW",
+        "name": "Ghoul Yarrow",
+        "count": 144,
+        "noRefund": false,
+        "icon": "T8_YARROW.png"
+      },
+      {
+        "uniqueName": "T7_MULLEIN",
+        "name": "Firetouched Mullein",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T7_MULLEIN.png"
+      },
+      {
+        "uniqueName": "T7_ALCOHOL",
+        "name": "Corn Hooch",
+        "count": 72,
+        "noRefund": false,
+        "icon": "T7_ALCOHOL.png"
+      },
+      {
+        "uniqueName": "T5_EGG",
+        "name": "Goose Eggs",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T5_EGG.png"
+      },
+      {
+        "uniqueName": "T8_ALCOHOL",
+        "name": "Pumpkin Moonshine",
+        "count": 36,
+        "noRefund": false,
+        "icon": "T8_ALCOHOL.png"
+      }
+    ],
+    "enchantments": {
+      "1": {
+        "focus": 1496,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+          "name": "Basic Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png"
+        }
+      },
+      "2": {
+        "focus": 1896,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+          "name": "Refined Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png"
+        }
+      },
+      "3": {
+        "focus": 3097,
+        "extract": {
+          "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+          "name": "Pure Arcane Extract",
+          "count": 90,
+          "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png"
+        }
+      }
+    },
+    "maxEnchantment": 3,
+    "icon": "T8_POTION_TORNADO.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T6_ALCOHOL",
+    "uniqueName": "T6_ALCOHOL",
+    "name": "Potato Schnapps",
+    "tier": 6,
+    "category": "potion",
+    "subcategory": "distillery",
+    "isRare": false,
+    "isIntermediate": true,
+    "amountCrafted": 1,
+    "nutrition": 288,
+    "baseFocus": 38,
+    "ingredients": [
+      {
+        "uniqueName": "T6_POTATO",
+        "name": "Potatoes",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T6_POTATO.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T6_ALCOHOL.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T7_ALCOHOL",
+    "uniqueName": "T7_ALCOHOL",
+    "name": "Corn Hooch",
+    "tier": 7,
+    "category": "potion",
+    "subcategory": "distillery",
+    "isRare": false,
+    "isIntermediate": true,
+    "amountCrafted": 1,
+    "nutrition": 576,
+    "baseFocus": 38,
+    "ingredients": [
+      {
+        "uniqueName": "T7_CORN",
+        "name": "Bundle of Corn",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T7_CORN.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T7_ALCOHOL.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T8_ALCOHOL",
+    "uniqueName": "T8_ALCOHOL",
+    "name": "Pumpkin Moonshine",
+    "tier": 8,
+    "category": "potion",
+    "subcategory": "distillery",
+    "isRare": false,
+    "isIntermediate": true,
+    "amountCrafted": 1,
+    "nutrition": 1152,
+    "baseFocus": 38,
+    "ingredients": [
+      {
+        "uniqueName": "T8_PUMPKIN",
+        "name": "Pumpkin",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T8_PUMPKIN.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T8_ALCOHOL.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T1_ALCHEMY_EXTRACT_LEVEL1",
+    "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL1",
+    "name": "Basic Arcane Extract",
+    "tier": 1,
+    "category": "potion",
+    "subcategory": "distillery",
+    "isRare": false,
+    "isIntermediate": true,
+    "amountCrafted": 1,
+    "nutrition": 18,
+    "baseFocus": 0,
+    "ingredients": [
+      {
+        "uniqueName": "T1_ALCHEMY_COMMON",
+        "name": "Rare Animal Remains",
+        "count": 1,
+        "noRefund": false,
+        "icon": "T1_ALCHEMY_COMMON.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T1_ALCHEMY_EXTRACT_LEVEL1.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T1_ALCHEMY_EXTRACT_LEVEL2",
+    "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL2",
+    "name": "Refined Arcane Extract",
+    "tier": 1,
+    "category": "potion",
+    "subcategory": "distillery",
+    "isRare": false,
+    "isIntermediate": true,
+    "amountCrafted": 1,
+    "nutrition": 18,
+    "baseFocus": 0,
+    "ingredients": [
+      {
+        "uniqueName": "T1_ALCHEMY_COMMON",
+        "name": "Rare Animal Remains",
+        "count": 3,
+        "noRefund": false,
+        "icon": "T1_ALCHEMY_COMMON.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T1_ALCHEMY_EXTRACT_LEVEL2.png",
+    "bonusCity": "Brecilien"
+  },
+  {
+    "id": "T1_ALCHEMY_EXTRACT_LEVEL3",
+    "uniqueName": "T1_ALCHEMY_EXTRACT_LEVEL3",
+    "name": "Pure Arcane Extract",
+    "tier": 1,
+    "category": "potion",
+    "subcategory": "distillery",
+    "isRare": false,
+    "isIntermediate": true,
+    "amountCrafted": 1,
+    "nutrition": 18,
+    "baseFocus": 0,
+    "ingredients": [
+      {
+        "uniqueName": "T1_ALCHEMY_COMMON",
+        "name": "Rare Animal Remains",
+        "count": 9,
+        "noRefund": false,
+        "icon": "T1_ALCHEMY_COMMON.png"
+      }
+    ],
+    "enchantments": {},
+    "maxEnchantment": 0,
+    "icon": "T1_ALCHEMY_EXTRACT_LEVEL3.png",
+    "bonusCity": "Brecilien"
+  }
+]

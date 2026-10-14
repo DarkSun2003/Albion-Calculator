@@ -1,0 +1,225 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background-color: #07090e;
+  color: #e2e8f0;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, rgba(229, 193, 88, 0.06) 0%, transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 0% 100%, rgba(225, 29, 72, 0.03) 0%, transparent 40%);
+  min-height: 100vh;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #07090e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #232e47;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #57461e;
+}
+
+/* Albion Gold Leaf Title */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #fdf0cd 0%, #e5c158 50%, #997a23 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Material Tactile Themes */
+.mat-wood {
+  background: linear-gradient(145deg, rgba(69, 26, 3, 0.45) 0%, rgba(24, 14, 9, 0.95) 100%),
+              repeating-linear-gradient(45deg, rgba(180, 83, 9, 0.08) 0px, rgba(180, 83, 9, 0.08) 2px, transparent 2px, transparent 10px);
+  border-color: #78350f;
+}
+
+.mat-wood:hover, .mat-wood.active {
+  border-color: #d97706;
+  box-shadow: 0 0 20px -3px rgba(217, 119, 6, 0.35);
+}
+
+.mat-ore {
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%),
+              radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.15), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(245, 158, 11, 0.1), transparent 50%);
+  border-color: #334155;
+}
+
+.mat-ore:hover, .mat-ore.active {
+  border-color: #38bdf8;
+  box-shadow: 0 0 20px -3px rgba(56, 189, 248, 0.35);
+}
+
+.mat-hide {
+  background: linear-gradient(145deg, rgba(124, 45, 18, 0.4) 0%, rgba(35, 14, 7, 0.95) 100%),
+              radial-gradient(ellipse at 50% 50%, rgba(180, 83, 9, 0.1) 0%, transparent 70%);
+  border-color: #9a3412;
+}
+
+.mat-hide:hover, .mat-hide.active {
+  border-color: #f97316;
+  box-shadow: 0 0 20px -3px rgba(249, 115, 22, 0.35);
+}
+
+.mat-fiber {
+  background: linear-gradient(145deg, rgba(6, 78, 59, 0.4) 0%, rgba(10, 30, 24, 0.95) 100%),
+              repeating-linear-gradient(0deg, rgba(52, 211, 153, 0.05) 0px, rgba(52, 211, 153, 0.05) 2px, transparent 2px, transparent 6px),
+              repeating-linear-gradient(90deg, rgba(52, 211, 153, 0.05) 0px, rgba(52, 211, 153, 0.05) 2px, transparent 2px, transparent 6px);
+  border-color: #065f46;
+}
+
+.mat-fiber:hover, .mat-fiber.active {
+  border-color: #10b981;
+  box-shadow: 0 0 20px -3px rgba(16, 185, 129, 0.35);
+}
+
+.mat-stone {
+  background: linear-gradient(145deg, rgba(51, 65, 85, 0.5) 0%, rgba(15, 23, 42, 0.95) 100%),
+              radial-gradient(circle at 50% 30%, rgba(148, 163, 184, 0.12), transparent 60%);
+  border-color: #475569;
+}
+
+.mat-stone:hover, .mat-stone.active {
+  border-color: #94a3b8;
+  box-shadow: 0 0 20px -3px rgba(148, 163, 184, 0.35);
+}
+
+/* Authentic Albion Enchantment Glows */
+.ench-glow-0 {
+  border-color: #334155;
+}
+.ench-glow-1 {
+  border-color: #15803d;
+  box-shadow: 0 0 14px -2px rgba(34, 197, 94, 0.4);
+}
+.ench-glow-2 {
+  border-color: #0369a1;
+  box-shadow: 0 0 14px -2px rgba(14, 165, 233, 0.4);
+}
+.ench-glow-3 {
+  border-color: #7e22ce;
+  box-shadow: 0 0 14px -2px rgba(168, 85, 247, 0.45);
+}
+.ench-glow-4 {
+  border-color: #b45309;
+  box-shadow: 0 0 18px -2px rgba(245, 158, 11, 0.55);
+}
+
+/* Grimdark Artisan Forge Aesthetics */
+@keyframes forgeGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px -3px rgba(229, 193, 88, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  50% {
+    box-shadow: 0 0 25px -2px rgba(229, 193, 88, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+}
+
+@keyframes runePulse {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.02); }
+}
+
+@keyframes staggerFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-forge-glow {
+  animation: forgeGlow 3.5s ease-in-out infinite;
+}
+
+.animate-stagger-fade {
+  animation: staggerFade 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Tactile Tier Gems */
+.gem-t4 {
+  background: radial-gradient(circle at 35% 30%, #38bdf8 0%, #0284c7 60%, #0369a1 100%);
+  border: 1px solid #7dd3fc;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 0 10px rgba(56, 189, 248, 0.4);
+}
+
+.gem-t5 {
+  background: radial-gradient(circle at 35% 30%, #fb7185 0%, #e11d48 60%, #9f1239 100%);
+  border: 1px solid #fda4af;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 0 10px rgba(244, 63, 94, 0.4);
+}
+
+.gem-t6 {
+  background: radial-gradient(circle at 35% 30%, #fb923c 0%, #ea580c 60%, #9a3412 100%);
+  border: 1px solid #fed7aa;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 0 10px rgba(249, 115, 22, 0.4);
+}
+
+.gem-t7 {
+  background: radial-gradient(circle at 35% 30%, #facc15 0%, #ca8a04 60%, #854d0e 100%);
+  border: 1px solid #fef08a;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 0 12px rgba(234, 179, 8, 0.5);
+}
+
+.gem-t8 {
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #cbd5e1 50%, #64748b 100%);
+  border: 1px solid #f8fafc;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.8), 0 0 14px rgba(248, 250, 252, 0.6);
+}
+
+/* Grimdark Card & Panel Styling */
+.grimdark-surface {
+  background: linear-gradient(180deg, rgba(22, 28, 42, 0.85) 0%, rgba(13, 17, 26, 0.95) 100%);
+  border: 1px solid rgba(56, 70, 98, 0.5);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.grimdark-surface-gold {
+  background: linear-gradient(180deg, rgba(30, 26, 18, 0.9) 0%, rgba(16, 14, 10, 0.98) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.7), 0 0 15px -4px rgba(229, 193, 88, 0.15), inset 0 1px 0 rgba(255, 245, 200, 0.08);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-spin-slow {
+  animation: spinSlow 20s linear infinite;
+}
+
+

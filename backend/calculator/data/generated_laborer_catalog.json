@@ -1,0 +1,2887 @@
+{
+  "laborers": [
+    {
+      "id": "blacksmith_t2",
+      "professionId": "blacksmith",
+      "professionName": "Blacksmith (Warrior)",
+      "type": "crafting",
+      "code": "WARRIOR",
+      "tier": 2,
+      "fullJournalId": "T2_JOURNAL_WARRIOR_FULL",
+      "fullJournalName": "Novice Blacksmith's Journal (Full)",
+      "emptyJournalId": "T2_JOURNAL_WARRIOR_EMPTY",
+      "emptyJournalName": "Novice Blacksmith's Journal (Empty)",
+      "fameRequired": 300,
+      "baseYield100": 7.2,
+      "maxYield150": 10.8,
+      "returns": [
+        {
+          "item": "T2_METALBAR",
+          "name": "Copper Bar",
+          "icon": "T2_METALBAR.png",
+          "weight": 0.6,
+          "amount": 4.3
+        },
+        {
+          "item": "T2_PLANKS",
+          "name": "Birch Planks",
+          "icon": "T2_PLANKS.png",
+          "weight": 0.4,
+          "amount": 2.9
+        }
+      ],
+      "fullIcon": "T2_JOURNAL_WARRIOR_FULL.png",
+      "emptyIcon": "T2_JOURNAL_WARRIOR_EMPTY.png",
+      "desc": "Consumes Blacksmith journals from crafting Swords, Axes, Maces, Shields, and Plate Armor."
+    },
+    {
+      "id": "blacksmith_t3",
+      "professionId": "blacksmith",
+      "professionName": "Blacksmith (Warrior)",
+      "type": "crafting",
+      "code": "WARRIOR",
+      "tier": 3,
+      "fullJournalId": "T3_JOURNAL_WARRIOR_FULL",
+      "fullJournalName": "Journeyman Blacksmith's Journal (Full)",
+      "emptyJournalId": "T3_JOURNAL_WARRIOR_EMPTY",
+      "emptyJournalName": "Journeyman Blacksmith's Journal (Empty)",
+      "fameRequired": 600,
+      "baseYield100": 8.0,
+      "maxYield150": 12.0,
+      "returns": [
+        {
+          "item": "T3_METALBAR",
+          "name": "Bronze Bar",
+          "icon": "T3_METALBAR.png",
+          "weight": 0.6,
+          "amount": 4.8
+        },
+        {
+          "item": "T3_PLANKS",
+          "name": "Chestnut Planks",
+          "icon": "T3_PLANKS.png",
+          "weight": 0.4,
+          "amount": 3.2
+        }
+      ],
+      "fullIcon": "T3_JOURNAL_WARRIOR_FULL.png",
+      "emptyIcon": "T3_JOURNAL_WARRIOR_EMPTY.png",
+      "desc": "Consumes Blacksmith journals from crafting Swords, Axes, Maces, Shields, and Plate Armor."
+    },
+    {
+      "id": "blacksmith_t4",
+      "professionId": "blacksmith",
+      "professionName": "Blacksmith (Warrior)",
+      "type": "crafting",
+      "code": "WARRIOR",
+      "tier": 4,
+      "fullJournalId": "T4_JOURNAL_WARRIOR_FULL",
+      "fullJournalName": "Adept Blacksmith's Journal (Full)",
+      "emptyJournalId": "T4_JOURNAL_WARRIOR_EMPTY",
+      "emptyJournalName": "Adept Blacksmith's Journal (Empty)",
+      "fameRequired": 1200,
+      "baseYield100": 11.5,
+      "maxYield150": 17.2,
+      "returns": [
+        {
+          "item": "T4_METALBAR",
+          "name": "Steel Bar",
+          "icon": "T4_METALBAR.png",
+          "weight": 0.6,
+          "amount": 6.9
+        },
+        {
+          "item": "T4_PLANKS",
+          "name": "Pine Planks",
+          "icon": "T4_PLANKS.png",
+          "weight": 0.4,
+          "amount": 4.6
+        }
+      ],
+      "fullIcon": "T4_JOURNAL_WARRIOR_FULL.png",
+      "emptyIcon": "T4_JOURNAL_WARRIOR_EMPTY.png",
+      "desc": "Consumes Blacksmith journals from crafting Swords, Axes, Maces, Shields, and Plate Armor."
+    },
+    {
+      "id": "blacksmith_t5",
+      "professionId": "blacksmith",
+      "professionName": "Blacksmith (Warrior)",
+      "type": "crafting",
+      "code": "WARRIOR",
+      "tier": 5,
+      "fullJournalId": "T5_JOURNAL_WARRIOR_FULL",
+      "fullJournalName": "Expert Blacksmith's Journal (Full)",
+      "emptyJournalId": "T5_JOURNAL_WARRIOR_EMPTY",
+      "emptyJournalName": "Expert Blacksmith's Journal (Empty)",
+      "fameRequired": 2400,
+      "baseYield100": 14.4,
+      "maxYield150": 21.6,
+      "returns": [
+        {
+          "item": "T5_METALBAR",
+          "name": "Titanium Steel Bar",
+          "icon": "T5_METALBAR.png",
+          "weight": 0.6,
+          "amount": 8.6
+        },
+        {
+          "item": "T5_PLANKS",
+          "name": "Cedar Planks",
+          "icon": "T5_PLANKS.png",
+          "weight": 0.4,
+          "amount": 5.8
+        }
+      ],
+      "fullIcon": "T5_JOURNAL_WARRIOR_FULL.png",
+      "emptyIcon": "T5_JOURNAL_WARRIOR_EMPTY.png",
+      "desc": "Consumes Blacksmith journals from crafting Swords, Axes, Maces, Shields, and Plate Armor."
+    },
+    {
+      "id": "blacksmith_t6",
+      "professionId": "blacksmith",
+      "professionName": "Blacksmith (Warrior)",
+      "type": "crafting",
+      "code": "WARRIOR",
+      "tier": 6,
+      "fullJournalId": "T6_JOURNAL_WARRIOR_FULL",
+      "fullJournalName": "Master Blacksmith's Journal (Full)",
+      "emptyJournalId": "T6_JOURNAL_WARRIOR_EMPTY",
+      "emptyJournalName": "Master Blacksmith's Journal (Empty)",
+      "fameRequired": 4800,
+      "baseYield100": 17.6,
+      "maxYield150": 26.4,
+      "returns": [
+        {
+          "item": "T6_METALBAR",
+          "name": "Runite Steel Bar",
+          "icon": "T6_METALBAR.png",
+          "weight": 0.6,
+          "amount": 10.6
+        },
+        {
+          "item": "T6_PLANKS",
+          "name": "Bloodoak Planks",
+          "icon": "T6_PLANKS.png",
+          "weight": 0.4,
+          "amount": 7.0
+        }
+      ],
+      "fullIcon": "T6_JOURNAL_WARRIOR_FULL.png",
+      "emptyIcon": "T6_JOURNAL_WARRIOR_EMPTY.png",
+      "desc": "Consumes Blacksmith journals from crafting Swords, Axes, Maces, Shields, and Plate Armor."
+    },
+    {
+      "id": "blacksmith_t7",
+      "professionId": "blacksmith",
+      "professionName": "Blacksmith (Warrior)",
+      "type": "crafting",
+      "code": "WARRIOR",
+      "tier": 7,
+      "fullJournalId": "T7_JOURNAL_WARRIOR_FULL",
+      "fullJournalName": "Grandmaster Blacksmith's Journal (Full)",
+      "emptyJournalId": "T7_JOURNAL_WARRIOR_EMPTY",
+      "emptyJournalName": "Grandmaster Blacksmith's Journal (Empty)",
+      "fameRequired": 9600,
+      "baseYield100": 20.8,
+      "maxYield150": 31.2,
+      "returns": [
+        {
+          "item": "T7_METALBAR",
+          "name": "Meteorite Steel Bar",
+          "icon": "T7_METALBAR.png",
+          "weight": 0.6,
+          "amount": 12.5
+        },
+        {
+          "item": "T7_PLANKS",
+          "name": "Ashenbark Planks",
+          "icon": "T7_PLANKS.png",
+          "weight": 0.4,
+          "amount": 8.3
+        }
+      ],
+      "fullIcon": "T7_JOURNAL_WARRIOR_FULL.png",
+      "emptyIcon": "T7_JOURNAL_WARRIOR_EMPTY.png",
+      "desc": "Consumes Blacksmith journals from crafting Swords, Axes, Maces, Shields, and Plate Armor."
+    },
+    {
+      "id": "blacksmith_t8",
+      "professionId": "blacksmith",
+      "professionName": "Blacksmith (Warrior)",
+      "type": "crafting",
+      "code": "WARRIOR",
+      "tier": 8,
+      "fullJournalId": "T8_JOURNAL_WARRIOR_FULL",
+      "fullJournalName": "Elder Blacksmith's Journal (Full)",
+      "emptyJournalId": "T8_JOURNAL_WARRIOR_EMPTY",
+      "emptyJournalName": "Elder Blacksmith's Journal (Empty)",
+      "fameRequired": 19200,
+      "baseYield100": 24.0,
+      "maxYield150": 36.0,
+      "returns": [
+        {
+          "item": "T8_METALBAR",
+          "name": "Adamantium Steel Bar",
+          "icon": "T8_METALBAR.png",
+          "weight": 0.6,
+          "amount": 14.4
+        },
+        {
+          "item": "T8_PLANKS",
+          "name": "Whitewood Planks",
+          "icon": "T8_PLANKS.png",
+          "weight": 0.4,
+          "amount": 9.6
+        }
+      ],
+      "fullIcon": "T8_JOURNAL_WARRIOR_FULL.png",
+      "emptyIcon": "T8_JOURNAL_WARRIOR_EMPTY.png",
+      "desc": "Consumes Blacksmith journals from crafting Swords, Axes, Maces, Shields, and Plate Armor."
+    },
+    {
+      "id": "fletcher_t2",
+      "professionId": "fletcher",
+      "professionName": "Fletcher (Hunter)",
+      "type": "crafting",
+      "code": "HUNTER",
+      "tier": 2,
+      "fullJournalId": "T2_JOURNAL_HUNTER_FULL",
+      "fullJournalName": "Novice Fletcher's Journal (Full)",
+      "emptyJournalId": "T2_JOURNAL_HUNTER_EMPTY",
+      "emptyJournalName": "Novice Fletcher's Journal (Empty)",
+      "fameRequired": 300,
+      "baseYield100": 7.2,
+      "maxYield150": 10.8,
+      "returns": [
+        {
+          "item": "T2_LEATHER",
+          "name": "Stiff Leather",
+          "icon": "T2_LEATHER.png",
+          "weight": 0.6,
+          "amount": 4.3
+        },
+        {
+          "item": "T2_PLANKS",
+          "name": "Birch Planks",
+          "icon": "T2_PLANKS.png",
+          "weight": 0.4,
+          "amount": 2.9
+        }
+      ],
+      "fullIcon": "T2_JOURNAL_HUNTER_FULL.png",
+      "emptyIcon": "T2_JOURNAL_HUNTER_EMPTY.png",
+      "desc": "Consumes Fletcher journals from crafting Bows, Spears, Daggers, Torches, and Leather Armor."
+    },
+    {
+      "id": "fletcher_t3",
+      "professionId": "fletcher",
+      "professionName": "Fletcher (Hunter)",
+      "type": "crafting",
+      "code": "HUNTER",
+      "tier": 3,
+      "fullJournalId": "T3_JOURNAL_HUNTER_FULL",
+      "fullJournalName": "Journeyman Fletcher's Journal (Full)",
+      "emptyJournalId": "T3_JOURNAL_HUNTER_EMPTY",
+      "emptyJournalName": "Journeyman Fletcher's Journal (Empty)",
+      "fameRequired": 600,
+      "baseYield100": 8.0,
+      "maxYield150": 12.0,
+      "returns": [
+        {
+          "item": "T3_LEATHER",
+          "name": "Thick Leather",
+          "icon": "T3_LEATHER.png",
+          "weight": 0.6,
+          "amount": 4.8
+        },
+        {
+          "item": "T3_PLANKS",
+          "name": "Chestnut Planks",
+          "icon": "T3_PLANKS.png",
+          "weight": 0.4,
+          "amount": 3.2
+        }
+      ],
+      "fullIcon": "T3_JOURNAL_HUNTER_FULL.png",
+      "emptyIcon": "T3_JOURNAL_HUNTER_EMPTY.png",
+      "desc": "Consumes Fletcher journals from crafting Bows, Spears, Daggers, Torches, and Leather Armor."
+    },
+    {
+      "id": "fletcher_t4",
+      "professionId": "fletcher",
+      "professionName": "Fletcher (Hunter)",
+      "type": "crafting",
+      "code": "HUNTER",
+      "tier": 4,
+      "fullJournalId": "T4_JOURNAL_HUNTER_FULL",
+      "fullJournalName": "Adept Fletcher's Journal (Full)",
+      "emptyJournalId": "T4_JOURNAL_HUNTER_EMPTY",
+      "emptyJournalName": "Adept Fletcher's Journal (Empty)",
+      "fameRequired": 1200,
+      "baseYield100": 11.5,
+      "maxYield150": 17.2,
+      "returns": [
+        {
+          "item": "T4_LEATHER",
+          "name": "Worked Leather",
+          "icon": "T4_LEATHER.png",
+          "weight": 0.6,
+          "amount": 6.9
+        },
+        {
+          "item": "T4_PLANKS",
+          "name": "Pine Planks",
+          "icon": "T4_PLANKS.png",
+          "weight": 0.4,
+          "amount": 4.6
+        }
+      ],
+      "fullIcon": "T4_JOURNAL_HUNTER_FULL.png",
+      "emptyIcon": "T4_JOURNAL_HUNTER_EMPTY.png",
+      "desc": "Consumes Fletcher journals from crafting Bows, Spears, Daggers, Torches, and Leather Armor."
+    },
+    {
+      "id": "fletcher_t5",
+      "professionId": "fletcher",
+      "professionName": "Fletcher (Hunter)",
+      "type": "crafting",
+      "code": "HUNTER",
+      "tier": 5,
+      "fullJournalId": "T5_JOURNAL_HUNTER_FULL",
+      "fullJournalName": "Expert Fletcher's Journal (Full)",
+      "emptyJournalId": "T5_JOURNAL_HUNTER_EMPTY",
+      "emptyJournalName": "Expert Fletcher's Journal (Empty)",
+      "fameRequired": 2400,
+      "baseYield100": 14.4,
+      "maxYield150": 21.6,
+      "returns": [
+        {
+          "item": "T5_LEATHER",
+          "name": "Cured Leather",
+          "icon": "T5_LEATHER.png",
+          "weight": 0.6,
+          "amount": 8.6
+        },
+        {
+          "item": "T5_PLANKS",
+          "name": "Cedar Planks",
+          "icon": "T5_PLANKS.png",
+          "weight": 0.4,
+          "amount": 5.8
+        }
+      ],
+      "fullIcon": "T5_JOURNAL_HUNTER_FULL.png",
+      "emptyIcon": "T5_JOURNAL_HUNTER_EMPTY.png",
+      "desc": "Consumes Fletcher journals from crafting Bows, Spears, Daggers, Torches, and Leather Armor."
+    },
+    {
+      "id": "fletcher_t6",
+      "professionId": "fletcher",
+      "professionName": "Fletcher (Hunter)",
+      "type": "crafting",
+      "code": "HUNTER",
+      "tier": 6,
+      "fullJournalId": "T6_JOURNAL_HUNTER_FULL",
+      "fullJournalName": "Master Fletcher's Journal (Full)",
+      "emptyJournalId": "T6_JOURNAL_HUNTER_EMPTY",
+      "emptyJournalName": "Master Fletcher's Journal (Empty)",
+      "fameRequired": 4800,
+      "baseYield100": 17.6,
+      "maxYield150": 26.4,
+      "returns": [
+        {
+          "item": "T6_LEATHER",
+          "name": "Hardened Leather",
+          "icon": "T6_LEATHER.png",
+          "weight": 0.6,
+          "amount": 10.6
+        },
+        {
+          "item": "T6_PLANKS",
+          "name": "Bloodoak Planks",
+          "icon": "T6_PLANKS.png",
+          "weight": 0.4,
+          "amount": 7.0
+        }
+      ],
+      "fullIcon": "T6_JOURNAL_HUNTER_FULL.png",
+      "emptyIcon": "T6_JOURNAL_HUNTER_EMPTY.png",
+      "desc": "Consumes Fletcher journals from crafting Bows, Spears, Daggers, Torches, and Leather Armor."
+    },
+    {
+      "id": "fletcher_t7",
+      "professionId": "fletcher",
+      "professionName": "Fletcher (Hunter)",
+      "type": "crafting",
+      "code": "HUNTER",
+      "tier": 7,
+      "fullJournalId": "T7_JOURNAL_HUNTER_FULL",
+      "fullJournalName": "Grandmaster Fletcher's Journal (Full)",
+      "emptyJournalId": "T7_JOURNAL_HUNTER_EMPTY",
+      "emptyJournalName": "Grandmaster Fletcher's Journal (Empty)",
+      "fameRequired": 9600,
+      "baseYield100": 20.8,
+      "maxYield150": 31.2,
+      "returns": [
+        {
+          "item": "T7_LEATHER",
+          "name": "Reinforced Leather",
+          "icon": "T7_LEATHER.png",
+          "weight": 0.6,
+          "amount": 12.5
+        },
+        {
+          "item": "T7_PLANKS",
+          "name": "Ashenbark Planks",
+          "icon": "T7_PLANKS.png",
+          "weight": 0.4,
+          "amount": 8.3
+        }
+      ],
+      "fullIcon": "T7_JOURNAL_HUNTER_FULL.png",
+      "emptyIcon": "T7_JOURNAL_HUNTER_EMPTY.png",
+      "desc": "Consumes Fletcher journals from crafting Bows, Spears, Daggers, Torches, and Leather Armor."
+    },
+    {
+      "id": "fletcher_t8",
+      "professionId": "fletcher",
+      "professionName": "Fletcher (Hunter)",
+      "type": "crafting",
+      "code": "HUNTER",
+      "tier": 8,
+      "fullJournalId": "T8_JOURNAL_HUNTER_FULL",
+      "fullJournalName": "Elder Fletcher's Journal (Full)",
+      "emptyJournalId": "T8_JOURNAL_HUNTER_EMPTY",
+      "emptyJournalName": "Elder Fletcher's Journal (Empty)",
+      "fameRequired": 19200,
+      "baseYield100": 24.0,
+      "maxYield150": 36.0,
+      "returns": [
+        {
+          "item": "T8_LEATHER",
+          "name": "Fortified Leather",
+          "icon": "T8_LEATHER.png",
+          "weight": 0.6,
+          "amount": 14.4
+        },
+        {
+          "item": "T8_PLANKS",
+          "name": "Whitewood Planks",
+          "icon": "T8_PLANKS.png",
+          "weight": 0.4,
+          "amount": 9.6
+        }
+      ],
+      "fullIcon": "T8_JOURNAL_HUNTER_FULL.png",
+      "emptyIcon": "T8_JOURNAL_HUNTER_EMPTY.png",
+      "desc": "Consumes Fletcher journals from crafting Bows, Spears, Daggers, Torches, and Leather Armor."
+    },
+    {
+      "id": "imbuer_t2",
+      "professionId": "imbuer",
+      "professionName": "Imbuer (Mage)",
+      "type": "crafting",
+      "code": "MAGE",
+      "tier": 2,
+      "fullJournalId": "T2_JOURNAL_MAGE_FULL",
+      "fullJournalName": "Novice Imbuer's Journal (Full)",
+      "emptyJournalId": "T2_JOURNAL_MAGE_EMPTY",
+      "emptyJournalName": "Novice Imbuer's Journal (Empty)",
+      "fameRequired": 300,
+      "baseYield100": 7.2,
+      "maxYield150": 10.8,
+      "returns": [
+        {
+          "item": "T2_CLOTH",
+          "name": "Simple Cloth",
+          "icon": "T2_CLOTH.png",
+          "weight": 0.6,
+          "amount": 4.3
+        },
+        {
+          "item": "T2_METALBAR",
+          "name": "Copper Bar",
+          "icon": "T2_METALBAR.png",
+          "weight": 0.4,
+          "amount": 2.9
+        }
+      ],
+      "fullIcon": "T2_JOURNAL_MAGE_FULL.png",
+      "emptyIcon": "T2_JOURNAL_MAGE_EMPTY.png",
+      "desc": "Consumes Imbuer journals from crafting Fire, Holy, Frost, Arcane staffs, Tomes, and Cloth Armor."
+    },
+    {
+      "id": "imbuer_t3",
+      "professionId": "imbuer",
+      "professionName": "Imbuer (Mage)",
+      "type": "crafting",
+      "code": "MAGE",
+      "tier": 3,
+      "fullJournalId": "T3_JOURNAL_MAGE_FULL",
+      "fullJournalName": "Journeyman Imbuer's Journal (Full)",
+      "emptyJournalId": "T3_JOURNAL_MAGE_EMPTY",
+      "emptyJournalName": "Journeyman Imbuer's Journal (Empty)",
+      "fameRequired": 600,
+      "baseYield100": 8.0,
+      "maxYield150": 12.0,
+      "returns": [
+        {
+          "item": "T3_CLOTH",
+          "name": "Neat Cloth",
+          "icon": "T3_CLOTH.png",
+          "weight": 0.6,
+          "amount": 4.8
+        },
+        {
+          "item": "T3_METALBAR",
+          "name": "Bronze Bar",
+          "icon": "T3_METALBAR.png",
+          "weight": 0.4,
+          "amount": 3.2
+        }
+      ],
+      "fullIcon": "T3_JOURNAL_MAGE_FULL.png",
+      "emptyIcon": "T3_JOURNAL_MAGE_EMPTY.png",
+      "desc": "Consumes Imbuer journals from crafting Fire, Holy, Frost, Arcane staffs, Tomes, and Cloth Armor."
+    },
+    {
+      "id": "imbuer_t4",
+      "professionId": "imbuer",
+      "professionName": "Imbuer (Mage)",
+      "type": "crafting",
+      "code": "MAGE",
+      "tier": 4,
+      "fullJournalId": "T4_JOURNAL_MAGE_FULL",
+      "fullJournalName": "Adept Imbuer's Journal (Full)",
+      "emptyJournalId": "T4_JOURNAL_MAGE_EMPTY",
+      "emptyJournalName": "Adept Imbuer's Journal (Empty)",
+      "fameRequired": 1200,
+      "baseYield100": 11.5,
+      "maxYield150": 17.2,
+      "returns": [
+        {
+          "item": "T4_CLOTH",
+          "name": "Fine Cloth",
+          "icon": "T4_CLOTH.png",
+          "weight": 0.6,
+          "amount": 6.9
+        },
+        {
+          "item": "T4_METALBAR",
+          "name": "Steel Bar",
+          "icon": "T4_METALBAR.png",
+          "weight": 0.4,
+          "amount": 4.6
+        }
+      ],
+      "fullIcon": "T4_JOURNAL_MAGE_FULL.png",
+      "emptyIcon": "T4_JOURNAL_MAGE_EMPTY.png",
+      "desc": "Consumes Imbuer journals from crafting Fire, Holy, Frost, Arcane staffs, Tomes, and Cloth Armor."
+    },
+    {
+      "id": "imbuer_t5",
+      "professionId": "imbuer",
+      "professionName": "Imbuer (Mage)",
+      "type": "crafting",
+      "code": "MAGE",
+      "tier": 5,
+      "fullJournalId": "T5_JOURNAL_MAGE_FULL",
+      "fullJournalName": "Expert Imbuer's Journal (Full)",
+      "emptyJournalId": "T5_JOURNAL_MAGE_EMPTY",
+      "emptyJournalName": "Expert Imbuer's Journal (Empty)",
+      "fameRequired": 2400,
+      "baseYield100": 14.4,
+      "maxYield150": 21.6,
+      "returns": [
+        {
+          "item": "T5_CLOTH",
+          "name": "Ornate Cloth",
+          "icon": "T5_CLOTH.png",
+          "weight": 0.6,
+          "amount": 8.6
+        },
+        {
+          "item": "T5_METALBAR",
+          "name": "Titanium Steel Bar",
+          "icon": "T5_METALBAR.png",
+          "weight": 0.4,
+          "amount": 5.8
+        }
+      ],
+      "fullIcon": "T5_JOURNAL_MAGE_FULL.png",
+      "emptyIcon": "T5_JOURNAL_MAGE_EMPTY.png",
+      "desc": "Consumes Imbuer journals from crafting Fire, Holy, Frost, Arcane staffs, Tomes, and Cloth Armor."
+    },
+    {
+      "id": "imbuer_t6",
+      "professionId": "imbuer",
+      "professionName": "Imbuer (Mage)",
+      "type": "crafting",
+      "code": "MAGE",
+      "tier": 6,
+      "fullJournalId": "T6_JOURNAL_MAGE_FULL",
+      "fullJournalName": "Master Imbuer's Journal (Full)",
+      "emptyJournalId": "T6_JOURNAL_MAGE_EMPTY",
+      "emptyJournalName": "Master Imbuer's Journal (Empty)",
+      "fameRequired": 4800,
+      "baseYield100": 17.6,
+      "maxYield150": 26.4,
+      "returns": [
+        {
+          "item": "T6_CLOTH",
+          "name": "Lavish Cloth",
+          "icon": "T6_CLOTH.png",
+          "weight": 0.6,
+          "amount": 10.6
+        },
+        {
+          "item": "T6_METALBAR",
+          "name": "Runite Steel Bar",
+          "icon": "T6_METALBAR.png",
+          "weight": 0.4,
+          "amount": 7.0
+        }
+      ],
+      "fullIcon": "T6_JOURNAL_MAGE_FULL.png",
+      "emptyIcon": "T6_JOURNAL_MAGE_EMPTY.png",
+      "desc": "Consumes Imbuer journals from crafting Fire, Holy, Frost, Arcane staffs, Tomes, and Cloth Armor."
+    },
+    {
+      "id": "imbuer_t7",
+      "professionId": "imbuer",
+      "professionName": "Imbuer (Mage)",
+      "type": "crafting",
+      "code": "MAGE",
+      "tier": 7,
+      "fullJournalId": "T7_JOURNAL_MAGE_FULL",
+      "fullJournalName": "Grandmaster Imbuer's Journal (Full)",
+      "emptyJournalId": "T7_JOURNAL_MAGE_EMPTY",
+      "emptyJournalName": "Grandmaster Imbuer's Journal (Empty)",
+      "fameRequired": 9600,
+      "baseYield100": 20.8,
+      "maxYield150": 31.2,
+      "returns": [
+        {
+          "item": "T7_CLOTH",
+          "name": "Opulent Cloth",
+          "icon": "T7_CLOTH.png",
+          "weight": 0.6,
+          "amount": 12.5
+        },
+        {
+          "item": "T7_METALBAR",
+          "name": "Meteorite Steel Bar",
+          "icon": "T7_METALBAR.png",
+          "weight": 0.4,
+          "amount": 8.3
+        }
+      ],
+      "fullIcon": "T7_JOURNAL_MAGE_FULL.png",
+      "emptyIcon": "T7_JOURNAL_MAGE_EMPTY.png",
+      "desc": "Consumes Imbuer journals from crafting Fire, Holy, Frost, Arcane staffs, Tomes, and Cloth Armor."
+    },
+    {
+      "id": "imbuer_t8",
+      "professionId": "imbuer",
+      "professionName": "Imbuer (Mage)",
+      "type": "crafting",
+      "code": "MAGE",
+      "tier": 8,
+      "fullJournalId": "T8_JOURNAL_MAGE_FULL",
+      "fullJournalName": "Elder Imbuer's Journal (Full)",
+      "emptyJournalId": "T8_JOURNAL_MAGE_EMPTY",
+      "emptyJournalName": "Elder Imbuer's Journal (Empty)",
+      "fameRequired": 19200,
+      "baseYield100": 24.0,
+      "maxYield150": 36.0,
+      "returns": [
+        {
+          "item": "T8_CLOTH",
+          "name": "Baroque Cloth",
+          "icon": "T8_CLOTH.png",
+          "weight": 0.6,
+          "amount": 14.4
+        },
+        {
+          "item": "T8_METALBAR",
+          "name": "Adamantium Steel Bar",
+          "icon": "T8_METALBAR.png",
+          "weight": 0.4,
+          "amount": 9.6
+        }
+      ],
+      "fullIcon": "T8_JOURNAL_MAGE_FULL.png",
+      "emptyIcon": "T8_JOURNAL_MAGE_EMPTY.png",
+      "desc": "Consumes Imbuer journals from crafting Fire, Holy, Frost, Arcane staffs, Tomes, and Cloth Armor."
+    },
+    {
+      "id": "tinker_t2",
+      "professionId": "tinker",
+      "professionName": "Tinker (Toolmaker)",
+      "type": "crafting",
+      "code": "TOOLMAKER",
+      "tier": 2,
+      "fullJournalId": "T2_JOURNAL_TOOLMAKER_FULL",
+      "fullJournalName": "Novice Tinker's Journal (Full)",
+      "emptyJournalId": "T2_JOURNAL_TOOLMAKER_EMPTY",
+      "emptyJournalName": "Novice Tinker's Journal (Empty)",
+      "fameRequired": 300,
+      "baseYield100": 7.2,
+      "maxYield150": 10.8,
+      "returns": [
+        {
+          "item": "T2_PLANKS",
+          "name": "Birch Planks",
+          "icon": "T2_PLANKS.png",
+          "weight": 0.35,
+          "amount": 2.5
+        },
+        {
+          "item": "T2_METALBAR",
+          "name": "Copper Bar",
+          "icon": "T2_METALBAR.png",
+          "weight": 0.35,
+          "amount": 2.5
+        },
+        {
+          "item": "T2_CLOTH",
+          "name": "Simple Cloth",
+          "icon": "T2_CLOTH.png",
+          "weight": 0.3,
+          "amount": 2.2
+        }
+      ],
+      "fullIcon": "T2_JOURNAL_TOOLMAKER_FULL.png",
+      "emptyIcon": "T2_JOURNAL_TOOLMAKER_EMPTY.png",
+      "desc": "Consumes Tinker journals from crafting Tools, Capes, Bags, and Furniture."
+    },
+    {
+      "id": "tinker_t3",
+      "professionId": "tinker",
+      "professionName": "Tinker (Toolmaker)",
+      "type": "crafting",
+      "code": "TOOLMAKER",
+      "tier": 3,
+      "fullJournalId": "T3_JOURNAL_TOOLMAKER_FULL",
+      "fullJournalName": "Journeyman Tinker's Journal (Full)",
+      "emptyJournalId": "T3_JOURNAL_TOOLMAKER_EMPTY",
+      "emptyJournalName": "Journeyman Tinker's Journal (Empty)",
+      "fameRequired": 600,
+      "baseYield100": 8.0,
+      "maxYield150": 12.0,
+      "returns": [
+        {
+          "item": "T3_PLANKS",
+          "name": "Chestnut Planks",
+          "icon": "T3_PLANKS.png",
+          "weight": 0.35,
+          "amount": 2.8
+        },
+        {
+          "item": "T3_METALBAR",
+          "name": "Bronze Bar",
+          "icon": "T3_METALBAR.png",
+          "weight": 0.35,
+          "amount": 2.8
+        },
+        {
+          "item": "T3_CLOTH",
+          "name": "Neat Cloth",
+          "icon": "T3_CLOTH.png",
+          "weight": 0.3,
+          "amount": 2.4
+        }
+      ],
+      "fullIcon": "T3_JOURNAL_TOOLMAKER_FULL.png",
+      "emptyIcon": "T3_JOURNAL_TOOLMAKER_EMPTY.png",
+      "desc": "Consumes Tinker journals from crafting Tools, Capes, Bags, and Furniture."
+    },
+    {
+      "id": "tinker_t4",
+      "professionId": "tinker",
+      "professionName": "Tinker (Toolmaker)",
+      "type": "crafting",
+      "code": "TOOLMAKER",
+      "tier": 4,
+      "fullJournalId": "T4_JOURNAL_TOOLMAKER_FULL",
+      "fullJournalName": "Adept Tinker's Journal (Full)",
+      "emptyJournalId": "T4_JOURNAL_TOOLMAKER_EMPTY",
+      "emptyJournalName": "Adept Tinker's Journal (Empty)",
+      "fameRequired": 1200,
+      "baseYield100": 11.5,
+      "maxYield150": 17.2,
+      "returns": [
+        {
+          "item": "T4_PLANKS",
+          "name": "Pine Planks",
+          "icon": "T4_PLANKS.png",
+          "weight": 0.35,
+          "amount": 4.0
+        },
+        {
+          "item": "T4_METALBAR",
+          "name": "Steel Bar",
+          "icon": "T4_METALBAR.png",
+          "weight": 0.35,
+          "amount": 4.0
+        },
+        {
+          "item": "T4_CLOTH",
+          "name": "Fine Cloth",
+          "icon": "T4_CLOTH.png",
+          "weight": 0.3,
+          "amount": 3.4
+        }
+      ],
+      "fullIcon": "T4_JOURNAL_TOOLMAKER_FULL.png",
+      "emptyIcon": "T4_JOURNAL_TOOLMAKER_EMPTY.png",
+      "desc": "Consumes Tinker journals from crafting Tools, Capes, Bags, and Furniture."
+    },
+    {
+      "id": "tinker_t5",
+      "professionId": "tinker",
+      "professionName": "Tinker (Toolmaker)",
+      "type": "crafting",
+      "code": "TOOLMAKER",
+      "tier": 5,
+      "fullJournalId": "T5_JOURNAL_TOOLMAKER_FULL",
+      "fullJournalName": "Expert Tinker's Journal (Full)",
+      "emptyJournalId": "T5_JOURNAL_TOOLMAKER_EMPTY",
+      "emptyJournalName": "Expert Tinker's Journal (Empty)",
+      "fameRequired": 2400,
+      "baseYield100": 14.4,
+      "maxYield150": 21.6,
+      "returns": [
+        {
+          "item": "T5_PLANKS",
+          "name": "Cedar Planks",
+          "icon": "T5_PLANKS.png",
+          "weight": 0.35,
+          "amount": 5.0
+        },
+        {
+          "item": "T5_METALBAR",
+          "name": "Titanium Steel Bar",
+          "icon": "T5_METALBAR.png",
+          "weight": 0.35,
+          "amount": 5.0
+        },
+        {
+          "item": "T5_CLOTH",
+          "name": "Ornate Cloth",
+          "icon": "T5_CLOTH.png",
+          "weight": 0.3,
+          "amount": 4.3
+        }
+      ],
+      "fullIcon": "T5_JOURNAL_TOOLMAKER_FULL.png",
+      "emptyIcon": "T5_JOURNAL_TOOLMAKER_EMPTY.png",
+      "desc": "Consumes Tinker journals from crafting Tools, Capes, Bags, and Furniture."
+    },
+    {
+      "id": "tinker_t6",
+      "professionId": "tinker",
+      "professionName": "Tinker (Toolmaker)",
+      "type": "crafting",
+      "code": "TOOLMAKER",
+      "tier": 6,
+      "fullJournalId": "T6_JOURNAL_TOOLMAKER_FULL",
+      "fullJournalName": "Master Tinker's Journal (Full)",
+      "emptyJournalId": "T6_JOURNAL_TOOLMAKER_EMPTY",
+      "emptyJournalName": "Master Tinker's Journal (Empty)",
+      "fameRequired": 4800,
+      "baseYield100": 17.6,
+      "maxYield150": 26.4,
+      "returns": [
+        {
+          "item": "T6_PLANKS",
+          "name": "Bloodoak Planks",
+          "icon": "T6_PLANKS.png",
+          "weight": 0.35,
+          "amount": 6.2
+        },
+        {
+          "item": "T6_METALBAR",
+          "name": "Runite Steel Bar",
+          "icon": "T6_METALBAR.png",
+          "weight": 0.35,
+          "amount": 6.2
+        },
+        {
+          "item": "T6_CLOTH",
+          "name": "Lavish Cloth",
+          "icon": "T6_CLOTH.png",
+          "weight": 0.3,
+          "amount": 5.3
+        }
+      ],
+      "fullIcon": "T6_JOURNAL_TOOLMAKER_FULL.png",
+      "emptyIcon": "T6_JOURNAL_TOOLMAKER_EMPTY.png",
+      "desc": "Consumes Tinker journals from crafting Tools, Capes, Bags, and Furniture."
+    },
+    {
+      "id": "tinker_t7",
+      "professionId": "tinker",
+      "professionName": "Tinker (Toolmaker)",
+      "type": "crafting",
+      "code": "TOOLMAKER",
+      "tier": 7,
+      "fullJournalId": "T7_JOURNAL_TOOLMAKER_FULL",
+      "fullJournalName": "Grandmaster Tinker's Journal (Full)",
+      "emptyJournalId": "T7_JOURNAL_TOOLMAKER_EMPTY",
+      "emptyJournalName": "Grandmaster Tinker's Journal (Empty)",
+      "fameRequired": 9600,
+      "baseYield100": 20.8,
+      "maxYield150": 31.2,
+      "returns": [
+        {
+          "item": "T7_PLANKS",
+          "name": "Ashenbark Planks",
+          "icon": "T7_PLANKS.png",
+          "weight": 0.35,
+          "amount": 7.3
+        },
+        {
+          "item": "T7_METALBAR",
+          "name": "Meteorite Steel Bar",
+          "icon": "T7_METALBAR.png",
+          "weight": 0.35,
+          "amount": 7.3
+        },
+        {
+          "item": "T7_CLOTH",
+          "name": "Opulent Cloth",
+          "icon": "T7_CLOTH.png",
+          "weight": 0.3,
+          "amount": 6.2
+        }
+      ],
+      "fullIcon": "T7_JOURNAL_TOOLMAKER_FULL.png",
+      "emptyIcon": "T7_JOURNAL_TOOLMAKER_EMPTY.png",
+      "desc": "Consumes Tinker journals from crafting Tools, Capes, Bags, and Furniture."
+    },
+    {
+      "id": "tinker_t8",
+      "professionId": "tinker",
+      "professionName": "Tinker (Toolmaker)",
+      "type": "crafting",
+      "code": "TOOLMAKER",
+      "tier": 8,
+      "fullJournalId": "T8_JOURNAL_TOOLMAKER_FULL",
+      "fullJournalName": "Elder Tinker's Journal (Full)",
+      "emptyJournalId": "T8_JOURNAL_TOOLMAKER_EMPTY",
+      "emptyJournalName": "Elder Tinker's Journal (Empty)",
+      "fameRequired": 19200,
+      "baseYield100": 24.0,
+      "maxYield150": 36.0,
+      "returns": [
+        {
+          "item": "T8_PLANKS",
+          "name": "Whitewood Planks",
+          "icon": "T8_PLANKS.png",
+          "weight": 0.35,
+          "amount": 8.4
+        },
+        {
+          "item": "T8_METALBAR",
+          "name": "Adamantium Steel Bar",
+          "icon": "T8_METALBAR.png",
+          "weight": 0.35,
+          "amount": 8.4
+        },
+        {
+          "item": "T8_CLOTH",
+          "name": "Baroque Cloth",
+          "icon": "T8_CLOTH.png",
+          "weight": 0.3,
+          "amount": 7.2
+        }
+      ],
+      "fullIcon": "T8_JOURNAL_TOOLMAKER_FULL.png",
+      "emptyIcon": "T8_JOURNAL_TOOLMAKER_EMPTY.png",
+      "desc": "Consumes Tinker journals from crafting Tools, Capes, Bags, and Furniture."
+    },
+    {
+      "id": "lumberjack_t2",
+      "professionId": "lumberjack",
+      "professionName": "Lumberjack (Woodcutter)",
+      "type": "gathering",
+      "code": "WOOD",
+      "tier": 2,
+      "fullJournalId": "T2_JOURNAL_WOOD_FULL",
+      "fullJournalName": "Novice Lumberjack's Journal (Full)",
+      "emptyJournalId": "T2_JOURNAL_WOOD_EMPTY",
+      "emptyJournalName": "Novice Lumberjack's Journal (Empty)",
+      "fameRequired": 200,
+      "baseYield100": 24.0,
+      "maxYield150": 36.0,
+      "returns": [
+        {
+          "item": "T2_WOOD",
+          "name": "Birch Logs",
+          "icon": "T2_WOOD.png",
+          "weight": 0.75,
+          "amount": 18.0
+        },
+        {
+          "item": "T2_PLANKS",
+          "name": "Birch Planks",
+          "icon": "T2_PLANKS.png",
+          "weight": 0.25,
+          "amount": 6.0
+        }
+      ],
+      "fullIcon": "T2_JOURNAL_WOOD_FULL.png",
+      "emptyIcon": "T2_JOURNAL_WOOD_EMPTY.png",
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes."
+    },
+    {
+      "id": "lumberjack_t3",
+      "professionId": "lumberjack",
+      "professionName": "Lumberjack (Woodcutter)",
+      "type": "gathering",
+      "code": "WOOD",
+      "tier": 3,
+      "fullJournalId": "T3_JOURNAL_WOOD_FULL",
+      "fullJournalName": "Journeyman Lumberjack's Journal (Full)",
+      "emptyJournalId": "T3_JOURNAL_WOOD_EMPTY",
+      "emptyJournalName": "Journeyman Lumberjack's Journal (Empty)",
+      "fameRequired": 450,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
+      "returns": [
+        {
+          "item": "T3_WOOD",
+          "name": "Chestnut Logs",
+          "icon": "T3_WOOD.png",
+          "weight": 0.75,
+          "amount": 24.0
+        },
+        {
+          "item": "T3_PLANKS",
+          "name": "Chestnut Planks",
+          "icon": "T3_PLANKS.png",
+          "weight": 0.25,
+          "amount": 8.0
+        }
+      ],
+      "fullIcon": "T3_JOURNAL_WOOD_FULL.png",
+      "emptyIcon": "T3_JOURNAL_WOOD_EMPTY.png",
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes."
+    },
+    {
+      "id": "lumberjack_t4",
+      "professionId": "lumberjack",
+      "professionName": "Lumberjack (Woodcutter)",
+      "type": "gathering",
+      "code": "WOOD",
+      "tier": 4,
+      "fullJournalId": "T4_JOURNAL_WOOD_FULL",
+      "fullJournalName": "Adept Lumberjack's Journal (Full)",
+      "emptyJournalId": "T4_JOURNAL_WOOD_EMPTY",
+      "emptyJournalName": "Adept Lumberjack's Journal (Empty)",
+      "fameRequired": 900,
+      "baseYield100": 48.0,
+      "maxYield150": 72.0,
+      "returns": [
+        {
+          "item": "T4_WOOD",
+          "name": "Pine Logs",
+          "icon": "T4_WOOD.png",
+          "weight": 0.75,
+          "amount": 36.0
+        },
+        {
+          "item": "T4_PLANKS",
+          "name": "Pine Planks",
+          "icon": "T4_PLANKS.png",
+          "weight": 0.25,
+          "amount": 12.0
+        }
+      ],
+      "fullIcon": "T4_JOURNAL_WOOD_FULL.png",
+      "emptyIcon": "T4_JOURNAL_WOOD_EMPTY.png",
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes."
+    },
+    {
+      "id": "lumberjack_t5",
+      "professionId": "lumberjack",
+      "professionName": "Lumberjack (Woodcutter)",
+      "type": "gathering",
+      "code": "WOOD",
+      "tier": 5,
+      "fullJournalId": "T5_JOURNAL_WOOD_FULL",
+      "fullJournalName": "Expert Lumberjack's Journal (Full)",
+      "emptyJournalId": "T5_JOURNAL_WOOD_EMPTY",
+      "emptyJournalName": "Expert Lumberjack's Journal (Empty)",
+      "fameRequired": 1800,
+      "baseYield100": 64.0,
+      "maxYield150": 96.0,
+      "returns": [
+        {
+          "item": "T5_WOOD",
+          "name": "Cedar Logs",
+          "icon": "T5_WOOD.png",
+          "weight": 0.75,
+          "amount": 48.0
+        },
+        {
+          "item": "T5_PLANKS",
+          "name": "Cedar Planks",
+          "icon": "T5_PLANKS.png",
+          "weight": 0.25,
+          "amount": 16.0
+        }
+      ],
+      "fullIcon": "T5_JOURNAL_WOOD_FULL.png",
+      "emptyIcon": "T5_JOURNAL_WOOD_EMPTY.png",
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes."
+    },
+    {
+      "id": "lumberjack_t6",
+      "professionId": "lumberjack",
+      "professionName": "Lumberjack (Woodcutter)",
+      "type": "gathering",
+      "code": "WOOD",
+      "tier": 6,
+      "fullJournalId": "T6_JOURNAL_WOOD_FULL",
+      "fullJournalName": "Master Lumberjack's Journal (Full)",
+      "emptyJournalId": "T6_JOURNAL_WOOD_EMPTY",
+      "emptyJournalName": "Master Lumberjack's Journal (Empty)",
+      "fameRequired": 3600,
+      "baseYield100": 80.0,
+      "maxYield150": 120.0,
+      "returns": [
+        {
+          "item": "T6_WOOD",
+          "name": "Bloodoak Logs",
+          "icon": "T6_WOOD.png",
+          "weight": 0.75,
+          "amount": 60.0
+        },
+        {
+          "item": "T6_PLANKS",
+          "name": "Bloodoak Planks",
+          "icon": "T6_PLANKS.png",
+          "weight": 0.25,
+          "amount": 20.0
+        }
+      ],
+      "fullIcon": "T6_JOURNAL_WOOD_FULL.png",
+      "emptyIcon": "T6_JOURNAL_WOOD_EMPTY.png",
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes."
+    },
+    {
+      "id": "lumberjack_t7",
+      "professionId": "lumberjack",
+      "professionName": "Lumberjack (Woodcutter)",
+      "type": "gathering",
+      "code": "WOOD",
+      "tier": 7,
+      "fullJournalId": "T7_JOURNAL_WOOD_FULL",
+      "fullJournalName": "Grandmaster Lumberjack's Journal (Full)",
+      "emptyJournalId": "T7_JOURNAL_WOOD_EMPTY",
+      "emptyJournalName": "Grandmaster Lumberjack's Journal (Empty)",
+      "fameRequired": 7200,
+      "baseYield100": 96.0,
+      "maxYield150": 144.0,
+      "returns": [
+        {
+          "item": "T7_WOOD",
+          "name": "Ashenbark Logs",
+          "icon": "T7_WOOD.png",
+          "weight": 0.75,
+          "amount": 72.0
+        },
+        {
+          "item": "T7_PLANKS",
+          "name": "Ashenbark Planks",
+          "icon": "T7_PLANKS.png",
+          "weight": 0.25,
+          "amount": 24.0
+        }
+      ],
+      "fullIcon": "T7_JOURNAL_WOOD_FULL.png",
+      "emptyIcon": "T7_JOURNAL_WOOD_EMPTY.png",
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes."
+    },
+    {
+      "id": "lumberjack_t8",
+      "professionId": "lumberjack",
+      "professionName": "Lumberjack (Woodcutter)",
+      "type": "gathering",
+      "code": "WOOD",
+      "tier": 8,
+      "fullJournalId": "T8_JOURNAL_WOOD_FULL",
+      "fullJournalName": "Elder Lumberjack's Journal (Full)",
+      "emptyJournalId": "T8_JOURNAL_WOOD_EMPTY",
+      "emptyJournalName": "Elder Lumberjack's Journal (Empty)",
+      "fameRequired": 14400,
+      "baseYield100": 112.0,
+      "maxYield150": 168.0,
+      "returns": [
+        {
+          "item": "T8_WOOD",
+          "name": "Whitewood Logs",
+          "icon": "T8_WOOD.png",
+          "weight": 0.75,
+          "amount": 84.0
+        },
+        {
+          "item": "T8_PLANKS",
+          "name": "Whitewood Planks",
+          "icon": "T8_PLANKS.png",
+          "weight": 0.25,
+          "amount": 28.0
+        }
+      ],
+      "fullIcon": "T8_JOURNAL_WOOD_FULL.png",
+      "emptyIcon": "T8_JOURNAL_WOOD_EMPTY.png",
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes."
+    },
+    {
+      "id": "stonecutter_t2",
+      "professionId": "stonecutter",
+      "professionName": "Stonecutter",
+      "type": "gathering",
+      "code": "STONE",
+      "tier": 2,
+      "fullJournalId": "T2_JOURNAL_STONE_FULL",
+      "fullJournalName": "Novice Stonecutter's Journal (Full)",
+      "emptyJournalId": "T2_JOURNAL_STONE_EMPTY",
+      "emptyJournalName": "Novice Stonecutter's Journal (Empty)",
+      "fameRequired": 200,
+      "baseYield100": 24.0,
+      "maxYield150": 36.0,
+      "returns": [
+        {
+          "item": "T2_ROCK",
+          "name": "Limestone",
+          "icon": "T2_ROCK.png",
+          "weight": 0.75,
+          "amount": 18.0
+        },
+        {
+          "item": "T2_STONEBLOCK",
+          "name": "Limestone Block",
+          "icon": "T2_STONEBLOCK.png",
+          "weight": 0.25,
+          "amount": 6.0
+        }
+      ],
+      "fullIcon": "T2_JOURNAL_STONE_FULL.png",
+      "emptyIcon": "T2_JOURNAL_STONE_EMPTY.png",
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes."
+    },
+    {
+      "id": "stonecutter_t3",
+      "professionId": "stonecutter",
+      "professionName": "Stonecutter",
+      "type": "gathering",
+      "code": "STONE",
+      "tier": 3,
+      "fullJournalId": "T3_JOURNAL_STONE_FULL",
+      "fullJournalName": "Journeyman Stonecutter's Journal (Full)",
+      "emptyJournalId": "T3_JOURNAL_STONE_EMPTY",
+      "emptyJournalName": "Journeyman Stonecutter's Journal (Empty)",
+      "fameRequired": 450,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
+      "returns": [
+        {
+          "item": "T3_ROCK",
+          "name": "Sandstone",
+          "icon": "T3_ROCK.png",
+          "weight": 0.75,
+          "amount": 24.0
+        },
+        {
+          "item": "T3_STONEBLOCK",
+          "name": "Sandstone Block",
+          "icon": "T3_STONEBLOCK.png",
+          "weight": 0.25,
+          "amount": 8.0
+        }
+      ],
+      "fullIcon": "T3_JOURNAL_STONE_FULL.png",
+      "emptyIcon": "T3_JOURNAL_STONE_EMPTY.png",
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes."
+    },
+    {
+      "id": "stonecutter_t4",
+      "professionId": "stonecutter",
+      "professionName": "Stonecutter",
+      "type": "gathering",
+      "code": "STONE",
+      "tier": 4,
+      "fullJournalId": "T4_JOURNAL_STONE_FULL",
+      "fullJournalName": "Adept Stonecutter's Journal (Full)",
+      "emptyJournalId": "T4_JOURNAL_STONE_EMPTY",
+      "emptyJournalName": "Adept Stonecutter's Journal (Empty)",
+      "fameRequired": 900,
+      "baseYield100": 48.0,
+      "maxYield150": 72.0,
+      "returns": [
+        {
+          "item": "T4_ROCK",
+          "name": "Travertine",
+          "icon": "T4_ROCK.png",
+          "weight": 0.75,
+          "amount": 36.0
+        },
+        {
+          "item": "T4_STONEBLOCK",
+          "name": "Travertine Block",
+          "icon": "T4_STONEBLOCK.png",
+          "weight": 0.25,
+          "amount": 12.0
+        }
+      ],
+      "fullIcon": "T4_JOURNAL_STONE_FULL.png",
+      "emptyIcon": "T4_JOURNAL_STONE_EMPTY.png",
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes."
+    },
+    {
+      "id": "stonecutter_t5",
+      "professionId": "stonecutter",
+      "professionName": "Stonecutter",
+      "type": "gathering",
+      "code": "STONE",
+      "tier": 5,
+      "fullJournalId": "T5_JOURNAL_STONE_FULL",
+      "fullJournalName": "Expert Stonecutter's Journal (Full)",
+      "emptyJournalId": "T5_JOURNAL_STONE_EMPTY",
+      "emptyJournalName": "Expert Stonecutter's Journal (Empty)",
+      "fameRequired": 1800,
+      "baseYield100": 64.0,
+      "maxYield150": 96.0,
+      "returns": [
+        {
+          "item": "T5_ROCK",
+          "name": "Granite",
+          "icon": "T5_ROCK.png",
+          "weight": 0.75,
+          "amount": 48.0
+        },
+        {
+          "item": "T5_STONEBLOCK",
+          "name": "Granite Block",
+          "icon": "T5_STONEBLOCK.png",
+          "weight": 0.25,
+          "amount": 16.0
+        }
+      ],
+      "fullIcon": "T5_JOURNAL_STONE_FULL.png",
+      "emptyIcon": "T5_JOURNAL_STONE_EMPTY.png",
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes."
+    },
+    {
+      "id": "stonecutter_t6",
+      "professionId": "stonecutter",
+      "professionName": "Stonecutter",
+      "type": "gathering",
+      "code": "STONE",
+      "tier": 6,
+      "fullJournalId": "T6_JOURNAL_STONE_FULL",
+      "fullJournalName": "Master Stonecutter's Journal (Full)",
+      "emptyJournalId": "T6_JOURNAL_STONE_EMPTY",
+      "emptyJournalName": "Master Stonecutter's Journal (Empty)",
+      "fameRequired": 3600,
+      "baseYield100": 80.0,
+      "maxYield150": 120.0,
+      "returns": [
+        {
+          "item": "T6_ROCK",
+          "name": "Slate",
+          "icon": "T6_ROCK.png",
+          "weight": 0.75,
+          "amount": 60.0
+        },
+        {
+          "item": "T6_STONEBLOCK",
+          "name": "Slate Block",
+          "icon": "T6_STONEBLOCK.png",
+          "weight": 0.25,
+          "amount": 20.0
+        }
+      ],
+      "fullIcon": "T6_JOURNAL_STONE_FULL.png",
+      "emptyIcon": "T6_JOURNAL_STONE_EMPTY.png",
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes."
+    },
+    {
+      "id": "stonecutter_t7",
+      "professionId": "stonecutter",
+      "professionName": "Stonecutter",
+      "type": "gathering",
+      "code": "STONE",
+      "tier": 7,
+      "fullJournalId": "T7_JOURNAL_STONE_FULL",
+      "fullJournalName": "Grandmaster Stonecutter's Journal (Full)",
+      "emptyJournalId": "T7_JOURNAL_STONE_EMPTY",
+      "emptyJournalName": "Grandmaster Stonecutter's Journal (Empty)",
+      "fameRequired": 7200,
+      "baseYield100": 96.0,
+      "maxYield150": 144.0,
+      "returns": [
+        {
+          "item": "T7_ROCK",
+          "name": "Basalt",
+          "icon": "T7_ROCK.png",
+          "weight": 0.75,
+          "amount": 72.0
+        },
+        {
+          "item": "T7_STONEBLOCK",
+          "name": "Basalt Block",
+          "icon": "T7_STONEBLOCK.png",
+          "weight": 0.25,
+          "amount": 24.0
+        }
+      ],
+      "fullIcon": "T7_JOURNAL_STONE_FULL.png",
+      "emptyIcon": "T7_JOURNAL_STONE_EMPTY.png",
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes."
+    },
+    {
+      "id": "stonecutter_t8",
+      "professionId": "stonecutter",
+      "professionName": "Stonecutter",
+      "type": "gathering",
+      "code": "STONE",
+      "tier": 8,
+      "fullJournalId": "T8_JOURNAL_STONE_FULL",
+      "fullJournalName": "Elder Stonecutter's Journal (Full)",
+      "emptyJournalId": "T8_JOURNAL_STONE_EMPTY",
+      "emptyJournalName": "Elder Stonecutter's Journal (Empty)",
+      "fameRequired": 14400,
+      "baseYield100": 112.0,
+      "maxYield150": 168.0,
+      "returns": [
+        {
+          "item": "T8_ROCK",
+          "name": "Marble",
+          "icon": "T8_ROCK.png",
+          "weight": 0.75,
+          "amount": 84.0
+        },
+        {
+          "item": "T8_STONEBLOCK",
+          "name": "Marble Block",
+          "icon": "T8_STONEBLOCK.png",
+          "weight": 0.25,
+          "amount": 28.0
+        }
+      ],
+      "fullIcon": "T8_JOURNAL_STONE_FULL.png",
+      "emptyIcon": "T8_JOURNAL_STONE_EMPTY.png",
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes."
+    },
+    {
+      "id": "prospector_t2",
+      "professionId": "prospector",
+      "professionName": "Prospector (Miner)",
+      "type": "gathering",
+      "code": "ORE",
+      "tier": 2,
+      "fullJournalId": "T2_JOURNAL_ORE_FULL",
+      "fullJournalName": "Novice Prospector's Journal (Full)",
+      "emptyJournalId": "T2_JOURNAL_ORE_EMPTY",
+      "emptyJournalName": "Novice Prospector's Journal (Empty)",
+      "fameRequired": 200,
+      "baseYield100": 24.0,
+      "maxYield150": 36.0,
+      "returns": [
+        {
+          "item": "T2_ORE",
+          "name": "Copper Ore",
+          "icon": "T2_ORE.png",
+          "weight": 0.75,
+          "amount": 18.0
+        },
+        {
+          "item": "T2_METALBAR",
+          "name": "Copper Bar",
+          "icon": "T2_METALBAR.png",
+          "weight": 0.25,
+          "amount": 6.0
+        }
+      ],
+      "fullIcon": "T2_JOURNAL_ORE_FULL.png",
+      "emptyIcon": "T2_JOURNAL_ORE_EMPTY.png",
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes."
+    },
+    {
+      "id": "prospector_t3",
+      "professionId": "prospector",
+      "professionName": "Prospector (Miner)",
+      "type": "gathering",
+      "code": "ORE",
+      "tier": 3,
+      "fullJournalId": "T3_JOURNAL_ORE_FULL",
+      "fullJournalName": "Journeyman Prospector's Journal (Full)",
+      "emptyJournalId": "T3_JOURNAL_ORE_EMPTY",
+      "emptyJournalName": "Journeyman Prospector's Journal (Empty)",
+      "fameRequired": 450,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
+      "returns": [
+        {
+          "item": "T3_ORE",
+          "name": "Tin Ore",
+          "icon": "T3_ORE.png",
+          "weight": 0.75,
+          "amount": 24.0
+        },
+        {
+          "item": "T3_METALBAR",
+          "name": "Bronze Bar",
+          "icon": "T3_METALBAR.png",
+          "weight": 0.25,
+          "amount": 8.0
+        }
+      ],
+      "fullIcon": "T3_JOURNAL_ORE_FULL.png",
+      "emptyIcon": "T3_JOURNAL_ORE_EMPTY.png",
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes."
+    },
+    {
+      "id": "prospector_t4",
+      "professionId": "prospector",
+      "professionName": "Prospector (Miner)",
+      "type": "gathering",
+      "code": "ORE",
+      "tier": 4,
+      "fullJournalId": "T4_JOURNAL_ORE_FULL",
+      "fullJournalName": "Adept Prospector's Journal (Full)",
+      "emptyJournalId": "T4_JOURNAL_ORE_EMPTY",
+      "emptyJournalName": "Adept Prospector's Journal (Empty)",
+      "fameRequired": 900,
+      "baseYield100": 48.0,
+      "maxYield150": 72.0,
+      "returns": [
+        {
+          "item": "T4_ORE",
+          "name": "Iron Ore",
+          "icon": "T4_ORE.png",
+          "weight": 0.75,
+          "amount": 36.0
+        },
+        {
+          "item": "T4_METALBAR",
+          "name": "Steel Bar",
+          "icon": "T4_METALBAR.png",
+          "weight": 0.25,
+          "amount": 12.0
+        }
+      ],
+      "fullIcon": "T4_JOURNAL_ORE_FULL.png",
+      "emptyIcon": "T4_JOURNAL_ORE_EMPTY.png",
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes."
+    },
+    {
+      "id": "prospector_t5",
+      "professionId": "prospector",
+      "professionName": "Prospector (Miner)",
+      "type": "gathering",
+      "code": "ORE",
+      "tier": 5,
+      "fullJournalId": "T5_JOURNAL_ORE_FULL",
+      "fullJournalName": "Expert Prospector's Journal (Full)",
+      "emptyJournalId": "T5_JOURNAL_ORE_EMPTY",
+      "emptyJournalName": "Expert Prospector's Journal (Empty)",
+      "fameRequired": 1800,
+      "baseYield100": 64.0,
+      "maxYield150": 96.0,
+      "returns": [
+        {
+          "item": "T5_ORE",
+          "name": "Titanium Ore",
+          "icon": "T5_ORE.png",
+          "weight": 0.75,
+          "amount": 48.0
+        },
+        {
+          "item": "T5_METALBAR",
+          "name": "Titanium Steel Bar",
+          "icon": "T5_METALBAR.png",
+          "weight": 0.25,
+          "amount": 16.0
+        }
+      ],
+      "fullIcon": "T5_JOURNAL_ORE_FULL.png",
+      "emptyIcon": "T5_JOURNAL_ORE_EMPTY.png",
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes."
+    },
+    {
+      "id": "prospector_t6",
+      "professionId": "prospector",
+      "professionName": "Prospector (Miner)",
+      "type": "gathering",
+      "code": "ORE",
+      "tier": 6,
+      "fullJournalId": "T6_JOURNAL_ORE_FULL",
+      "fullJournalName": "Master Prospector's Journal (Full)",
+      "emptyJournalId": "T6_JOURNAL_ORE_EMPTY",
+      "emptyJournalName": "Master Prospector's Journal (Empty)",
+      "fameRequired": 3600,
+      "baseYield100": 80.0,
+      "maxYield150": 120.0,
+      "returns": [
+        {
+          "item": "T6_ORE",
+          "name": "Runite Ore",
+          "icon": "T6_ORE.png",
+          "weight": 0.75,
+          "amount": 60.0
+        },
+        {
+          "item": "T6_METALBAR",
+          "name": "Runite Steel Bar",
+          "icon": "T6_METALBAR.png",
+          "weight": 0.25,
+          "amount": 20.0
+        }
+      ],
+      "fullIcon": "T6_JOURNAL_ORE_FULL.png",
+      "emptyIcon": "T6_JOURNAL_ORE_EMPTY.png",
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes."
+    },
+    {
+      "id": "prospector_t7",
+      "professionId": "prospector",
+      "professionName": "Prospector (Miner)",
+      "type": "gathering",
+      "code": "ORE",
+      "tier": 7,
+      "fullJournalId": "T7_JOURNAL_ORE_FULL",
+      "fullJournalName": "Grandmaster Prospector's Journal (Full)",
+      "emptyJournalId": "T7_JOURNAL_ORE_EMPTY",
+      "emptyJournalName": "Grandmaster Prospector's Journal (Empty)",
+      "fameRequired": 7200,
+      "baseYield100": 96.0,
+      "maxYield150": 144.0,
+      "returns": [
+        {
+          "item": "T7_ORE",
+          "name": "Meteorite Ore",
+          "icon": "T7_ORE.png",
+          "weight": 0.75,
+          "amount": 72.0
+        },
+        {
+          "item": "T7_METALBAR",
+          "name": "Meteorite Steel Bar",
+          "icon": "T7_METALBAR.png",
+          "weight": 0.25,
+          "amount": 24.0
+        }
+      ],
+      "fullIcon": "T7_JOURNAL_ORE_FULL.png",
+      "emptyIcon": "T7_JOURNAL_ORE_EMPTY.png",
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes."
+    },
+    {
+      "id": "prospector_t8",
+      "professionId": "prospector",
+      "professionName": "Prospector (Miner)",
+      "type": "gathering",
+      "code": "ORE",
+      "tier": 8,
+      "fullJournalId": "T8_JOURNAL_ORE_FULL",
+      "fullJournalName": "Elder Prospector's Journal (Full)",
+      "emptyJournalId": "T8_JOURNAL_ORE_EMPTY",
+      "emptyJournalName": "Elder Prospector's Journal (Empty)",
+      "fameRequired": 14400,
+      "baseYield100": 112.0,
+      "maxYield150": 168.0,
+      "returns": [
+        {
+          "item": "T8_ORE",
+          "name": "Adamantium Ore",
+          "icon": "T8_ORE.png",
+          "weight": 0.75,
+          "amount": 84.0
+        },
+        {
+          "item": "T8_METALBAR",
+          "name": "Adamantium Steel Bar",
+          "icon": "T8_METALBAR.png",
+          "weight": 0.25,
+          "amount": 28.0
+        }
+      ],
+      "fullIcon": "T8_JOURNAL_ORE_FULL.png",
+      "emptyIcon": "T8_JOURNAL_ORE_EMPTY.png",
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes."
+    },
+    {
+      "id": "cropper_t2",
+      "professionId": "cropper",
+      "professionName": "Cropper (Harvester)",
+      "type": "gathering",
+      "code": "FIBER",
+      "tier": 2,
+      "fullJournalId": "T2_JOURNAL_FIBER_FULL",
+      "fullJournalName": "Novice Cropper's Journal (Full)",
+      "emptyJournalId": "T2_JOURNAL_FIBER_EMPTY",
+      "emptyJournalName": "Novice Cropper's Journal (Empty)",
+      "fameRequired": 200,
+      "baseYield100": 24.0,
+      "maxYield150": 36.0,
+      "returns": [
+        {
+          "item": "T2_FIBER",
+          "name": "Cotton",
+          "icon": "T2_FIBER.png",
+          "weight": 0.75,
+          "amount": 18.0
+        },
+        {
+          "item": "T2_CLOTH",
+          "name": "Simple Cloth",
+          "icon": "T2_CLOTH.png",
+          "weight": 0.25,
+          "amount": 6.0
+        }
+      ],
+      "fullIcon": "T2_JOURNAL_FIBER_FULL.png",
+      "emptyIcon": "T2_JOURNAL_FIBER_EMPTY.png",
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes."
+    },
+    {
+      "id": "cropper_t3",
+      "professionId": "cropper",
+      "professionName": "Cropper (Harvester)",
+      "type": "gathering",
+      "code": "FIBER",
+      "tier": 3,
+      "fullJournalId": "T3_JOURNAL_FIBER_FULL",
+      "fullJournalName": "Journeyman Cropper's Journal (Full)",
+      "emptyJournalId": "T3_JOURNAL_FIBER_EMPTY",
+      "emptyJournalName": "Journeyman Cropper's Journal (Empty)",
+      "fameRequired": 450,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
+      "returns": [
+        {
+          "item": "T3_FIBER",
+          "name": "Flax",
+          "icon": "T3_FIBER.png",
+          "weight": 0.75,
+          "amount": 24.0
+        },
+        {
+          "item": "T3_CLOTH",
+          "name": "Neat Cloth",
+          "icon": "T3_CLOTH.png",
+          "weight": 0.25,
+          "amount": 8.0
+        }
+      ],
+      "fullIcon": "T3_JOURNAL_FIBER_FULL.png",
+      "emptyIcon": "T3_JOURNAL_FIBER_EMPTY.png",
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes."
+    },
+    {
+      "id": "cropper_t4",
+      "professionId": "cropper",
+      "professionName": "Cropper (Harvester)",
+      "type": "gathering",
+      "code": "FIBER",
+      "tier": 4,
+      "fullJournalId": "T4_JOURNAL_FIBER_FULL",
+      "fullJournalName": "Adept Cropper's Journal (Full)",
+      "emptyJournalId": "T4_JOURNAL_FIBER_EMPTY",
+      "emptyJournalName": "Adept Cropper's Journal (Empty)",
+      "fameRequired": 900,
+      "baseYield100": 48.0,
+      "maxYield150": 72.0,
+      "returns": [
+        {
+          "item": "T4_FIBER",
+          "name": "Hemp",
+          "icon": "T4_FIBER.png",
+          "weight": 0.75,
+          "amount": 36.0
+        },
+        {
+          "item": "T4_CLOTH",
+          "name": "Fine Cloth",
+          "icon": "T4_CLOTH.png",
+          "weight": 0.25,
+          "amount": 12.0
+        }
+      ],
+      "fullIcon": "T4_JOURNAL_FIBER_FULL.png",
+      "emptyIcon": "T4_JOURNAL_FIBER_EMPTY.png",
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes."
+    },
+    {
+      "id": "cropper_t5",
+      "professionId": "cropper",
+      "professionName": "Cropper (Harvester)",
+      "type": "gathering",
+      "code": "FIBER",
+      "tier": 5,
+      "fullJournalId": "T5_JOURNAL_FIBER_FULL",
+      "fullJournalName": "Expert Cropper's Journal (Full)",
+      "emptyJournalId": "T5_JOURNAL_FIBER_EMPTY",
+      "emptyJournalName": "Expert Cropper's Journal (Empty)",
+      "fameRequired": 1800,
+      "baseYield100": 64.0,
+      "maxYield150": 96.0,
+      "returns": [
+        {
+          "item": "T5_FIBER",
+          "name": "Skyflower",
+          "icon": "T5_FIBER.png",
+          "weight": 0.75,
+          "amount": 48.0
+        },
+        {
+          "item": "T5_CLOTH",
+          "name": "Ornate Cloth",
+          "icon": "T5_CLOTH.png",
+          "weight": 0.25,
+          "amount": 16.0
+        }
+      ],
+      "fullIcon": "T5_JOURNAL_FIBER_FULL.png",
+      "emptyIcon": "T5_JOURNAL_FIBER_EMPTY.png",
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes."
+    },
+    {
+      "id": "cropper_t6",
+      "professionId": "cropper",
+      "professionName": "Cropper (Harvester)",
+      "type": "gathering",
+      "code": "FIBER",
+      "tier": 6,
+      "fullJournalId": "T6_JOURNAL_FIBER_FULL",
+      "fullJournalName": "Master Cropper's Journal (Full)",
+      "emptyJournalId": "T6_JOURNAL_FIBER_EMPTY",
+      "emptyJournalName": "Master Cropper's Journal (Empty)",
+      "fameRequired": 3600,
+      "baseYield100": 80.0,
+      "maxYield150": 120.0,
+      "returns": [
+        {
+          "item": "T6_FIBER",
+          "name": "Amberleaf Cotton",
+          "icon": "T6_FIBER.png",
+          "weight": 0.75,
+          "amount": 60.0
+        },
+        {
+          "item": "T6_CLOTH",
+          "name": "Lavish Cloth",
+          "icon": "T6_CLOTH.png",
+          "weight": 0.25,
+          "amount": 20.0
+        }
+      ],
+      "fullIcon": "T6_JOURNAL_FIBER_FULL.png",
+      "emptyIcon": "T6_JOURNAL_FIBER_EMPTY.png",
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes."
+    },
+    {
+      "id": "cropper_t7",
+      "professionId": "cropper",
+      "professionName": "Cropper (Harvester)",
+      "type": "gathering",
+      "code": "FIBER",
+      "tier": 7,
+      "fullJournalId": "T7_JOURNAL_FIBER_FULL",
+      "fullJournalName": "Grandmaster Cropper's Journal (Full)",
+      "emptyJournalId": "T7_JOURNAL_FIBER_EMPTY",
+      "emptyJournalName": "Grandmaster Cropper's Journal (Empty)",
+      "fameRequired": 7200,
+      "baseYield100": 96.0,
+      "maxYield150": 144.0,
+      "returns": [
+        {
+          "item": "T7_FIBER",
+          "name": "Sunflax",
+          "icon": "T7_FIBER.png",
+          "weight": 0.75,
+          "amount": 72.0
+        },
+        {
+          "item": "T7_CLOTH",
+          "name": "Opulent Cloth",
+          "icon": "T7_CLOTH.png",
+          "weight": 0.25,
+          "amount": 24.0
+        }
+      ],
+      "fullIcon": "T7_JOURNAL_FIBER_FULL.png",
+      "emptyIcon": "T7_JOURNAL_FIBER_EMPTY.png",
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes."
+    },
+    {
+      "id": "cropper_t8",
+      "professionId": "cropper",
+      "professionName": "Cropper (Harvester)",
+      "type": "gathering",
+      "code": "FIBER",
+      "tier": 8,
+      "fullJournalId": "T8_JOURNAL_FIBER_FULL",
+      "fullJournalName": "Elder Cropper's Journal (Full)",
+      "emptyJournalId": "T8_JOURNAL_FIBER_EMPTY",
+      "emptyJournalName": "Elder Cropper's Journal (Empty)",
+      "fameRequired": 14400,
+      "baseYield100": 112.0,
+      "maxYield150": 168.0,
+      "returns": [
+        {
+          "item": "T8_FIBER",
+          "name": "Ghost Hemp",
+          "icon": "T8_FIBER.png",
+          "weight": 0.75,
+          "amount": 84.0
+        },
+        {
+          "item": "T8_CLOTH",
+          "name": "Baroque Cloth",
+          "icon": "T8_CLOTH.png",
+          "weight": 0.25,
+          "amount": 28.0
+        }
+      ],
+      "fullIcon": "T8_JOURNAL_FIBER_FULL.png",
+      "emptyIcon": "T8_JOURNAL_FIBER_EMPTY.png",
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes."
+    },
+    {
+      "id": "gamekeeper_t2",
+      "professionId": "gamekeeper",
+      "professionName": "Gamekeeper (Skinner)",
+      "type": "gathering",
+      "code": "HIDE",
+      "tier": 2,
+      "fullJournalId": "T2_JOURNAL_HIDE_FULL",
+      "fullJournalName": "Novice Gamekeeper's Journal (Full)",
+      "emptyJournalId": "T2_JOURNAL_HIDE_EMPTY",
+      "emptyJournalName": "Novice Gamekeeper's Journal (Empty)",
+      "fameRequired": 200,
+      "baseYield100": 24.0,
+      "maxYield150": 36.0,
+      "returns": [
+        {
+          "item": "T2_HIDE",
+          "name": "Rugged Hide",
+          "icon": "T2_HIDE.png",
+          "weight": 0.75,
+          "amount": 18.0
+        },
+        {
+          "item": "T2_LEATHER",
+          "name": "Stiff Leather",
+          "icon": "T2_LEATHER.png",
+          "weight": 0.25,
+          "amount": 6.0
+        }
+      ],
+      "fullIcon": "T2_JOURNAL_HIDE_FULL.png",
+      "emptyIcon": "T2_JOURNAL_HIDE_EMPTY.png",
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes."
+    },
+    {
+      "id": "gamekeeper_t3",
+      "professionId": "gamekeeper",
+      "professionName": "Gamekeeper (Skinner)",
+      "type": "gathering",
+      "code": "HIDE",
+      "tier": 3,
+      "fullJournalId": "T3_JOURNAL_HIDE_FULL",
+      "fullJournalName": "Journeyman Gamekeeper's Journal (Full)",
+      "emptyJournalId": "T3_JOURNAL_HIDE_EMPTY",
+      "emptyJournalName": "Journeyman Gamekeeper's Journal (Empty)",
+      "fameRequired": 450,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
+      "returns": [
+        {
+          "item": "T3_HIDE",
+          "name": "Thin Hide",
+          "icon": "T3_HIDE.png",
+          "weight": 0.75,
+          "amount": 24.0
+        },
+        {
+          "item": "T3_LEATHER",
+          "name": "Thick Leather",
+          "icon": "T3_LEATHER.png",
+          "weight": 0.25,
+          "amount": 8.0
+        }
+      ],
+      "fullIcon": "T3_JOURNAL_HIDE_FULL.png",
+      "emptyIcon": "T3_JOURNAL_HIDE_EMPTY.png",
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes."
+    },
+    {
+      "id": "gamekeeper_t4",
+      "professionId": "gamekeeper",
+      "professionName": "Gamekeeper (Skinner)",
+      "type": "gathering",
+      "code": "HIDE",
+      "tier": 4,
+      "fullJournalId": "T4_JOURNAL_HIDE_FULL",
+      "fullJournalName": "Adept Gamekeeper's Journal (Full)",
+      "emptyJournalId": "T4_JOURNAL_HIDE_EMPTY",
+      "emptyJournalName": "Adept Gamekeeper's Journal (Empty)",
+      "fameRequired": 900,
+      "baseYield100": 48.0,
+      "maxYield150": 72.0,
+      "returns": [
+        {
+          "item": "T4_HIDE",
+          "name": "Medium Hide",
+          "icon": "T4_HIDE.png",
+          "weight": 0.75,
+          "amount": 36.0
+        },
+        {
+          "item": "T4_LEATHER",
+          "name": "Worked Leather",
+          "icon": "T4_LEATHER.png",
+          "weight": 0.25,
+          "amount": 12.0
+        }
+      ],
+      "fullIcon": "T4_JOURNAL_HIDE_FULL.png",
+      "emptyIcon": "T4_JOURNAL_HIDE_EMPTY.png",
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes."
+    },
+    {
+      "id": "gamekeeper_t5",
+      "professionId": "gamekeeper",
+      "professionName": "Gamekeeper (Skinner)",
+      "type": "gathering",
+      "code": "HIDE",
+      "tier": 5,
+      "fullJournalId": "T5_JOURNAL_HIDE_FULL",
+      "fullJournalName": "Expert Gamekeeper's Journal (Full)",
+      "emptyJournalId": "T5_JOURNAL_HIDE_EMPTY",
+      "emptyJournalName": "Expert Gamekeeper's Journal (Empty)",
+      "fameRequired": 1800,
+      "baseYield100": 64.0,
+      "maxYield150": 96.0,
+      "returns": [
+        {
+          "item": "T5_HIDE",
+          "name": "Heavy Hide",
+          "icon": "T5_HIDE.png",
+          "weight": 0.75,
+          "amount": 48.0
+        },
+        {
+          "item": "T5_LEATHER",
+          "name": "Cured Leather",
+          "icon": "T5_LEATHER.png",
+          "weight": 0.25,
+          "amount": 16.0
+        }
+      ],
+      "fullIcon": "T5_JOURNAL_HIDE_FULL.png",
+      "emptyIcon": "T5_JOURNAL_HIDE_EMPTY.png",
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes."
+    },
+    {
+      "id": "gamekeeper_t6",
+      "professionId": "gamekeeper",
+      "professionName": "Gamekeeper (Skinner)",
+      "type": "gathering",
+      "code": "HIDE",
+      "tier": 6,
+      "fullJournalId": "T6_JOURNAL_HIDE_FULL",
+      "fullJournalName": "Master Gamekeeper's Journal (Full)",
+      "emptyJournalId": "T6_JOURNAL_HIDE_EMPTY",
+      "emptyJournalName": "Master Gamekeeper's Journal (Empty)",
+      "fameRequired": 3600,
+      "baseYield100": 80.0,
+      "maxYield150": 120.0,
+      "returns": [
+        {
+          "item": "T6_HIDE",
+          "name": "Robust Hide",
+          "icon": "T6_HIDE.png",
+          "weight": 0.75,
+          "amount": 60.0
+        },
+        {
+          "item": "T6_LEATHER",
+          "name": "Hardened Leather",
+          "icon": "T6_LEATHER.png",
+          "weight": 0.25,
+          "amount": 20.0
+        }
+      ],
+      "fullIcon": "T6_JOURNAL_HIDE_FULL.png",
+      "emptyIcon": "T6_JOURNAL_HIDE_EMPTY.png",
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes."
+    },
+    {
+      "id": "gamekeeper_t7",
+      "professionId": "gamekeeper",
+      "professionName": "Gamekeeper (Skinner)",
+      "type": "gathering",
+      "code": "HIDE",
+      "tier": 7,
+      "fullJournalId": "T7_JOURNAL_HIDE_FULL",
+      "fullJournalName": "Grandmaster Gamekeeper's Journal (Full)",
+      "emptyJournalId": "T7_JOURNAL_HIDE_EMPTY",
+      "emptyJournalName": "Grandmaster Gamekeeper's Journal (Empty)",
+      "fameRequired": 7200,
+      "baseYield100": 96.0,
+      "maxYield150": 144.0,
+      "returns": [
+        {
+          "item": "T7_HIDE",
+          "name": "Thick Hide",
+          "icon": "T7_HIDE.png",
+          "weight": 0.75,
+          "amount": 72.0
+        },
+        {
+          "item": "T7_LEATHER",
+          "name": "Reinforced Leather",
+          "icon": "T7_LEATHER.png",
+          "weight": 0.25,
+          "amount": 24.0
+        }
+      ],
+      "fullIcon": "T7_JOURNAL_HIDE_FULL.png",
+      "emptyIcon": "T7_JOURNAL_HIDE_EMPTY.png",
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes."
+    },
+    {
+      "id": "gamekeeper_t8",
+      "professionId": "gamekeeper",
+      "professionName": "Gamekeeper (Skinner)",
+      "type": "gathering",
+      "code": "HIDE",
+      "tier": 8,
+      "fullJournalId": "T8_JOURNAL_HIDE_FULL",
+      "fullJournalName": "Elder Gamekeeper's Journal (Full)",
+      "emptyJournalId": "T8_JOURNAL_HIDE_EMPTY",
+      "emptyJournalName": "Elder Gamekeeper's Journal (Empty)",
+      "fameRequired": 14400,
+      "baseYield100": 112.0,
+      "maxYield150": 168.0,
+      "returns": [
+        {
+          "item": "T8_HIDE",
+          "name": "Resilient Hide",
+          "icon": "T8_HIDE.png",
+          "weight": 0.75,
+          "amount": 84.0
+        },
+        {
+          "item": "T8_LEATHER",
+          "name": "Fortified Leather",
+          "icon": "T8_LEATHER.png",
+          "weight": 0.25,
+          "amount": 28.0
+        }
+      ],
+      "fullIcon": "T8_JOURNAL_HIDE_FULL.png",
+      "emptyIcon": "T8_JOURNAL_HIDE_EMPTY.png",
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes."
+    },
+    {
+      "id": "fisherman_t2",
+      "professionId": "fisherman",
+      "professionName": "Fisherman",
+      "type": "gathering",
+      "code": "FISHING",
+      "tier": 2,
+      "fullJournalId": "T2_JOURNAL_FISHING_FULL",
+      "fullJournalName": "Novice Fisherman's Journal (Full)",
+      "emptyJournalId": "T2_JOURNAL_FISHING_EMPTY",
+      "emptyJournalName": "Novice Fisherman's Journal (Empty)",
+      "fameRequired": 200,
+      "baseYield100": 24.0,
+      "maxYield150": 36.0,
+      "returns": [
+        {
+          "item": "T2_FISH_FRESHWATER",
+          "name": "T2_FISH_FRESHWATER",
+          "icon": "T2_FISH_FRESHWATER.png",
+          "weight": 0.5,
+          "amount": 12.0
+        },
+        {
+          "item": "T2_FISH_SALTWATER",
+          "name": "T2_FISH_SALTWATER",
+          "icon": "T2_FISH_SALTWATER.png",
+          "weight": 0.5,
+          "amount": 12.0
+        }
+      ],
+      "fullIcon": "T2_JOURNAL_FISHING_FULL.png",
+      "emptyIcon": "T2_JOURNAL_FISHING_EMPTY.png",
+      "desc": "Consumes Fisherman journals from catching fish in rivers, lakes, and oceans."
+    },
+    {
+      "id": "fisherman_t3",
+      "professionId": "fisherman",
+      "professionName": "Fisherman",
+      "type": "gathering",
+      "code": "FISHING",
+      "tier": 3,
+      "fullJournalId": "T3_JOURNAL_FISHING_FULL",
+      "fullJournalName": "Journeyman Fisherman's Journal (Full)",
+      "emptyJournalId": "T3_JOURNAL_FISHING_EMPTY",
+      "emptyJournalName": "Journeyman Fisherman's Journal (Empty)",
+      "fameRequired": 450,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
+      "returns": [
+        {
+          "item": "T3_FISH_FRESHWATER",
+          "name": "T3_FISH_FRESHWATER",
+          "icon": "T3_FISH_FRESHWATER.png",
+          "weight": 0.5,
+          "amount": 16.0
+        },
+        {
+          "item": "T3_FISH_SALTWATER",
+          "name": "T3_FISH_SALTWATER",
+          "icon": "T3_FISH_SALTWATER.png",
+          "weight": 0.5,
+          "amount": 16.0
+        }
+      ],
+      "fullIcon": "T3_JOURNAL_FISHING_FULL.png",
+      "emptyIcon": "T3_JOURNAL_FISHING_EMPTY.png",
+      "desc": "Consumes Fisherman journals from catching fish in rivers, lakes, and oceans."
+    },
+    {
+      "id": "fisherman_t4",
+      "professionId": "fisherman",
+      "professionName": "Fisherman",
+      "type": "gathering",
+      "code": "FISHING",
+      "tier": 4,
+      "fullJournalId": "T4_JOURNAL_FISHING_FULL",
+      "fullJournalName": "Adept Fisherman's Journal (Full)",
+      "emptyJournalId": "T4_JOURNAL_FISHING_EMPTY",
+      "emptyJournalName": "Adept Fisherman's Journal (Empty)",
+      "fameRequired": 900,
+      "baseYield100": 48.0,
+      "maxYield150": 72.0,
+      "returns": [
+        {
+          "item": "T4_FISH_FRESHWATER",
+          "name": "T4_FISH_FRESHWATER",
+          "icon": "T4_FISH_FRESHWATER.png",
+          "weight": 0.5,
+          "amount": 24.0
+        },
+        {
+          "item": "T4_FISH_SALTWATER",
+          "name": "T4_FISH_SALTWATER",
+          "icon": "T4_FISH_SALTWATER.png",
+          "weight": 0.5,
+          "amount": 24.0
+        }
+      ],
+      "fullIcon": "T4_JOURNAL_FISHING_FULL.png",
+      "emptyIcon": "T4_JOURNAL_FISHING_EMPTY.png",
+      "desc": "Consumes Fisherman journals from catching fish in rivers, lakes, and oceans."
+    },
+    {
+      "id": "fisherman_t5",
+      "professionId": "fisherman",
+      "professionName": "Fisherman",
+      "type": "gathering",
+      "code": "FISHING",
+      "tier": 5,
+      "fullJournalId": "T5_JOURNAL_FISHING_FULL",
+      "fullJournalName": "Expert Fisherman's Journal (Full)",
+      "emptyJournalId": "T5_JOURNAL_FISHING_EMPTY",
+      "emptyJournalName": "Expert Fisherman's Journal (Empty)",
+      "fameRequired": 1800,
+      "baseYield100": 64.0,
+      "maxYield150": 96.0,
+      "returns": [
+        {
+          "item": "T5_FISH_FRESHWATER",
+          "name": "T5_FISH_FRESHWATER",
+          "icon": "T5_FISH_FRESHWATER.png",
+          "weight": 0.5,
+          "amount": 32.0
+        },
+        {
+          "item": "T5_FISH_SALTWATER",
+          "name": "T5_FISH_SALTWATER",
+          "icon": "T5_FISH_SALTWATER.png",
+          "weight": 0.5,
+          "amount": 32.0
+        }
+      ],
+      "fullIcon": "T5_JOURNAL_FISHING_FULL.png",
+      "emptyIcon": "T5_JOURNAL_FISHING_EMPTY.png",
+      "desc": "Consumes Fisherman journals from catching fish in rivers, lakes, and oceans."
+    },
+    {
+      "id": "fisherman_t6",
+      "professionId": "fisherman",
+      "professionName": "Fisherman",
+      "type": "gathering",
+      "code": "FISHING",
+      "tier": 6,
+      "fullJournalId": "T6_JOURNAL_FISHING_FULL",
+      "fullJournalName": "Master Fisherman's Journal (Full)",
+      "emptyJournalId": "T6_JOURNAL_FISHING_EMPTY",
+      "emptyJournalName": "Master Fisherman's Journal (Empty)",
+      "fameRequired": 3600,
+      "baseYield100": 80.0,
+      "maxYield150": 120.0,
+      "returns": [
+        {
+          "item": "T6_FISH_FRESHWATER",
+          "name": "T6_FISH_FRESHWATER",
+          "icon": "T6_FISH_FRESHWATER.png",
+          "weight": 0.5,
+          "amount": 40.0
+        },
+        {
+          "item": "T6_FISH_SALTWATER",
+          "name": "T6_FISH_SALTWATER",
+          "icon": "T6_FISH_SALTWATER.png",
+          "weight": 0.5,
+          "amount": 40.0
+        }
+      ],
+      "fullIcon": "T6_JOURNAL_FISHING_FULL.png",
+      "emptyIcon": "T6_JOURNAL_FISHING_EMPTY.png",
+      "desc": "Consumes Fisherman journals from catching fish in rivers, lakes, and oceans."
+    },
+    {
+      "id": "fisherman_t7",
+      "professionId": "fisherman",
+      "professionName": "Fisherman",
+      "type": "gathering",
+      "code": "FISHING",
+      "tier": 7,
+      "fullJournalId": "T7_JOURNAL_FISHING_FULL",
+      "fullJournalName": "Grandmaster Fisherman's Journal (Full)",
+      "emptyJournalId": "T7_JOURNAL_FISHING_EMPTY",
+      "emptyJournalName": "Grandmaster Fisherman's Journal (Empty)",
+      "fameRequired": 7200,
+      "baseYield100": 96.0,
+      "maxYield150": 144.0,
+      "returns": [
+        {
+          "item": "T7_FISH_FRESHWATER",
+          "name": "T7_FISH_FRESHWATER",
+          "icon": "T7_FISH_FRESHWATER.png",
+          "weight": 0.5,
+          "amount": 48.0
+        },
+        {
+          "item": "T7_FISH_SALTWATER",
+          "name": "T7_FISH_SALTWATER",
+          "icon": "T7_FISH_SALTWATER.png",
+          "weight": 0.5,
+          "amount": 48.0
+        }
+      ],
+      "fullIcon": "T7_JOURNAL_FISHING_FULL.png",
+      "emptyIcon": "T7_JOURNAL_FISHING_EMPTY.png",
+      "desc": "Consumes Fisherman journals from catching fish in rivers, lakes, and oceans."
+    },
+    {
+      "id": "fisherman_t8",
+      "professionId": "fisherman",
+      "professionName": "Fisherman",
+      "type": "gathering",
+      "code": "FISHING",
+      "tier": 8,
+      "fullJournalId": "T8_JOURNAL_FISHING_FULL",
+      "fullJournalName": "Elder Fisherman's Journal (Full)",
+      "emptyJournalId": "T8_JOURNAL_FISHING_EMPTY",
+      "emptyJournalName": "Elder Fisherman's Journal (Empty)",
+      "fameRequired": 14400,
+      "baseYield100": 112.0,
+      "maxYield150": 168.0,
+      "returns": [
+        {
+          "item": "T8_FISH_FRESHWATER",
+          "name": "T8_FISH_FRESHWATER",
+          "icon": "T8_FISH_FRESHWATER.png",
+          "weight": 0.5,
+          "amount": 56.0
+        },
+        {
+          "item": "T8_FISH_SALTWATER",
+          "name": "T8_FISH_SALTWATER",
+          "icon": "T8_FISH_SALTWATER.png",
+          "weight": 0.5,
+          "amount": 56.0
+        }
+      ],
+      "fullIcon": "T8_JOURNAL_FISHING_FULL.png",
+      "emptyIcon": "T8_JOURNAL_FISHING_EMPTY.png",
+      "desc": "Consumes Fisherman journals from catching fish in rivers, lakes, and oceans."
+    },
+    {
+      "id": "mercenary_t2",
+      "professionId": "mercenary",
+      "professionName": "Mercenary",
+      "type": "mercenary",
+      "code": "MERCENARY",
+      "tier": 2,
+      "fullJournalId": "T2_JOURNAL_MERCENARY_FULL",
+      "fullJournalName": "Novice Mercenary's Journal (Full)",
+      "emptyJournalId": "T2_JOURNAL_MERCENARY_EMPTY",
+      "emptyJournalName": "Novice Mercenary's Journal (Empty)",
+      "fameRequired": 500,
+      "baseYield100": 1000,
+      "maxYield150": 1500.0,
+      "returns": [
+        {
+          "item": "SILVER",
+          "name": "Silver",
+          "icon": "silver.png",
+          "weight": 1.0,
+          "amount": 1000
+        }
+      ],
+      "fullIcon": "T2_JOURNAL_MERCENARY_FULL.png",
+      "emptyIcon": "T2_JOURNAL_MERCENARY_EMPTY.png",
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses."
+    },
+    {
+      "id": "mercenary_t3",
+      "professionId": "mercenary",
+      "professionName": "Mercenary",
+      "type": "mercenary",
+      "code": "MERCENARY",
+      "tier": 3,
+      "fullJournalId": "T3_JOURNAL_MERCENARY_FULL",
+      "fullJournalName": "Journeyman Mercenary's Journal (Full)",
+      "emptyJournalId": "T3_JOURNAL_MERCENARY_EMPTY",
+      "emptyJournalName": "Journeyman Mercenary's Journal (Empty)",
+      "fameRequired": 1200,
+      "baseYield100": 2500,
+      "maxYield150": 3750.0,
+      "returns": [
+        {
+          "item": "SILVER",
+          "name": "Silver",
+          "icon": "silver.png",
+          "weight": 1.0,
+          "amount": 2500
+        }
+      ],
+      "fullIcon": "T3_JOURNAL_MERCENARY_FULL.png",
+      "emptyIcon": "T3_JOURNAL_MERCENARY_EMPTY.png",
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses."
+    },
+    {
+      "id": "mercenary_t4",
+      "professionId": "mercenary",
+      "professionName": "Mercenary",
+      "type": "mercenary",
+      "code": "MERCENARY",
+      "tier": 4,
+      "fullJournalId": "T4_JOURNAL_MERCENARY_FULL",
+      "fullJournalName": "Adept Mercenary's Journal (Full)",
+      "emptyJournalId": "T4_JOURNAL_MERCENARY_EMPTY",
+      "emptyJournalName": "Adept Mercenary's Journal (Empty)",
+      "fameRequired": 2500,
+      "baseYield100": 5500,
+      "maxYield150": 8250.0,
+      "returns": [
+        {
+          "item": "SILVER",
+          "name": "Silver",
+          "icon": "silver.png",
+          "weight": 1.0,
+          "amount": 5500
+        }
+      ],
+      "fullIcon": "T4_JOURNAL_MERCENARY_FULL.png",
+      "emptyIcon": "T4_JOURNAL_MERCENARY_EMPTY.png",
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses."
+    },
+    {
+      "id": "mercenary_t5",
+      "professionId": "mercenary",
+      "professionName": "Mercenary",
+      "type": "mercenary",
+      "code": "MERCENARY",
+      "tier": 5,
+      "fullJournalId": "T5_JOURNAL_MERCENARY_FULL",
+      "fullJournalName": "Expert Mercenary's Journal (Full)",
+      "emptyJournalId": "T5_JOURNAL_MERCENARY_EMPTY",
+      "emptyJournalName": "Expert Mercenary's Journal (Empty)",
+      "fameRequired": 5000,
+      "baseYield100": 10800,
+      "maxYield150": 16200.0,
+      "returns": [
+        {
+          "item": "SILVER",
+          "name": "Silver",
+          "icon": "silver.png",
+          "weight": 1.0,
+          "amount": 10800
+        }
+      ],
+      "fullIcon": "T5_JOURNAL_MERCENARY_FULL.png",
+      "emptyIcon": "T5_JOURNAL_MERCENARY_EMPTY.png",
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses."
+    },
+    {
+      "id": "mercenary_t6",
+      "professionId": "mercenary",
+      "professionName": "Mercenary",
+      "type": "mercenary",
+      "code": "MERCENARY",
+      "tier": 6,
+      "fullJournalId": "T6_JOURNAL_MERCENARY_FULL",
+      "fullJournalName": "Master Mercenary's Journal (Full)",
+      "emptyJournalId": "T6_JOURNAL_MERCENARY_EMPTY",
+      "emptyJournalName": "Master Mercenary's Journal (Empty)",
+      "fameRequired": 10000,
+      "baseYield100": 20000,
+      "maxYield150": 30000.0,
+      "returns": [
+        {
+          "item": "SILVER",
+          "name": "Silver",
+          "icon": "silver.png",
+          "weight": 1.0,
+          "amount": 20000
+        }
+      ],
+      "fullIcon": "T6_JOURNAL_MERCENARY_FULL.png",
+      "emptyIcon": "T6_JOURNAL_MERCENARY_EMPTY.png",
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses."
+    },
+    {
+      "id": "mercenary_t7",
+      "professionId": "mercenary",
+      "professionName": "Mercenary",
+      "type": "mercenary",
+      "code": "MERCENARY",
+      "tier": 7,
+      "fullJournalId": "T7_JOURNAL_MERCENARY_FULL",
+      "fullJournalName": "Grandmaster Mercenary's Journal (Full)",
+      "emptyJournalId": "T7_JOURNAL_MERCENARY_EMPTY",
+      "emptyJournalName": "Grandmaster Mercenary's Journal (Empty)",
+      "fameRequired": 20000,
+      "baseYield100": 36000,
+      "maxYield150": 54000.0,
+      "returns": [
+        {
+          "item": "SILVER",
+          "name": "Silver",
+          "icon": "silver.png",
+          "weight": 1.0,
+          "amount": 36000
+        }
+      ],
+      "fullIcon": "T7_JOURNAL_MERCENARY_FULL.png",
+      "emptyIcon": "T7_JOURNAL_MERCENARY_EMPTY.png",
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses."
+    },
+    {
+      "id": "mercenary_t8",
+      "professionId": "mercenary",
+      "professionName": "Mercenary",
+      "type": "mercenary",
+      "code": "MERCENARY",
+      "tier": 8,
+      "fullJournalId": "T8_JOURNAL_MERCENARY_FULL",
+      "fullJournalName": "Elder Mercenary's Journal (Full)",
+      "emptyJournalId": "T8_JOURNAL_MERCENARY_EMPTY",
+      "emptyJournalName": "Elder Mercenary's Journal (Empty)",
+      "fameRequired": 40000,
+      "baseYield100": 65000,
+      "maxYield150": 97500.0,
+      "returns": [
+        {
+          "item": "SILVER",
+          "name": "Silver",
+          "icon": "silver.png",
+          "weight": 1.0,
+          "amount": 65000
+        }
+      ],
+      "fullIcon": "T8_JOURNAL_MERCENARY_FULL.png",
+      "emptyIcon": "T8_JOURNAL_MERCENARY_EMPTY.png",
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses."
+    }
+  ],
+  "professions": [
+    {
+      "id": "blacksmith",
+      "name": "Blacksmith (Warrior)",
+      "type": "crafting",
+      "code": "WARRIOR",
+      "desc": "Consumes Blacksmith journals from crafting Swords, Axes, Maces, Shields, and Plate Armor.",
+      "returns": [
+        [
+          "T{tier}_METALBAR",
+          0.6
+        ],
+        [
+          "T{tier}_PLANKS",
+          0.4
+        ]
+      ],
+      "icon": "T4_JOURNAL_WARRIOR_FULL.png"
+    },
+    {
+      "id": "fletcher",
+      "name": "Fletcher (Hunter)",
+      "type": "crafting",
+      "code": "HUNTER",
+      "desc": "Consumes Fletcher journals from crafting Bows, Spears, Daggers, Torches, and Leather Armor.",
+      "returns": [
+        [
+          "T{tier}_LEATHER",
+          0.6
+        ],
+        [
+          "T{tier}_PLANKS",
+          0.4
+        ]
+      ],
+      "icon": "T4_JOURNAL_HUNTER_FULL.png"
+    },
+    {
+      "id": "imbuer",
+      "name": "Imbuer (Mage)",
+      "type": "crafting",
+      "code": "MAGE",
+      "desc": "Consumes Imbuer journals from crafting Fire, Holy, Frost, Arcane staffs, Tomes, and Cloth Armor.",
+      "returns": [
+        [
+          "T{tier}_CLOTH",
+          0.6
+        ],
+        [
+          "T{tier}_METALBAR",
+          0.4
+        ]
+      ],
+      "icon": "T4_JOURNAL_MAGE_FULL.png"
+    },
+    {
+      "id": "tinker",
+      "name": "Tinker (Toolmaker)",
+      "type": "crafting",
+      "code": "TOOLMAKER",
+      "desc": "Consumes Tinker journals from crafting Tools, Capes, Bags, and Furniture.",
+      "returns": [
+        [
+          "T{tier}_PLANKS",
+          0.35
+        ],
+        [
+          "T{tier}_METALBAR",
+          0.35
+        ],
+        [
+          "T{tier}_CLOTH",
+          0.3
+        ]
+      ],
+      "icon": "T4_JOURNAL_TOOLMAKER_FULL.png"
+    },
+    {
+      "id": "lumberjack",
+      "name": "Lumberjack (Woodcutter)",
+      "type": "gathering",
+      "code": "WOOD",
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes.",
+      "returns": [
+        [
+          "T{tier}_WOOD",
+          0.75
+        ],
+        [
+          "T{tier}_PLANKS",
+          0.25
+        ]
+      ],
+      "icon": "T4_JOURNAL_WOOD_FULL.png"
+    },
+    {
+      "id": "stonecutter",
+      "name": "Stonecutter",
+      "type": "gathering",
+      "code": "STONE",
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes.",
+      "returns": [
+        [
+          "T{tier}_ROCK",
+          0.75
+        ],
+        [
+          "T{tier}_STONEBLOCK",
+          0.25
+        ]
+      ],
+      "icon": "T4_JOURNAL_STONE_FULL.png"
+    },
+    {
+      "id": "prospector",
+      "name": "Prospector (Miner)",
+      "type": "gathering",
+      "code": "ORE",
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes.",
+      "returns": [
+        [
+          "T{tier}_ORE",
+          0.75
+        ],
+        [
+          "T{tier}_METALBAR",
+          0.25
+        ]
+      ],
+      "icon": "T4_JOURNAL_ORE_FULL.png"
+    },
+    {
+      "id": "cropper",
+      "name": "Cropper (Harvester)",
+      "type": "gathering",
+      "code": "FIBER",
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes.",
+      "returns": [
+        [
+          "T{tier}_FIBER",
+          0.75
+        ],
+        [
+          "T{tier}_CLOTH",
+          0.25
+        ]
+      ],
+      "icon": "T4_JOURNAL_FIBER_FULL.png"
+    },
+    {
+      "id": "gamekeeper",
+      "name": "Gamekeeper (Skinner)",
+      "type": "gathering",
+      "code": "HIDE",
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes.",
+      "returns": [
+        [
+          "T{tier}_HIDE",
+          0.75
+        ],
+        [
+          "T{tier}_LEATHER",
+          0.25
+        ]
+      ],
+      "icon": "T4_JOURNAL_HIDE_FULL.png"
+    },
+    {
+      "id": "fisherman",
+      "name": "Fisherman",
+      "type": "gathering",
+      "code": "FISHING",
+      "desc": "Consumes Fisherman journals from catching fish in rivers, lakes, and oceans.",
+      "returns": [
+        [
+          "T{tier}_FISH_FRESHWATER",
+          0.5
+        ],
+        [
+          "T{tier}_FISH_SALTWATER",
+          0.5
+        ]
+      ],
+      "icon": "T4_JOURNAL_FISHING_FULL.png"
+    },
+    {
+      "id": "mercenary",
+      "name": "Mercenary",
+      "type": "mercenary",
+      "code": "MERCENARY",
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses.",
+      "returns": [
+        [
+          "SILVER",
+          1.0
+        ]
+      ],
+      "icon": "T4_JOURNAL_MERCENARY_FULL.png"
+    }
+  ],
+  "houseTiers": [
+    {
+      "tier": 2,
+      "name": "Novice's House",
+      "laborers": 1,
+      "beds": 1,
+      "tables": 1,
+      "blocks": 30,
+      "planks": 30
+    },
+    {
+      "tier": 3,
+      "name": "Journeyman's House",
+      "laborers": 2,
+      "beds": 2,
+      "tables": 1,
+      "blocks": 60,
+      "planks": 60
+    },
+    {
+      "tier": 4,
+      "name": "Adept's House",
+      "laborers": 3,
+      "beds": 3,
+      "tables": 1,
+      "blocks": 180,
+      "planks": 180
+    },
+    {
+      "tier": 5,
+      "name": "Expert's House",
+      "laborers": 3,
+      "beds": 3,
+      "tables": 1,
+      "blocks": 360,
+      "planks": 360
+    },
+    {
+      "tier": 6,
+      "name": "Master's House",
+      "laborers": 3,
+      "beds": 3,
+      "tables": 1,
+      "blocks": 720,
+      "planks": 720
+    },
+    {
+      "tier": 7,
+      "name": "Grandmaster's House",
+      "laborers": 3,
+      "beds": 3,
+      "tables": 1,
+      "blocks": 1440,
+      "planks": 1440
+    },
+    {
+      "tier": 8,
+      "name": "Elder's House",
+      "laborers": 3,
+      "beds": 3,
+      "tables": 1,
+      "blocks": 2880,
+      "planks": 2880
+    }
+  ]
+}
