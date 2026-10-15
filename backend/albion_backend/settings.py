@@ -101,31 +101,46 @@ WSGI_APPLICATION = 'albion_backend.wsgi.application'
 
 # Database
 # Uses SQLite3 for local development by default.
-# Uses PostgreSQL in production when DATABASE_URL is set (e.g. by Railway).
-DATABASE_URL = os.getenv('DATABASE_URL')
+# Uses PostgreSQL in production when DATABASE_URL, POSTGRES_URL, or PGHOST is set (e.g. by Railway).
+RAW_DB_URL = (
+    os.getenv('DATABASE_URL') or 
+    os.getenv('DATABASE_PUBLIC_URL') or 
+    os.getenv('POSTGRES_URL')
+)
 
-if DATABASE_URL:
+if not RAW_DB_URL and os.getenv('PGHOST'):
+    _pghost = os.getenv('PGHOST')
+    _pgport = os.getenv('PGPORT', '5432')
+    _pguser = os.getenv('PGUSER', os.getenv('POSTGRES_USER', 'postgres'))
+    _pgpass = os.getenv('PGPASSWORD', os.getenv('POSTGRES_PASSWORD', ''))
+    _pgdb = os.getenv('PGDATABASE', os.getenv('POSTGRES_DB', 'railway'))
+    RAW_DB_URL = f"postgresql://{_pguser}:{_pgpass}@{_pghost}:{_pgport}/{_pgdb}"
+
+if RAW_DB_URL and RAW_DB_URL.strip():
     try:
         import dj_database_url
-        DATABASES = {
-            'default': dj_database_url.config(
-                default=DATABASE_URL,
-                conn_max_age=600,
-                conn_health_checks=True,
-                ssl_require=True if ('localhost' not in DATABASE_URL and '127.0.0.1' not in DATABASE_URL) else False,
-            )
-        }
-    except ImportError:
-        import urllib.parse as urlparse
-        url = urlparse.urlparse(DATABASE_URL)
+        db_config = dj_database_url.config(
+            default=RAW_DB_URL.strip(),
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True if ('localhost' not in RAW_DB_URL and '127.0.0.1' not in RAW_DB_URL) else False,
+        )
+        if db_config.get('ENGINE') == 'django.db.backends.postgresql':
+            # Guarantee database name is never empty
+            if not db_config.get('NAME'):
+                db_config['NAME'] = os.getenv('PGDATABASE', os.getenv('POSTGRES_DB', 'railway'))
+            # If host is missing/empty, URL was malformed -> fallback to SQLite safely
+            if not db_config.get('HOST'):
+                db_config = {
+                    'ENGINE': 'django.db.backends.sqlite3',
+                    'NAME': BASE_DIR / 'db.sqlite3',
+                }
+        DATABASES = {'default': db_config}
+    except Exception:
         DATABASES = {
             'default': {
-                'ENGINE': 'django.db.backends.postgresql',
-                'NAME': url.path[1:],
-                'USER': url.username,
-                'PASSWORD': url.password,
-                'HOST': url.hostname,
-                'PORT': url.port or 5432,
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
             }
         }
 else:
