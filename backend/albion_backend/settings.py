@@ -116,6 +116,14 @@ if not RAW_DB_URL and os.getenv('PGHOST'):
     _pgdb = os.getenv('PGDATABASE', os.getenv('POSTGRES_DB', 'railway'))
     RAW_DB_URL = f"postgresql://{_pguser}:{_pgpass}@{_pghost}:{_pgport}/{_pgdb}"
 
+def _is_pg_connectable(host, port, timeout=1.5):
+    import socket
+    try:
+        with socket.create_connection((host, int(port or 5432)), timeout=timeout):
+            return True
+    except Exception:
+        return False
+
 if RAW_DB_URL and RAW_DB_URL.strip():
     try:
         import dj_database_url
@@ -129,8 +137,11 @@ if RAW_DB_URL and RAW_DB_URL.strip():
             # Guarantee database name is never empty
             if not db_config.get('NAME'):
                 db_config['NAME'] = os.getenv('PGDATABASE', os.getenv('POSTGRES_DB', 'railway'))
-            # If host is missing/empty, URL was malformed -> fallback to SQLite safely
-            if not db_config.get('HOST'):
+            # If host is missing or unreachable/refusing connection (e.g. self-referencing web host) -> fallback safely
+            _host = db_config.get('HOST')
+            _port = db_config.get('PORT') or 5432
+            if not _host or not _is_pg_connectable(_host, _port):
+                print(f"⚠️ Warning: PostgreSQL host '{_host}:{_port}' is unreachable or refusing connections. Falling back to SQLite.")
                 db_config = {
                     'ENGINE': 'django.db.backends.sqlite3',
                     'NAME': BASE_DIR / 'db.sqlite3',
