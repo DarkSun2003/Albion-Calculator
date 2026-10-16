@@ -36,7 +36,9 @@ import {
   ShieldCheck,
   RefreshCw,
   Sliders,
-  DollarSign
+  DollarSign,
+  BookOpen,
+  HelpCircle
 } from 'lucide-react';
 
 const SUBCATEGORY_ICONS = {
@@ -53,7 +55,7 @@ const SUBCATEGORY_ICONS = {
   butchery: Scissors,
 };
 
-export default function FoodCalculator({ server, hasPremium, useFocus }) {
+export default function FoodCalculator({ server, hasPremium, useFocus, onOpenGuide, onStartTour }) {
   // Navigation & Filtering
   const [selectedCourse, setSelectedCourse] = useState('all');
   const [selectedTier, setSelectedTier] = useState(7);
@@ -316,8 +318,26 @@ export default function FoodCalculator({ server, hasPremium, useFocus }) {
             </div>
           </div>
 
-          {/* Engine Status & Royal City Specialty Badge */}
-          <div className="flex items-center gap-3">
+          {/* Engine Status, Guide & Royal City Specialty Badge */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => onOpenGuide && onOpenGuide('food')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/15 border border-amber-500/40 text-xs font-serif font-bold text-amber-300 hover:bg-amber-500/25 transition-all shadow-sm"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+              <span>Cooking Guide</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onStartTour && onStartTour('food')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-amber-500/40 text-xs font-serif font-bold text-amber-200 hover:bg-amber-500/20 transition-all shadow-sm"
+            >
+              <HelpCircle className="w-3.5 h-3.5 text-amber-400" />
+              <span>Interactive Tour</span>
+            </button>
+
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0e1117] border border-amber-700/40 text-xs shadow-inner">
               <ShieldCheck className="w-4 h-4 text-amber-400" />
               <div className="text-left">
@@ -335,7 +355,7 @@ export default function FoodCalculator({ server, hasPremium, useFocus }) {
       </div>
 
       {/* 2. Course Subcategory Filter Bar */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
+      <div id="tour-food-course-picker" className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
         {FOOD_SUBCATEGORIES.map((cat) => {
           const IconComp = SUBCATEGORY_ICONS[cat.id] || Utensils;
           const isActive = selectedCourse === cat.id;
@@ -403,7 +423,7 @@ export default function FoodCalculator({ server, hasPremium, useFocus }) {
       </div>
 
       {/* 4. Dish Catalog Browser (Horizontal Carousel / Grid) */}
-      <div className="space-y-2">
+      <div id="tour-food-item-picker" className="space-y-2">
         <div className="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
           <span>Available Recipes ({filteredItems.length})</span>
           <span>Click recipe to forge in hearth</span>
@@ -567,7 +587,7 @@ export default function FoodCalculator({ server, hasPremium, useFocus }) {
           </div>
 
           {/* Location, Nutrition Station Tax & Batch Slider Controls */}
-          <div className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
+          <div id="tour-food-city-controls" className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-2 border-b border-albion-border/80">
               <div className="flex items-center gap-2 text-xs font-serif font-bold text-slate-200">
                 <Building className="w-4 h-4 text-amber-400" />
@@ -681,7 +701,7 @@ export default function FoodCalculator({ server, hasPremium, useFocus }) {
           </div>
 
           {/* 6. Ingredient Recipe & Market Ledger */}
-          <div className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
+          <div id="tour-food-ingredients" className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-2 border-b border-albion-border/80">
               <div className="flex items-center gap-2 text-xs font-serif font-bold text-slate-200">
                 <Coins className="w-4 h-4 text-amber-400" />
@@ -774,7 +794,7 @@ export default function FoodCalculator({ server, hasPremium, useFocus }) {
         {/* Right Column: Artisan Financial Ledger (5 Cols) */}
         <div className="lg:col-span-5 space-y-5">
           {/* Main Profit & Return Ledger Card */}
-          <div className="rounded-2xl border border-amber-700/50 bg-gradient-to-b from-[#151922] to-[#0e1117] p-5 space-y-5 shadow-2xl">
+          <div id="tour-food-ledger" className="rounded-2xl border border-amber-700/50 bg-gradient-to-b from-[#151922] to-[#0e1117] p-5 space-y-5 shadow-2xl">
             {/* Ledger Header */}
             <div className="flex items-center justify-between pb-3 border-b border-amber-900/30">
               <div className="flex items-center gap-2">
@@ -929,7 +949,7 @@ export default function FoodCalculator({ server, hasPremium, useFocus }) {
           </div>
 
           {/* Chef Specialization & Destiny Board Mastery Sliders */}
-          <div className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
+          <div id="tour-food-focus-spec" className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-2 border-b border-albion-border/80">
               <div className="flex items-center gap-2 text-xs font-serif font-bold text-slate-200">
                 <Zap className="w-4 h-4 text-sky-400" />

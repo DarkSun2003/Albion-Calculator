@@ -27,7 +27,9 @@ import {
   ShieldCheck, 
   RefreshCw, 
   Sliders,
-  Flame
+  Flame,
+  BookOpen,
+  HelpCircle
 } from 'lucide-react';
 
 const SUBCATEGORY_ICONS = {
@@ -43,7 +45,7 @@ const SUBCATEGORY_ICONS = {
   distillery: FlaskConical,
 };
 
-export default function PotionCalculator({ server, hasPremium, useFocus }) {
+export default function PotionCalculator({ server, hasPremium, useFocus, onOpenGuide, onStartTour }) {
   // Navigation & Filtering
   const [selectedSubcategory, setSelectedSubcategory] = useState('all');
   const [selectedTier, setSelectedTier] = useState(4);
@@ -302,7 +304,25 @@ export default function PotionCalculator({ server, hasPremium, useFocus }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => onOpenGuide && onOpenGuide('potions')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-500/15 border border-teal-500/40 text-xs font-serif font-bold text-teal-300 hover:bg-teal-500/25 transition-all shadow-sm"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-teal-400" />
+              <span>Alchemy Guide</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onStartTour && onStartTour('potions')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-teal-500/40 text-xs font-serif font-bold text-teal-200 hover:bg-teal-500/20 transition-all shadow-sm"
+            >
+              <HelpCircle className="w-3.5 h-3.5 text-teal-400" />
+              <span>Interactive Tour</span>
+            </button>
+
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0b1417] border border-teal-700/40 text-xs shadow-inner">
               <ShieldCheck className="w-4 h-4 text-teal-400" />
               <div className="text-left">
@@ -320,7 +340,7 @@ export default function PotionCalculator({ server, hasPremium, useFocus }) {
       </div>
 
       {/* 2. Subcategory Filter Pills */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
+      <div id="tour-potion-type-picker" className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
         {POTION_SUBCATEGORIES.map((cat) => {
           const IconComp = SUBCATEGORY_ICONS[cat.id] || FlaskConical;
           const isActive = selectedSubcategory === cat.id;
@@ -386,7 +406,7 @@ export default function PotionCalculator({ server, hasPremium, useFocus }) {
       </div>
 
       {/* 4. Potions Catalog Browser */}
-      <div className="space-y-2">
+      <div id="tour-potion-item-picker" className="space-y-2">
         <div className="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
           <span>Available Concoctions ({filteredItems.length})</span>
           <span>Click potion to brew in alembic</span>
@@ -539,7 +559,7 @@ export default function PotionCalculator({ server, hasPremium, useFocus }) {
           </div>
 
           {/* Station Controls & Batch Size */}
-          <div className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
+          <div id="tour-potion-city-controls" className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-2 border-b border-albion-border/80">
               <div className="flex items-center gap-2 text-xs font-serif font-bold text-slate-200">
                 <Building className="w-4 h-4 text-teal-400" />
@@ -647,7 +667,7 @@ export default function PotionCalculator({ server, hasPremium, useFocus }) {
           </div>
 
           {/* 6. Ingredient Recipe Ledger */}
-          <div className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
+          <div id="tour-potion-ingredients" className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-2 border-b border-albion-border/80">
               <div className="flex items-center gap-2 text-xs font-serif font-bold text-slate-200">
                 <Coins className="w-4 h-4 text-teal-400" />
@@ -735,7 +755,7 @@ export default function PotionCalculator({ server, hasPremium, useFocus }) {
 
         {/* Right Column (5 Cols) */}
         <div className="lg:col-span-5 space-y-5">
-          <div className="rounded-2xl border border-teal-700/50 bg-gradient-to-b from-[#111f22] to-[#091518] p-5 space-y-5 shadow-2xl">
+          <div id="tour-potion-ledger" className="rounded-2xl border border-teal-700/50 bg-gradient-to-b from-[#111f22] to-[#091518] p-5 space-y-5 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-teal-900/30">
               <div className="flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-teal-400" />
@@ -878,7 +898,7 @@ export default function PotionCalculator({ server, hasPremium, useFocus }) {
           </div>
 
           {/* Alchemist Mastery & Specs */}
-          <div className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
+          <div id="tour-potion-focus-spec" className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-2 border-b border-albion-border/80">
               <div className="flex items-center gap-2 text-xs font-serif font-bold text-slate-200">
                 <Zap className="w-4 h-4 text-sky-400" />

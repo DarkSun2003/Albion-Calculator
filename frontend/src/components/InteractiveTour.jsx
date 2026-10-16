@@ -11,74 +11,449 @@ import {
   Coins, 
   Zap, 
   TrendingUp,
-  Server
+  Server,
+  Hammer,
+  Flame,
+  FlaskConical,
+  Wheat,
+  Users,
+  Skull,
+  ShoppingCart,
+  Scale,
+  Soup,
+  ShieldCheck,
+  Building,
+  Bed,
+  Truck
 } from 'lucide-react';
 
-const TOUR_STEPS = [
-  {
-    targetId: '#tour-header-controls',
-    title: 'Server Realm, Premium & Focus Controls',
-    badge: 'Step 1 of 7',
-    icon: Server,
-    description: 'Select your Albion server realm (Europe, Americas, or Asia). Toggle Premium status (which cuts market tax in half from 8% down to 4%), and toggle Crafting Focus to simulate 53.9% Resource Return Rates.',
-    placement: 'bottom',
-  },
-  {
-    targetId: '#tour-module-tabs',
-    title: '7 Economic Command Modules',
-    badge: 'Step 2 of 7',
+export const MODULE_TOURS = {
+  refining: {
+    name: 'Refining Workshop',
     icon: Layers,
-    description: 'Easily switch between all Albion economic disciplines: Refining Workshop, Gear & Item Crafting, Chef\'s Hearth (Food), Alchemist Lab (Potions), Farming, Laborers, and Caerleon Black Market arbitrage.',
-    placement: 'bottom',
+    badgeColor: 'text-amber-300 border-amber-500/40 bg-amber-500/15',
+    steps: [
+      {
+        targetId: '#tour-header-controls',
+        title: 'Server Realm, Premium & Focus Controls',
+        badge: 'Step 1 of 7',
+        icon: Server,
+        description: 'Select your Albion server realm (Europe, Americas, or Asia). Toggle Premium status (cuts market tax from 8% down to 4%), and toggle Crafting Focus to simulate 53.9% Resource Return Rates.',
+        placement: 'bottom',
+      },
+      {
+        targetId: '#tour-module-tabs',
+        title: '7 Economic Command Modules',
+        badge: 'Step 2 of 7',
+        icon: Layers,
+        description: 'Easily switch between all Albion economic disciplines: Refining Workshop, Gear & Item Crafting, Chef\'s Hearth (Food), Alchemist Lab (Potions), Farming, Laborers, and Caerleon Black Market arbitrage.',
+        placement: 'bottom',
+      },
+      {
+        targetId: '#tour-resource-picker',
+        title: 'Select Material, Tier & Enchantment',
+        badge: 'Step 3 of 7',
+        icon: Compass,
+        description: 'Pick your raw resource (Hide, Wood, Fiber, Ore, Stone) across Tiers T2 to T8. Select enchantments from .0 Flat up to .4 Pristine with authentic in-game border glows.',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-city-controls',
+        title: 'Royal City Bonuses & Station Tax',
+        badge: 'Step 4 of 7',
+        icon: MapPin,
+        description: 'Refining in the native bonus city (e.g., Martlock for Hide, Fort Sterling for Wood) raises your Resource Return Rate from 15.2% up to 36.7% (or 53.9% with Focus)! Enter the station owner\'s nutrition tax and your batch size.',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-price-inputs',
+        title: 'Live Market Sync & Price Inputs',
+        badge: 'Step 5 of 7',
+        icon: Coins,
+        description: 'Live prices sync automatically from the Albion Online Data Project with real-time freshness badges. If local market orders change, type directly into any price box to override with your current game prices.',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-focus-spec',
+        title: 'Destiny Board Mastery & Specs',
+        badge: 'Step 6 of 7',
+        icon: Zap,
+        description: 'Adjust your Mastery and Specialization sliders to match your in-game Destiny Board. Higher spec slashes Focus cost exponentially, boosting your Silver-per-Focus (SPF) yield!',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-profit-ledger',
+        title: 'Real-Time Net Profit & Upfront Purse',
+        badge: 'Step 7 of 7',
+        icon: TrendingUp,
+        description: 'The authoritative ledger calculates your required upfront wallet silver, returned refunded materials, break-even unit price, and true net profit silver after all taxes and nutrition fees.',
+        placement: 'left',
+      },
+    ]
   },
-  {
-    targetId: '#tour-resource-picker',
-    title: 'Select Material, Tier & Enchantment',
-    badge: 'Step 3 of 7',
-    icon: Compass,
-    description: 'Pick your raw resource (Hide, Wood, Fiber, Ore, Stone) across Tiers T2 to T8. Select enchantments from .0 Flat up to .4 Pristine with authentic in-game border glows.',
-    placement: 'right',
+  crafting: {
+    name: 'Gear & Weapon Forgemaster',
+    icon: Hammer,
+    badgeColor: 'text-sky-300 border-sky-500/40 bg-sky-500/15',
+    steps: [
+      {
+        targetId: '#tour-craft-categories',
+        title: 'Equipment Categories & Subcategories',
+        badge: 'Step 1 of 7',
+        icon: Hammer,
+        description: 'Select your equipment discipline: Warrior (Swords, Axes, Maces, Plate Armor), Mage (Fire, Holy, Frost, Arcane, Cloth), Hunter (Bows, Daggers, Leather), Off-hands, or Gathering Gear.',
+        placement: 'bottom',
+      },
+      {
+        targetId: '#tour-craft-item-picker',
+        title: 'Item Catalog & Instant Search',
+        badge: 'Step 2 of 7',
+        icon: Compass,
+        description: 'Choose the exact piece of equipment you want to craft. Type in the search box to quickly filter across 3,400+ weapons, armors, and artifact gear.',
+        placement: 'bottom',
+      },
+      {
+        targetId: '#tour-craft-tier-ench',
+        title: 'Tier & Enchantment Configuration',
+        badge: 'Step 3 of 7',
+        icon: Sparkles,
+        description: 'Switch between Tier 4 through Tier 8, and choose your enchantment level (.0 Flat, .1 Uncommon, .2 Rare, .3 Exceptional, .4 Pristine).',
+        placement: 'bottom',
+      },
+      {
+        targetId: '#tour-craft-workflow-switcher',
+        title: 'Pre-Craft Planner vs. Post-Craft Realized',
+        badge: 'Step 4 of 7',
+        icon: Scale,
+        description: 'Toggle between "Phase 1: Pre-Craft Planner" (honest forecast before buying materials) and "Phase 2: Post-Craft Realized" (where you record the actual quality procs that rolled into your bag).',
+        placement: 'bottom',
+      },
+      {
+        targetId: '#tour-craft-planner-details',
+        title: 'Material Shopping List & Wallet Capital',
+        badge: 'Step 5 of 7',
+        icon: ShoppingCart,
+        description: 'See the exact gross quantities of refined materials and artifacts required. Review your Total Upfront Purse (materials + station nutrition fee + empty journals), and click "Copy Shopping List" to paste directly into Discord or game chat!',
+        placement: 'top',
+      },
+      {
+        targetId: '#tour-craft-salad-journals',
+        title: 'Crafter\'s Salad Buff & Filled Journals',
+        badge: 'Step 6 of 7',
+        icon: Zap,
+        description: 'Toggle Crafter\'s Salad (+150 Quality Power to multiply Masterpiece and Outstanding chances), and toggle empty craft journals to capture fame for 100% free resale profit silver!',
+        placement: 'top',
+      },
+      {
+        targetId: '#tour-craft-realized-ledger',
+        title: 'Quality Dice Simulator & Realized Margin',
+        badge: 'Step 7 of 7',
+        icon: TrendingUp,
+        description: 'Click "Simulate Roll (Dice)" to run Albion\'s multi-roll quality algorithm on your batch, or type the exact qualities you rolled. See your weighted realized profit and true silver margin!',
+        placement: 'left',
+      },
+    ]
   },
-  {
-    targetId: '#tour-city-controls',
-    title: 'Royal City Bonuses & Station Tax',
-    badge: 'Step 4 of 7',
-    icon: MapPin,
-    description: 'Refining in the native bonus city (e.g., Martlock for Hide, Fort Sterling for Wood) raises your Resource Return Rate from 15.2% up to 36.7% (or 53.9% with Focus)! Enter the station owner\'s nutrition tax and your batch size.',
-    placement: 'right',
+  food: {
+    name: 'Chef\'s Hearth & Cooking',
+    icon: Flame,
+    badgeColor: 'text-amber-400 border-amber-500/40 bg-amber-500/15',
+    steps: [
+      {
+        targetId: '#tour-food-course-picker',
+        title: 'Culinary Courses & Recipes',
+        badge: 'Step 1 of 6',
+        icon: Soup,
+        description: 'Filter food recipes across Soups, Salads, Pies, Omelettes, Stews, Sandwiches, Roasts, and Butchery pantry goods.',
+        placement: 'bottom',
+      },
+      {
+        targetId: '#tour-food-item-picker',
+        title: 'Meal Selection & Enchantment Level',
+        badge: 'Step 2 of 6',
+        icon: Compass,
+        description: 'Pick your target food item (e.g. Pork Omelette, Beef Stew, Roast Pork) and select fish sauce enchantment level (.0, .1, .2, .3) for enhanced buff stats.',
+        placement: 'bottom',
+      },
+      {
+        targetId: '#tour-food-city-controls',
+        title: 'Caerleon Cooking Bonus & Batch Size',
+        badge: 'Step 3 of 6',
+        icon: MapPin,
+        description: 'Caerleon has a massive native +15% local cooking bonus (yielding 43.5% RRR without focus, or 53.9% with focus)! Enter station nutrition tax and your batch quantity.',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-food-ingredients',
+        title: 'Ingredients & Reagent Costs',
+        badge: 'Step 4 of 6',
+        icon: Coins,
+        description: 'Review the market prices of raw crops, flour, meats, eggs, milk, and fish sauce. Click any price to customize it based on your local market orders.',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-food-focus-spec',
+        title: 'Chef Mastery & Spec Sliders',
+        badge: 'Step 5 of 6',
+        icon: Zap,
+        description: 'Enter your Chef Destiny Board mastery and recipe specialization to reduce Focus cost per batch down to a fraction of base.',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-food-ledger',
+        title: 'Cooking Net Profit & Nutrition Payout',
+        badge: 'Step 6 of 6',
+        icon: TrendingUp,
+        description: 'Review total revenue, station fees, ingredient costs, refunded returned ingredients, and true net profit silver per cooking session.',
+        placement: 'left',
+      },
+    ]
   },
-  {
-    targetId: '#tour-price-inputs',
-    title: 'Live Market Sync & Price Inputs',
-    badge: 'Step 5 of 7',
-    icon: Coins,
-    description: 'Live prices sync automatically from the Albion Online Data Project with real-time freshness badges. If local market orders change, type directly into any price box to override with your current game prices.',
-    placement: 'right',
+  potions: {
+    name: 'Alchemist Lab & Potions',
+    icon: FlaskConical,
+    badgeColor: 'text-teal-300 border-teal-500/40 bg-teal-500/15',
+    steps: [
+      {
+        targetId: '#tour-potion-type-picker',
+        title: 'Alchemical Categories',
+        badge: 'Step 1 of 6',
+        icon: FlaskConical,
+        description: 'Filter between Healing, Energy, Resistance & Defense, Poison & Debuff, Invisibility & Mobility, and Gathering/Distillery extracts.',
+        placement: 'bottom',
+      },
+      {
+        targetId: '#tour-potion-item-picker',
+        title: 'Potion Selection & Purity Level',
+        badge: 'Step 2 of 6',
+        icon: Compass,
+        description: 'Select your target potion across T4 through T8, and choose enchantment purity (.0 to .3) using Arcane Extracts.',
+        placement: 'bottom',
+      },
+      {
+        targetId: '#tour-potion-city-controls',
+        title: 'Caerleon / Brecilien Bonus & Batch Size',
+        badge: 'Step 3 of 6',
+        icon: MapPin,
+        description: 'Brew in Caerleon (+15% local bonus) or Brecilien for boosted return rates. Enter the Alchemist Lab station owner fee and your batch quantity.',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-potion-ingredients',
+        title: 'Herbs, Milk & Alcohol Reagents',
+        badge: 'Step 4 of 6',
+        icon: Coins,
+        description: 'Live prices sync for Burdock, Dragon Teasel, Firefern, Ghoul Yarrow, Goat Milk, and Alchemy Extracts with instant override support.',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-potion-focus-spec',
+        title: 'Alchemist Mastery & Specialization',
+        badge: 'Step 5 of 6',
+        icon: Zap,
+        description: 'Match your in-game Destiny Board sliders to slash Focus cost and calculate your exact Silver-per-Focus (SPF) ratio.',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-potion-ledger',
+        title: 'Net Potion Profit & Break-Even Cost',
+        badge: 'Step 6 of 6',
+        icon: TrendingUp,
+        description: 'Calculate net profit per brew, break-even sell price, total upfront wallet silver needed, and returned herbs.',
+        placement: 'left',
+      },
+    ]
   },
-  {
-    targetId: '#tour-focus-spec',
-    title: 'Destiny Board Mastery & Specs',
-    badge: 'Step 6 of 7',
-    icon: Zap,
-    description: 'Adjust your Mastery and Specialization sliders to match your in-game Destiny Board. Higher spec slashes Focus cost exponentially, boosting your Silver-per-Focus (SPF) yield!',
-    placement: 'right',
+  farming: {
+    name: 'Farming & Livestock',
+    icon: Wheat,
+    badgeColor: 'text-emerald-300 border-emerald-500/40 bg-emerald-500/15',
+    steps: [
+      {
+        targetId: '#tour-farm-mode-picker',
+        title: 'Homestead Agricultural Plots',
+        badge: 'Step 1 of 6',
+        icon: Wheat,
+        description: 'Choose your island operation: Crops (Carrots, Wheat, Corn), Herbs (Burdock, Firefern), Pasture Animals (Chickens, Pigs, Cows), or Rare Mounts.',
+        placement: 'bottom',
+      },
+      {
+        targetId: '#tour-farm-item-picker',
+        title: 'Seed & Animal Selection',
+        badge: 'Step 2 of 6',
+        icon: Compass,
+        description: 'Pick your crop or livestock across Tier 1 through Tier 8.',
+        placement: 'bottom',
+      },
+      {
+        targetId: '#tour-farm-homestead-controls',
+        title: 'Island Location & Number of Plots',
+        badge: 'Step 3 of 6',
+        icon: MapPin,
+        description: 'Set your island\'s home city (each Royal City offers +10% crop or animal growth bonuses!) and your number of farm plots (9 squares per plot).',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-farm-focus-watering',
+        title: 'Focus Watering & Baby Nurturing',
+        badge: 'Step 4 of 6',
+        icon: Zap,
+        description: 'Watering crops with Focus doubles your Seed Return Rate above 100%, allowing you to harvest crops indefinitely without ever rebuying seeds from the market!',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-farm-feed-inputs',
+        title: 'Feeding Costs & Harvest Value',
+        badge: 'Step 5 of 6',
+        icon: Coins,
+        description: 'For livestock: compare feed costs against passive milk/egg yields vs. slaughtering for raw meat.',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-farm-yield-ledger',
+        title: 'Daily Homestead Net Silver Yield',
+        badge: 'Step 6 of 6',
+        icon: TrendingUp,
+        description: 'Calculates your daily net silver profit, harvest volume, seed recycling balance, and capital investment.',
+        placement: 'left',
+      },
+    ]
   },
-  {
-    targetId: '#tour-profit-ledger',
-    title: 'Real-Time Net Profit & Upfront Purse',
-    badge: 'Step 7 of 7',
-    icon: TrendingUp,
-    description: 'The authoritative ledger calculates your required upfront wallet silver, returned refunded materials, break-even unit price, and true net profit silver after all taxes and nutrition fees.',
-    placement: 'left',
+  laborers: {
+    name: 'Laborers & Journals',
+    icon: Users,
+    badgeColor: 'text-purple-300 border-purple-500/40 bg-purple-500/15',
+    steps: [
+      {
+        targetId: '#tour-laborer-prof-picker',
+        title: 'Laborer Professions',
+        badge: 'Step 1 of 6',
+        icon: Users,
+        description: 'Pick your laborer type: Blacksmith (Metal), Fletcher (Leather/Wood), Imbuer (Cloth), Tinker, Mercenary (Raw Silver), or Gathering laborers.',
+        placement: 'bottom',
+      },
+      {
+        targetId: '#tour-laborer-house-config',
+        title: 'Guild Hall & House Tiering',
+        badge: 'Step 2 of 6',
+        icon: Building,
+        description: 'Configure your house tier (T2 to T8) and number of laborers. House tier must match or exceed your laborer tier to house them safely.',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-laborer-furniture-config',
+        title: 'The 150% Happiness Formula',
+        badge: 'Step 3 of 6',
+        icon: Bed,
+        description: 'To achieve the maximum 150% resource yield, every laborer requires: 1 Bed of equal tier, shared Table of equal tier, and Generalist Trophies.',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-laborer-journal-tier',
+        title: 'Journal Tier & Fame Requirements',
+        badge: 'Step 4 of 6',
+        icon: Compass,
+        description: 'Select the tier of journals you send them with (e.g. T5 or T7 journals). Higher tier journals require more fame to fill but return high tier materials.',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-laborer-economics',
+        title: 'Journal Purchase Cost vs. Return Value',
+        badge: 'Step 5 of 6',
+        icon: Coins,
+        description: 'Compares the market buy price of Full Journals against the market sell price of the returned refined materials + refunded empty book.',
+        placement: 'right',
+      },
+      {
+        targetId: '#tour-laborer-ledger',
+        title: 'Daily Laborer Net Silver & Payback Period',
+        badge: 'Step 6 of 6',
+        icon: TrendingUp,
+        description: 'Calculates net daily profit per worker and how many days it takes for your house/furniture investment to pay for itself completely.',
+        placement: 'left',
+      },
+    ]
   },
-];
+  blackmarket: {
+    name: 'Black Market Arbitrage',
+    icon: Skull,
+    badgeColor: 'text-rose-400 border-rose-500/40 bg-rose-500/15',
+    steps: [
+      {
+        targetId: '#tour-bm-item-filter',
+        title: 'Black Market Scanner & Filters',
+        badge: 'Step 1 of 5',
+        icon: Skull,
+        description: 'Scan live buy orders placed by the Caerleon Black Market. Filter by equipment type (Warrior, Mage, Hunter, Accessories) and tier.',
+        placement: 'bottom',
+      },
+      {
+        targetId: '#tour-bm-price-comparison',
+        title: 'Royal Continent Price vs. Caerleon Payout',
+        badge: 'Step 2 of 5',
+        icon: Coins,
+        description: 'Compares the cheapest crafting or marketplace purchase price in the 5 Royal Cities directly against the highest Caerleon buy order.',
+        placement: 'bottom',
+      },
+      {
+        targetId: '#tour-bm-arbitrage-spread',
+        title: 'Arbitrage Profit Spread & Margins',
+        badge: 'Step 3 of 5',
+        icon: TrendingUp,
+        description: 'See your true net profit per item after deducting Caerleon 4% market tax, and the profit margin percentage.',
+        placement: 'top',
+      },
+      {
+        targetId: '#tour-bm-hauling-weight',
+        title: 'Cargo Weight & Mount Capacity',
+        badge: 'Step 4 of 5',
+        icon: Truck,
+        description: 'Review total haul weight and recommended transport mounts (Grizzly Bear, Armored Horse, Pest Lizard) that don\'t lose speed when dismounted.',
+        placement: 'top',
+      },
+      {
+        targetId: '#tour-bm-safety-guide',
+        title: 'Red Zone Danger & Safety Protocol',
+        badge: 'Step 5 of 5',
+        icon: ShieldCheck,
+        description: 'Follow our essential Red Zone hauling checklist: scout the Caerleon border gates first, equip Miner Boots and Assassin Jacket, and never run overweight!',
+        placement: 'top',
+      },
+    ]
+  }
+};
 
-export default function InteractiveTour({ isActive, onComplete, onSkip }) {
+export default function InteractiveTour({ 
+  isActive, 
+  activeModule = 'refining', 
+  onSelectModule, 
+  onComplete, 
+  onSkip 
+}) {
+  const [currentModule, setCurrentModule] = useState(activeModule);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [targetRect, setTargetRect] = useState(null);
   const tooltipRef = useRef(null);
 
-  const step = TOUR_STEPS[currentStepIndex];
+  // Sync module if parent tab changes
+  useEffect(() => {
+    if (activeModule && MODULE_TOURS[activeModule]) {
+      setCurrentModule(activeModule);
+      setCurrentStepIndex(0);
+    }
+  }, [activeModule]);
+
+  const activeTour = MODULE_TOURS[currentModule] || MODULE_TOURS.refining;
+  const tourSteps = activeTour.steps;
+  const step = tourSteps[currentStepIndex] || tourSteps[0];
+
+  const handleSwitchModule = (modKey) => {
+    setCurrentModule(modKey);
+    setCurrentStepIndex(0);
+    if (onSelectModule) {
+      onSelectModule(modKey);
+    }
+  };
 
   // Update target bounding box
   const updateTargetPosition = useCallback(() => {
@@ -138,7 +513,7 @@ export default function InteractiveTour({ isActive, onComplete, onSkip }) {
       if (e.key === 'Escape') {
         onSkip();
       } else if (e.key === 'ArrowRight' || e.key === 'Enter') {
-        if (currentStepIndex < TOUR_STEPS.length - 1) {
+        if (currentStepIndex < tourSteps.length - 1) {
           setCurrentStepIndex(prev => prev + 1);
         } else {
           onComplete();
@@ -152,12 +527,12 @@ export default function InteractiveTour({ isActive, onComplete, onSkip }) {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isActive, currentStepIndex, onComplete, onSkip]);
+  }, [isActive, currentStepIndex, tourSteps.length, onComplete, onSkip]);
 
   if (!isActive || !step) return null;
 
-  const Icon = step.icon;
-  const isLastStep = currentStepIndex === TOUR_STEPS.length - 1;
+  const Icon = step.icon || Compass;
+  const isLastStep = currentStepIndex === tourSteps.length - 1;
 
   // Calculate Tooltip Coordinates
   let tooltipStyle = {};
@@ -169,7 +544,6 @@ export default function InteractiveTour({ isActive, onComplete, onSkip }) {
     const isMobile = windowWidth < 768;
 
     if (isMobile) {
-      // On small screens, pin tooltip neatly to bottom
       tooltipStyle = {
         position: 'fixed',
         bottom: '24px',
@@ -180,36 +554,44 @@ export default function InteractiveTour({ isActive, onComplete, onSkip }) {
     } else if (step.placement === 'bottom') {
       tooltipStyle = {
         position: 'fixed',
-        top: `${Math.min(windowHeight - 280, targetRect.bottom + padding)}px`,
-        left: `${Math.max(16, Math.min(windowWidth - 440, targetRect.left))}px`,
-        width: '420px',
+        top: `${Math.min(windowHeight - 320, targetRect.bottom + padding)}px`,
+        left: `${Math.max(16, Math.min(windowWidth - 460, targetRect.left))}px`,
+        width: '440px',
         zIndex: 100,
       };
     } else if (step.placement === 'left') {
       tooltipStyle = {
         position: 'fixed',
-        top: `${Math.max(20, Math.min(windowHeight - 320, targetRect.top))}px`,
-        left: `${Math.max(16, targetRect.left - 440 - padding)}px`,
-        width: '420px',
+        top: `${Math.max(20, Math.min(windowHeight - 340, targetRect.top))}px`,
+        left: `${Math.max(16, targetRect.left - 460 - padding)}px`,
+        width: '440px',
+        zIndex: 100,
+      };
+    } else if (step.placement === 'top') {
+      tooltipStyle = {
+        position: 'fixed',
+        bottom: `${Math.max(20, windowHeight - targetRect.top + padding)}px`,
+        left: `${Math.max(16, Math.min(windowWidth - 460, targetRect.left))}px`,
+        width: '440px',
         zIndex: 100,
       };
     } else {
       // Default: place on right or bottom
-      const canFitRight = targetRect.right + 440 + padding < windowWidth;
+      const canFitRight = targetRect.right + 460 + padding < windowWidth;
       if (canFitRight) {
         tooltipStyle = {
           position: 'fixed',
-          top: `${Math.max(20, Math.min(windowHeight - 320, targetRect.top))}px`,
+          top: `${Math.max(20, Math.min(windowHeight - 340, targetRect.top))}px`,
           left: `${targetRect.right + padding}px`,
-          width: '420px',
+          width: '440px',
           zIndex: 100,
         };
       } else {
         tooltipStyle = {
           position: 'fixed',
-          top: `${Math.min(windowHeight - 280, targetRect.bottom + padding)}px`,
+          top: `${Math.min(windowHeight - 320, targetRect.bottom + padding)}px`,
           left: `${Math.max(16, targetRect.left)}px`,
-          width: '420px',
+          width: '440px',
           zIndex: 100,
         };
       }
@@ -221,7 +603,7 @@ export default function InteractiveTour({ isActive, onComplete, onSkip }) {
       top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
-      width: '420px',
+      width: '440px',
       zIndex: 100,
     };
   }
@@ -259,15 +641,49 @@ export default function InteractiveTour({ isActive, onComplete, onSkip }) {
         style={tooltipStyle}
         className="bg-albion-surface border border-amber-500/80 rounded-2xl p-5 shadow-[0_10px_40px_rgba(0,0,0,0.9),0_0_20px_rgba(245,158,11,0.25)] text-slate-100 ring-1 ring-amber-400/40 animate-fade-in"
       >
-        {/* Header */}
+        {/* Module Switcher Pills */}
+        <div className="mb-3 pb-2.5 border-b border-albion-border/70">
+          <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono mb-1.5">
+            <span className="flex items-center gap-1 text-amber-300 font-bold">
+              <Compass className="w-3.5 h-3.5 text-amber-400" />
+              <span>GUIDED TOUR MODULE:</span>
+            </span>
+            <span className="text-slate-400">Click to switch</span>
+          </div>
+          <div className="flex items-center gap-1 overflow-x-auto pb-1 scrollbar-none">
+            {Object.entries(MODULE_TOURS).map(([key, mod]) => {
+              const isModActive = key === currentModule;
+              const ModIcon = mod.icon;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => handleSwitchModule(key)}
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-serif font-bold whitespace-nowrap transition-all ${
+                    isModActive
+                      ? 'bg-amber-500/20 border border-amber-500/60 text-amber-300 shadow-sm'
+                      : 'bg-slate-800/40 border border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                  }`}
+                >
+                  <ModIcon className={`w-3 h-3 ${isModActive ? 'text-amber-400' : 'text-slate-500'}`} />
+                  <span>{mod.name.split(' ')[0]}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Step Header */}
         <div className="flex items-center justify-between gap-3 mb-2.5">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/50 flex items-center justify-center text-amber-300 shadow-sm shrink-0">
               <Icon className="w-4 h-4" />
             </div>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/40 font-bold uppercase tracking-wider">
-              {step.badge}
-            </span>
+            <div>
+              <span className={`text-[10px] font-mono px-2 py-0.5 rounded border font-bold uppercase tracking-wider ${activeTour.badgeColor}`}>
+                {activeTour.name} &bull; {step.badge}
+              </span>
+            </div>
           </div>
 
           <button
@@ -294,7 +710,7 @@ export default function InteractiveTour({ isActive, onComplete, onSkip }) {
         <div className="flex items-center justify-between pt-3 border-t border-albion-border/70">
           {/* Progress dots */}
           <div className="flex items-center gap-1.5">
-            {TOUR_STEPS.map((_, idx) => (
+            {tourSteps.map((_, idx) => (
               <button
                 key={idx}
                 type="button"
@@ -318,7 +734,7 @@ export default function InteractiveTour({ isActive, onComplete, onSkip }) {
               onClick={onSkip}
               className="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 text-xs font-mono transition-colors cursor-pointer mr-1"
             >
-              Skip Tour
+              Skip
             </button>
 
             {currentStepIndex > 0 && (
@@ -343,9 +759,9 @@ export default function InteractiveTour({ isActive, onComplete, onSkip }) {
               }}
               className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold font-mono text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95"
             >
-              <span>{isLastStep ? 'Complete Tour' : 'Next'}</span>
-              {!isLastStep && <ChevronRight className="w-3.5 h-3.5" />}
-              {isLastStep && <CheckCircle2 className="w-3.5 h-3.5" />}
+              <span>{isLastStep ? 'Finish Tour' : 'Next'}</span>
+              {!isLastStep && <ChevronRight className="w-3.5 h-3.5 text-slate-950" />}
+              {isLastStep && <CheckCircle2 className="w-3.5 h-3.5 text-slate-950" />}
             </button>
           </div>
         </div>

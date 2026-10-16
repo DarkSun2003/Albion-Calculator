@@ -31,6 +31,7 @@ export default function App() {
   // Guide, Onboarding & Interactive Tour States
   const [isTourActive, setIsTourActive] = useState(false);
   const [isHandbookOpen, setIsHandbookOpen] = useState(false);
+  const [handbookInitialTab, setHandbookInitialTab] = useState('quickstart');
   const [showWelcomeBanner, setShowWelcomeBanner] = useState(() => {
     try {
       return localStorage.getItem('albion_artisan_onboarded') !== 'true';
@@ -48,13 +49,21 @@ export default function App() {
     }
   };
 
-  const handleStartTour = () => {
+  const handleOpenHandbook = (tab = 'quickstart') => {
+    setHandbookInitialTab(tab);
+    setIsHandbookOpen(true);
+  };
+
+  const handleStartTour = (moduleName) => {
     handleDismissWelcome();
     setIsHandbookOpen(false);
-    setActiveTab('refining');
+    const targetModule = moduleName || activeTab;
+    if (activeTab !== targetModule) {
+      setActiveTab(targetModule);
+    }
     setTimeout(() => {
       setIsTourActive(true);
-    }, 150);
+    }, 180);
   };
 
   // Refining parameters
@@ -429,39 +438,83 @@ export default function App() {
           <BlackMarketCalculator
             server={server}
             hasPremium={hasPremium}
+            onOpenGuide={handleOpenHandbook}
+            onStartTour={handleStartTour}
           />
         ) : activeTab === 'laborers' ? (
           <LaborerCalculator
             server={server}
             hasPremium={hasPremium}
+            onOpenGuide={handleOpenHandbook}
+            onStartTour={handleStartTour}
           />
         ) : activeTab === 'farming' ? (
           <FarmingCalculator
             server={server}
             hasPremium={hasPremium}
             useFocus={useFocus}
+            onOpenGuide={handleOpenHandbook}
+            onStartTour={handleStartTour}
           />
         ) : activeTab === 'potions' ? (
           <PotionCalculator
             server={server}
             hasPremium={hasPremium}
             useFocus={useFocus}
+            onOpenGuide={handleOpenHandbook}
+            onStartTour={handleStartTour}
           />
         ) : activeTab === 'cooking' ? (
           <FoodCalculator
             server={server}
             hasPremium={hasPremium}
             useFocus={useFocus}
+            onOpenGuide={handleOpenHandbook}
+            onStartTour={handleStartTour}
           />
         ) : activeTab === 'crafting' ? (
           <CraftingCalculator
             server={server}
             hasPremium={hasPremium}
             useFocus={useFocus}
+            onOpenGuide={handleOpenHandbook}
+            onStartTour={handleStartTour}
           />
         ) : (
           /* Tab 2: Refining Workshop */
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div className="space-y-4">
+            {/* Refining Quick Guide Banner */}
+            <div className="flex flex-wrap items-center justify-between gap-3 bg-gradient-to-r from-amber-950/40 via-albion-card to-amber-950/40 p-3 rounded-xl border border-amber-500/30">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/50 flex items-center justify-center text-amber-400">
+                  <Layers className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="font-serif font-bold text-xs text-slate-200">Refining Workshop & Royal City Matrix Guide</span>
+                  <p className="text-[11px] text-slate-400">Master the 5 Royal City refining bonuses (up to 53.9% return rate with Focus)</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleOpenHandbook('refining')}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 font-mono text-xs font-bold transition-all cursor-pointer"
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>Read Guide</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleStartTour('refining')}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-mono text-xs font-bold transition-all shadow-md cursor-pointer hover:scale-105"
+                >
+                  <Compass className="w-3.5 h-3.5" />
+                  <span>Interactive Tour</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             {/* Left Column: Workshop Controls (7 Cols) */}
             <div className="lg:col-span-7 space-y-5">
               {/* 1. Tactile Material, Tier & Enchantment Picker */}
@@ -589,6 +642,7 @@ export default function App() {
               </div>
             </div>
           </div>
+          </div>
         )}
       </main>
 
@@ -607,6 +661,8 @@ export default function App() {
       {/* Interactive Step-by-Step Guided Tour */}
       <InteractiveTour
         isActive={isTourActive}
+        activeModule={activeTab}
+        onSelectModule={(mod) => setActiveTab(mod)}
         onComplete={() => {
           setIsTourActive(false);
           handleDismissWelcome();
@@ -622,6 +678,7 @@ export default function App() {
         isOpen={isHandbookOpen}
         onClose={() => setIsHandbookOpen(false)}
         onStartTour={handleStartTour}
+        initialTab={handbookInitialTab}
       />
     </div>
   );

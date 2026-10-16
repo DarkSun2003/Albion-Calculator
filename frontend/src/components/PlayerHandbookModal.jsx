@@ -17,20 +17,41 @@ import {
   ChevronRight,
   ShoppingCart,
   RotateCcw,
-  Scale
+  Scale,
+  Flame,
+  Soup,
+  FlaskConical,
+  Wheat,
+  Users,
+  Bed,
+  Truck,
+  ShieldCheck,
+  Egg,
+  Scissors
 } from 'lucide-react';
 
 const HANDBOOK_TABS = [
   { id: 'quickstart', label: '🔰 Quickstart', icon: Compass },
-  { id: 'crafting', label: '🛒 Crafting Workflow', icon: Hammer },
-  { id: 'cities', label: '🏙️ City RRR Matrix', icon: MapPin },
-  { id: 'blackmarket', label: '💀 Black Market Hauling', icon: Skull },
-  { id: 'focus', label: '⚡ Focus Efficiency', icon: Zap },
-  { id: 'faq', label: '❓ FAQ & Live Data', icon: HelpCircle },
+  { id: 'refining', label: '💎 Refining & RRR', icon: Layers },
+  { id: 'crafting', label: '⚔️ Gear Crafting', icon: Hammer },
+  { id: 'food', label: '🍲 Cooking & Food', icon: Flame },
+  { id: 'potions', label: '🧪 Potions & Alchemy', icon: FlaskConical },
+  { id: 'farming', label: '🌾 Farming & Animals', icon: Wheat },
+  { id: 'laborers', label: '👷 Laborers & Houses', icon: Users },
+  { id: 'blackmarket', label: '💀 Black Market', icon: Skull },
+  { id: 'focus', label: '⚡ Focus & Specs', icon: Zap },
+  { id: 'faq', label: '❓ FAQ & Data', icon: HelpCircle },
 ];
 
-export default function PlayerHandbookModal({ isOpen, onClose, onStartTour }) {
-  const [activeTab, setActiveTab] = useState('quickstart');
+export default function PlayerHandbookModal({ isOpen, onClose, onStartTour, initialTab = 'quickstart' }) {
+  const [activeTab, setActiveTab] = useState(initialTab);
+
+  // Sync initialTab when modal opens
+  useEffect(() => {
+    if (initialTab && isOpen) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab, isOpen]);
 
   // Close on Escape key
   useEffect(() => {
@@ -45,10 +66,17 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour }) {
 
   if (!isOpen) return null;
 
+  const handleLaunchModuleTour = (moduleKey) => {
+    onClose();
+    if (onStartTour) {
+      onStartTour(moduleKey);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-md animate-fade-in">
       <div 
-        className="bg-albion-surface border border-albion-border/90 rounded-2xl w-full max-w-4xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden text-slate-100 ring-1 ring-amber-500/20"
+        className="bg-albion-surface border border-albion-border/90 rounded-2xl w-full max-w-5xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden text-slate-100 ring-1 ring-amber-500/20"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -60,14 +88,14 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour }) {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="font-serif text-lg sm:text-xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-300 to-amber-500">
-                  Player Handbook & Navigation Codex
+                  Albion Artisan Master Codex & Guide
                 </h2>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/40 font-bold uppercase">
-                  Guide
+                  All 7 Disciplines
                 </span>
               </div>
               <p className="text-xs text-slate-400 font-serif">
-                Master Albion Online economy, city bonuses, crafting workflow, and silver optimization
+                Comprehensive blueprints for Refining, Gear Crafting, Cooking, Potions, Farming, Laborers, and Black Market hauling
               </p>
             </div>
           </div>
@@ -79,27 +107,6 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour }) {
             title="Close Handbook (Esc)"
           >
             <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Top Interactive Walkthrough Banner */}
-        <div className="bg-gradient-to-r from-amber-950/50 via-sky-950/40 to-amber-950/50 border-b border-amber-500/30 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-2 text-slate-300 font-sans">
-            <Sparkles className="w-4 h-4 text-amber-400 shrink-0 animate-pulse" />
-            <span>
-              First time on the site? Prefer a guided, interactive walk through the buttons on your screen?
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              onClose();
-              onStartTour();
-            }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono font-bold text-xs tracking-wider transition-all shadow-md hover:scale-105 active:scale-95 cursor-pointer shrink-0"
-          >
-            <Compass className="w-3.5 h-3.5" />
-            <span>Start Interactive Tour &rarr;</span>
           </button>
         </div>
 
@@ -132,6 +139,26 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour }) {
           {/* TAB 1: QUICKSTART */}
           {activeTab === 'quickstart' && (
             <div className="space-y-6 animate-fade-in">
+              <div className="bg-gradient-to-r from-amber-950/40 via-sky-950/30 to-amber-950/40 border border-amber-500/30 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div>
+                  <h4 className="font-serif font-bold text-amber-300 text-sm mb-1 flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-amber-400" />
+                    New to the Albion Calculator?
+                  </h4>
+                  <p className="text-slate-300">
+                    You can launch a step-by-step interactive spotlight tour of the current page anytime!
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleLaunchModuleTour('refining')}
+                  className="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono font-bold text-xs tracking-wider transition-all shadow-md cursor-pointer flex items-center gap-1.5"
+                >
+                  <Compass className="w-3.5 h-3.5" />
+                  <span>Start Refining Tour &rarr;</span>
+                </button>
+              </div>
+
               <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/30 to-albion-bg border border-amber-500/30 space-y-2">
                 <h3 className="font-serif text-base font-bold text-amber-300 flex items-center gap-2">
                   <Compass className="w-4 h-4 text-amber-400" />
@@ -147,9 +174,9 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour }) {
                   <div className="w-8 h-8 rounded-lg bg-sky-950/70 border border-sky-500/50 flex items-center justify-center text-sky-400 font-mono font-bold text-sm">
                     1
                   </div>
-                  <h4 className="font-serif font-bold text-slate-200 text-sm">Refine in Bonus Cities</h4>
+                  <h4 className="font-serif font-bold text-slate-200 text-sm">Refine & Craft in Bonus Cities</h4>
                   <p className="text-xs text-slate-400">
-                    Always refine in the city that has the <strong>native 15% local production bonus</strong>. This raises your Resource Return Rate from 15.2% up to <strong>36.7%</strong> (or <strong>53.9% with Focus</strong>)!
+                    Always manufacture in the city with the <strong>native local production bonus</strong>. This raises your Resource Return Rate from 15.2% up to <strong>36.7%</strong> (or <strong>53.9% with Focus</strong>)!
                   </p>
                 </div>
 
@@ -169,49 +196,108 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour }) {
                   </div>
                   <h4 className="font-serif font-bold text-slate-200 text-sm">Bring Journals & Eat Salad</h4>
                   <p className="text-xs text-slate-400">
-                    Carry <strong>Empty Journals</strong> in your bag to capture fame for 100% free resale profit, and eat <strong>Crafter's Salad</strong> (+150 Quality Rating) before hitting the forge.
+                    Carry <strong>Empty Journals</strong> in your bag to capture fame for 100% free resale profit, and eat <strong>Crafter&apos;s Salad</strong> (+150 Quality Rating) before hitting the forge.
                   </p>
-                </div>
-              </div>
-
-              <div className="p-4 rounded-xl bg-albion-bg/80 border border-albion-border space-y-3">
-                <h4 className="font-serif font-bold text-slate-200 text-sm flex items-center gap-2">
-                  <Layers className="w-4 h-4 text-sky-400" />
-                  Site Navigation Roadmap
-                </h4>
-                <div className="space-y-2 text-xs text-slate-300">
-                  <div className="flex items-start gap-2">
-                    <span className="font-mono text-amber-400 font-bold shrink-0">1. Top Header:</span>
-                    <span>Switch your server region (Europe, Americas, Asia), toggle Premium (drops tax from 8% to 4%), and toggle Focus.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="font-mono text-amber-400 font-bold shrink-0">2. Module Tabs:</span>
-                    <span>Navigate between Refining, Gear Crafting, Cooking, Potions, Farming, Laborers, and Caerleon Black Market.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="font-mono text-amber-400 font-bold shrink-0">3. Live Prices:</span>
-                    <span>Live prices fetch automatically from the Albion Online Data Project. You can type manual prices anytime to match current market boards.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="font-mono text-amber-400 font-bold shrink-0">4. Right-Hand Ledger:</span>
-                    <span>Review your total upfront silver needed, break-even unit cost, return rate refunds, and net profit.</span>
-                  </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* TAB 2: CRAFTING WORKFLOW */}
-          {activeTab === 'crafting' && (
+          {/* TAB 2: REFINING & RRR MATRIX */}
+          {activeTab === 'refining' && (
             <div className="space-y-5 animate-fade-in">
-              <div className="p-4 rounded-xl bg-gradient-to-r from-sky-950/40 to-albion-bg border border-sky-500/30 space-y-2">
-                <h3 className="font-serif text-base font-bold text-sky-300 flex items-center gap-2">
-                  <Hammer className="w-4 h-4 text-sky-400" />
-                  Pre-Craft Planning vs. Post-Craft Realized Ledger
+              <div className="bg-gradient-to-r from-sky-950/40 via-albion-bg to-sky-950/40 border border-sky-500/30 rounded-xl p-3.5 flex items-center justify-between gap-3 text-xs">
+                <span className="text-sky-300 font-sans">
+                  Ready to see these bonuses live in action on the Refining workshop?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleLaunchModuleTour('refining')}
+                  className="px-3 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-mono font-bold text-xs tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+                >
+                  <Compass className="w-3.5 h-3.5" />
+                  <span>Launch Refining Tour &rarr;</span>
+                </button>
+              </div>
+
+              <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/30 to-albion-bg border border-amber-500/30 space-y-2">
+                <h3 className="font-serif text-base font-bold text-amber-300 flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-amber-400" />
+                  Royal Continent Resource Return Rate (RRR) Matrix
                 </h3>
                 <p className="text-slate-300 text-xs">
-                  Why is the Gear Crafting calculator divided into two distinct phases? Because before you craft, <strong>it is impossible to know what quality you will get!</strong>
+                  Refining in the native bonus city gives a <strong>+15% local refining bonus</strong>, raising base RRR to <strong>36.7%</strong> and Focus RRR to <strong>53.9%</strong>:
                 </p>
+              </div>
+
+              <div className="overflow-x-auto rounded-xl border border-albion-border">
+                <table className="w-full text-xs text-left">
+                  <thead className="bg-[#0b0e15] text-slate-400 font-serif uppercase tracking-wider border-b border-albion-border">
+                    <tr>
+                      <th className="py-2.5 px-3">City</th>
+                      <th className="py-2.5 px-3">Primary Refining Resource</th>
+                      <th className="py-2.5 px-3">No-Focus RRR</th>
+                      <th className="py-2.5 px-3">With-Focus RRR</th>
+                      <th className="py-2.5 px-3">Equipment Crafting Bonus</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-albion-border/40 font-mono">
+                    <tr className="hover:bg-slate-800/20">
+                      <td className="py-2.5 px-3 font-serif font-bold text-slate-100">Martlock</td>
+                      <td className="py-2.5 px-3 text-amber-300 font-bold">Hide &rarr; Leather</td>
+                      <td className="py-2.5 px-3 text-sky-300">36.7%</td>
+                      <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
+                      <td className="py-2.5 px-3 text-slate-300 font-sans">Axes, Quarterstaffs, Frost, Shoes</td>
+                    </tr>
+                    <tr className="hover:bg-slate-800/20">
+                      <td className="py-2.5 px-3 font-serif font-bold text-slate-100">Fort Sterling</td>
+                      <td className="py-2.5 px-3 text-amber-300 font-bold">Wood &rarr; Planks</td>
+                      <td className="py-2.5 px-3 text-sky-300">36.7%</td>
+                      <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
+                      <td className="py-2.5 px-3 text-slate-300 font-sans">Hammers, Spears, Holy, Plate Helmets</td>
+                    </tr>
+                    <tr className="hover:bg-slate-800/20">
+                      <td className="py-2.5 px-3 font-serif font-bold text-slate-100">Lymhurst</td>
+                      <td className="py-2.5 px-3 text-amber-300 font-bold">Fiber &rarr; Cloth</td>
+                      <td className="py-2.5 px-3 text-sky-300">36.7%</td>
+                      <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
+                      <td className="py-2.5 px-3 text-slate-300 font-sans">Swords, Bows, Arcane, Leather Helmets</td>
+                    </tr>
+                    <tr className="hover:bg-slate-800/20">
+                      <td className="py-2.5 px-3 font-serif font-bold text-slate-100">Bridgewatch</td>
+                      <td className="py-2.5 px-3 text-amber-300 font-bold">Ore &rarr; Metal Bars</td>
+                      <td className="py-2.5 px-3 text-sky-300">36.7%</td>
+                      <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
+                      <td className="py-2.5 px-3 text-slate-300 font-sans">Crossbows, Daggers, Cursed, Plate Armor</td>
+                    </tr>
+                    <tr className="hover:bg-slate-800/20">
+                      <td className="py-2.5 px-3 font-serif font-bold text-slate-100">Thetford</td>
+                      <td className="py-2.5 px-3 text-amber-300 font-bold">Ore &rarr; Stone Blocks</td>
+                      <td className="py-2.5 px-3 text-sky-300">36.7%</td>
+                      <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
+                      <td className="py-2.5 px-3 text-slate-300 font-sans">Maces, Fire, Nature, Cloth Armor</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: GEAR CRAFTING */}
+          {activeTab === 'crafting' && (
+            <div className="space-y-5 animate-fade-in">
+              <div className="bg-gradient-to-r from-sky-950/40 via-albion-bg to-sky-950/40 border border-sky-500/30 rounded-xl p-3.5 flex items-center justify-between gap-3 text-xs">
+                <span className="text-sky-300 font-sans">
+                  Ready to test the Pre-Craft Planner and Quality Dice Simulator live?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleLaunchModuleTour('crafting')}
+                  className="px-3 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-mono font-bold text-xs tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+                >
+                  <Compass className="w-3.5 h-3.5" />
+                  <span>Launch Crafting Tour &rarr;</span>
+                </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -230,7 +316,6 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour }) {
                     <li><strong className="text-slate-100">Safe Base Forecast:</strong> Valued strictly at Normal/Good market prices. If a craft is profitable at base price, you cannot lose.</li>
                     <li><strong className="text-slate-100">Upfront Wallet Budget:</strong> Tells you exactly how much liquid silver you must have in your inventory (materials + station food fees + empty books).</li>
                     <li><strong className="text-slate-100">Interactive Shopping Checklist:</strong> Check off items as you buy them from the marketplace, or click <em>Copy Shopping List</em> to paste into game chat.</li>
-                    <li><strong className="text-slate-100">Destiny Board Specs:</strong> Set your Mastery and Specialization sliders to see your Quality Rating boost.</li>
                   </ul>
                 </div>
 
@@ -247,7 +332,7 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour }) {
                   </div>
                   <ul className="text-xs text-slate-300 space-y-2 list-disc list-inside">
                     <li><strong className="text-slate-100">Backpack Quality Logger:</strong> Enter the exact quantities of Normal (Q1), Good (Q2), Outstanding (Q3), Excellent (Q4), and Masterpiece (Q5) that landed in your bag.</li>
-                    <li><strong className="text-slate-100">Discrete Dice Simulator:</strong> Simulates Albion's exact multi-roll quality algorithm if testing batches in advance.</li>
+                    <li><strong className="text-slate-100">Discrete Dice Simulator:</strong> Simulates Albion&apos;s exact multi-roll quality algorithm if testing batches in advance.</li>
                     <li><strong className="text-slate-100">Weighted Average Realized Margin:</strong> Computes your true weighted revenue and realized net silver profit based on what actually rolled.</li>
                   </ul>
                 </div>
@@ -256,123 +341,246 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour }) {
               <div className="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-500/30 text-xs text-emerald-300 flex items-start gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <p>
-                  <strong>The Quality Rule:</strong> With 100 Mastery, 100 Spec (+675 Quality Rating), and Crafter's Salad (+150 QR), Normal quality chance drops from 68.9% down to only ~2.7%! Outstanding and Excellent procs occur regularly, turning good crafts into massive silver windfalls.
+                  <strong>The Quality Rule:</strong> With 100 Mastery, 100 Spec (+675 Quality Rating), and Crafter&apos;s Salad (+150 QR), Normal quality chance drops from 68.9% down to only ~2.7%! Outstanding and Excellent procs occur regularly, turning good crafts into massive silver windfalls.
                 </p>
               </div>
             </div>
           )}
 
-          {/* TAB 3: CITY RRR MATRIX */}
-          {activeTab === 'cities' && (
+          {/* TAB 4: COOKING & FOOD */}
+          {activeTab === 'food' && (
             <div className="space-y-5 animate-fade-in">
+              <div className="bg-gradient-to-r from-amber-950/40 via-albion-bg to-amber-950/40 border border-amber-500/30 rounded-xl p-3.5 flex items-center justify-between gap-3 text-xs">
+                <span className="text-amber-300 font-sans">
+                  Ready to test cooking recipes, batch nutrition, and Caerleon return rates?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleLaunchModuleTour('food')}
+                  className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono font-bold text-xs tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+                >
+                  <Compass className="w-3.5 h-3.5" />
+                  <span>Launch Food Tour &rarr;</span>
+                </button>
+              </div>
+
               <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/30 to-albion-bg border border-amber-500/30 space-y-2">
                 <h3 className="font-serif text-base font-bold text-amber-300 flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-amber-400" />
-                  Royal Continent Resource Return Rate (RRR) Matrix
+                  <Flame className="w-4 h-4 text-amber-400" />
+                  Chef&apos;s Hearth Economics & Caerleon Bonus
                 </h3>
                 <p className="text-slate-300 text-xs">
-                  Refining in the native bonus city gives a <strong>+15% local refining bonus</strong>, raising base RRR to <strong>36.7%</strong> and Focus RRR to <strong>53.9%</strong>. Never refine outside these cities:
+                  Food is constantly consumed across Albion by players for combat/crafting buffs and by crafting stations as nutrition fuel.
                 </p>
               </div>
 
-              <div className="overflow-x-auto rounded-xl border border-albion-border">
-                <table className="w-full text-xs text-left">
-                  <thead className="bg-[#0b0e15] text-slate-400 font-serif uppercase tracking-wider border-b border-albion-border">
-                    <tr>
-                      <th className="py-2.5 px-3">City</th>
-                      <th className="py-2.5 px-3">Primary Refining Resource</th>
-                      <th className="py-2.5 px-3">No-Focus RRR</th>
-                      <th className="py-2.5 px-3">With-Focus RRR</th>
-                      <th className="py-2.5 px-3">Gear Crafting Bonus</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-albion-border/40 font-mono">
-                    <tr className="hover:bg-slate-800/20">
-                      <td className="py-2.5 px-3 font-serif font-bold text-slate-100 flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-slate-400" />
-                        Martlock
-                      </td>
-                      <td className="py-2.5 px-3 text-amber-300 font-bold">Hide &rarr; Leather</td>
-                      <td className="py-2.5 px-3 text-sky-300">36.7%</td>
-                      <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
-                      <td className="py-2.5 px-3 text-slate-300 font-sans">Axes, Quarterstaffs, Frost, Shoes</td>
-                    </tr>
-                    <tr className="hover:bg-slate-800/20">
-                      <td className="py-2.5 px-3 font-serif font-bold text-slate-100 flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-slate-200" />
-                        Fort Sterling
-                      </td>
-                      <td className="py-2.5 px-3 text-amber-300 font-bold">Wood &rarr; Planks</td>
-                      <td className="py-2.5 px-3 text-sky-300">36.7%</td>
-                      <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
-                      <td className="py-2.5 px-3 text-slate-300 font-sans">Hammers, Spears, Holy, Plate Helmets</td>
-                    </tr>
-                    <tr className="hover:bg-slate-800/20">
-                      <td className="py-2.5 px-3 font-serif font-bold text-slate-100 flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                        Lymhurst
-                      </td>
-                      <td className="py-2.5 px-3 text-amber-300 font-bold">Fiber &rarr; Cloth</td>
-                      <td className="py-2.5 px-3 text-sky-300">36.7%</td>
-                      <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
-                      <td className="py-2.5 px-3 text-slate-300 font-sans">Swords, Bows, Arcane, Leather Helmets</td>
-                    </tr>
-                    <tr className="hover:bg-slate-800/20">
-                      <td className="py-2.5 px-3 font-serif font-bold text-slate-100 flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-amber-500" />
-                        Bridgewatch
-                      </td>
-                      <td className="py-2.5 px-3 text-amber-300 font-bold">Ore &rarr; Metal Bars</td>
-                      <td className="py-2.5 px-3 text-sky-300">36.7%</td>
-                      <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
-                      <td className="py-2.5 px-3 text-slate-300 font-sans">Crossbows, Daggers, Cursed, Plate Armor</td>
-                    </tr>
-                    <tr className="hover:bg-slate-800/20">
-                      <td className="py-2.5 px-3 font-serif font-bold text-slate-100 flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-purple-500" />
-                        Thetford
-                      </td>
-                      <td className="py-2.5 px-3 text-amber-300 font-bold">Ore &rarr; Stone Blocks</td>
-                      <td className="py-2.5 px-3 text-sky-300">36.7%</td>
-                      <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
-                      <td className="py-2.5 px-3 text-slate-300 font-sans">Maces, Fire, Nature, Cloth Armor</td>
-                    </tr>
-                    <tr className="hover:bg-slate-800/20">
-                      <td className="py-2.5 px-3 font-serif font-bold text-slate-100 flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-rose-500" />
-                        Caerleon
-                      </td>
-                      <td className="py-2.5 px-3 text-slate-400">None (General)</td>
-                      <td className="py-2.5 px-3 text-slate-400">15.2%</td>
-                      <td className="py-2.5 px-3 text-sky-300">43.5%</td>
-                      <td className="py-2.5 px-3 text-rose-300 font-sans">Gathering Gear, Tools, Food & Potions</td>
-                    </tr>
-                    <tr className="hover:bg-slate-800/20">
-                      <td className="py-2.5 px-3 font-serif font-bold text-slate-100 flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-teal-400" />
-                        Brecilien
-                      </td>
-                      <td className="py-2.5 px-3 text-slate-400">None (General)</td>
-                      <td className="py-2.5 px-3 text-slate-400">15.2%</td>
-                      <td className="py-2.5 px-3 text-sky-300">43.5%</td>
-                      <td className="py-2.5 px-3 text-teal-300 font-sans">Capes, Bags & Avalonian Tools</td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
+                  <h4 className="font-serif font-bold text-amber-300">Caerleon +15% Local Cooking Bonus</h4>
+                  <p className="text-slate-300">
+                    Caerleon is the food capital of the Royal Continent. Cooking food in Caerleon awards a <strong>+15% local production bonus</strong>:
+                  </p>
+                  <ul className="text-slate-400 space-y-1 list-disc list-inside font-mono">
+                    <li>Royal Cities (No Bonus): 15.2% RRR (43.5% with Focus)</li>
+                    <li>Caerleon (Bonus Active): <strong>24.8% RRR (53.9% with Focus)</strong></li>
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
+                  <h4 className="font-serif font-bold text-amber-300">High-Velocity Food Staples</h4>
+                  <p className="text-slate-300">
+                    The highest volume, fastest turnover foods in Albion:
+                  </p>
+                  <ul className="text-slate-400 space-y-1 list-disc list-inside">
+                    <li><strong>Pork Omelette:</strong> Essential for PvE healers and PvP mages (Cooldown Reduction).</li>
+                    <li><strong>Beef Stew:</strong> Standard damage booster (+13.5% damage) for every DPS build.</li>
+                    <li><strong>Roast Pork:</strong> Crucial solo dungeon and corrupt dungeon lifesteal food.</li>
+                    <li><strong>Crafter&apos;s Salad:</strong> Mandatory for all gear crafters for +150 Quality Power.</li>
+                  </ul>
+                </div>
               </div>
             </div>
           )}
 
-          {/* TAB 4: BLACK MARKET */}
+          {/* TAB 5: POTIONS & ALCHEMY */}
+          {activeTab === 'potions' && (
+            <div className="space-y-5 animate-fade-in">
+              <div className="bg-gradient-to-r from-teal-950/40 via-albion-bg to-teal-950/40 border border-teal-500/30 rounded-xl p-3.5 flex items-center justify-between gap-3 text-xs">
+                <span className="text-teal-300 font-sans">
+                  Ready to brew potions and optimize Silver-per-Focus in the Alchemist Lab?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleLaunchModuleTour('potions')}
+                  className="px-3 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-950 font-mono font-bold text-xs tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+                >
+                  <Compass className="w-3.5 h-3.5" />
+                  <span>Launch Potions Tour &rarr;</span>
+                </button>
+              </div>
+
+              <div className="p-4 rounded-xl bg-gradient-to-r from-teal-950/30 to-albion-bg border border-teal-500/30 space-y-2">
+                <h3 className="font-serif text-base font-bold text-teal-300 flex items-center gap-2">
+                  <FlaskConical className="w-4 h-4 text-teal-400" />
+                  Alchemist Lab Brewing & Herb Reagents
+                </h3>
+                <p className="text-slate-300 text-xs">
+                  Potions are single-use consumables that players drink constantly in ZvZ guild battles, Hellgates, and Mists. Demand is endless.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
+                  <h4 className="font-serif font-bold text-teal-300">City Bonuses for Potions</h4>
+                  <p className="text-slate-300">
+                    Just like cooking, <strong>Caerleon</strong> and <strong>Brecilien</strong> have local production bonuses for alchemy:
+                  </p>
+                  <ul className="text-slate-400 space-y-1 list-disc list-inside">
+                    <li>Brewing in Caerleon yields high return rates without requiring focus.</li>
+                    <li>Always check whether shipping herbs from Lymhurst to Caerleon yields higher arbitrage profit.</li>
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
+                  <h4 className="font-serif font-bold text-teal-300">Top PVP Potion Meta</h4>
+                  <ul className="text-slate-400 space-y-1 list-disc list-inside">
+                    <li><strong>Poison Potions (T4, T6, T8):</strong> Huge volume for gankers and PvE mob clearing.</li>
+                    <li><strong>Resistance Potions (T5, T7):</strong> Crucial defensives for tanking burst in ZvZ.</li>
+                    <li><strong>Invisibility Potions (T8):</strong> High value escape tools used by gatherers and solo rovers.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 6: FARMING & ANIMALS */}
+          {activeTab === 'farming' && (
+            <div className="space-y-5 animate-fade-in">
+              <div className="bg-gradient-to-r from-emerald-950/40 via-albion-bg to-emerald-950/40 border border-emerald-500/30 rounded-xl p-3.5 flex items-center justify-between gap-3 text-xs">
+                <span className="text-emerald-300 font-sans">
+                  Ready to calculate seed yields, focus watering, and animal slaughter vs. milk?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleLaunchModuleTour('farming')}
+                  className="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono font-bold text-xs tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+                >
+                  <Compass className="w-3.5 h-3.5" />
+                  <span>Launch Farming Tour &rarr;</span>
+                </button>
+              </div>
+
+              <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-950/30 to-albion-bg border border-emerald-500/30 space-y-2">
+                <h3 className="font-serif text-base font-bold text-emerald-300 flex items-center gap-2">
+                  <Wheat className="w-4 h-4 text-emerald-400" />
+                  Homestead Agriculture & The Infinite Seed Loop
+                </h3>
+                <p className="text-slate-300 text-xs">
+                  Farming is the lowest-risk passive economy in Albion Online. If you water your crops with Focus, you generate free silver every 22 hours.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
+                  <h4 className="font-serif font-bold text-emerald-300">The Infinite Seed Loop (Watering)</h4>
+                  <p className="text-slate-300">
+                    Without watering, seeds have a return rate of ~60-80% (meaning you lose seeds each cycle).
+                  </p>
+                  <p className="text-slate-400">
+                    When you <strong>Water with Focus</strong>, your seed return rate jumps above <strong>100%</strong> (often 106% to 113%). Not only do you keep 100% of your seeds, you get <strong>bonus extra seeds to sell on the market for pure profit</strong>!
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
+                  <h4 className="font-serif font-bold text-emerald-300">Livestock: Milk vs. Slaughter</h4>
+                  <p className="text-slate-300">
+                    Animals can be kept alive for daily produce (e.g. Eggs, Cow Milk, Sheep Milk) or slaughtered at the butcher for raw meat.
+                  </p>
+                  <p className="text-slate-400">
+                    Use our <em>Slaughter vs. Produce</em> toggle to automatically calculate which option yields the highest silver based on today&apos;s meat and milk prices.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 7: LABORERS & HOUSES */}
+          {activeTab === 'laborers' && (
+            <div className="space-y-5 animate-fade-in">
+              <div className="bg-gradient-to-r from-purple-950/40 via-albion-bg to-purple-950/40 border border-purple-500/30 rounded-xl p-3.5 flex items-center justify-between gap-3 text-xs">
+                <span className="text-purple-300 font-sans">
+                  Ready to configure your player houses, trophies, and journal returns?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleLaunchModuleTour('laborers')}
+                  className="px-3 py-1.5 rounded-lg bg-purple-500 hover:bg-purple-400 text-slate-950 font-mono font-bold text-xs tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+                >
+                  <Compass className="w-3.5 h-3.5" />
+                  <span>Launch Laborers Tour &rarr;</span>
+                </button>
+              </div>
+
+              <div className="p-4 rounded-xl bg-gradient-to-r from-purple-950/30 to-albion-bg border border-purple-500/30 space-y-2">
+                <h3 className="font-serif text-base font-bold text-purple-300 flex items-center gap-2">
+                  <Users className="w-4 h-4 text-purple-400" />
+                  Laborer Estate Mechanics & The 150% Happiness Cap
+                </h3>
+                <p className="text-slate-300 text-xs">
+                  Laborers turn filled crafting journals into massive batches of refined materials and silver every single day.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
+                  <h4 className="font-serif font-bold text-purple-300">The 150% Happiness Formula</h4>
+                  <p className="text-slate-300">
+                    A laborer with base happiness only returns ~100% of journal loot. With maximum happiness, they return <strong>150% loot</strong>!
+                  </p>
+                  <ul className="text-slate-400 space-y-1 list-disc list-inside">
+                    <li>1 Bed of matching or higher Tier per laborer.</li>
+                    <li>1 Shared Table of matching or higher Tier (accommodates up to 4 laborers).</li>
+                    <li>Generalist Trophies of each tier up to your laborer tier.</li>
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
+                  <h4 className="font-serif font-bold text-purple-300">Synergy with Crafting</h4>
+                  <p className="text-slate-300">
+                    Never craft equipment without bringing Empty Journals in your bag!
+                  </p>
+                  <p className="text-slate-400">
+                    Crafting fills the books with fame for free. You then hand the books to your laborers, and tomorrow morning they give you back refined planks, bars, and leather to craft with again!
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 8: BLACK MARKET */}
           {activeTab === 'blackmarket' && (
             <div className="space-y-5 animate-fade-in">
+              <div className="bg-gradient-to-r from-rose-950/40 via-albion-bg to-rose-950/40 border border-rose-500/30 rounded-xl p-3.5 flex items-center justify-between gap-3 text-xs">
+                <span className="text-rose-300 font-sans">
+                  Ready to scan Caerleon buy orders and calculate cargo transport spreads?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleLaunchModuleTour('blackmarket')}
+                  className="px-3 py-1.5 rounded-lg bg-rose-500 hover:bg-rose-400 text-slate-950 font-mono font-bold text-xs tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+                >
+                  <Compass className="w-3.5 h-3.5" />
+                  <span>Launch Black Market Tour &rarr;</span>
+                </button>
+              </div>
+
               <div className="p-4 rounded-xl bg-gradient-to-r from-rose-950/40 to-albion-bg border border-rose-500/30 space-y-2">
                 <h3 className="font-serif text-base font-bold text-rose-300 flex items-center gap-2">
                   <Skull className="w-4 h-4 text-rose-400" />
                   Caerleon Black Market & Red Zone Transport
                 </h3>
                 <p className="text-slate-300 text-xs">
-                  The Black Market in Caerleon buys equipment directly from players to feed PvE mob drop tables across the entire game. Prices steadily rise until filled, creating massive profit margins.
+                  The Black Market in Caerleon buys equipment directly from players to feed mob drop tables across the entire game. Prices steadily rise until filled, creating massive profit margins.
                 </p>
               </div>
 
@@ -405,7 +613,7 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour }) {
             </div>
           )}
 
-          {/* TAB 5: FOCUS EFFICIENCY */}
+          {/* TAB 9: FOCUS EFFICIENCY */}
           {activeTab === 'focus' && (
             <div className="space-y-5 animate-fade-in">
               <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-950/40 to-albion-bg border border-emerald-500/30 space-y-2">
@@ -449,7 +657,7 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour }) {
             </div>
           )}
 
-          {/* TAB 6: FAQ & LIVE DATA */}
+          {/* TAB 10: FAQ & LIVE DATA */}
           {activeTab === 'faq' && (
             <div className="space-y-4 animate-fade-in text-xs">
               <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
@@ -500,10 +708,7 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour }) {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => {
-                onClose();
-                onStartTour();
-              }}
+              onClick={() => handleLaunchModuleTour(activeTab === 'quickstart' ? 'refining' : activeTab)}
               className="px-3.5 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-mono font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <Compass className="w-3.5 h-3.5 text-amber-400" />

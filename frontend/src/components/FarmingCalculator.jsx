@@ -25,6 +25,8 @@ import {
   Heart,
   Layers,
   Info,
+  BookOpen,
+  HelpCircle,
 } from 'lucide-react';
 
 const CATEGORY_ICONS = {
@@ -35,7 +37,7 @@ const CATEGORY_ICONS = {
   mount: Shield,
 };
 
-export default function FarmingCalculator({ server, hasPremium, useFocus: globalFocus }) {
+export default function FarmingCalculator({ server, hasPremium, useFocus: globalFocus, onOpenGuide, onStartTour }) {
   // Navigation & Filtering
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedTier, setSelectedTier] = useState(3);
@@ -284,7 +286,25 @@ export default function FarmingCalculator({ server, hasPremium, useFocus: global
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => onOpenGuide && onOpenGuide('farming')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/15 border border-amber-500/40 text-xs font-serif font-bold text-amber-300 hover:bg-amber-500/25 transition-all shadow-sm"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+              <span>Farming Guide</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onStartTour && onStartTour('farming')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-amber-500/40 text-xs font-serif font-bold text-amber-200 hover:bg-amber-500/20 transition-all shadow-sm"
+            >
+              <HelpCircle className="w-3.5 h-3.5 text-amber-400" />
+              <span>Interactive Tour</span>
+            </button>
+
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0f0e08] border border-amber-700/40 text-xs shadow-inner">
               <Building className="w-4 h-4 text-amber-400" />
               <div className="text-left">
@@ -317,7 +337,7 @@ export default function FarmingCalculator({ server, hasPremium, useFocus: global
       </div>
 
       {/* 2. Category Switcher */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-albion-border/80 pb-3">
+      <div id="tour-farm-mode-picker" className="flex flex-wrap items-center gap-2 border-b border-albion-border/80 pb-3">
         {FARMING_CATEGORIES.map((cat) => {
           const Icon = CATEGORY_ICONS[cat.id] || Sparkles;
           const isSelected = selectedCategory === cat.id;
@@ -372,7 +392,7 @@ export default function FarmingCalculator({ server, hasPremium, useFocus: global
       </div>
 
       {/* 4. Agriculture Catalog Grid */}
-      <div className="space-y-2">
+      <div id="tour-farm-item-picker" className="space-y-2">
         <div className="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
           <span>Available Plants & Livestock ({filteredItems.length})</span>
           <span>Click item to cultivate on plots</span>
@@ -477,7 +497,7 @@ export default function FarmingCalculator({ server, hasPremium, useFocus: global
           </div>
 
           {/* Plot Controls & Island Biome */}
-          <div className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
+          <div id="tour-farm-homestead-controls" className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-2 border-b border-albion-border/80">
               <div className="flex items-center gap-2 text-xs font-serif font-bold text-slate-200">
                 <Layers className="w-4 h-4 text-amber-400" />
@@ -578,7 +598,7 @@ export default function FarmingCalculator({ server, hasPremium, useFocus: global
           </div>
 
           {/* Market Unit Prices */}
-          <div className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
+          <div id="tour-farm-feed-inputs" className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-2 border-b border-albion-border/80">
               <div className="flex items-center gap-2 text-xs font-serif font-bold text-slate-200">
                 <Coins className="w-4 h-4 text-amber-400" />
@@ -679,7 +699,7 @@ export default function FarmingCalculator({ server, hasPremium, useFocus: global
           </div>
 
           {/* Destiny Board Focus & Mastery Simulator */}
-          <div className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
+          <div id="tour-farm-focus-watering" className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-2 border-b border-albion-border/80">
               <div className="flex items-center gap-2 text-xs font-serif font-bold text-slate-200">
                 <Droplets className="w-4 h-4 text-sky-400" />
@@ -748,7 +768,7 @@ export default function FarmingCalculator({ server, hasPremium, useFocus: global
         {/* Right Column: Financial Ledger & Biome Matrix (5 Cols) */}
         <div className="lg:col-span-5 space-y-5">
           {/* Main Profit Ledger */}
-          <div className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
+          <div id="tour-farm-yield-ledger" className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-2 border-b border-albion-border/80">
               <div className="flex items-center gap-2 text-xs font-serif font-bold text-slate-200">
                 <TrendingUp className="w-4 h-4 text-amber-400" />

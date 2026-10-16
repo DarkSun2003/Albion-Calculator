@@ -21,7 +21,9 @@ import {
   Layers,
   Sparkles,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  BookOpen,
+  HelpCircle
 } from 'lucide-react';
 import { 
   getBlackMarketItemsApi, 
@@ -92,7 +94,7 @@ const getEnchantmentBorder = (enchantment) => {
   return 'border-stone-700/80';
 };
 
-export default function BlackMarketCalculator({ server = 'europe', hasPremium = true }) {
+export default function BlackMarketCalculator({ server = 'europe', hasPremium = true, onOpenGuide, onStartTour }) {
   // Scanner state
   const [tier, setTier] = useState(5);
   const [enchantment, setEnchantment] = useState(0);
@@ -353,6 +355,24 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
 
           <div className="flex flex-wrap items-center gap-2">
             <button
+              type="button"
+              onClick={() => onOpenGuide && onOpenGuide('blackmarket')}
+              className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-serif font-bold bg-rose-950/70 border border-rose-700/60 text-rose-300 hover:bg-rose-900/50 transition-all shadow-sm"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-rose-400" />
+              <span>Smuggler&apos;s Guide</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onStartTour && onStartTour('blackmarket')}
+              className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-serif font-bold bg-stone-900 border border-amber-600/50 text-amber-200 hover:bg-amber-950/40 transition-all shadow-sm"
+            >
+              <HelpCircle className="w-3.5 h-3.5 text-amber-400" />
+              <span>Interactive Tour</span>
+            </button>
+
+            <button
               onClick={handleScan}
               disabled={isScanning}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-serif font-bold text-xs bg-gradient-to-r from-rose-800 to-amber-700 hover:from-rose-700 hover:to-amber-600 text-white shadow-lg shadow-rose-950/50 transition-all border border-rose-500/30 active:scale-95 disabled:opacity-50"
@@ -363,9 +383,9 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
           </div>
         </div>
 
-        {/* Dual Arbitrage Pathways Infographic Pill */}
-        <div className="mt-4 pt-4 border-t border-stone-800/80 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-          <div className="flex items-start gap-2.5 bg-stone-950/70 p-2.5 rounded-xl border border-stone-800/60">
+        {/* Dual Arbitrage Pathways & Safety Infographic Pill */}
+        <div id="tour-bm-safety-guide" className="mt-4 pt-4 border-t border-stone-800/80 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <div id="tour-bm-hauling-weight" className="flex items-start gap-2.5 bg-stone-950/70 p-2.5 rounded-xl border border-stone-800/60">
             <div className="p-1.5 rounded-lg bg-sky-950/60 border border-sky-800/60 text-sky-400 mt-0.5">
               <Truck className="w-4 h-4" />
             </div>
@@ -392,7 +412,7 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
       </div>
 
       {/* 2. Scanner Parameters & Filter Controls */}
-      <div className="rounded-2xl border border-stone-800/80 bg-stone-950/90 p-5 space-y-4 shadow-xl">
+      <div id="tour-bm-item-filter" className="rounded-2xl border border-stone-800/80 bg-stone-950/90 p-5 space-y-4 shadow-xl">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Sliders className="w-4 h-4 text-amber-400" />
@@ -505,7 +525,7 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
         </div>
 
         {/* Sliders & Dropdowns: Min Profit, Min Margin, Quality, Sort By */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pt-2 border-t border-stone-800/60 text-xs">
+        <div id="tour-bm-arbitrage-spread" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pt-2 border-t border-stone-800/60 text-xs">
           <div className="space-y-1">
             <div className="flex justify-between font-serif text-[11px] text-stone-400">
               <span>Min Profit Spread</span>
@@ -770,7 +790,7 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
       )}
 
       {/* 4. Arbitrage Opportunities Results (Cards / Table) */}
-      <div className="space-y-4">
+      <div id="tour-bm-price-comparison" className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-emerald-400" />

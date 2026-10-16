@@ -27,9 +27,11 @@ import {
   Layers,
   ArrowRight,
   ShieldCheck,
+  BookOpen,
+  HelpCircle,
 } from 'lucide-react';
 
-export default function LaborerCalculator({ server, hasPremium }) {
+export default function LaborerCalculator({ server, hasPremium, onOpenGuide, onStartTour }) {
   // Navigation & Filtering
   const [selectedType, setSelectedType] = useState('all');
   const [selectedTier, setSelectedTier] = useState(5);
@@ -241,7 +243,25 @@ export default function LaborerCalculator({ server, hasPremium }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => onOpenGuide && onOpenGuide('laborers')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-500/15 border border-purple-500/40 text-xs font-serif font-bold text-purple-300 hover:bg-purple-500/25 transition-all shadow-sm"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-purple-400" />
+              <span>Laborers Guide</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onStartTour && onStartTour('laborers')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-purple-500/40 text-xs font-serif font-bold text-purple-200 hover:bg-purple-500/20 transition-all shadow-sm"
+            >
+              <HelpCircle className="w-3.5 h-3.5 text-purple-400" />
+              <span>Interactive Tour</span>
+            </button>
+
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0f0c08] border border-amber-700/40 text-xs shadow-inner">
               <Home className="w-4 h-4 text-amber-400" />
               <div className="text-left">
@@ -273,7 +293,7 @@ export default function LaborerCalculator({ server, hasPremium }) {
       </div>
 
       {/* 2. Profession Category Bar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-albion-border/80 pb-3">
+      <div id="tour-laborer-prof-picker" className="flex flex-wrap items-center gap-2 border-b border-albion-border/80 pb-3">
         {LABORER_TYPES.map((type) => {
           const isSelected = selectedType === type.id;
           return (
@@ -326,7 +346,7 @@ export default function LaborerCalculator({ server, hasPremium }) {
       </div>
 
       {/* 4. Laborer Catalog Browser */}
-      <div className="space-y-2">
+      <div id="tour-laborer-journal-tier" className="space-y-2">
         <div className="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
           <span>Available Laborer Journals ({filteredLaborers.length})</span>
           <span>Click profession to assign to quarters</span>
@@ -431,7 +451,7 @@ export default function LaborerCalculator({ server, hasPremium }) {
           </div>
 
           {/* House Setup & Furniture Controls */}
-          <div className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
+          <div id="tour-laborer-house-config" className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-2 border-b border-albion-border/80">
               <div className="flex items-center gap-2 text-xs font-serif font-bold text-slate-200">
                 <Home className="w-4 h-4 text-amber-400" />
@@ -497,7 +517,7 @@ export default function LaborerCalculator({ server, hasPremium }) {
             </div>
 
             {/* Furniture & Happiness Controls */}
-            <div className="pt-3 border-t border-albion-border/60 space-y-3">
+            <div id="tour-laborer-furniture-config" className="pt-3 border-t border-albion-border/60 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-serif font-bold text-slate-300 flex items-center gap-1.5">
                   <Smile className="w-4 h-4 text-emerald-400" />
@@ -567,7 +587,7 @@ export default function LaborerCalculator({ server, hasPremium }) {
           </div>
 
           {/* Market Unit Prices */}
-          <div className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
+          <div id="tour-laborer-economics" className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-2 border-b border-albion-border/80">
               <div className="flex items-center gap-2 text-xs font-serif font-bold text-slate-200">
                 <Coins className="w-4 h-4 text-amber-400" />
@@ -660,7 +680,7 @@ export default function LaborerCalculator({ server, hasPremium }) {
         {/* Right Column: Financial Ledger & Returns (5 Cols) */}
         <div className="lg:col-span-5 space-y-5">
           {/* Main Profit Ledger */}
-          <div className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
+          <div id="tour-laborer-ledger" className="rounded-2xl border border-albion-border bg-albion-card p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-2 border-b border-albion-border/80">
               <div className="flex items-center gap-2 text-xs font-serif font-bold text-slate-200">
                 <TrendingUp className="w-4 h-4 text-amber-400" />

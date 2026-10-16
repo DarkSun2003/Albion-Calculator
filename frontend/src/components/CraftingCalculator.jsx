@@ -188,6 +188,8 @@ export default function CraftingCalculator({
   server,
   hasPremium,
   useFocus,
+  onOpenGuide,
+  onStartTour,
 }) {
   const [activeCategory, setActiveCategory] = useState('accessories');
   const [selectedSubcategory, setSelectedSubcategory] = useState('all');
@@ -871,8 +873,39 @@ export default function CraftingCalculator({
 
   return (
     <div className="space-y-6">
+      {/* Crafting Master Guide Banner */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-gradient-to-r from-sky-950/40 via-albion-card to-sky-950/40 p-3 rounded-xl border border-sky-500/30">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-sky-500/20 border border-sky-500/50 flex items-center justify-center text-sky-400">
+            <Hammer className="w-4 h-4" />
+          </div>
+          <div>
+            <span className="font-serif font-bold text-xs text-slate-200">Gear & Weapon Crafting Master Guide</span>
+            <p className="text-[11px] text-slate-400">Learn Pre-Craft shopping forecasts, Crafter&apos;s Salad quality bonuses, and roll simulations</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => onOpenGuide ? onOpenGuide('crafting') : null}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 font-mono text-xs font-bold transition-all cursor-pointer"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>Read Guide</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => onStartTour ? onStartTour('crafting') : null}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-400 hover:to-sky-500 text-slate-950 font-mono text-xs font-bold transition-all shadow-md cursor-pointer hover:scale-105"
+          >
+            <Compass className="w-3.5 h-3.5" />
+            <span>Interactive Tour</span>
+          </button>
+        </div>
+      </div>
+
       {/* Category Navigation Tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-albion-border/80 pb-3">
+      <div id="tour-craft-categories" className="flex flex-wrap gap-2 border-b border-albion-border/80 pb-3">
         {Object.values(CRAFTING_CATEGORIES).map((cat) => {
           const isActive = activeCategory === cat.id;
           return (
@@ -900,7 +933,7 @@ export default function CraftingCalculator({
       </div>
 
       {/* Workflow Phase Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-albion-card border border-albion-border shadow-lg">
+      <div id="tour-craft-workflow-switcher" className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-albion-card border border-albion-border shadow-lg">
         <div className="flex items-center gap-3">
           <div className={`w-9 h-9 rounded-lg border flex items-center justify-center shrink-0 ${
             workflowPhase === 'plan' 
@@ -967,7 +1000,7 @@ export default function CraftingCalculator({
         {/* Left Column: Crafting Setup (7 Cols) */}
         <div className="lg:col-span-7 space-y-5">
           {/* 1. Item Grid Selector */}
-          <div className="bg-albion-card border border-albion-border rounded-xl p-4 sm:p-5 shadow-xl space-y-4">
+          <div id="tour-craft-item-picker" className="bg-albion-card border border-albion-border rounded-xl p-4 sm:p-5 shadow-xl space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-albion-border/60 pb-3">
               <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5 font-serif">
                 <Hammer className="w-3.5 h-3.5 text-albion-gold" />
@@ -1105,7 +1138,7 @@ export default function CraftingCalculator({
             </div>
 
             {/* Tier & Enchantment Bars */}
-            <div className="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-albion-border/60">
+            <div id="tour-craft-tier-ench" className="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-albion-border/60">
               {/* Tier Selection (T2 to T8) */}
               <div>
                 <div className="flex justify-between items-center mb-1.5">
@@ -1391,7 +1424,7 @@ export default function CraftingCalculator({
           </div>
 
           {/* 3. Visual Recipe & Material Cost Inputs (Refined Mats + Artifact Slot) */}
-          <div className="bg-albion-card border border-albion-border rounded-xl p-4 sm:p-5 shadow-xl space-y-4">
+          <div id="tour-craft-planner-details" className="bg-albion-card border border-albion-border rounded-xl p-4 sm:p-5 shadow-xl space-y-4">
             <div className="flex flex-wrap items-center justify-between border-b border-albion-border/60 pb-2 gap-2">
               <h3 className="text-xs uppercase tracking-wider text-slate-300 font-semibold flex items-center gap-1.5 font-serif">
                 <Coins className="w-3.5 h-3.5 text-albion-gold" />
@@ -1621,7 +1654,7 @@ export default function CraftingCalculator({
 
           {/* 4. Backpack Quality Roll Tracker & Roll Simulator (rendered ONLY in 'realized' phase!) */}
           {workflowPhase === 'realized' && (
-            <div className="bg-albion-card border border-emerald-500/50 rounded-xl p-4 sm:p-5 shadow-xl space-y-4">
+            <div id="tour-craft-realized-ledger" className="bg-albion-card border border-emerald-500/50 rounded-xl p-4 sm:p-5 shadow-xl space-y-4">
               {/* Header with Crafter's Salad Buff Switch & Quality Power Badge */}
               <div className="flex flex-wrap items-center justify-between border-b border-albion-border/60 pb-3 gap-2">
                 <div>
@@ -1962,7 +1995,7 @@ export default function CraftingCalculator({
         )}
 
           {/* 3. Crafting Journals System with Explicit ON / OFF Toggle */}
-          <div className="bg-albion-card border border-albion-border rounded-xl p-4 sm:p-5 shadow-xl space-y-3">
+          <div id="tour-craft-salad-journals" className="bg-albion-card border border-albion-border rounded-xl p-4 sm:p-5 shadow-xl space-y-3">
             <div className="flex items-center justify-between border-b border-albion-border/60 pb-2.5">
               <div className="flex items-center gap-2">
                 <BookOpen className="w-4 h-4 text-amber-400" />
@@ -2211,7 +2244,7 @@ export default function CraftingCalculator({
         </div>
 
         {/* Right Column: Crafting Profit Ledger (5 Cols) */}
-        <div className="lg:col-span-5 space-y-5">
+        <div id="tour-craft-ledger" className="lg:col-span-5 space-y-5">
           {/* Pre-Craft Shopping List & Required Upfront Capital (when in 'plan' phase) */}
           {workflowPhase === 'plan' && (
             <div className="bg-albion-card border border-albion-gold/60 rounded-xl p-5 shadow-xl space-y-4 relative overflow-hidden">
