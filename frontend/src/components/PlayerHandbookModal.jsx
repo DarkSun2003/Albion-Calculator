@@ -432,35 +432,35 @@ export default function PlayerHandbookModal({
                       <td className="py-2.5 px-3 text-amber-300 font-bold">Hide &rarr; Leather</td>
                       <td className="py-2.5 px-3 text-sky-300">36.7%</td>
                       <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
-                      <td className="py-2.5 px-3 text-slate-300 font-sans">Axes, Quarterstaffs, Frost, Shoes</td>
+                      <td className="py-2.5 px-3 text-slate-300 font-sans">Axes, Quarterstaffs, Frost Staves, Plate Shoes, Off-Hands</td>
                     </tr>
                     <tr className="hover:bg-slate-800/20">
                       <td className="py-2.5 px-3 font-serif font-bold text-slate-100">Fort Sterling</td>
                       <td className="py-2.5 px-3 text-amber-300 font-bold">Wood &rarr; Planks</td>
                       <td className="py-2.5 px-3 text-sky-300">36.7%</td>
                       <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
-                      <td className="py-2.5 px-3 text-slate-300 font-sans">Hammers, Spears, Holy, Plate Helmets</td>
+                      <td className="py-2.5 px-3 text-slate-300 font-sans">Hammers, Spears, Holy Staves, Plate Helmets, Cloth Armor (Robes)</td>
                     </tr>
                     <tr className="hover:bg-slate-800/20">
                       <td className="py-2.5 px-3 font-serif font-bold text-slate-100">Lymhurst</td>
                       <td className="py-2.5 px-3 text-amber-300 font-bold">Fiber &rarr; Cloth</td>
                       <td className="py-2.5 px-3 text-sky-300">36.7%</td>
                       <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
-                      <td className="py-2.5 px-3 text-slate-300 font-sans">Swords, Bows, Arcane, Leather Helmets</td>
+                      <td className="py-2.5 px-3 text-slate-300 font-sans">Swords, Bows, Arcane Staves, Leather Helmets (Hoods), Leather Shoes</td>
                     </tr>
                     <tr className="hover:bg-slate-800/20">
                       <td className="py-2.5 px-3 font-serif font-bold text-slate-100">Bridgewatch</td>
-                      <td className="py-2.5 px-3 text-amber-300 font-bold">Ore &rarr; Metal Bars</td>
+                      <td className="py-2.5 px-3 text-amber-300 font-bold">Stone &rarr; Stone Blocks</td>
                       <td className="py-2.5 px-3 text-sky-300">36.7%</td>
                       <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
-                      <td className="py-2.5 px-3 text-slate-300 font-sans">Crossbows, Daggers, Cursed, Plate Armor</td>
+                      <td className="py-2.5 px-3 text-slate-300 font-sans">Crossbows, Daggers, Cursed Staves, Plate Armor, Cloth Shoes (Sandals)</td>
                     </tr>
                     <tr className="hover:bg-slate-800/20">
                       <td className="py-2.5 px-3 font-serif font-bold text-slate-100">Thetford</td>
-                      <td className="py-2.5 px-3 text-amber-300 font-bold">Ore &rarr; Stone Blocks</td>
+                      <td className="py-2.5 px-3 text-amber-300 font-bold">Ore &rarr; Metal Bars</td>
                       <td className="py-2.5 px-3 text-sky-300">36.7%</td>
                       <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
-                      <td className="py-2.5 px-3 text-slate-300 font-sans">Maces, Fire, Nature, Cloth Armor</td>
+                      <td className="py-2.5 px-3 text-slate-300 font-sans">Maces, Fire Staves, Nature Staves, Leather Armor (Jackets), Cloth Helmets (Cowls)</td>
                     </tr>
                   </tbody>
                 </table>

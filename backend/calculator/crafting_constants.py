@@ -45,10 +45,10 @@ CRAFTING_CATEGORIES = {
 # City Crafting Bonuses (+15% production bonus to specific item types)
 CITY_CRAFTING_BONUSES = {
     'Thetford': ['maces', 'nature_staves', 'fire_staves', 'cloth_helmets', 'leather_armor'],
-    'Fort Sterling': ['hammers', 'spears', 'holy_staves', 'plate_helmets', 'cloth_armor', 'shields', 'tomes'],
-    'Lymhurst': ['swords', 'bows', 'arcane_staves', 'leather_helmets', 'leather_shoes', 'torches'],
+    'Fort Sterling': ['hammers', 'spears', 'holy_staves', 'plate_helmets', 'cloth_armor'],
+    'Lymhurst': ['swords', 'bows', 'arcane_staves', 'leather_helmets', 'leather_shoes'],
     'Bridgewatch': ['crossbows', 'daggers', 'cursed_staves', 'plate_armor', 'cloth_shoes'],
-    'Martlock': ['axes', 'quarterstaffs', 'frost_staves', 'plate_shoes', 'cloth_helmets'],
+    'Martlock': ['axes', 'quarterstaffs', 'frost_staves', 'plate_shoes', 'shields', 'tomes', 'torches'],
     'Caerleon': ['tools', 'gathering_gear', 'wargloves', 'shapeshifter', 'food'],
     'Brecilien': ['bags', 'capes', 'potions'],
 }
