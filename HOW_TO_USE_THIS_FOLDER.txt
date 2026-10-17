@@ -1,0 +1,66 @@
+===============================================================================
+  ALBION ARTISAN CALCULATOR — QUICK GUIDE FOR DOWNLOADED REPO USERS
+===============================================================================
+
+Welcome! If you downloaded this folder from GitHub, here is what each file in
+this folder does and which one you should double-click:
+
+-------------------------------------------------------------------------------
+1. WHICH FILE SHOULD I DOUBLE-CLICK TO RUN THE APP?
+-------------------------------------------------------------------------------
+
+  [A] "Albion Desktop App.vbs"  (RECOMMENDED FOR PLAYERS)
+      - Launches the calculator as a standalone, borderless Desktop App window.
+      - Runs 100% silently with ZERO black command-prompt windows cluttering
+        your taskbar.
+      - Uses ultra-low RAM (single-process Python + local SQLite database).
+      - Automatically starts your Albion Data Client (ADC) market scanner in
+        the background if you have it installed.
+      - Automatically shuts down the background server the moment you close
+        the app window.
+
+  [B] "start-albion-local.bat"  (FOR DEVELOPERS / CODE EDITING)
+      - Opens two visible command-prompt terminals:
+          1) Django Backend Server on http://127.0.0.1:8000
+          2) Vite Frontend Dev Server on http://localhost:5173
+      - Opens the site in your regular web browser with live hot-reloading.
+      - Use this if you are editing the code in "frontend/" or "backend/" and
+        want to see live terminal logs.
+      - NOTE: On your very first run, this script will automatically create
+        your ".venv" Python environment and run "npm install" for you!
+
+  [C] "Setup_Albion_Data_Client.bat"  (OPTIONAL LIVE MARKET SCANNER FOR PC)
+      - Albion Online does not have an official public Market API; prices are
+        crowdsourced by players running the official open-source Albion Data
+        Client (ADC).
+      - Double-click this file once to automatically download and install the
+        official Albion Data Client on your PC.
+      - Whenever ADC is running while you play Albion Online, simply clicking
+        through any in-game Market tab updates prices to "Updated just now"!
+
+-------------------------------------------------------------------------------
+2. WHAT ARE THE OTHER FILES IN THIS FOLDER?
+-------------------------------------------------------------------------------
+
+  * "desktop_app.py"
+      The Python controller script that powers "Albion Desktop App.vbs". You
+      do not need to click this directly.
+
+  * "albion-icon.ico"
+      The custom Royal Forgemaster icon. To put a shortcut on your Desktop:
+        1. Right-click "Albion Desktop App.vbs" -> Send to -> Desktop (create shortcut)
+        2. Right-click the new shortcut on your Desktop -> Properties -> Change Icon
+        3. Browse to this folder and pick "albion-icon.ico"!
+
+  * "backend/"  &  "frontend/"
+      The Django REST API calculation engines (all 7 calculators + 3-layer
+      verified market price engine) and the React + Vite user interface.
+
+-------------------------------------------------------------------------------
+3. FIRST-TIME REQUIREMENTS
+-------------------------------------------------------------------------------
+  To run the project locally from source, make sure you have installed:
+    1) Python 3.10 or newer (https://www.python.org/downloads/)
+       * Make sure to check "Add Python to PATH" during installation!
+    2) Node.js 18 or newer (https://nodejs.org/)
+===============================================================================

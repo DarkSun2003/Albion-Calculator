@@ -31,6 +31,28 @@ def get_python_exe() -> str:
     backend_venv_py = BACKEND_DIR / "venv" / "Scripts" / "python.exe"
     if backend_venv_py.is_file():
         return str(backend_venv_py)
+
+    # First-time repo downloader fallback: create .venv and install requirements automatically
+    try:
+        subprocess.run(
+            [sys.executable, "-m", "venv", str(ROOT_DIR / ".venv")],
+            cwd=str(ROOT_DIR),
+            creationflags=CREATE_NO_WINDOW,
+            check=False,
+        )
+        if venv_py.is_file():
+            req_file = BACKEND_DIR / "requirements.txt"
+            if req_file.is_file():
+                subprocess.run(
+                    [str(venv_py), "-m", "pip", "install", "-r", str(req_file)],
+                    cwd=str(ROOT_DIR),
+                    creationflags=CREATE_NO_WINDOW,
+                    check=False,
+                )
+            return str(venv_py)
+    except Exception:
+        pass
+
     return sys.executable
 
 
@@ -42,6 +64,17 @@ def is_port_in_use(port: int) -> bool:
 
 def ensure_frontend_built():
     """Builds the React frontend automatically if dist is missing or older than source edits."""
+    npm_cmd = "npm.cmd" if sys.platform == "win32" else "npm"
+
+    # Ensure node_modules is installed if a user just cloned the repo
+    if not (FRONTEND_DIR / "node_modules").is_dir():
+        subprocess.run(
+            [npm_cmd, "install"],
+            cwd=str(FRONTEND_DIR),
+            creationflags=CREATE_NO_WINDOW,
+            check=False,
+        )
+
     dist_manifest = FRONTEND_DIR / "dist" / "manifest.json"
     needs_build = not DIST_INDEX.is_file() or not dist_manifest.is_file()
 
@@ -63,7 +96,6 @@ def ensure_frontend_built():
     if not needs_build:
         return
 
-    npm_cmd = "npm.cmd" if sys.platform == "win32" else "npm"
     subprocess.run(
         [npm_cmd, "run", "build"],
         cwd=str(FRONTEND_DIR),
