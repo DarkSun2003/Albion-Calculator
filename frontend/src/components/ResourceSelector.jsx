@@ -64,9 +64,11 @@ export default function ResourceSelector({
       {/* 1. Resource Selector with Real Tactile Textures & Albion Icons */}
       <div>
         <div className="flex items-center justify-between mb-2.5">
-          <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-albion-gold" />
-            Crafting Material
+          <label className="text-xs uppercase tracking-wider text-slate-300 font-semibold flex items-center gap-2">
+            <span className="text-[10px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/40 font-bold">
+              Stage 01
+            </span>
+            <span>Material, Tier &amp; Enchantment</span>
           </label>
           <span className="text-[11px] font-mono text-slate-400">
             Selected: <span className="text-albion-gold font-bold">{currentResource.name}</span>

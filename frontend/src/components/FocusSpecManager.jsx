@@ -14,7 +14,7 @@ export default function FocusSpecManager({
   focusPerUnit,
   totalFocusNeeded,
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const handleSpecChange = (tier, val) => {
     setSpecLevels((prev) => ({
@@ -23,51 +23,85 @@ export default function FocusSpecManager({
     }));
   };
 
-  const handleMaxAll = () => {
-    setMasteryLevel(100);
-    setSpecLevels({ 4: 100, 5: 100, 6: 100, 7: 100, 8: 100 });
+  const handlePreset = (lvl, e) => {
+    if (e) e.stopPropagation();
+    setMasteryLevel(lvl);
+    setSpecLevels({ 4: lvl, 5: lvl, 6: lvl, 7: lvl, 8: lvl });
   };
 
-  const handleReset = () => {
-    setMasteryLevel(0);
-    setSpecLevels({ 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 });
-  };
+  const handleMaxAll = (e) => handlePreset(100, e);
+  const handleReset = (e) => handlePreset(0, e);
 
   return (
     <div className="bg-albion-card border border-albion-border rounded-xl shadow-lg overflow-hidden">
       {/* Header Bar */}
       <div 
         onClick={() => setIsOpen(!isOpen)}
-        className="p-4 sm:p-5 flex items-center justify-between cursor-pointer hover:bg-albion-surface/40 transition-colors"
+        className="p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3 cursor-pointer hover:bg-albion-surface/40 transition-colors"
       >
         <div className="flex items-center gap-3">
-          <div className={`p-2 rounded-lg border ${useFocus ? 'bg-sky-500/20 border-sky-500/40 text-sky-400' : 'bg-albion-bg border-albion-border text-slate-500'}`}>
+          <div className={`p-2 rounded-lg border ${useFocus ? 'bg-sky-500/20 border-sky-500/40 text-sky-400 shadow-[0_0_12px_rgba(56,189,248,0.25)]' : 'bg-albion-bg border-albion-border text-slate-500'}`}>
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[10px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30 font-bold">
+                Stage 04
+              </span>
               <h3 className="text-sm font-serif font-bold text-slate-200">
-                Destiny Board Focus & Specialization
+                Destiny Board Focus &amp; Specialization
               </h3>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/20">
                 {focusPerUnit} Focus / Craft
               </span>
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-400 mt-0.5">
               {useFocus 
-                ? `Total Focus Needed: ${totalFocusNeeded.toLocaleString()} points` 
-                : 'Turn Focus ON above to simulate focus consumption and silver/focus ratio.'}
+                ? `Total Focus Needed: ${totalFocusNeeded.toLocaleString()} points (Mastery ${masteryLevel}/100)` 
+                : 'Turn Focus ON in the top bar to activate +53.9% return rate & Silver/Focus metrics.'}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-mono text-albion-gold hidden sm:inline">
-            Mastery: {masteryLevel}/100
-          </span>
+        <div className="flex items-center gap-2 ml-auto">
+          {/* Instant 1-Click Spec Presets Visible Without Opening Accordion */}
+          <div className="flex items-center gap-1 bg-albion-bg/90 p-1 rounded-lg border border-albion-border" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              onClick={(e) => handlePreset(0, e)}
+              className={`text-[10px] font-mono px-2 py-1 rounded transition-colors cursor-pointer ${
+                masteryLevel === 0 ? 'bg-slate-700 text-white font-bold' : 'text-slate-400 hover:text-slate-200'
+              }`}
+              title="Set all specs to 0"
+            >
+              0 Spec
+            </button>
+            <button
+              type="button"
+              onClick={(e) => handlePreset(50, e)}
+              className={`text-[10px] font-mono px-2 py-1 rounded transition-colors cursor-pointer ${
+                masteryLevel === 50 ? 'bg-sky-500/30 text-sky-200 border border-sky-500/40 font-bold' : 'text-slate-400 hover:text-slate-200'
+              }`}
+              title="Set Mastery & Specs to 50"
+            >
+              50 Spec
+            </button>
+            <button
+              type="button"
+              onClick={(e) => handlePreset(100, e)}
+              className={`text-[10px] font-mono px-2 py-1 rounded transition-colors cursor-pointer ${
+                masteryLevel === 100 ? 'bg-amber-500/30 text-amber-200 border border-amber-500/50 font-bold' : 'text-amber-400/80 hover:text-amber-300'
+              }`}
+              title="Set Mastery & All Specs to 100 (Max Efficiency)"
+            >
+              ⚡ Max 100
+            </button>
+          </div>
+
           <button
             type="button"
-            className="p-1 rounded text-slate-400 hover:text-slate-200"
+            className="p-1.5 rounded-lg bg-albion-bg border border-albion-border text-slate-300 hover:text-white"
+            title={isOpen ? 'Collapse sliders' : 'Expand individual tier sliders'}
           >
             {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
@@ -79,26 +113,8 @@ export default function FocusSpecManager({
         <div className="p-4 sm:p-5 border-t border-albion-border/70 bg-albion-bg/40 space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-xs text-slate-400 font-sans">
-              Every 10,000 Focus Efficiency cuts focus cost in half.
+              Every 10,000 Focus Efficiency cuts focus cost in half. Adjust individual tiers below:
             </span>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={handleMaxAll}
-                className="flex items-center gap-1 text-[11px] font-mono px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/40"
-              >
-                <Zap className="w-3 h-3" />
-                Max Spec (100)
-              </button>
-              <button
-                type="button"
-                onClick={handleReset}
-                className="flex items-center gap-1 text-[11px] font-mono px-2 py-1 rounded bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700"
-              >
-                <RotateCcw className="w-3 h-3" />
-                Reset
-              </button>
-            </div>
           </div>
 
           {/* Mastery Slider */}

@@ -1,31 +1,78 @@
 import React from 'react';
 import { RefreshCw, Coins, Tag, ArrowRight, Zap, RotateCcw } from 'lucide-react';
 import { RESOURCES, getItemIdentifier, getItemIconPath } from '../utils/albionMath';
+import { getCalibratedNowMs } from '../services/api';
 import ItemIcon from './ItemIcon';
 
-function getFreshness(dateString) {
-  if (
-    !dateString ||
-    typeof dateString !== 'string' ||
-    dateString.startsWith('0001') ||
-    dateString.startsWith('1970') ||
-    isNaN(new Date(dateString).getTime()) ||
-    new Date(dateString).getFullYear() < 2020
-  ) {
-    return { label: 'No Orders', color: 'text-slate-500 bg-slate-900/60 border-slate-800' };
+function getFreshness(dateString, ageHours, source) {
+  if (source === 'aodp_24h_avg') {
+    return {
+      label: '📊 24h Traded Avg',
+      color: 'text-sky-300 bg-sky-950/70 border-sky-700/70',
+      tooltip: 'Verified 24-hour traded average price from Albion Data Project history',
+    };
   }
-  const diffHours = (Date.now() - new Date(dateString).getTime()) / (1000 * 60 * 60);
-  if (diffHours < 0) return { label: '🟢 Just now', color: 'text-emerald-400 bg-emerald-950/60 border-emerald-800' };
+
+  let diffHours = null;
+  if (ageHours !== null && ageHours !== undefined && !Number.isNaN(Number(ageHours)) && Number(ageHours) < 9000) {
+    diffHours = Number(ageHours);
+  } else if (
+    dateString &&
+    typeof dateString === 'string' &&
+    !dateString.startsWith('0001') &&
+    !dateString.startsWith('1970') &&
+    !isNaN(new Date(dateString).getTime()) &&
+    new Date(dateString).getFullYear() >= 2020
+  ) {
+    const parsedStr = dateString.endsWith('Z') || dateString.includes('+') ? dateString : `${dateString}Z`;
+    diffHours = Math.max(0, (getCalibratedNowMs() - new Date(parsedStr).getTime()) / (1000 * 60 * 60));
+  }
+
+  if (diffHours === null) {
+    return {
+      label: 'No Recent Scan',
+      color: 'text-slate-400 bg-slate-900/80 border-slate-700',
+      tooltip: 'No active player market scan found yet',
+    };
+  }
+
+  if (diffHours <= 0.04) {
+    return {
+      label: '🟢 Updated just now',
+      color: 'text-emerald-300 bg-emerald-950/80 border-emerald-700/80',
+      tooltip: 'Scanned less than 2 minutes ago',
+    };
+  }
   if (diffHours < 1) {
     const mins = Math.max(1, Math.round(diffHours * 60));
-    return { label: `🟢 ${mins}m ago`, color: 'text-emerald-400 bg-emerald-950/60 border-emerald-800' };
+    return {
+      label: `🟢 Updated ${mins}m ago`,
+      color: 'text-emerald-300 bg-emerald-950/80 border-emerald-700/80',
+      tooltip: `Fresh market scan (${mins} minutes old)`,
+    };
   }
-  if (diffHours < 24) {
+  if (diffHours < 6) {
     const hrs = Math.round(diffHours * 10) / 10;
-    return { label: `🟡 ${hrs}h ago`, color: 'text-amber-400 bg-amber-950/60 border-amber-800' };
+    return {
+      label: `🟡 Updated ${hrs}h ago`,
+      color: 'text-amber-300 bg-amber-950/80 border-amber-700/80',
+      tooltip: `Moderately recent market scan (${hrs} hours old)`,
+    };
   }
-  const days = Math.round(diffHours / 24);
-  return { label: `🔴 ${days}d ago`, color: 'text-rose-400 bg-rose-950/60 border-rose-800' };
+  if (diffHours < 48) {
+    const hrs = Math.round(diffHours);
+    return {
+      label: `🔴 Updated ${hrs}h ago`,
+      color: 'text-rose-300 bg-rose-950/80 border-rose-700/80',
+      tooltip: `Older market scan (${hrs} hours old) — verify in-game if trading large volume`,
+    };
+  }
+  const days = Math.max(1, Math.round(diffHours / 24));
+  return {
+    label: `🔴 Updated ${days}d ago`,
+    color: 'text-rose-300 bg-rose-950/80 border-rose-700/80',
+    tooltip: `Stale market scan (${days} days old)`,
+  };
 }
 
 export default function PriceInputs({
@@ -70,21 +117,24 @@ export default function PriceInputs({
     : `T${selectedTier}.${selectedEnchantment} ${resource.refinedName}`;
 
   const hasAnyOverride = manualOverrides.raw || manualOverrides.prevRefined || manualOverrides.refined;
-  const rawFresh = getFreshness(priceTimestamps?.raw);
-  const prevFresh = getFreshness(priceTimestamps?.prevRefined);
-  const refinedFresh = getFreshness(priceTimestamps?.refined);
+  const rawFresh = getFreshness(priceTimestamps?.raw, priceTimestamps?.rawAgeHours, priceTimestamps?.rawSource);
+  const prevFresh = getFreshness(priceTimestamps?.prevRefined, priceTimestamps?.prevRefinedAgeHours, priceTimestamps?.prevRefinedSource);
+  const refinedFresh = getFreshness(priceTimestamps?.refined, priceTimestamps?.refinedAgeHours, priceTimestamps?.refinedSource);
 
   return (
     <div className="bg-albion-card border border-albion-border rounded-xl p-4 sm:p-5 shadow-xl space-y-4">
       {/* Header & Live Fetch Controls */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-albion-border/60 pb-3">
         <div>
-          <h3 className="text-xs uppercase tracking-wider text-slate-300 font-semibold flex items-center gap-1.5 font-serif">
+          <h3 className="text-xs uppercase tracking-wider text-slate-200 font-semibold flex items-center gap-2 font-serif">
+            <span className="text-[10px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/40 font-bold">
+              Stage 03
+            </span>
             <Coins className="w-3.5 h-3.5 text-albion-gold" />
-            Market Unit Price Ledger
+            <span>Market Unit Price Ledger</span>
           </h3>
-          <p className="text-[11px] text-slate-500">
-            Real-time market order rates with live background sync & manual override safeguards.
+          <p className="text-[11px] text-slate-400 mt-0.5">
+            Auto-synced from AODP + 24h Traded History. Click any price box to type your own in-game price.
           </p>
         </div>
 

@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 
 const HANDBOOK_TABS = [
+  { id: 'uimap', label: '🗺️ Where Is Everything?', icon: MapPin },
   { id: 'quickstart', label: '🔰 Quickstart', icon: Compass },
   { id: 'refining', label: '💎 Refining & RRR', icon: Layers },
   { id: 'crafting', label: '⚔️ Gear Crafting', icon: Hammer },
@@ -40,10 +41,16 @@ const HANDBOOK_TABS = [
   { id: 'laborers', label: '👷 Laborers & Houses', icon: Users },
   { id: 'blackmarket', label: '💀 Black Market', icon: Skull },
   { id: 'focus', label: '⚡ Focus & Specs', icon: Zap },
-  { id: 'faq', label: '❓ FAQ & Data', icon: HelpCircle },
+  { id: 'faq', label: '❓ FAQ & Live Data', icon: HelpCircle },
 ];
 
-export default function PlayerHandbookModal({ isOpen, onClose, onStartTour, initialTab = 'quickstart' }) {
+export default function PlayerHandbookModal({
+  isOpen,
+  onClose,
+  onStartTour,
+  onJumpToFeature,
+  initialTab = 'uimap',
+}) {
   const [activeTab, setActiveTab] = useState(initialTab);
 
   // Sync initialTab when modal opens
@@ -73,6 +80,14 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour, init
     }
   };
 
+  const triggerJump = (moduleKey, selector) => {
+    if (onJumpToFeature) {
+      onJumpToFeature(moduleKey, selector);
+    } else {
+      onClose();
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-md animate-fade-in">
       <div 
@@ -82,20 +97,20 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour, init
         {/* Header */}
         <div className="p-4 sm:p-5 border-b border-albion-border/80 bg-gradient-to-r from-albion-card via-albion-surface to-albion-card flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-600 via-amber-700 to-amber-950 flex items-center justify-center border border-amber-400/50 shadow-gold-glow shrink-0">
-              <BookOpen className="w-5 h-5 text-slate-950 fill-amber-300 drop-shadow" />
+            <div className="w-10 h-10 rounded-xl bg-[#07090e] flex items-center justify-center border border-amber-400/60 shadow-gold-glow shrink-0 overflow-hidden">
+              <img src="/logo.png" alt="Albion Artisan" className="w-full h-full object-cover" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="font-serif text-lg sm:text-xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-300 to-amber-500">
-                  Albion Artisan Master Codex & Guide
+                  Albion Artisan Master Codex &amp; UI Map
                 </h2>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/40 font-bold uppercase">
                   All 7 Disciplines
                 </span>
               </div>
               <p className="text-xs text-slate-400 font-serif">
-                Comprehensive blueprints for Refining, Gear Crafting, Cooking, Potions, Farming, Laborers, and Black Market hauling
+                Click any feature below to teleport straight to it, or read the economic blueprints for all 7 calculators
               </p>
             </div>
           </div>
@@ -120,7 +135,7 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour, init
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-serif font-bold whitespace-nowrap transition-all ${
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-serif font-bold whitespace-nowrap transition-all cursor-pointer ${
                   isActive
                     ? 'bg-amber-950/60 border border-amber-500/70 text-amber-300 shadow-[0_0_10px_rgba(245,158,11,0.2)]'
                     : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 border border-transparent'
@@ -136,6 +151,176 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour, init
         {/* Tab Content Body */}
         <div className="p-5 sm:p-6 overflow-y-auto space-y-6 flex-1 text-sm leading-relaxed scrollbar-thin">
           
+          {/* TAB 0: WHERE IS EVERYTHING? (INTERACTIVE UI MAP) */}
+          {activeTab === 'uimap' && (
+            <div className="space-y-5 animate-fade-in">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/50 via-[#111726] to-amber-950/40 border border-amber-500/40 flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h3 className="font-serif text-base font-bold text-amber-300 flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-amber-400" />
+                    Interactive UI Map — Click Any Card to Teleport &amp; Highlight It!
+                  </h3>
+                  <p className="text-xs text-slate-300 mt-0.5">
+                    Can&apos;t find a setting? Click any card below (or press <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[10px] text-amber-300">Ctrl+K</kbd> anytime) and we will switch to that tab, scroll straight to it, and highlight it in gold!
+                  </p>
+                </div>
+              </div>
+
+              {/* Section 1: Where are the Refining & Global Settings? */}
+              <div>
+                <h4 className="text-xs font-mono uppercase tracking-wider text-amber-400 font-bold mb-2.5">
+                  1. Common Settings &amp; Refining Controls (Click to Jump)
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                  {[
+                    {
+                      badge: 'Top Bar',
+                      title: 'Server, Premium & Focus Switch',
+                      desc: 'Switch Europe/Americas/Asia, toggle Premium 4% tax, or turn Focus ON/OFF.',
+                      mod: null,
+                      sel: '#tour-header-controls',
+                    },
+                    {
+                      badge: 'Stage 01',
+                      title: 'Material, Tier & Enchantment',
+                      desc: 'Choose Wood, Ore, Hide, Fiber, or Stone across T2–T8 and .0 to .4.',
+                      mod: 'refining',
+                      sel: '#tour-resource-picker',
+                    },
+                    {
+                      badge: 'Stage 02',
+                      title: 'Royal City Bonus & Station Tax',
+                      desc: 'Select your city (+40% RRR specialty badge), batch size, and nutrition fee.',
+                      mod: 'refining',
+                      sel: '#tour-city-controls',
+                    },
+                    {
+                      badge: 'Stage 03',
+                      title: 'Market Prices & Sell/Direct Order',
+                      desc: 'Refresh live AODP prices, type manual overrides, or switch Sell vs Direct Order.',
+                      mod: 'refining',
+                      sel: '#tour-price-inputs',
+                    },
+                    {
+                      badge: 'Stage 04',
+                      title: 'Focus Mastery & Spec Sliders',
+                      desc: 'Use the 1-click 0 / 50 / Max 100 Spec buttons or adjust individual tier sliders.',
+                      mod: 'refining',
+                      sel: '#tour-focus-spec',
+                    },
+                    {
+                      badge: 'Right Column',
+                      title: '6-City Arbitrage & Profit Verdict',
+                      desc: 'See Net Batch Profit, Silver per Focus, and compare all 6 Royal Cities side-by-side.',
+                      mod: 'refining',
+                      sel: '#tour-arbitrage',
+                    },
+                  ].map((card) => (
+                    <button
+                      key={card.title}
+                      type="button"
+                      onClick={() => triggerJump(card.mod, card.sel)}
+                      className="text-left p-3.5 rounded-xl bg-albion-card hover:bg-[#161f33] border border-albion-border hover:border-amber-500/60 transition-all group cursor-pointer flex flex-col justify-between gap-2"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold">
+                            {card.badge}
+                          </span>
+                          <span className="text-[10px] font-mono text-amber-400 group-hover:translate-x-0.5 transition-transform">
+                            Teleport &rarr;
+                          </span>
+                        </div>
+                        <div className="font-serif font-bold text-slate-100 group-hover:text-amber-200">
+                          {card.title}
+                        </div>
+                        <p className="text-[11px] text-slate-400 mt-1 leading-snug">
+                          {card.desc}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Section 2: Where are the 7 Calculators? */}
+              <div>
+                <h4 className="text-xs font-mono uppercase tracking-wider text-sky-400 font-bold mb-2.5">
+                  2. All 7 Economic Calculators (Click to Open Calculator)
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                  {[
+                    {
+                      name: '💎 Refining Workshop',
+                      bonus: '+40% Royal City Bonus',
+                      desc: 'Planks, Metal Bars, Leather, Cloth, and Stone Blocks with 6-city arbitrage.',
+                      mod: 'refining',
+                      sel: '#tour-resource-picker',
+                    },
+                    {
+                      name: '⚔️ Gear & Weapon Forge',
+                      bonus: '3,400+ Craftable Items',
+                      desc: 'Pre-craft shopping list, Kraken Salad quality buffs, Journals, and Post-Craft quality procs.',
+                      mod: 'crafting',
+                      sel: '#tour-craft-categories',
+                    },
+                    {
+                      name: "🍲 Chef's Hearth (Food)",
+                      bonus: '+15% Caerleon Bonus',
+                      desc: 'Stews, Omelettes, Pies, Salads, Roasts, Fish Sauces, and Butcher meat chopping.',
+                      mod: 'cooking',
+                      sel: '#tour-food-categories',
+                    },
+                    {
+                      name: "🧪 Alchemist's Lab (Potions)",
+                      bonus: '+15% Brecilien / Caerleon',
+                      desc: 'Healing, Energy, Poison, Resistance, Sticky, and Gigantify potions + Arcane extracts.',
+                      mod: 'potions',
+                      sel: '#tour-potion-categories',
+                    },
+                    {
+                      name: '🌾 Agriculture & Pastures',
+                      bonus: 'Island Crops, Herbs & Animals',
+                      desc: 'Seed return rates, Focus watering profit, and mount/livestock raising.',
+                      mod: 'farming',
+                      sel: '#tour-farming-categories',
+                    },
+                    {
+                      name: '👷 Guild Laborers & Houses',
+                      bonus: 'Up to 150% Trophy Yield',
+                      desc: 'Compare buying filled journals vs self-filling, furniture tiers, and daily passive silver.',
+                      mod: 'laborers',
+                      sel: '#tour-laborer-Selector',
+                    },
+                    {
+                      name: '💀 Caerleon Black Market',
+                      bonus: 'Royal-to-Caerleon Flipper',
+                      desc: 'Scan Royal City sell orders against Caerleon NPC buy orders + Red-Zone haul risk.',
+                      mod: 'blackmarket',
+                      sel: '#tour-bm-radar-controls',
+                    },
+                  ].map((c) => (
+                    <button
+                      key={c.name}
+                      type="button"
+                      onClick={() => triggerJump(c.mod, c.sel)}
+                      className="text-left p-3.5 rounded-xl bg-albion-card hover:bg-[#161f33] border border-albion-border hover:border-sky-500/60 transition-all group cursor-pointer"
+                    >
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <span className="font-serif font-bold text-slate-100 group-hover:text-sky-300">
+                          {c.name}
+                        </span>
+                        <span className="text-[10px] font-mono text-sky-400">Open &rarr;</span>
+                      </div>
+                      <div className="text-[10px] font-mono text-amber-300 mb-1">{c.bonus}</div>
+                      <p className="text-[11px] text-slate-400 leading-snug">{c.desc}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* TAB 1: QUICKSTART */}
           {activeTab === 'quickstart' && (
             <div className="space-y-6 animate-fade-in">
@@ -660,36 +845,57 @@ export default function PlayerHandbookModal({ isOpen, onClose, onStartTour, init
           {/* TAB 10: FAQ & LIVE DATA */}
           {activeTab === 'faq' && (
             <div className="space-y-4 animate-fade-in text-xs">
-              <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
-                <h4 className="font-serif font-bold text-slate-200 text-sm flex items-center gap-2">
-                  <HelpCircle className="w-4 h-4 text-amber-400" />
-                  Where do the live prices come from?
+              <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-950/40 via-albion-card to-albion-card border border-emerald-500/40 space-y-2.5">
+                <h4 className="font-serif font-bold text-emerald-300 text-sm flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  How Our 3-Layer Verified Market Price Engine Works
                 </h4>
-                <p className="text-slate-400">
-                  Prices are fetched from the community-driven <strong>Albion Online Data Project (AODP)</strong>. Active players running the Albion Data Client automatically upload market board snapshots when opening market stalls in-game.
+                <p className="text-slate-300">
+                  Unlike basic calculators that blindly show raw market data, Albion Artisan protects your calculations with <strong>3 accuracy layers</strong>:
                 </p>
+                <ol className="text-slate-300 space-y-1.5 list-decimal list-inside">
+                  <li>
+                    <strong>Strict Quality &amp; Freshness Filtering (<code className="text-amber-300">qualities=1</code>):</strong> Resources, food, potions, crops, and journals only exist at Normal (Q1) in-game. We block phantom Q2–Q5 slots and sort strictly by timestamp so old prices never overwrite fresh ones.
+                  </li>
+                  <li>
+                    <strong>24-Hour Traded History Outlier Protection:</strong> Every price is cross-checked against real completed sales over the last 24 hours (<code className="text-sky-300">/stats/history/</code>). If a listing is missing or a manipulator posts a fake 9,999,999 silver order, we automatically substitute the true 24-hour traded average.
+                  </li>
+                  <li>
+                    <strong>Shared Community Database (<code className="text-emerald-300">MarketPriceSnapshot</code>):</strong> Whenever <strong>even 1 player</strong> using our site scans &amp; fetches fresh prices, our database permanently saves those verified prices so everyone on the site (including mobile users!) gets the newest prices.
+                  </li>
+                </ol>
+              </div>
+
+              <div className="p-4 rounded-xl bg-albion-card border border-amber-500/30 space-y-2.5">
+                <h4 className="font-serif font-bold text-amber-300 text-sm flex items-center gap-2">
+                  <HelpCircle className="w-4 h-4 text-amber-400" />
+                  Why do some prices say &ldquo;2h–3h ago&rdquo; &amp; how do I get instant &ldquo;0m ago&rdquo; prices?
+                </h4>
+                <p className="text-slate-300">
+                  Sandbox Interactive intentionally does not provide an official Market API. Prices in the global Albion Data Project only update when a PC player running the free <strong>Albion Data Client (ADC)</strong> opens that city&apos;s market in-game.
+                </p>
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                  <span className="text-emerald-300 font-semibold">
+                    💡 Play on PC? Run the free Albion Data Client in the background for instant 3-second live updates!
+                  </span>
+                  <a
+                    href="https://github.com/ao-data/albiondata-client/releases/latest/download/albiondata-client-amd64-installer.exe"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono font-bold text-xs transition-all"
+                  >
+                    Download ADC Scanner (.exe)
+                  </a>
+                </div>
               </div>
 
               <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
                 <h4 className="font-serif font-bold text-slate-200 text-sm flex items-center gap-2">
-                  <HelpCircle className="w-4 h-4 text-amber-400" />
-                  Why do some prices say &ldquo;X hours ago&rdquo; or &ldquo;No Orders&rdquo;?
+                  <HelpCircle className="w-4 h-4 text-sky-400" />
+                  Can I install this calculator as a Desktop App or Mobile App?
                 </h4>
-                <p className="text-slate-400">
-                  If an item or enchantment (like T8.3 Pristine) has low trading volume or nobody has opened its market tab recently with the data client running, the price record will be older.
-                </p>
-                <p className="text-emerald-400 font-sans">
-                  <strong>Pro-Tip:</strong> Whenever a price is outdated or you see a different price in-game, simply click into any price box and type your current local market price. The calculator immediately recalculates with your manual entry!
-                </p>
-              </div>
-
-              <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
-                <h4 className="font-serif font-bold text-slate-200 text-sm flex items-center gap-2">
-                  <HelpCircle className="w-4 h-4 text-amber-400" />
-                  Does this support Europe, Americas, and Asia servers?
-                </h4>
-                <p className="text-slate-400">
-                  Yes! Use the server dropdown in the top header. Selecting <strong>Europe</strong>, <strong>Americas (West)</strong>, or <strong>Asia (East)</strong> switches the live price feed and calculations to that specific realm.
+                <p className="text-slate-300">
+                  <strong>Yes!</strong> On mobile or Chrome/Edge, click the <strong>Install App</strong> button in the top bar (or &ldquo;Add to Home Screen&rdquo;) to run it fullscreen with offline icon caching. If you downloaded our project folder on Windows, double-click the <strong>Albion Artisan Calculator</strong> desktop shortcut to run the ultra-lightweight local SQLite Desktop App!
                 </p>
               </div>
             </div>

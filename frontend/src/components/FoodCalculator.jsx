@@ -266,8 +266,10 @@ export default function FoodCalculator({ server, hasPremium, useFocus, onOpenGui
 
       if (res) {
         let updatedCount = 0;
+        let sampleAge = null;
         if (res.food && res.food.sell_min > 0) {
           setItemSellPrice(res.food.sell_min);
+          if (res.food.age_hours != null) sampleAge = res.food.age_hours;
           updatedCount++;
         }
         if (res.ingredients) {
@@ -275,12 +277,14 @@ export default function FoodCalculator({ server, hasPremium, useFocus, onOpenGui
           Object.entries(res.ingredients).forEach(([id, rec]) => {
             if (rec && rec.sell_min > 0) {
               newPrices[id] = rec.sell_min;
+              if (sampleAge === null && rec.age_hours != null) sampleAge = rec.age_hours;
               updatedCount++;
             }
           });
           setIngredientPrices(newPrices);
         }
-        setPriceStatus(updatedCount > 0 ? `Updated ${updatedCount} prices from ${selectedCity}` : `No active sell orders found in ${selectedCity}`);
+        const ageText = sampleAge !== null ? (sampleAge < 1 ? ` • 🟢 Updated ${Math.max(1, Math.round(sampleAge * 60))}m ago` : ` • 🟡 Updated ${Math.round(sampleAge * 10) / 10}h ago`) : '';
+        setPriceStatus(updatedCount > 0 ? `Updated ${updatedCount} prices from ${selectedCity}${ageText}` : `No active sell orders found in ${selectedCity}`);
       } else {
         setPriceStatus('Using local estimates');
       }

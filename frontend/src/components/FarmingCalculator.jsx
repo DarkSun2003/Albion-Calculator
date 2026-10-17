@@ -237,15 +237,18 @@ export default function FarmingCalculator({ server, hasPremium, useFocus: global
 
       if (res && res.prices) {
         let updated = 0;
+        let sampleAge = null;
         const newPrices = { ...marketPrices };
         Object.entries(res.prices).forEach(([id, rec]) => {
           if (rec && rec.sell_min > 0) {
             newPrices[id] = rec.sell_min;
+            if (sampleAge === null && rec.age_hours != null) sampleAge = rec.age_hours;
             updated++;
           }
         });
         setMarketPrices(newPrices);
-        setPriceStatus(updated > 0 ? `Updated ${updated} prices from ${selectedCity}` : `No active sell orders found in ${selectedCity}`);
+        const ageText = sampleAge !== null ? (sampleAge < 1 ? ` • 🟢 Updated ${Math.max(1, Math.round(sampleAge * 60))}m ago` : ` • 🟡 Updated ${Math.round(sampleAge * 10) / 10}h ago`) : '';
+        setPriceStatus(updated > 0 ? `Updated ${updated} prices from ${selectedCity}${ageText}` : `No active sell orders found in ${selectedCity}`);
       } else {
         setPriceStatus('Using local estimates');
       }

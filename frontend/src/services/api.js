@@ -1,6 +1,45 @@
-const API_BASE = import.meta.env.VITE_API_URL 
-  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api` 
+const isLocalHost =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+const API_BASE = !isLocalHost && import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
   : 'http://127.0.0.1:8000/api';
+
+export function syncClientClock(data) {
+  if (typeof window !== 'undefined' && data?.server_utc_now) {
+    const serverMs = new Date(data.server_utc_now).getTime();
+    if (!isNaN(serverMs)) {
+      window.__INTERNET_CLOCK_OFFSET_MS__ = serverMs - Date.now();
+    }
+  }
+  return data;
+}
+
+export function getCalibratedNowMs() {
+  if (typeof window !== 'undefined' && typeof window.__INTERNET_CLOCK_OFFSET_MS__ === 'number') {
+    return Date.now() + window.__INTERNET_CLOCK_OFFSET_MS__;
+  }
+  return Date.now();
+}
+
+export function formatCalibratedStatusAge(ageHours) {
+  if (ageHours === null || ageHours === undefined || Number.isNaN(Number(ageHours)) || Number(ageHours) >= 9000) {
+    return '';
+  }
+  const hrs = Math.max(0, Number(ageHours));
+  if (hrs <= 0.04) return ' • 🟢 Updated just now';
+  if (hrs < 1) {
+    const mins = Math.max(1, Math.round(hrs * 60));
+    return ` • 🟢 Updated ${mins}m ago`;
+  }
+  if (hrs < 24) {
+    const cleanHrs = (Math.round(hrs * 10) / 10).toString();
+    return ` • 🟡 Updated ${cleanHrs}h ago`;
+  }
+  const days = Math.round(hrs / 24);
+  return ` • 🔴 Updated ${days}d ago`;
+}
 
 export async function getRefiningConstants() {
   try {
@@ -36,7 +75,7 @@ export async function fetchLivePricesApi(payload) {
       body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return await res.json();
+    return syncClientClock(await res.json());
   } catch (err) {
     console.warn('Failed to fetch prices from backend:', err);
     return null;
@@ -66,7 +105,7 @@ export async function fetchCraftingPricesApi(payload) {
       body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return await res.json();
+    return syncClientClock(await res.json());
   } catch (err) {
     console.warn('Failed to fetch crafting prices from backend:', err);
     return null;
@@ -108,7 +147,7 @@ export async function fetchFoodPricesApi(payload) {
       body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return await res.json();
+    return syncClientClock(await res.json());
   } catch (err) {
     console.warn('Failed to fetch food prices from backend:', err);
     return null;
@@ -158,7 +197,7 @@ export async function fetchPotionPricesApi(payload) {
       body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return await res.json();
+    return syncClientClock(await res.json());
   } catch (err) {
     console.warn('Failed to fetch potion prices from backend:', err);
     return null;
@@ -199,7 +238,7 @@ export async function fetchFarmingPricesApi(payload) {
       body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return await res.json();
+    return syncClientClock(await res.json());
   } catch (err) {
     console.warn('Failed to fetch farming prices from backend:', err);
     return null;
@@ -240,7 +279,7 @@ export async function fetchLaborerPricesApi(payload) {
       body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return await res.json();
+    return syncClientClock(await res.json());
   } catch (err) {
     console.warn('Failed to fetch laborer prices from backend:', err);
     return null;
@@ -266,7 +305,7 @@ export async function scanBlackMarketApi(payload) {
       body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return await res.json();
+    return syncClientClock(await res.json());
   } catch (err) {
     console.warn('Backend Black Market scan failed, using fallback client math:', err);
     return null;

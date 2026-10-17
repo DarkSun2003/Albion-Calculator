@@ -35,10 +35,10 @@ export const MODULE_TOURS = {
     steps: [
       {
         targetId: '#tour-header-controls',
-        title: 'Server Realm, Premium & Focus Controls',
+        title: 'Quick Finder (Ctrl+K), Server, Focus & Live Scanner',
         badge: 'Step 1 of 7',
         icon: Server,
-        description: 'Select your Albion server realm (Europe, Americas, or Asia). Toggle Premium status (cuts market tax from 8% down to 4%), and toggle Crafting Focus to simulate 53.9% Resource Return Rates.',
+        description: 'Use "Find Tool (Ctrl+K)" anytime to jump straight to any setting! Switch servers (Europe, Americas, Asia), toggle Premium (4% vs 8% tax), toggle Focus (+53.9% RRR), or click "Live Scanner" to download the PC market scanner.',
         placement: 'bottom',
       },
       {

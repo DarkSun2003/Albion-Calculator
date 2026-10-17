@@ -98,18 +98,21 @@ def scan_blackmarket(params):
     server_key = str(server).lower()
     base_api = AODP_SERVERS.get(server_key, AODP_SERVERS['europe'])
 
+    from .services import parse_aodp_date, sync_internet_clock, get_true_utc_now
+
     for i in range(0, min(len(aodp_ids), 120), chunk_size):
         chunk = aodp_ids[i:i + chunk_size]
         url = f"{base_api}{','.join(chunk)}.json?locations={locations}"
         try:
             resp = requests.get(url, timeout=10)
+            sync_internet_clock(resp)
             if resp.status_code == 200:
                 price_records.extend(resp.json())
         except Exception:
             pass
 
     # Index prices by item_id, city, and quality:
-    # prices_by_quality[item_id][city][quality] = { 'sell_min': X, 'buy_max': Y }
+    # prices_by_quality[item_id][city][quality] = { 'sell_min': X, 'buy_max': Y, 'sell_age': H }
     prices_by_quality = {}
     for r in price_records:
         iid = r.get('item_id')
@@ -117,24 +120,44 @@ def scan_blackmarket(params):
         if not iid or not city:
             continue
         qual = int(r.get('quality', 1))
-        sell_min = r.get('sell_price_min', 0)
-        buy_max = r.get('buy_price_max', 0)
+        sell_min = int(r.get('sell_price_min', 0) or 0)
+        buy_max = int(r.get('buy_price_max', 0) or 0)
 
-        # Discard invalid year 1 dates
-        s_date = r.get('sell_price_min_date')
-        if s_date and (s_date.startswith('0001') or s_date.startswith('1970')):
+        # Discard invalid year-0001 dates and expired (>72h) listings
+        s_date, s_age = parse_aodp_date(r.get('sell_price_min_date'))
+        b_date, b_age = parse_aodp_date(r.get('buy_price_max_date'))
+        if not s_date or s_age > 72.0:
             sell_min = 0
+        if not b_date or b_age > 72.0:
+            buy_max = 0
 
         if iid not in prices_by_quality:
             prices_by_quality[iid] = {}
         if city not in prices_by_quality[iid]:
             prices_by_quality[iid][city] = {}
 
-        existing = prices_by_quality[iid][city].get(qual, {'sell_min': 0, 'buy_max': 0})
-        if sell_min > 0 and (existing['sell_min'] == 0 or sell_min < existing['sell_min']):
-            existing['sell_min'] = sell_min
-        if buy_max > existing['buy_max']:
-            existing['buy_max'] = buy_max
+        existing = prices_by_quality[iid][city].get(qual, {
+            'sell_min': 0,
+            'buy_max': 0,
+            'sell_age': 999999.0,
+            'buy_age': 999999.0,
+            'sell_date': None,
+            'buy_date': None,
+        })
+        if sell_min > 0:
+            is_fresher = (s_age + 3.0) < existing['sell_age']
+            is_similar_and_cheaper = abs(s_age - existing['sell_age']) <= 3.0 and (existing['sell_min'] == 0 or sell_min < existing['sell_min'])
+            if existing['sell_min'] == 0 or is_fresher or is_similar_and_cheaper:
+                existing['sell_min'] = sell_min
+                existing['sell_age'] = s_age
+                existing['sell_date'] = s_date
+        if buy_max > 0:
+            is_b_fresher = (b_age + 3.0) < existing['buy_age']
+            is_b_similar_and_higher = abs(b_age - existing['buy_age']) <= 3.0 and (existing['buy_max'] == 0 or buy_max > existing['buy_max'])
+            if existing['buy_max'] == 0 or is_b_fresher or is_b_similar_and_higher:
+                existing['buy_max'] = buy_max
+                existing['buy_age'] = b_age
+                existing['buy_date'] = b_date
         prices_by_quality[iid][city][qual] = existing
 
     # Compute arbitrage spreads for each item across eligible qualities
@@ -158,13 +181,26 @@ def scan_blackmarket(params):
         best_item_opportunity = None
 
         for q in qualities_to_eval:
-            bm_data = item_cities.get('Black Market', {}).get(q, {'sell_min': 0, 'buy_max': 0})
+            bm_data = item_cities.get('Black Market', {}).get(q, {
+                'sell_min': 0,
+                'buy_max': 0,
+                'sell_age': 999999.0,
+                'buy_age': 999999.0,
+                'sell_date': None,
+                'buy_date': None,
+            })
             bm_buy_max = bm_data['buy_max']
             bm_sell_min = bm_data['sell_min']
+            bm_buy_age = bm_data.get('buy_age', 999999.0)
+            bm_sell_age = bm_data.get('sell_age', 999999.0)
+            bm_buy_date = bm_data.get('buy_date')
+            bm_sell_date = bm_data.get('sell_date')
 
             # Find best Royal City buy price for this quality
             royal_best_price = 0
             royal_best_city = 'Martlock'
+            royal_best_age = None
+            royal_best_date = None
 
             for rc in royal_cities:
                 q_rec = item_cities.get(rc, {}).get(q)
@@ -173,6 +209,8 @@ def scan_blackmarket(params):
                     if royal_best_price == 0 or s_price < royal_best_price:
                         royal_best_price = s_price
                         royal_best_city = rc
+                        royal_best_age = q_rec.get('sell_age')
+                        royal_best_date = q_rec.get('sell_date')
 
             # Craft cost scale for higher qualities
             quality_craft_mult = 1.0 if q <= 2 else (1.3 if q == 3 else (1.8 if q == 4 else 3.5))
@@ -210,6 +248,9 @@ def scan_blackmarket(params):
 
             qual_meta = ITEM_QUALITIES.get(q, {'name': 'Normal', 'color': 'slate', 'label': f'Quality {q}'})
 
+            active_bm_age = bm_buy_age if best_mode == 'Instant Buy Order' else bm_sell_age
+            active_bm_date = bm_buy_date if best_mode == 'Instant Buy Order' else bm_sell_date
+
             opp = {
                 'id': it['id'],
                 'aodpId': aodp_id,
@@ -232,6 +273,8 @@ def scan_blackmarket(params):
                     'quality': q,
                     'qualityName': qual_meta['name'],
                     'isMarketListing': royal_best_price > 0,
+                    'updatedAt': royal_best_date if royal_best_price > 0 else None,
+                    'ageHours': round(royal_best_age, 2) if (royal_best_price > 0 and royal_best_age is not None and royal_best_age < 9999) else None,
                 },
                 'blackMarket': {
                     'buyOrderMax': bm_buy_max,
@@ -240,6 +283,12 @@ def scan_blackmarket(params):
                     'qualityName': qual_meta['name'],
                     'instantPayout': instant_payout,
                     'listedPayout': listed_payout,
+                    'buyOrderUpdatedAt': bm_buy_date if bm_buy_max > 0 else None,
+                    'buyOrderAgeHours': round(bm_buy_age, 2) if (bm_buy_max > 0 and bm_buy_age < 9999) else None,
+                    'sellOrderUpdatedAt': bm_sell_date if bm_sell_min > 0 else None,
+                    'sellOrderAgeHours': round(bm_sell_age, 2) if (bm_sell_min > 0 and bm_sell_age < 9999) else None,
+                    'activeUpdatedAt': active_bm_date,
+                    'activeAgeHours': round(active_bm_age, 2) if (active_bm_age is not None and active_bm_age < 9999) else None,
                 },
                 'spread': {
                     'instantProfit': instant_profit,
@@ -266,6 +315,11 @@ def scan_blackmarket(params):
         results.sort(key=lambda x: x['spread']['silverPerKg'], reverse=True)
     elif sort_by == 'cost':
         results.sort(key=lambda x: x['acquisition']['cost'])
+    elif sort_by == 'freshness':
+        results.sort(key=lambda x: (
+            x['blackMarket'].get('activeAgeHours') if x['blackMarket'].get('activeAgeHours') is not None else 9999,
+            -x['spread']['bestProfit']
+        ))
     else: # profit
         results.sort(key=lambda x: x['spread']['bestProfit'], reverse=True)
 
@@ -275,6 +329,7 @@ def scan_blackmarket(params):
         'server': server,
         'tier': tier,
         'enchantment': enchantment,
+        'server_utc_now': get_true_utc_now().isoformat(),
     }
 
 def calculate_haul(params):

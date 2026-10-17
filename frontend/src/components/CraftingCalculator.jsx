@@ -125,29 +125,38 @@ export function computeDynamicQualityChances(mastery = 0, spec = 0, hasSalad = f
   };
 }
 
-function getFreshness(dateString) {
-  if (
-    !dateString ||
-    typeof dateString !== 'string' ||
-    dateString.startsWith('0001') ||
-    dateString.startsWith('1970') ||
-    isNaN(new Date(dateString).getTime()) ||
-    new Date(dateString).getFullYear() < 2020
+function getFreshness(dateString, ageHours) {
+  let diffHours = null;
+  if (ageHours !== null && ageHours !== undefined && !Number.isNaN(Number(ageHours)) && Number(ageHours) < 9000) {
+    diffHours = Number(ageHours);
+  } else if (
+    dateString &&
+    typeof dateString === 'string' &&
+    !dateString.startsWith('0001') &&
+    !dateString.startsWith('1970') &&
+    !isNaN(new Date(dateString).getTime()) &&
+    new Date(dateString).getFullYear() >= 2020
   ) {
+    const parsedStr = dateString.endsWith('Z') || dateString.includes('+') ? dateString : `${dateString}Z`;
+    const nowMs = (typeof window !== 'undefined' && typeof window.__INTERNET_CLOCK_OFFSET_MS__ === 'number')
+      ? Date.now() + window.__INTERNET_CLOCK_OFFSET_MS__
+      : Date.now();
+    diffHours = Math.max(0, (nowMs - new Date(parsedStr).getTime()) / (1000 * 60 * 60));
+  }
+  if (diffHours === null) {
     return { label: 'No Orders', color: 'text-slate-500 bg-slate-900/60 border-slate-800' };
   }
-  const diffHours = (Date.now() - new Date(dateString).getTime()) / (1000 * 60 * 60);
-  if (diffHours < 0) return { label: '🟢 Just now', color: 'text-emerald-400 bg-emerald-950/60 border-emerald-800' };
+  if (diffHours <= 0.04) return { label: '🟢 Updated just now', color: 'text-emerald-400 bg-emerald-950/60 border-emerald-800' };
   if (diffHours < 1) {
     const mins = Math.max(1, Math.round(diffHours * 60));
-    return { label: `🟢 ${mins}m ago`, color: 'text-emerald-400 bg-emerald-950/60 border-emerald-800' };
+    return { label: `🟢 Updated ${mins}m ago`, color: 'text-emerald-400 bg-emerald-950/60 border-emerald-800' };
   }
   if (diffHours < 24) {
     const hrs = Math.round(diffHours * 10) / 10;
-    return { label: `🟡 ${hrs}h ago`, color: 'text-amber-400 bg-amber-950/60 border-amber-800' };
+    return { label: `🟡 Updated ${hrs}h ago`, color: 'text-amber-400 bg-amber-950/60 border-amber-800' };
   }
   const days = Math.round(diffHours / 24);
-  return { label: `🔴 ${days}d ago`, color: 'text-rose-400 bg-rose-950/60 border-rose-800' };
+  return { label: `🔴 Updated ${days}d ago`, color: 'text-rose-400 bg-rose-950/60 border-rose-800' };
 }
 
 const TIER_DEFAULT_PRICES = {

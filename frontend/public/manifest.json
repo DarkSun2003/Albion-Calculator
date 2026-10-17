@@ -1,0 +1,26 @@
+{
+  "name": "Albion Artisan — Economic Suite & Underworld Ledger",
+  "short_name": "Albion Artisan",
+  "description": "All-in-one Albion Online economic suite: Refining, Crafting, Food, Potions, Farming, Laborers, and Caerleon Black Market arbitrage.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#07090e",
+  "theme_color": "#07090e",
+  "categories": ["games", "finance", "utilities"],
+  "icons": [
+    {
+      "src": "/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

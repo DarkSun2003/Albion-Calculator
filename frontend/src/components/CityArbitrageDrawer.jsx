@@ -1,20 +1,27 @@
 import React, { useState, useMemo } from 'react';
 import { CITIES, computeRefining, RESOURCES } from '../utils/albionMath';
+import { getCalibratedNowMs } from '../services/api';
 import { MapPin, TrendingUp, ChevronDown, ChevronUp, ArrowRight, Shield, Truck, Sparkles, AlertCircle } from 'lucide-react';
 
-function getFreshness(dateString) {
-  if (
-    !dateString ||
-    typeof dateString !== 'string' ||
-    dateString.startsWith('0001') ||
-    dateString.startsWith('1970') ||
-    isNaN(new Date(dateString).getTime()) ||
-    new Date(dateString).getFullYear() < 2020
+function getFreshness(dateString, ageHours) {
+  let diffHours = null;
+  if (ageHours !== null && ageHours !== undefined && !Number.isNaN(Number(ageHours)) && Number(ageHours) < 9000) {
+    diffHours = Number(ageHours);
+  } else if (
+    dateString &&
+    typeof dateString === 'string' &&
+    !dateString.startsWith('0001') &&
+    !dateString.startsWith('1970') &&
+    !isNaN(new Date(dateString).getTime()) &&
+    new Date(dateString).getFullYear() >= 2020
   ) {
+    const parsedStr = dateString.endsWith('Z') || dateString.includes('+') ? dateString : `${dateString}Z`;
+    diffHours = Math.max(0, (getCalibratedNowMs() - new Date(parsedStr).getTime()) / (1000 * 60 * 60));
+  }
+  if (diffHours === null) {
     return { label: 'No Orders', color: 'text-slate-500 bg-slate-900/60 border-slate-800' };
   }
-  const diffHours = (Date.now() - new Date(dateString).getTime()) / (1000 * 60 * 60);
-  if (diffHours < 0) return { label: '🟢 Just now', color: 'text-emerald-400 bg-emerald-950/60 border-emerald-800' };
+  if (diffHours <= 0.04) return { label: '🟢 Just now', color: 'text-emerald-400 bg-emerald-950/60 border-emerald-800' };
   if (diffHours < 1) {
     const mins = Math.max(1, Math.round(diffHours * 60));
     return { label: `🟢 ${mins}m ago`, color: 'text-emerald-400 bg-emerald-950/60 border-emerald-800' };

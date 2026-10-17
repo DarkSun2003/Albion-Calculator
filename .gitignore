@@ -45,3 +45,5 @@ Thumbs.db
 .vscode/
 .idea/
 *.docx
+*.lnk
+.desktop_app_profile/

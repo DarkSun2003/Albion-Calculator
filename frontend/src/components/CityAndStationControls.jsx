@@ -22,9 +22,12 @@ export default function CityAndStationControls({
       {/* City Selector */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5">
+          <label className="text-xs uppercase tracking-wider text-slate-300 font-semibold flex items-center gap-2">
+            <span className="text-[10px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 font-bold">
+              Stage 02
+            </span>
             <MapPin className="w-3.5 h-3.5 text-albion-gold" />
-            Refining Location
+            <span>Refining City, Batch Size &amp; Station Tax</span>
           </label>
           <span className="text-[11px] font-mono">
             {isBonusCity ? (

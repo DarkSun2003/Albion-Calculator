@@ -23,7 +23,9 @@ import {
   ChevronDown,
   ChevronUp,
   BookOpen,
-  HelpCircle
+  HelpCircle,
+  Clock,
+  Zap
 } from 'lucide-react';
 import { 
   getBlackMarketItemsApi, 
@@ -94,6 +96,85 @@ const getEnchantmentBorder = (enchantment) => {
   return 'border-stone-700/80';
 };
 
+const formatAgeText = (ageHours) => {
+  if (ageHours === null || ageHours === undefined || Number.isNaN(Number(ageHours))) return null;
+  const hrs = Number(ageHours);
+  if (hrs >= 9000) return null;
+  if (hrs < 0.04) return 'Updated just now';
+  if (hrs < 1.0) {
+    const mins = Math.max(1, Math.round(hrs * 60));
+    return `Updated ${mins} min${mins === 1 ? '' : 's'} ago`;
+  }
+  if (hrs < 24.0) {
+    const cleanHrs = hrs.toFixed(1).replace(/\.0$/, '');
+    return `Updated ${cleanHrs} hr${cleanHrs === '1' ? '' : 's'} ago`;
+  }
+  const roundedHrs = Math.round(hrs);
+  return `Updated ${roundedHrs} hrs ago`;
+};
+
+const renderFreshnessBadge = (ageHours, updatedAt, fallbackType = null) => {
+  if (fallbackType === 'craft') {
+    return (
+      <span
+        title="No active Royal City market listing found — using estimated crafting material cost in the bonus city."
+        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-indigo-950/90 text-indigo-200 border border-indigo-600/60 cursor-help shrink-0"
+      >
+        ⚒️ Craft Cost Est.
+      </span>
+    );
+  }
+
+  const label = formatAgeText(ageHours);
+  if (!label) {
+    return (
+      <span
+        title="No recent player scan timestamp available"
+        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono text-stone-400 bg-stone-900/90 border border-stone-700 shrink-0"
+      >
+        🕒 No Recent Scan
+      </span>
+    );
+  }
+
+  const hrs = Number(ageHours);
+  const exactTime = updatedAt ? new Date(updatedAt).toLocaleString() : 'Live AODP Server';
+
+  if (hrs <= 1.0) {
+    return (
+      <span
+        title={`Fresh market scan (${label}) • Recorded at ${exactTime}. High confidence!`}
+        className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-950/90 text-emerald-300 border border-emerald-600/80 cursor-help shrink-0 shadow-sm"
+      >
+        <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+        <span>{label}</span>
+      </span>
+    );
+  }
+
+  if (hrs <= 4.0) {
+    return (
+      <span
+        title={`Moderate scan age (${label}) • Recorded at ${exactTime}. Double-check order volume before hauling large quantities.`}
+        className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-950/90 text-amber-300 border border-amber-600/80 cursor-help shrink-0 shadow-sm"
+      >
+        <span className="h-2 w-2 rounded-full bg-amber-400" />
+        <span>{label}</span>
+      </span>
+    );
+  }
+
+  return (
+    <span
+      title={`Older market scan (${label}) • Recorded at ${exactTime}. High risk that this order has already been filled!`}
+      className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-rose-950/90 text-rose-300 border border-rose-600/80 cursor-help shrink-0 shadow-sm"
+    >
+      <span className="h-2 w-2 rounded-full bg-rose-400" />
+      <span>{label}</span>
+    </span>
+  );
+};
+
 export default function BlackMarketCalculator({ server = 'europe', hasPremium = true, onOpenGuide, onStartTour }) {
   // Scanner state
   const [tier, setTier] = useState(5);
@@ -103,8 +184,10 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
   const [minProfit, setMinProfit] = useState(1000);
   const [minMargin, setMinMargin] = useState(15);
   const [qualityFilter, setQualityFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('profit'); // 'profit', 'margin', 'density', 'cost'
+  const [maxAgeFilter, setMaxAgeFilter] = useState('all'); // 'all', '1', '3', '6', '12'
+  const [sortBy, setSortBy] = useState('profit'); // 'profit', 'margin', 'density', 'cost', 'freshness'
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'table'
+  const [autoFetchEnabled, setAutoFetchEnabled] = useState(true);
 
   // Loading & Data states
   const [isScanning, setIsScanning] = useState(false);
@@ -166,10 +249,23 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
     }
   };
 
-  // Trigger scan on tier/enchantment/server/quality change
+  // Debounced Auto-Fetch whenever tier, enchantment, server, category, quality, sort, or profit/margin sliders change
   useEffect(() => {
-    handleScan();
-  }, [server, tier, enchantment, category, qualityFilter, sortBy]);
+    if (!autoFetchEnabled) return;
+    const timer = setTimeout(() => {
+      handleScan();
+    }, 220);
+    return () => clearTimeout(timer);
+  }, [server, tier, enchantment, category, qualityFilter, sortBy, minProfit, minMargin, autoFetchEnabled]);
+
+  // Periodic background auto-refresh every 60 seconds when Auto-Fetch is ON
+  useEffect(() => {
+    if (!autoFetchEnabled) return;
+    const interval = setInterval(() => {
+      handleScan();
+    }, 60000);
+    return () => clearInterval(interval);
+  }, [server, tier, enchantment, category, qualityFilter, sortBy, minProfit, minMargin, autoFetchEnabled]);
 
   // Fallback simulator for offline mode
   const performClientFallbackScan = () => {
@@ -206,12 +302,17 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
           city: it.bonusCity,
           cost: estCost,
           isMarketListing: false,
+          updatedAt: null,
+          ageHours: null,
         },
         blackMarket: {
           buyOrderMax: bmDemand,
           sellOrderMin: Math.round(bmDemand * 1.15),
           instantPayout,
           listedPayout: Math.round(bmDemand * 1.15 * 0.935),
+          buyOrderAgeHours: null,
+          sellOrderAgeHours: null,
+          activeAgeHours: null,
         },
         spread: {
           instantProfit: profit,
@@ -231,7 +332,7 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
     setLastScanTime(new Date().toLocaleTimeString());
   };
 
-  // Filtered view by search query
+  // Filtered view by search query and max price age
   const displayedOpportunities = useMemo(() => {
     let list = scanResults;
     if (searchQuery.trim()) {
@@ -242,8 +343,18 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
         (item.subcategory && item.subcategory.toLowerCase().includes(q))
       );
     }
+    if (maxAgeFilter !== 'all') {
+      const maxHrs = parseFloat(maxAgeFilter);
+      list = list.filter(item => {
+        const bmAge = item.blackMarket?.activeAgeHours ?? item.blackMarket?.buyOrderAgeHours ?? item.blackMarket?.sellOrderAgeHours;
+        const royalAge = item.acquisition?.isMarketListing ? item.acquisition?.ageHours : 0;
+        const bOk = bmAge !== null && bmAge !== undefined && bmAge <= maxHrs;
+        const rOk = !item.acquisition?.isMarketListing || (royalAge !== null && royalAge !== undefined && royalAge <= maxHrs);
+        return bOk && rOk;
+      });
+    }
     return list;
-  }, [scanResults, searchQuery]);
+  }, [scanResults, searchQuery, maxAgeFilter]);
 
   // Recalculate Haul Manifest whenever cart changes
   useEffect(() => {
@@ -356,6 +467,20 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
+              onClick={() => setAutoFetchEnabled(!autoFetchEnabled)}
+              className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-serif font-bold transition-all border ${
+                autoFetchEnabled
+                  ? 'bg-amber-950/60 border-amber-500/60 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.2)]'
+                  : 'bg-stone-900 border-stone-800 text-stone-400 hover:text-stone-200'
+              }`}
+              title={autoFetchEnabled ? 'Automatically fetches live prices whenever filters change (and every 60s)' : 'Auto-fetch paused'}
+            >
+              <Zap className={`w-3.5 h-3.5 ${autoFetchEnabled ? 'text-amber-400 fill-amber-400' : 'text-stone-500'}`} />
+              <span>{autoFetchEnabled ? 'Auto-Fetch: ON' : 'Auto-Fetch: PAUSED'}</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => onOpenGuide && onOpenGuide('blackmarket')}
               className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-serif font-bold bg-rose-950/70 border border-rose-700/60 text-rose-300 hover:bg-rose-900/50 transition-all shadow-sm"
             >
@@ -378,7 +503,7 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-serif font-bold text-xs bg-gradient-to-r from-rose-800 to-amber-700 hover:from-rose-700 hover:to-amber-600 text-white shadow-lg shadow-rose-950/50 transition-all border border-rose-500/30 active:scale-95 disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${isScanning ? 'animate-spin' : ''}`} />
-              <span>{isScanning ? 'Scanning Live AODP...' : 'Scan Black Market'}</span>
+              <span>{isScanning ? 'Scanning Live AODP...' : 'Refresh Now'}</span>
             </button>
           </div>
         </div>
@@ -524,8 +649,8 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
           </div>
         </div>
 
-        {/* Sliders & Dropdowns: Min Profit, Min Margin, Quality, Sort By */}
-        <div id="tour-bm-arbitrage-spread" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pt-2 border-t border-stone-800/60 text-xs">
+        {/* Sliders & Dropdowns: Min Profit, Min Margin, Quality, Max Price Age, Sort By */}
+        <div id="tour-bm-arbitrage-spread" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 pt-2 border-t border-stone-800/60 text-xs">
           <div className="space-y-1">
             <div className="flex justify-between font-serif text-[11px] text-stone-400">
               <span>Min Profit Spread</span>
@@ -577,6 +702,24 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
           </div>
 
           <div className="space-y-1">
+            <label className="flex items-center gap-1 font-serif text-[11px] text-stone-400">
+              <Clock className="w-3 h-3 text-emerald-400" />
+              <span>Max Price Age (Freshness)</span>
+            </label>
+            <select
+              value={maxAgeFilter}
+              onChange={e => setMaxAgeFilter(e.target.value)}
+              className="w-full bg-stone-900 border border-stone-800 rounded-xl px-3 py-1.5 text-xs text-stone-200 focus:outline-none focus:border-amber-500/80 font-serif"
+            >
+              <option value="all">All Ages (&lt; 48 Hours)</option>
+              <option value="1">🟢 Fresh Only (&lt; 1 Hour)</option>
+              <option value="3">🟡 Under 3 Hours</option>
+              <option value="6">Under 6 Hours</option>
+              <option value="12">Under 12 Hours</option>
+            </select>
+          </div>
+
+          <div className="space-y-1">
             <label className="block font-serif text-[11px] text-stone-400">
               Sort Opportunities By
             </label>
@@ -588,6 +731,7 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
               <option value="profit">Highest Net Profit (Silver)</option>
               <option value="margin">Highest Margin ROI (%)</option>
               <option value="density">Highest Cargo Density (Silver / Kg)</option>
+              <option value="freshness">Freshest Prices First (Newest Scan)</option>
               <option value="cost">Lowest Capital Investment</option>
             </select>
           </div>
@@ -792,11 +936,37 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
       {/* 4. Arbitrage Opportunities Results (Cards / Table) */}
       <div id="tour-bm-price-comparison" className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-emerald-400" />
-            <h2 className="text-sm font-serif font-black uppercase tracking-wider text-stone-200">
-              Arbitrage Spreads ({displayedOpportunities.length})
-            </h2>
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-emerald-400" />
+              <h2 className="text-sm font-serif font-black uppercase tracking-wider text-stone-200">
+                Arbitrage Spreads ({displayedOpportunities.length})
+              </h2>
+            </div>
+
+            {/* Price Freshness Traffic-Light Legend */}
+            <div className="flex flex-wrap items-center gap-2 px-2.5 py-1 rounded-xl bg-stone-950/90 border border-stone-800/80 text-[10px] font-mono text-stone-400">
+              <span className="text-stone-300 font-bold flex items-center gap-1">
+                <Clock className="w-3 h-3 text-amber-400" />
+                Price Age:
+              </span>
+              <span className="inline-flex items-center gap-1 text-emerald-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                &le;1h Fresh
+              </span>
+              <span>&bull;</span>
+              <span className="inline-flex items-center gap-1 text-amber-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+                1–4h Moderate
+              </span>
+              <span>&bull;</span>
+              <span className="inline-flex items-center gap-1 text-rose-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-rose-400" />
+                &gt;4h Older
+              </span>
+              <span>&bull;</span>
+              <span className="text-indigo-300">⚒️ Craft Est.</span>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
@@ -835,7 +1005,7 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
               No Arbitrage Opportunities Found
             </h3>
             <p className="text-xs text-stone-500 font-serif max-w-md mx-auto">
-              No equipment matched your current profit or margin thresholds. Try lowering the Min Profit or Min Margin filters, or scan another Tier/Category.
+              No equipment matched your current profit, margin, or price freshness thresholds. Try relaxing the Max Price Age filter, lowering Min Profit/Margin, or scanning another Tier/Category.
             </p>
           </div>
         ) : viewMode === 'grid' ? (
@@ -846,7 +1016,7 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
 
               return (
                 <div
-                  key={item.aodpId}
+                  key={`${item.aodpId}-${item.quality || 1}`}
                   className="rounded-2xl border border-stone-800/90 hover:border-amber-500/50 bg-[#0f0e13] p-4 space-y-3.5 shadow-xl transition-all duration-200 relative group"
                 >
                   {/* Top Bar: Icon, Name, Tier, Category */}
@@ -875,8 +1045,8 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
                       <h4 className="text-sm font-serif font-black text-stone-100 truncate group-hover:text-amber-300 transition-colors">
                         {item.name}
                       </h4>
-                      <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
-                        <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded border font-bold ${
+                      <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                        <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded border font-bold ${
                           item.quality === 5 ? 'bg-amber-950/70 text-amber-300 border-amber-500 shadow-gold-glow' :
                           item.quality === 4 ? 'bg-purple-950/70 text-purple-300 border-purple-500' :
                           item.quality === 3 ? 'bg-sky-950/70 text-sky-300 border-sky-500' :
@@ -885,33 +1055,63 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
                         }`}>
                           {item.qualityName || 'Normal'} Quality
                         </span>
-                        <span className="text-[10px] font-mono text-stone-400 truncate">
-                          {item.acquisition.method} &bull; <span className="text-amber-400 font-bold">{formatSilver(item.acquisition.cost)}s</span>
-                        </span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Dual Market Prices: Buy Order vs Sell Order */}
-                  <div className="grid grid-cols-2 gap-2 text-xs bg-stone-950/70 p-2 rounded-xl border border-stone-800/60">
-                    <div>
-                      <span className="text-[10px] font-serif text-stone-400 block">Instant Buy Order</span>
-                      <div className="font-mono font-bold text-stone-200">
-                        {item.blackMarket.buyOrderMax > 0 ? `${formatSilver(item.blackMarket.buyOrderMax)}s` : 'No demand'}
-                      </div>
-                      <div className="text-[10px] font-mono text-emerald-400">
-                        {item.spread.instantProfit > 0 ? `+${formatSilver(item.spread.instantProfit)}s (${item.spread.instantMarginPct}%)` : '-'}
+                  {/* Royal City Acquisition Box with Clear Price Age */}
+                  <div className="bg-stone-950/90 px-3 py-2 rounded-xl border border-stone-800/80 flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <span className="text-[10px] font-serif text-stone-400 block">
+                        Royal City Cost ({item.acquisition.method})
+                      </span>
+                      <div className="font-mono font-bold text-amber-400 text-xs">
+                        {formatSilver(item.acquisition.cost)} s
                       </div>
                     </div>
+                    {renderFreshnessBadge(
+                      item.acquisition.ageHours,
+                      item.acquisition.updatedAt,
+                      item.acquisition.isMarketListing ? null : 'craft'
+                    )}
+                  </div>
 
-                    <div className="border-l border-stone-800/80 pl-2">
-                      <span className="text-[10px] font-serif text-stone-400 block">Listed Sell Order</span>
+                  {/* Dual Market Prices: Buy Order vs Sell Order */}
+                  <div className="grid grid-cols-2 gap-2 text-xs bg-stone-950/70 p-2.5 rounded-xl border border-stone-800/60">
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-serif text-stone-400 block">Caerleon BM Buy Order</span>
                       <div className="font-mono font-bold text-stone-200">
-                        {item.blackMarket.sellOrderMin > 0 ? `${formatSilver(item.blackMarket.sellOrderMin)}s` : 'No listings'}
+                        {item.blackMarket.buyOrderMax > 0 ? `${formatSilver(item.blackMarket.buyOrderMax)} s` : 'No demand'}
                       </div>
-                      <div className="text-[10px] font-mono text-emerald-400">
+                      <div className="text-[10px] font-mono text-emerald-400 font-bold">
+                        {item.spread.instantProfit > 0 ? `+${formatSilver(item.spread.instantProfit)}s (${item.spread.instantMarginPct}%)` : '-'}
+                      </div>
+                      {item.blackMarket.buyOrderMax > 0 && (
+                        <div className="pt-0.5">
+                          {renderFreshnessBadge(
+                            item.blackMarket.buyOrderAgeHours,
+                            item.blackMarket.buyOrderUpdatedAt
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="border-l border-stone-800/80 pl-2.5 space-y-1">
+                      <span className="text-[10px] font-serif text-stone-400 block">Caerleon BM Sell Order</span>
+                      <div className="font-mono font-bold text-stone-200">
+                        {item.blackMarket.sellOrderMin > 0 ? `${formatSilver(item.blackMarket.sellOrderMin)} s` : 'No listings'}
+                      </div>
+                      <div className="text-[10px] font-mono text-emerald-400 font-bold">
                         {item.spread.listedProfit > 0 ? `+${formatSilver(item.spread.listedProfit)}s (${item.spread.listedMarginPct}%)` : '-'}
                       </div>
+                      {item.blackMarket.sellOrderMin > 0 && (
+                        <div className="pt-0.5">
+                          {renderFreshnessBadge(
+                            item.blackMarket.sellOrderAgeHours,
+                            item.blackMarket.sellOrderUpdatedAt
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -971,10 +1171,10 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
               <thead className="bg-stone-950/80 border-b border-stone-800 text-[10px] font-serif uppercase tracking-wider text-stone-400">
                 <tr>
                   <th className="py-3 px-4">Equipment</th>
-                  <th className="py-3 px-3">Acquisition</th>
-                  <th className="py-3 px-3 text-right">Acquisition Cost</th>
-                  <th className="py-3 px-3 text-right">BM Buy Order</th>
-                  <th className="py-3 px-3 text-right">Instant Profit</th>
+                  <th className="py-3 px-3">Acquisition (Royal City)</th>
+                  <th className="py-3 px-3 text-right">Acquisition Cost &amp; Age</th>
+                  <th className="py-3 px-3 text-right">BM Order &amp; Age</th>
+                  <th className="py-3 px-3 text-right">Best Profit</th>
                   <th className="py-3 px-3 text-right">Density (s/kg)</th>
                   <th className="py-3 px-4 text-center">Action</th>
                 </tr>
@@ -984,7 +1184,7 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
                   const inCart = haulCart.find(h => h.aodpId === item.aodpId);
 
                   return (
-                    <tr key={item.aodpId} className="hover:bg-stone-900/40 transition-colors">
+                    <tr key={`${item.aodpId}-${item.quality || 1}`} className="hover:bg-stone-900/40 transition-colors">
                       <td className="py-2.5 px-4">
                         <div className="flex items-center gap-2.5">
                           <div className={`w-9 h-9 rounded-lg bg-stone-950 border p-0.5 flex items-center justify-center shrink-0 ${getEnchantmentBorder(item.enchantment)}`}>
@@ -1018,18 +1218,44 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
                           {item.acquisition.method}
                         </span>
                       </td>
-                      <td className="py-2.5 px-3 text-right font-mono font-bold text-stone-300">
-                        {formatSilver(item.acquisition.cost)} s
+                      <td className="py-2.5 px-3 text-right">
+                        <div className="font-mono font-bold text-stone-300">
+                          {formatSilver(item.acquisition.cost)} s
+                        </div>
+                        <div className="mt-0.5 flex justify-end">
+                          {renderFreshnessBadge(
+                            item.acquisition.ageHours,
+                            item.acquisition.updatedAt,
+                            item.acquisition.isMarketListing ? null : 'craft'
+                          )}
+                        </div>
                       </td>
-                      <td className="py-2.5 px-3 text-right font-mono text-stone-200">
-                        {item.blackMarket.buyOrderMax > 0 ? `${formatSilver(item.blackMarket.buyOrderMax)} s` : '-'}
+                      <td className="py-2.5 px-3 text-right">
+                        <div className="font-mono font-bold text-stone-200">
+                          {item.blackMarket.buyOrderMax > 0
+                            ? `${formatSilver(item.blackMarket.buyOrderMax)} s`
+                            : item.blackMarket.sellOrderMin > 0
+                            ? `${formatSilver(item.blackMarket.sellOrderMin)} s (Sell)`
+                            : '-'}
+                        </div>
+                        <div className="mt-0.5 flex justify-end">
+                          {(item.blackMarket.buyOrderMax > 0 || item.blackMarket.sellOrderMin > 0) &&
+                            renderFreshnessBadge(
+                              item.blackMarket.buyOrderMax > 0
+                                ? item.blackMarket.buyOrderAgeHours
+                                : item.blackMarket.sellOrderAgeHours,
+                              item.blackMarket.buyOrderMax > 0
+                                ? item.blackMarket.buyOrderUpdatedAt
+                                : item.blackMarket.sellOrderUpdatedAt
+                            )}
+                        </div>
                       </td>
                       <td className="py-2.5 px-3 text-right">
                         <div className="font-mono font-bold text-emerald-400">
-                          +{formatSilver(item.spread.instantProfit)} s
+                          +{formatSilver(item.spread.bestProfit)} s
                         </div>
                         <div className="text-[10px] font-mono text-stone-400">
-                          {item.spread.instantMarginPct}%
+                          {item.spread.bestMarginPct}% ({item.spread.bestMode === 'Instant Buy Order' ? 'Instant' : 'Listed'})
                         </div>
                       </td>
                       <td className="py-2.5 px-3 text-right font-mono font-bold text-amber-300">

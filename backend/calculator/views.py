@@ -11,7 +11,15 @@ from .constants import (
     AODP_SERVERS,
 )
 from .engine import calculate_refining, calculate_return_rate, calculate_focus_cost
-from .services import get_item_identifier, fetch_aodp_prices
+from .services import (
+    get_item_identifier,
+    fetch_aodp_prices,
+    parse_aodp_date,
+    fetch_aodp_history_averages,
+    save_user_price_override,
+    sync_internet_clock,
+    get_true_utc_now,
+)
 
 class RefiningConstantsView(APIView):
     """
@@ -98,7 +106,7 @@ class RefiningPricesView(APIView):
         # Helper to get the best price record
         def extract_prices(item_id):
             if not item_id:
-                return {'sell_min': 0, 'buy_max': 0, 'city': selected_city}
+                return {'sell_min': 0, 'buy_max': 0, 'city': selected_city, 'age_hours': None}
             city_key = f"{item_id}:{selected_city}"
             record = price_data.get(city_key)
             if record and record.get('sell_price_min', 0) > 0:
@@ -107,6 +115,8 @@ class RefiningPricesView(APIView):
                     'sell_min': record.get('sell_price_min', 0),
                     'buy_max': record.get('buy_price_max', 0),
                     'updated_at': record.get('updated_at'),
+                    'age_hours': record.get('age_hours'),
+                    'source': record.get('source', 'aodp_live'),
                     'city': selected_city,
                 }
             # Fallback to any royal city if not found or 0 in selected city
@@ -117,6 +127,8 @@ class RefiningPricesView(APIView):
                         'sell_min': rec.get('sell_price_min', 0),
                         'buy_max': rec.get('buy_price_max', 0),
                         'updated_at': rec.get('updated_at'),
+                        'age_hours': rec.get('age_hours'),
+                        'source': rec.get('source', 'aodp_live'),
                         'city': rec.get('city'),
                     }
             if record:
@@ -125,9 +137,11 @@ class RefiningPricesView(APIView):
                     'sell_min': record.get('sell_price_min', 0),
                     'buy_max': record.get('buy_price_max', 0),
                     'updated_at': record.get('updated_at'),
+                    'age_hours': record.get('age_hours'),
+                    'source': record.get('source', 'aodp_live'),
                     'city': selected_city,
                 }
-            return {'item_id': item_id, 'sell_min': 0, 'buy_max': 0, 'city': selected_city}
+            return {'item_id': item_id, 'sell_min': 0, 'buy_max': 0, 'city': selected_city, 'age_hours': None}
 
         royal_cities = ['Martlock', 'Thetford', 'Fort Sterling', 'Lymhurst', 'Bridgewatch', 'Caerleon']
         cities_data = {}
@@ -139,11 +153,14 @@ class RefiningPricesView(APIView):
                 'raw_sell_min': raw_rec.get('sell_price_min', 0) if raw_rec else 0,
                 'raw_buy_max': raw_rec.get('buy_price_max', 0) if raw_rec else 0,
                 'raw_updated_at': raw_rec.get('updated_at') if raw_rec else None,
+                'raw_age_hours': raw_rec.get('age_hours') if raw_rec else None,
                 'refined_sell_min': refined_rec.get('sell_price_min', 0) if refined_rec else 0,
                 'refined_buy_max': refined_rec.get('buy_price_max', 0) if refined_rec else 0,
                 'refined_updated_at': refined_rec.get('updated_at') if refined_rec else None,
+                'refined_age_hours': refined_rec.get('age_hours') if refined_rec else None,
                 'prev_refined_sell_min': prev_rec.get('sell_price_min', 0) if prev_rec else 0,
                 'prev_refined_updated_at': prev_rec.get('updated_at') if prev_rec else None,
+                'prev_refined_age_hours': prev_rec.get('age_hours') if prev_rec else None,
             }
 
         return Response({
@@ -156,6 +173,7 @@ class RefiningPricesView(APIView):
             'cities': cities_data,
             'server': server,
             'city': selected_city,
+            'server_utc_now': get_true_utc_now().isoformat(),
         })
 
 
@@ -254,108 +272,136 @@ class CraftingPricesView(APIView):
             journal_empty_id = item_def['journalTemplate'].replace('{tier}', str(tier))
             journal_full_id = f"{journal_empty_id}_FULL"
 
-        # Query AODP directly for all targets across Royal Cities + Black Market + selected city
-        locations = "Black Market,Caerleon,Martlock,Lymhurst,Fort Sterling,Thetford,Bridgewatch"
-        target_ids = [crafted_aodp_id]
-        if primary_mat_id: target_ids.append(primary_mat_id)
-        if secondary_mat_id: target_ids.append(secondary_mat_id)
-        if artifact_id: target_ids.append(artifact_id)
-        if journal_empty_id: target_ids.append(journal_empty_id)
-        if journal_full_id: target_ids.append(journal_full_id)
+        # 1. Fetch verified material, artifact & journal prices using strict qualities='1' + 24h history
+        mat_ids = [m for m in [primary_mat_id, secondary_mat_id, artifact_id, journal_empty_id, journal_full_id] if m]
+        mat_price_data = fetch_aodp_prices(mat_ids, server=server, qualities='1', include_history=True)
 
+        def get_mat_price(mat_id):
+            if not mat_id:
+                return {'sell_min': 0, 'updated_at': None, 'age_hours': None, 'city': selected_city}
+            rec = mat_price_data.get(f"{mat_id}:{selected_city}")
+            if rec and rec.get('sell_price_min', 0) > 0:
+                return {
+                    'sell_min': rec['sell_price_min'],
+                    'buy_max': rec.get('buy_price_max', 0),
+                    'avg_price_24h': rec.get('avg_price_24h', 0),
+                    'updated_at': rec.get('updated_at'),
+                    'age_hours': rec.get('age_hours'),
+                    'city': selected_city,
+                    'source': rec.get('source', 'aodp_live'),
+                }
+            for key, fallback_rec in mat_price_data.items():
+                if key.startswith(f"{mat_id}:") and fallback_rec.get('sell_price_min', 0) > 0:
+                    return {
+                        'sell_min': fallback_rec['sell_price_min'],
+                        'buy_max': fallback_rec.get('buy_price_max', 0),
+                        'avg_price_24h': fallback_rec.get('avg_price_24h', 0),
+                        'updated_at': fallback_rec.get('updated_at'),
+                        'age_hours': fallback_rec.get('age_hours'),
+                        'city': fallback_rec.get('city', selected_city),
+                        'source': fallback_rec.get('source', 'aodp_live'),
+                    }
+            return {'sell_min': 0, 'updated_at': None, 'age_hours': None, 'city': selected_city}
+
+        # 2. Fetch crafted equipment prices across all 5 qualities + 24h history cross-check
+        loc_list = ['Black Market', 'Caerleon', 'Martlock', 'Lymhurst', 'Fort Sterling', 'Thetford', 'Bridgewatch']
+        locations = ",".join(loc_list)
         server_key = str(server).lower()
         base_api = AODP_SERVERS.get(server_key, AODP_SERVERS['europe'])
-        url = f"{base_api}{','.join(target_ids)}.json?locations={locations}"
+        url = f"{base_api}{crafted_aodp_id}.json?locations={locations}&qualities=1,2,3,4,5"
 
         records = []
         try:
             resp = requests.get(url, timeout=7)
+            sync_internet_clock(resp)
             if resp.status_code == 200:
                 records = resp.json()
         except Exception as e:
             print(f"Crafting prices fetch error: {e}")
 
-        # Quality map
+        gear_history = fetch_aodp_history_averages(
+            item_ids=[crafted_aodp_id],
+            server=server_key,
+            locations=loc_list,
+            qualities='1,2,3,4,5',
+        )
+
         qualities_dict = {
-            1: {'id': 1, 'name': 'Normal', 'label': 'Normal (Q1)', 'sell_min': 0, 'buy_max': 0, 'updated_at': None, 'city': selected_city},
-            2: {'id': 2, 'name': 'Good', 'label': 'Good (Q2)', 'sell_min': 0, 'buy_max': 0, 'updated_at': None, 'city': selected_city},
-            3: {'id': 3, 'name': 'Outstanding', 'label': 'Outstanding (Q3)', 'sell_min': 0, 'buy_max': 0, 'updated_at': None, 'city': selected_city},
-            4: {'id': 4, 'name': 'Excellent', 'label': 'Excellent (Q4)', 'sell_min': 0, 'buy_max': 0, 'updated_at': None, 'city': selected_city},
-            5: {'id': 5, 'name': 'Masterpiece', 'label': 'Masterpiece (Q5)', 'sell_min': 0, 'buy_max': 0, 'updated_at': None, 'city': selected_city},
+            1: {'id': 1, 'name': 'Normal', 'label': 'Normal (Q1)', 'sell_min': 0, 'buy_max': 0, 'avg_price_24h': 0, 'daily_volume': 0, 'updated_at': None, 'age_hours': 999999.0, 'city': selected_city},
+            2: {'id': 2, 'name': 'Good', 'label': 'Good (Q2)', 'sell_min': 0, 'buy_max': 0, 'avg_price_24h': 0, 'daily_volume': 0, 'updated_at': None, 'age_hours': 999999.0, 'city': selected_city},
+            3: {'id': 3, 'name': 'Outstanding', 'label': 'Outstanding (Q3)', 'sell_min': 0, 'buy_max': 0, 'avg_price_24h': 0, 'daily_volume': 0, 'updated_at': None, 'age_hours': 999999.0, 'city': selected_city},
+            4: {'id': 4, 'name': 'Excellent', 'label': 'Excellent (Q4)', 'sell_min': 0, 'buy_max': 0, 'avg_price_24h': 0, 'daily_volume': 0, 'updated_at': None, 'age_hours': 999999.0, 'city': selected_city},
+            5: {'id': 5, 'name': 'Masterpiece', 'label': 'Masterpiece (Q5)', 'sell_min': 0, 'buy_max': 0, 'avg_price_24h': 0, 'daily_volume': 0, 'updated_at': None, 'age_hours': 999999.0, 'city': selected_city},
         }
 
-        # First pass: try selected city
+        # First pass: selected city with freshness & 24h history outlier protection
         for r in records:
-            if r.get('item_id') == crafted_aodp_id:
+            if r.get('item_id') == crafted_aodp_id and r.get('city') == selected_city:
                 try:
                     q = int(r.get('quality', 1))
                 except (ValueError, TypeError):
                     q = 1
-                if q not in qualities_dict: continue
-                sell_min = r.get('sell_price_min', 0)
-                buy_max = r.get('buy_price_max', 0)
-                u_date = r.get('sell_price_min_date')
-                if u_date and (u_date.startswith('0001') or u_date.startswith('1970')):
-                    u_date = None
-                    sell_min = 0
+                if q not in qualities_dict:
+                    continue
 
-                if r.get('city') == selected_city:
-                    if sell_min > 0 and (qualities_dict[q]['sell_min'] == 0 or sell_min < qualities_dict[q]['sell_min']):
+                sell_min = int(r.get('sell_price_min', 0) or 0)
+                buy_max = int(r.get('buy_price_max', 0) or 0)
+                u_date, age_h = parse_aodp_date(r.get('sell_price_min_date'))
+                b_date, b_age_h = parse_aodp_date(r.get('buy_price_max_date'))
+                if not u_date:
+                    sell_min = 0
+                if not b_date or b_age_h > 48.0:
+                    buy_max = 0
+
+                hist = gear_history.get(f"{crafted_aodp_id}:{selected_city}:{q}", {})
+                avg_24h = hist.get('avg_price_24h', 0)
+                vol_24h = hist.get('daily_volume', 0)
+
+                if avg_24h > 0:
+                    qualities_dict[q]['avg_price_24h'] = avg_24h
+                    qualities_dict[q]['daily_volume'] = vol_24h
+                    if sell_min == 0 or age_h > 24.0 or sell_min > avg_24h * 3.0 or sell_min < avg_24h * 0.25:
+                        sell_min = avg_24h
+
+                if sell_min > 0:
+                    existing_age = qualities_dict[q]['age_hours']
+                    is_fresher = (age_h + 3.0) < existing_age
+                    is_similar_and_cheaper = abs(age_h - existing_age) <= 3.0 and (qualities_dict[q]['sell_min'] == 0 or sell_min < qualities_dict[q]['sell_min'])
+                    if qualities_dict[q]['sell_min'] == 0 or is_fresher or is_similar_and_cheaper:
                         qualities_dict[q]['sell_min'] = sell_min
                         qualities_dict[q]['updated_at'] = u_date
+                        qualities_dict[q]['age_hours'] = age_h
                         qualities_dict[q]['city'] = selected_city
-                    if buy_max > qualities_dict[q]['buy_max']:
-                        qualities_dict[q]['buy_max'] = buy_max
 
-        # Second pass: for qualities still 0 in selected city, fallback to any royal city or Black Market
+                if buy_max > qualities_dict[q]['buy_max']:
+                    qualities_dict[q]['buy_max'] = buy_max
+
+        # Second pass: fallback to any Royal City or Black Market for qualities still missing
         for r in records:
             if r.get('item_id') == crafted_aodp_id:
                 try:
                     q = int(r.get('quality', 1))
                 except (ValueError, TypeError):
                     q = 1
-                if q not in qualities_dict: continue
-                sell_min = r.get('sell_price_min', 0)
-                u_date = r.get('sell_price_min_date')
-                if u_date and (u_date.startswith('0001') or u_date.startswith('1970')):
-                    u_date = None
+                if q not in qualities_dict:
+                    continue
+                sell_min = int(r.get('sell_price_min', 0) or 0)
+                u_date, age_h = parse_aodp_date(r.get('sell_price_min_date'))
+                if not u_date or age_h > 48.0:
                     sell_min = 0
 
                 if qualities_dict[q]['sell_min'] == 0 and sell_min > 0:
                     qualities_dict[q]['sell_min'] = sell_min
                     qualities_dict[q]['updated_at'] = u_date
+                    qualities_dict[q]['age_hours'] = age_h
                     qualities_dict[q]['city'] = r.get('city')
                 if qualities_dict[q]['buy_max'] == 0 and r.get('buy_price_max', 0) > 0:
-                    qualities_dict[q]['buy_max'] = r.get('buy_price_max', 0)
+                    b_date, b_age_h = parse_aodp_date(r.get('buy_price_max_date'))
+                    if b_date and b_age_h <= 48.0:
+                        qualities_dict[q]['buy_max'] = int(r.get('buy_price_max', 0))
 
-        # Helper for material prices
-        def get_mat_price(mat_id):
-            if not mat_id: return {'sell_min': 0, 'updated_at': None, 'city': selected_city}
-            best_sell = 0
-            best_date = None
-            best_city = selected_city
-            for r in records:
-                if r.get('item_id') == mat_id and r.get('city') == selected_city:
-                    s = r.get('sell_price_min', 0)
-                    d = r.get('sell_price_min_date')
-                    if s > 0 and not (d and (d.startswith('0001') or d.startswith('1970'))):
-                        if best_sell == 0 or s < best_sell:
-                            best_sell = s
-                            best_date = d
-            if best_sell == 0:
-                for r in records:
-                    if r.get('item_id') == mat_id and r.get('sell_price_min', 0) > 0:
-                        s = r['sell_price_min']
-                        d = r.get('sell_price_min_date')
-                        if not (d and (d.startswith('0001') or d.startswith('1970'))):
-                            if best_sell == 0 or s < best_sell:
-                                best_sell = s
-                                best_date = d
-                                best_city = r.get('city')
-            return {'sell_min': best_sell, 'updated_at': best_date, 'city': best_city}
-
-        # Choose default quality with an active price (prefer Good Q2, then Normal Q1, then lowest available)
-        default_q = 2 if qualities_dict[2]['sell_min'] > 0 else (1 if qualities_dict[1]['sell_min'] > 0 else 1)
+        # Choose default quality with an active price (prefer Normal Q1 or Good Q2)
+        default_q = 1 if qualities_dict[1]['sell_min'] > 0 else (2 if qualities_dict[2]['sell_min'] > 0 else 1)
         for cand_q in [1, 2, 3, 4, 5]:
             if qualities_dict[cand_q]['sell_min'] > 0:
                 default_q = cand_q
@@ -367,7 +413,9 @@ class CraftingPricesView(APIView):
                 'qualities': qualities_dict,
                 'default_quality': default_q,
                 'sell_min': qualities_dict[default_q]['sell_min'],
+                'avg_price_24h': qualities_dict[default_q]['avg_price_24h'],
                 'updated_at': qualities_dict[default_q]['updated_at'],
+                'age_hours': qualities_dict[default_q]['age_hours'],
                 'city': qualities_dict[default_q]['city'],
             },
             'primary_mat': get_mat_price(primary_mat_id),
@@ -377,6 +425,7 @@ class CraftingPricesView(APIView):
             'journal_full': get_mat_price(journal_full_id) if journal_full_id else None,
             'server': server,
             'city': selected_city,
+            'server_utc_now': get_true_utc_now().isoformat(),
         })
 
 
@@ -467,6 +516,7 @@ class FoodPricesView(APIView):
                     'sell_min': record.get('sell_price_min', 0),
                     'buy_max': record.get('buy_price_max', 0),
                     'updated_at': record.get('updated_at'),
+                    'age_hours': record.get('age_hours'),
                     'city': selected_city,
                 }
             for key, rec in price_data.items():
@@ -476,6 +526,7 @@ class FoodPricesView(APIView):
                         'sell_min': rec.get('sell_price_min', 0),
                         'buy_max': rec.get('buy_price_max', 0),
                         'updated_at': rec.get('updated_at'),
+                        'age_hours': rec.get('age_hours'),
                         'city': rec.get('city'),
                     }
             return {'item_id': iid, 'sell_min': 0, 'buy_max': 0, 'city': selected_city}
@@ -488,6 +539,7 @@ class FoodPricesView(APIView):
             'ingredients': ingredients_res,
             'server': server,
             'city': selected_city,
+            'server_utc_now': get_true_utc_now().isoformat(),
         })
 
 
@@ -576,6 +628,7 @@ class PotionPricesView(APIView):
                     'sell_min': record.get('sell_price_min', 0),
                     'buy_max': record.get('buy_price_max', 0),
                     'updated_at': record.get('updated_at'),
+                    'age_hours': record.get('age_hours'),
                     'city': selected_city,
                 }
             for key, rec in price_data.items():
@@ -585,6 +638,7 @@ class PotionPricesView(APIView):
                         'sell_min': rec.get('sell_price_min', 0),
                         'buy_max': rec.get('buy_price_max', 0),
                         'updated_at': rec.get('updated_at'),
+                        'age_hours': rec.get('age_hours'),
                         'city': rec.get('city'),
                     }
             return {'item_id': iid, 'sell_min': 0, 'buy_max': 0, 'city': selected_city}
@@ -597,6 +651,7 @@ class PotionPricesView(APIView):
             'ingredients': ingredients_res,
             'server': server,
             'city': selected_city,
+            'server_utc_now': get_true_utc_now().isoformat(),
         })
 
 
@@ -662,6 +717,7 @@ class FarmingPricesView(APIView):
                     'sell_min': record.get('sell_price_min', 0),
                     'buy_max': record.get('buy_price_max', 0),
                     'updated_at': record.get('updated_at'),
+                    'age_hours': record.get('age_hours'),
                     'city': selected_city,
                 }
             for key, rec in price_data.items():
@@ -671,6 +727,7 @@ class FarmingPricesView(APIView):
                         'sell_min': rec.get('sell_price_min', 0),
                         'buy_max': rec.get('buy_price_max', 0),
                         'updated_at': rec.get('updated_at'),
+                        'age_hours': rec.get('age_hours'),
                         'city': rec.get('city'),
                     }
             return {'item_id': iid, 'sell_min': 0, 'buy_max': 0, 'city': selected_city}
@@ -681,6 +738,7 @@ class FarmingPricesView(APIView):
             'prices': results,
             'server': server,
             'city': selected_city,
+            'server_utc_now': get_true_utc_now().isoformat(),
         })
 
 
@@ -731,6 +789,7 @@ class LaborerPricesView(APIView):
                     'sell_min': record.get('sell_price_min', 0),
                     'buy_max': record.get('buy_price_max', 0),
                     'updated_at': record.get('updated_at'),
+                    'age_hours': record.get('age_hours'),
                     'city': selected_city,
                 }
             for key, rec in price_data.items():
@@ -740,6 +799,7 @@ class LaborerPricesView(APIView):
                         'sell_min': rec.get('sell_price_min', 0),
                         'buy_max': rec.get('buy_price_max', 0),
                         'updated_at': rec.get('updated_at'),
+                        'age_hours': rec.get('age_hours'),
                         'city': rec.get('city'),
                     }
             return {'item_id': iid, 'sell_min': 0, 'buy_max': 0, 'city': selected_city}
@@ -750,6 +810,7 @@ class LaborerPricesView(APIView):
             'prices': results,
             'server': server,
             'city': selected_city,
+            'server_utc_now': get_true_utc_now().isoformat(),
         })
 
 
