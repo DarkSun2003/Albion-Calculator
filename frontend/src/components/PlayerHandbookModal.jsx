@@ -269,35 +269,35 @@ export default function PlayerHandbookModal({
                       bonus: '+15% Caerleon Bonus',
                       desc: 'Stews, Omelettes, Pies, Salads, Roasts, Fish Sauces, and Butcher meat chopping.',
                       mod: 'cooking',
-                      sel: '#tour-food-categories',
+                      sel: '#tour-food-course-picker',
                     },
                     {
                       name: "🧪 Alchemist's Lab (Potions)",
                       bonus: '+15% Brecilien / Caerleon',
                       desc: 'Healing, Energy, Poison, Resistance, Sticky, and Gigantify potions + Arcane extracts.',
                       mod: 'potions',
-                      sel: '#tour-potion-categories',
+                      sel: '#tour-potion-type-picker',
                     },
                     {
                       name: '🌾 Agriculture & Pastures',
                       bonus: 'Island Crops, Herbs & Animals',
                       desc: 'Seed return rates, Focus watering profit, and mount/livestock raising.',
                       mod: 'farming',
-                      sel: '#tour-farming-categories',
+                      sel: '#tour-farm-mode-picker',
                     },
                     {
                       name: '👷 Guild Laborers & Houses',
                       bonus: 'Up to 150% Trophy Yield',
                       desc: 'Compare buying filled journals vs self-filling, furniture tiers, and daily passive silver.',
                       mod: 'laborers',
-                      sel: '#tour-laborer-Selector',
+                      sel: '#tour-laborer-prof-picker',
                     },
                     {
                       name: '💀 Caerleon Black Market',
                       bonus: 'Royal-to-Caerleon Flipper',
-                      desc: 'Scan Royal City sell orders against Caerleon NPC buy orders + Red-Zone haul risk.',
+                      desc: 'Scan Royal City sell orders against Caerleon NPC buy orders + live price age filters.',
                       mod: 'blackmarket',
-                      sel: '#tour-bm-radar-controls',
+                      sel: '#tour-bm-item-filter',
                     },
                   ].map((c) => (
                     <button
@@ -747,7 +747,7 @@ export default function PlayerHandbookModal({
             <div className="space-y-5 animate-fade-in">
               <div className="bg-gradient-to-r from-rose-950/40 via-albion-bg to-rose-950/40 border border-rose-500/30 rounded-xl p-3.5 flex items-center justify-between gap-3 text-xs">
                 <span className="text-rose-300 font-sans">
-                  Ready to scan Caerleon buy orders and calculate cargo transport spreads?
+                  Ready to scan Caerleon buy orders, filter by price freshness, and calculate cargo spreads?
                 </span>
                 <button
                   type="button"
@@ -762,7 +762,7 @@ export default function PlayerHandbookModal({
               <div className="p-4 rounded-xl bg-gradient-to-r from-rose-950/40 to-albion-bg border border-rose-500/30 space-y-2">
                 <h3 className="font-serif text-base font-bold text-rose-300 flex items-center gap-2">
                   <Skull className="w-4 h-4 text-rose-400" />
-                  Caerleon Black Market & Red Zone Transport
+                  Caerleon Black Market, Price Freshness &amp; Red Zone Transport
                 </h3>
                 <p className="text-slate-300 text-xs">
                   The Black Market in Caerleon buys equipment directly from players to feed mob drop tables across the entire game. Prices steadily rise until filled, creating massive profit margins.
@@ -773,27 +773,40 @@ export default function PlayerHandbookModal({
                 <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2 text-xs">
                   <h4 className="font-serif font-bold text-amber-300 flex items-center gap-1.5">
                     <Coins className="w-4 h-4 text-amber-400" />
-                    How Buy Orders Work
+                    Quality-Matched Arbitrage &amp; Auto-Fetch
                   </h4>
                   <p className="text-slate-300">
-                    Unlike normal markets where players sell to other players, the Black Market places <strong>system-generated buy orders</strong>. If an item is rarely crafted or delivered, its buy order price rises every minute until someone sells it.
+                    Unlike basic flippers that accidentally compare a Normal (Q1) Royal City item against a Masterpiece (Q5) Black Market order, our scanner <strong>strictly matches identical item qualities (Q1–Q5)</strong>.
                   </p>
                   <p className="text-slate-400">
-                    Use our <em>Black Market Arbitrage</em> tab to compare royal city crafting costs directly against Caerleon buy order payouts.
+                    Keep <strong>⚡ Auto-Fetch: ON</strong> in the header to automatically scan live prices whenever you change Tier, Enchantment, or Category (plus every 60 seconds).
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-albion-card border border-rose-500/30 space-y-2 text-xs">
-                  <h4 className="font-serif font-bold text-rose-400 flex items-center gap-1.5">
-                    <ShieldAlert className="w-4 h-4 text-rose-400" />
-                    Red Zone Hauling Safety Rules
+                <div className="p-4 rounded-xl bg-albion-card border border-emerald-500/30 space-y-2 text-xs">
+                  <h4 className="font-serif font-bold text-emerald-300 flex items-center gap-1.5">
+                    <Zap className="w-4 h-4 text-emerald-400" />
+                    Reading Price Age Badges &amp; Freshness Filter
                   </h4>
                   <ul className="text-slate-300 space-y-1.5 list-disc list-inside">
-                    <li><strong>Scout First:</strong> Use an alt or party member naked on a swiftclaw to scout the Caerleon gate red zones.</li>
-                    <li><strong>Armored Mounts:</strong> Always use an Armored Horse, Grizzly Bear, or Pest Lizard. Never use oxes that lose speed on dismount.</li>
-                    <li><strong>Invisibility Gear:</strong> Equip Miner Boots (Flee) and Assassin Jacket (Invisibility) for emergency escape.</li>
+                    <li><strong className="text-emerald-300">🟢 Updated X mins ago (&le; 1 hr):</strong> Fresh scan — high confidence that the order is still open!</li>
+                    <li><strong className="text-amber-300">🟡 Updated X hrs ago (1–4 hrs):</strong> Moderate age — verify in-game volume before hauling huge stacks.</li>
+                    <li><strong className="text-rose-300">🔴 Updated X hrs ago (&gt; 4 hrs):</strong> Older scan — use the <strong>Max Price Age</strong> dropdown to hide stale orders!</li>
+                    <li><strong className="text-indigo-300">⚒️ Craft Cost Est.:</strong> No Royal City listing found; uses estimated bonus-city crafting cost.</li>
                   </ul>
                 </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-albion-card border border-rose-500/30 space-y-2 text-xs">
+                <h4 className="font-serif font-bold text-rose-400 flex items-center gap-1.5">
+                  <ShieldAlert className="w-4 h-4 text-rose-400" />
+                  Red Zone Hauling Safety Rules
+                </h4>
+                <ul className="text-slate-300 space-y-1.5 list-disc list-inside">
+                  <li><strong>Scout First:</strong> Use an alt or party member on a fast mount to scout the Caerleon border red-zone gates.</li>
+                  <li><strong>Armored Mounts:</strong> Always use an Armored Horse, Grizzly Bear, Spectral Direboar, or Pest Lizard that keeps carry capacity if dismounted.</li>
+                  <li><strong>Escape Gear:</strong> Equip Miner Boots (Flee), Assassin Jacket (Ambush), and Fort Sterling Cape (CC Immunity) for emergency escape.</li>
+                </ul>
               </div>
             </div>
           )}
@@ -848,17 +861,20 @@ export default function PlayerHandbookModal({
               <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-950/40 via-albion-card to-albion-card border border-emerald-500/40 space-y-2.5">
                 <h4 className="font-serif font-bold text-emerald-300 text-sm flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  How Our 3-Layer Verified Market Price Engine Works
+                  How Our 3-Layer Verified Market Price Engine &amp; Clock Calibration Work
                 </h4>
                 <p className="text-slate-300">
-                  Unlike basic calculators that blindly show raw market data, Albion Artisan protects your calculations with <strong>3 accuracy layers</strong>:
+                  Unlike basic calculators that blindly show raw market data, Albion Artisan protects your calculations across all 7 calculators with <strong>4 accuracy layers</strong>:
                 </p>
                 <ol className="text-slate-300 space-y-1.5 list-decimal list-inside">
                   <li>
                     <strong>Strict Quality &amp; Freshness Filtering (<code className="text-amber-300">qualities=1</code>):</strong> Resources, food, potions, crops, and journals only exist at Normal (Q1) in-game. We block phantom Q2–Q5 slots and sort strictly by timestamp so old prices never overwrite fresh ones.
                   </li>
                   <li>
-                    <strong>24-Hour Traded History Outlier Protection:</strong> Every price is cross-checked against real completed sales over the last 24 hours (<code className="text-sky-300">/stats/history/</code>). If a listing is missing or a manipulator posts a fake 9,999,999 silver order, we automatically substitute the true 24-hour traded average.
+                    <strong>24-Hour Traded History Outlier Protection (<code className="text-sky-300">📊 24h Traded Avg</code>):</strong> Every price is cross-checked against real completed sales over the last 24 hours (<code className="text-sky-300">/stats/history/</code>). If a listing is missing or a manipulator posts a fake 9,999,999 silver order, we automatically substitute the true 24-hour traded average.
+                  </li>
+                  <li>
+                    <strong>Automatic Internet Clock Calibration:</strong> Even if your computer or phone system clock/date is out of sync, all 7 calculators automatically calibrate against the live Albion Data Project UTC server clock so <strong>🟢 Updated Xm ago</strong> and <strong>🟡 Updated Xh ago</strong> badges are always 100% accurate.
                   </li>
                   <li>
                     <strong>Shared Community Database (<code className="text-emerald-300">MarketPriceSnapshot</code>):</strong> Whenever <strong>even 1 player</strong> using our site scans &amp; fetches fresh prices, our database permanently saves those verified prices so everyone on the site (including mobile users!) gets the newest prices.
@@ -876,7 +892,7 @@ export default function PlayerHandbookModal({
                 </p>
                 <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
                   <span className="text-emerald-300 font-semibold">
-                    💡 Play on PC? Run the free Albion Data Client in the background for instant 3-second live updates!
+                    💡 Play on PC? Run the free Albion Data Client in the background (or run <code className="text-amber-300">Setup_Albion_Data_Client.bat</code>) for instant 3-second live updates!
                   </span>
                   <a
                     href="https://github.com/ao-data/albiondata-client/releases/latest/download/albiondata-client-amd64-installer.exe"
@@ -895,7 +911,7 @@ export default function PlayerHandbookModal({
                   Can I install this calculator as a Desktop App or Mobile App?
                 </h4>
                 <p className="text-slate-300">
-                  <strong>Yes!</strong> On mobile or Chrome/Edge, click the <strong>Install App</strong> button in the top bar (or &ldquo;Add to Home Screen&rdquo;) to run it fullscreen with offline icon caching. If you downloaded our project folder on Windows, double-click the <strong>Albion Artisan Calculator</strong> desktop shortcut to run the ultra-lightweight local SQLite Desktop App!
+                  <strong>Yes!</strong> On mobile or Chrome/Edge, click the <strong>Install App</strong> button in the top bar (or &ldquo;Add to Home Screen&rdquo;) to run it fullscreen with offline icon caching. If you downloaded our project folder on Windows, double-click <strong>Albion Desktop App.vbs</strong> (or the <strong>Albion Artisan Calculator</strong> desktop shortcut) to launch the zero-terminal native desktop window, or <strong>start-albion-local.bat</strong> for developer browser mode!
                 </p>
               </div>
             </div>
@@ -914,7 +930,10 @@ export default function PlayerHandbookModal({
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => handleLaunchModuleTour(activeTab === 'quickstart' ? 'refining' : activeTab)}
+              onClick={() => {
+                const tourKey = ['uimap', 'quickstart', 'focus', 'faq'].includes(activeTab) ? 'refining' : activeTab;
+                handleLaunchModuleTour(tourKey);
+              }}
               className="px-3.5 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-mono font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <Compass className="w-3.5 h-3.5 text-amber-400" />

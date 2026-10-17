@@ -139,8 +139,9 @@ export default function App() {
   const handleJumpToFeature = (moduleKey, targetSelector) => {
     setIsHandbookOpen(false);
     setIsCommandOpen(false);
-    if (moduleKey && activeTab !== moduleKey) {
-      setActiveTab(moduleKey);
+    const normalizedMod = moduleKey === 'food' ? 'cooking' : moduleKey;
+    if (normalizedMod && activeTab !== normalizedMod) {
+      setActiveTab(normalizedMod);
     }
     if (targetSelector) {
       spotlightElement(targetSelector);
@@ -150,9 +151,10 @@ export default function App() {
   const handleStartTour = (moduleName) => {
     handleDismissWelcome();
     setIsHandbookOpen(false);
-    const targetModule = moduleName || activeTab;
-    if (activeTab !== targetModule) {
-      setActiveTab(targetModule);
+    const rawTarget = moduleName || activeTab;
+    const normalizedTab = rawTarget === 'food' ? 'cooking' : rawTarget;
+    if (activeTab !== normalizedTab) {
+      setActiveTab(normalizedTab);
     }
     setTimeout(() => {
       setIsTourActive(true);
@@ -780,7 +782,7 @@ export default function App() {
       <CommandNavigator
         isOpen={isCommandOpen}
         onClose={() => setIsCommandOpen(false)}
-        onSelectModule={(mod) => setActiveTab(mod)}
+        onSelectModule={(mod) => setActiveTab(mod === 'food' ? 'cooking' : mod)}
         onOpenHandbook={(tab) => handleOpenHandbook(tab)}
         onOpenScanner={() => setIsScannerOpen(true)}
         onStartTour={() => handleStartTour()}
@@ -795,8 +797,8 @@ export default function App() {
       {/* Interactive Step-by-Step Guided Tour */}
       <InteractiveTour
         isActive={isTourActive}
-        activeModule={activeTab}
-        onSelectModule={(mod) => setActiveTab(mod)}
+        activeModule={activeTab === 'cooking' ? 'food' : activeTab}
+        onSelectModule={(mod) => setActiveTab(mod === 'food' ? 'cooking' : mod)}
         onComplete={() => {
           setIsTourActive(false);
           handleDismissWelcome();
