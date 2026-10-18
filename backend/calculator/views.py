@@ -98,7 +98,8 @@ class RefiningPricesView(APIView):
 
         raw_id = get_item_identifier(resource_type, tier, enchantment, is_refined=False)
         refined_id = get_item_identifier(resource_type, tier, enchantment, is_refined=True)
-        prev_refined_id = get_item_identifier(resource_type, tier - 1, 0, is_refined=True) if tier > 2 else ""
+        prev_ench = enchantment if (tier - 1 >= 4 and resource_type.lower() != 'stone') else 0
+        prev_refined_id = get_item_identifier(resource_type, tier - 1, prev_ench, is_refined=True) if tier > 2 else ""
 
         items_to_fetch = [i for i in [raw_id, refined_id, prev_refined_id] if i]
         price_data = fetch_aodp_prices(items_to_fetch, server=server)

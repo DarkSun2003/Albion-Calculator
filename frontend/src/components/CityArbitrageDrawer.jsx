@@ -206,111 +206,122 @@ export default function CityArbitrageDrawer({
   ]);
 
   return (
-    <div className="bg-albion-card border border-albion-border rounded-xl shadow-xl overflow-hidden">
+    <div className="forged-tablet shadow-2xl relative overflow-hidden">
+      {/* Subtle top edge gold hairline */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
+
       {/* Header bar */}
       <div 
         onClick={() => setIsOpen(!isOpen)}
-        className="p-4 sm:p-5 flex items-center justify-between cursor-pointer hover:bg-albion-surface/40 transition-colors border-b border-albion-border/60"
+        className="p-4 sm:p-5 flex items-center justify-between cursor-pointer hover:bg-slate-800/20 transition-colors border-b border-[#1c2738]/80"
       >
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-amber-500/15 border border-amber-500/40 text-amber-300">
+          <div className="p-2.5 rounded-xl bg-[#1c1405] border border-amber-500/50 text-amber-300 shadow-[0_0_12px_rgba(217,119,6,0.2)]">
             <Truck className="w-5 h-5" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm font-serif font-black text-slate-100">
-                Cross-City Arbitrage & Hauling Ledger
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="text-sm font-serif font-bold text-slate-100 tracking-wide">
+                Cross-City Arbitrage &amp; Royal Hauling Ledger
               </h3>
               {bestLocalCity && (
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-bold">
                   Top Local: {bestLocalCity.cityName} ({bestLocalCity.returnRatePct}% RRR)
                 </span>
               )}
             </div>
-            <p className="text-xs text-slate-400 font-serif">
+            <p className="text-xs text-slate-400 font-sans mt-0.5">
               Live multi-city price spreads across all 6 Royal Cities with optimal inter-city hauling routes.
             </p>
           </div>
         </div>
 
-        <button type="button" className="p-1 rounded text-slate-400 hover:text-slate-200">
+        <button type="button" className="p-1.5 rounded-lg bg-[#06090f] border border-[#1e2a3c] text-slate-300 hover:text-white cursor-pointer">
           {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
       </div>
 
       {/* Expanded Content */}
       {isOpen && (
-        <div className="p-4 sm:p-5 bg-albion-bg/60 space-y-4">
-          {/* Optimal Inter-City Hauling Blueprint Card */}
+        <div className="p-4 sm:p-5 bg-[#070b13]/60 space-y-4">
+          {/* Optimal Inter-City Hauling Blueprint Card: Royal Transport Manifest */}
           {optimalHaulRoute && (
-            <div className="rounded-xl border border-amber-500/40 bg-gradient-to-r from-amber-950/40 via-slate-900/90 to-amber-950/30 p-4 space-y-3 shadow-lg">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
+            <div className="rounded-xl border border-amber-500/50 bg-gradient-to-r from-[#1c1203] via-[#0d121c] to-[#090f18] p-4.5 space-y-3.5 shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400/60 to-transparent" />
+
+              <div className="flex flex-wrap items-center justify-between gap-2.5">
+                <div className="flex items-center gap-2 flex-wrap">
                   <Sparkles className="w-4 h-4 text-amber-400" />
-                  <span className="text-xs font-serif font-black uppercase tracking-wider text-amber-200">
+                  <span className="text-xs font-serif font-bold uppercase tracking-wider text-amber-200">
                     Optimal Inter-City Hauling Route
                   </span>
                   {optimalHaulRoute.hasLiveMultiCity ? (
-                    <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">
                       Verified Multi-City Live Data
                     </span>
                   ) : (
-                    <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">
                       Active Hub Projection
                     </span>
                   )}
                 </div>
-                <div className="text-xs font-mono font-bold text-emerald-400">
+                <div className="text-xs font-mono font-extrabold text-emerald-400 bg-[#061811] px-2.5 py-1 rounded-lg border border-emerald-500/30">
                   Haul Net Profit: +{optimalHaulRoute.netProfit.toLocaleString()} silver ({optimalHaulRoute.marginPct}% ROI)
                 </div>
               </div>
 
               {/* Step-by-Step Transport Flow */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                 {/* Step 1: Buy Raw */}
-                <div className="bg-slate-950/80 p-2.5 rounded-lg border border-slate-800 space-y-1">
+                <div className="bg-[#0b121d] p-3 rounded-xl border border-[#1e2a3c] space-y-1.5 shadow-inner">
                   <div className="text-[10px] font-mono uppercase text-sky-400 font-bold flex items-center justify-between">
                     <span>1. Buy Raw Materials</span>
-                    <span>{optimalHaulRoute.cheapestRaw.hasLiveRaw ? 'Cheapest Hub' : 'Projected Hub'}</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-sky-950/70 text-sky-300 border border-sky-800">
+                      {optimalHaulRoute.cheapestRaw.hasLiveRaw ? 'Cheapest Hub' : 'Projected Hub'}
+                    </span>
                   </div>
-                  <div className="font-serif font-bold text-slate-200">
+                  <div className="font-serif font-bold text-slate-100 text-sm">
                     {optimalHaulRoute.cheapestRaw.cityName}
                   </div>
                   <div className="text-[11px] font-mono text-slate-400">
-                    Rate: <strong className="text-sky-300">{optimalHaulRoute.cheapestRaw.rawPrice.toLocaleString()}s</strong> / unit
+                    Rate: <strong className="text-sky-300 font-bold">{optimalHaulRoute.cheapestRaw.rawPrice.toLocaleString()}s</strong> / unit
                     {!optimalHaulRoute.cheapestRaw.hasLiveRaw && (
-                      <span className="ml-1 text-[9px] text-slate-500">(Est.)</span>
+                      <span className="ml-1 text-[9px] text-slate-500 font-sans">(Est.)</span>
                     )}
                   </div>
                 </div>
 
                 {/* Step 2: Refine in Bonus City */}
-                <div className="bg-slate-950/80 p-2.5 rounded-lg border border-slate-800 space-y-1">
+                <div className="bg-[#0b121d] p-3 rounded-xl border border-amber-500/40 space-y-1.5 shadow-inner">
                   <div className="text-[10px] font-mono uppercase text-amber-400 font-bold flex items-center justify-between">
-                    <span>2. Transport & Refine</span>
-                    <span>Bonus RRR</span>
+                    <span>2. Transport &amp; Refine</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-950/70 text-amber-300 border border-amber-800 font-bold">
+                      +40% Bonus
+                    </span>
                   </div>
-                  <div className="font-serif font-bold text-slate-200">
+                  <div className="font-serif font-bold text-slate-100 text-sm">
                     {optimalHaulRoute.bonusCity.cityName}
                   </div>
                   <div className="text-[11px] font-mono text-slate-400">
-                    Return Rate: <strong className="text-amber-300">{optimalHaulRoute.returnRatePct}% RRR</strong>
+                    Return Rate: <strong className="text-amber-300 font-bold">{optimalHaulRoute.returnRatePct}% RRR</strong>
                   </div>
                 </div>
 
                 {/* Step 3: Liquidate in Highest City */}
-                <div className="bg-slate-950/80 p-2.5 rounded-lg border border-slate-800 space-y-1">
+                <div className="bg-[#0b121d] p-3 rounded-xl border border-emerald-500/40 space-y-1.5 shadow-inner">
                   <div className="text-[10px] font-mono uppercase text-emerald-400 font-bold flex items-center justify-between">
-                    <span>3. Transport & Sell</span>
-                    <span>{optimalHaulRoute.highestSell.hasLiveRefined ? 'Peak Revenue' : 'Projected Hub'}</span>
+                    <span>3. Transport &amp; Liquidate</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-950/70 text-emerald-300 border border-emerald-800">
+                      {optimalHaulRoute.highestSell.hasLiveRefined ? 'Peak Revenue' : 'Projected Hub'}
+                    </span>
                   </div>
-                  <div className="font-serif font-bold text-slate-200">
+                  <div className="font-serif font-bold text-slate-100 text-sm">
                     {optimalHaulRoute.highestSell.cityName}
                   </div>
                   <div className="text-[11px] font-mono text-slate-400">
-                    Sell: <strong className="text-emerald-300">{optimalHaulRoute.highestSell.refinedPrice.toLocaleString()}s</strong> / unit
+                    Sell: <strong className="text-emerald-300 font-bold">{optimalHaulRoute.highestSell.refinedPrice.toLocaleString()}s</strong> / unit
                     {!optimalHaulRoute.highestSell.hasLiveRefined && (
-                      <span className="ml-1 text-[9px] text-slate-500">(Est.)</span>
+                      <span className="ml-1 text-[9px] text-slate-500 font-sans">(Est.)</span>
                     )}
                   </div>
                 </div>
@@ -319,20 +330,20 @@ export default function CityArbitrageDrawer({
           )}
 
           {/* Full City-by-City Ledger Table */}
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-xl border border-[#1c2738]/80 bg-[#080d16]">
             <table className="w-full text-left text-xs font-sans border-collapse">
               <thead>
-                <tr className="border-b border-albion-border text-slate-400 uppercase font-mono text-[10px]">
-                  <th className="py-2.5 px-3">Royal City</th>
-                  <th className="py-2.5 px-3">Raw Buy Price</th>
-                  <th className="py-2.5 px-3">Refined Sell Price</th>
-                  <th className="py-2.5 px-3">Return Rate (RRR)</th>
-                  <th className="py-2.5 px-3 text-right">Local Net Profit</th>
-                  <th className="py-2.5 px-3 text-right">Margin %</th>
-                  <th className="py-2.5 px-3 text-center">Action</th>
+                <tr className="border-b border-[#1c2738] text-slate-400 uppercase font-mono text-[10px] bg-[#06090f]">
+                  <th className="py-3 px-3.5">Royal City</th>
+                  <th className="py-3 px-3.5">Raw Buy Price</th>
+                  <th className="py-3 px-3.5">Refined Sell Price</th>
+                  <th className="py-3 px-3.5">Return Rate (RRR)</th>
+                  <th className="py-3 px-3.5 text-right">Local Net Profit</th>
+                  <th className="py-3 px-3.5 text-right">Margin %</th>
+                  <th className="py-3 px-3.5 text-center">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-albion-border/40 font-mono">
+              <tbody className="divide-y divide-[#162030] font-mono">
                 {cityComparisons.map((row) => {
                   const isTop = row.cityName === bestLocalCity?.cityName;
                   const rawFresh = getFreshness(row.rawUpdatedAt);
@@ -341,20 +352,20 @@ export default function CityArbitrageDrawer({
                   return (
                     <tr 
                       key={row.cityName}
-                      className={`hover:bg-albion-surface/40 transition-colors ${
-                        row.isCurrent ? 'bg-albion-surface/60 font-semibold' : ''
+                      className={`hover:bg-[#0c1422] transition-colors ${
+                        row.isCurrent ? 'bg-[#0f1726] font-semibold' : ''
                       }`}
                     >
-                      <td className="py-3 px-3">
+                      <td className="py-3 px-3.5">
                         <div className="flex items-center gap-2">
-                          <span className="text-slate-200 font-bold font-serif">{row.cityName}</span>
+                          <span className="text-slate-100 font-bold font-serif">{row.cityName}</span>
                           {row.isCurrent && (
-                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 font-sans">
-                              Active
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/40 font-mono font-bold">
+                              ◆ Active
                             </span>
                           )}
                           {row.isSpecialty && (
-                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-sans">
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono font-bold">
                               +40% Bonus
                             </span>
                           )}
@@ -362,60 +373,60 @@ export default function CityArbitrageDrawer({
                       </td>
 
                       {/* Raw Material Price with Freshness */}
-                      <td className="py-3 px-3">
-                        <div className="flex items-center gap-1.5">
-                          <span className={row.hasLiveRaw ? "text-slate-200 font-bold" : "text-slate-400 font-normal"}>
+                      <td className="py-3 px-3.5">
+                        <div className="flex items-center gap-2">
+                          <span className={row.hasLiveRaw ? "text-slate-100 font-bold" : "text-slate-400 font-normal"}>
                             {row.hasLiveRaw ? `${row.rawPrice.toLocaleString()}s` : `~${row.rawPrice.toLocaleString()}s`}
                           </span>
-                          <span className={`text-[9px] px-1.5 py-0.2 rounded border ${row.hasLiveRaw ? rawFresh.color : 'text-slate-500 bg-slate-900/60 border-slate-800'}`}>
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded border ${row.hasLiveRaw ? rawFresh.color : 'text-slate-500 bg-[#06090f] border-slate-800'}`}>
                             {row.hasLiveRaw ? rawFresh.label : 'Fallback'}
                           </span>
                         </div>
                       </td>
 
                       {/* Refined Sell Price with Freshness */}
-                      <td className="py-3 px-3">
-                        <div className="flex items-center gap-1.5">
+                      <td className="py-3 px-3.5">
+                        <div className="flex items-center gap-2">
                           <span className={row.hasLiveRefined ? "text-emerald-400 font-bold" : "text-emerald-400/70 font-normal"}>
                             {row.hasLiveRefined ? `${row.refinedPrice.toLocaleString()}s` : `~${row.refinedPrice.toLocaleString()}s`}
                           </span>
-                          <span className={`text-[9px] px-1.5 py-0.2 rounded border ${row.hasLiveRefined ? refinedFresh.color : 'text-slate-500 bg-slate-900/60 border-slate-800'}`}>
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded border ${row.hasLiveRefined ? refinedFresh.color : 'text-slate-500 bg-[#06090f] border-slate-800'}`}>
                             {row.hasLiveRefined ? refinedFresh.label : 'Fallback'}
                           </span>
                         </div>
                       </td>
 
                       {/* RRR */}
-                      <td className="py-3 px-3 font-bold text-sky-400">
+                      <td className="py-3 px-3.5 font-bold text-sky-400">
                         {row.returnRatePct}%
                       </td>
 
                       {/* Local Net Profit */}
-                      <td className={`py-3 px-3 text-right font-bold ${
+                      <td className={`py-3 px-3.5 text-right font-extrabold ${
                         row.netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'
                       }`}>
                         {row.netProfit >= 0 ? '+' : ''}{row.netProfit.toLocaleString()} s
                       </td>
 
                       {/* Margin % */}
-                      <td className={`py-3 px-3 text-right ${
+                      <td className={`py-3 px-3.5 text-right font-bold ${
                         row.marginPct >= 0 ? 'text-emerald-400' : 'text-rose-400'
                       }`}>
                         {row.marginPct >= 0 ? '+' : ''}{row.marginPct}%
                       </td>
 
                       {/* Switch City Action */}
-                      <td className="py-3 px-3 text-center">
+                      <td className="py-3 px-3.5 text-center">
                         {!row.isCurrent ? (
                           <button
                             type="button"
                             onClick={() => onSelectCity(row.cityName)}
-                            className="text-[10px] font-serif font-bold px-2.5 py-1 rounded-lg bg-albion-surface border border-albion-border hover:border-albion-gold text-slate-300 hover:text-albion-gold transition-all shadow"
+                            className="text-[10px] font-serif font-bold px-2.5 py-1 rounded-lg bg-[#06090f] border border-amber-500/40 hover:border-amber-400 text-amber-300 hover:text-amber-200 transition-all shadow-sm cursor-pointer hover:scale-105 active:scale-95"
                           >
                             Snap City
                           </button>
                         ) : (
-                          <span className="text-[10px] text-slate-500 font-sans">Selected</span>
+                          <span className="text-[10px] text-slate-500 font-mono">Selected</span>
                         )}
                       </td>
                     </tr>

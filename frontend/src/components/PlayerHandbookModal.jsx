@@ -89,27 +89,27 @@ export default function PlayerHandbookModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-md animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md animate-fadeIn">
       <div 
-        className="bg-albion-surface border border-albion-border/90 rounded-2xl w-full max-w-5xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden text-slate-100 ring-1 ring-amber-500/20"
+        className="bg-[#070b14] border border-amber-500/50 rounded-2xl w-full max-w-5xl max-h-[92vh] flex flex-col shadow-[0_0_60px_rgba(212,163,75,0.22)] overflow-hidden text-slate-100 ring-1 ring-amber-500/30"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-albion-border/80 bg-gradient-to-r from-albion-card via-albion-surface to-albion-card flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#07090e] flex items-center justify-center border border-amber-400/60 shadow-gold-glow shrink-0 overflow-hidden">
+        <div className="p-4 sm:p-5 border-b border-amber-500/30 bg-gradient-to-r from-amber-950/70 via-[#0e1422] to-amber-950/50 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-xl bg-[#04060a] flex items-center justify-center border border-amber-400/80 shadow-[0_0_20px_rgba(212,163,75,0.25)] shrink-0 overflow-hidden">
               <img src="/logo.png" alt="Albion Artisan" className="w-full h-full object-cover" />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="font-serif text-lg sm:text-xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-300 to-amber-500">
+                <h2 className="font-decorative text-lg sm:text-xl font-black tracking-wide text-amber-200 drop-shadow-sm">
                   Albion Artisan Master Codex &amp; UI Map
                 </h2>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/40 font-bold uppercase">
+                <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/40 font-bold uppercase tracking-wider">
                   All 7 Disciplines
                 </span>
               </div>
-              <p className="text-xs text-slate-400 font-serif">
+              <p className="text-xs text-slate-300/80 font-sans mt-0.5">
                 Click any feature below to teleport straight to it, or read the economic blueprints for all 7 calculators
               </p>
             </div>
@@ -118,7 +118,7 @@ export default function PlayerHandbookModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 border border-transparent hover:border-slate-700 transition-colors"
+            className="p-2 rounded-xl bg-[#05080e] hover:bg-[#111827] border border-[#1a2436] hover:border-amber-500/50 text-slate-400 hover:text-amber-200 transition-colors cursor-pointer active:scale-95"
             title="Close Handbook (Esc)"
           >
             <X className="w-5 h-5" />
@@ -126,7 +126,7 @@ export default function PlayerHandbookModal({
         </div>
 
         {/* Navigation Tabs (Horizontal Scrollable) */}
-        <div className="bg-[#0b0e15] border-b border-albion-border/70 px-4 py-2 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+        <div className="bg-[#04060a] border-b border-[#1e2a3c] px-4 py-2.5 flex items-center gap-1.5 overflow-x-auto scrollbar-thin">
           {HANDBOOK_TABS.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -135,13 +135,13 @@ export default function PlayerHandbookModal({
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-serif font-bold whitespace-nowrap transition-all cursor-pointer ${
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-serif font-bold whitespace-nowrap transition-all cursor-pointer ${
                   isActive
-                    ? 'bg-amber-950/60 border border-amber-500/70 text-amber-300 shadow-[0_0_10px_rgba(245,158,11,0.2)]'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 border border-transparent'
+                    ? 'bg-gradient-to-b from-amber-950/70 to-[#0e1422] border border-amber-400/90 text-amber-200 shadow-[0_0_12px_rgba(212,163,75,0.3)] ring-1 ring-amber-500/40'
+                    : 'text-slate-400 hover:text-amber-200 hover:bg-[#0a0f18] border border-transparent'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-amber-400' : 'text-slate-500'}`} />
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-amber-300' : 'text-slate-500'}`} />
                 <span>{tab.label}</span>
               </button>
             );
@@ -149,7 +149,7 @@ export default function PlayerHandbookModal({
         </div>
 
         {/* Tab Content Body */}
-        <div className="p-5 sm:p-6 overflow-y-auto space-y-6 flex-1 text-sm leading-relaxed scrollbar-thin">
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-6 flex-1 text-sm leading-relaxed scrollbar-thin bg-[#070b14]">
           
           {/* TAB 0: WHERE IS EVERYTHING? (INTERACTIVE UI MAP) */}
           {activeTab === 'uimap' && (
@@ -464,6 +464,37 @@ export default function PlayerHandbookModal({
                     </tr>
                   </tbody>
                 </table>
+              </div>
+
+              {/* "I Have Materials" Mode & Multi-Pass RRR Guide */}
+              <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/40 to-albion-bg border border-amber-500/40 space-y-2.5 text-xs shadow-inner">
+                <h4 className="font-serif font-bold text-amber-300 text-sm flex items-center gap-1.5">
+                  <RotateCcw className="w-4 h-4 text-amber-400" />
+                  "I Have Materials" Reverse Mode &amp; Compounded Multi-Pass RRR
+                </h4>
+                <p className="text-slate-300">
+                  Don't want to calculate backward in your head? You can enter the exact materials sitting in your bank:
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                  <div className="bg-[#0b121d] p-3 rounded-lg border border-[#1e2a3c] space-y-1">
+                    <span className="font-bold text-slate-100 block">1. Reverse Mode (All 4 Forges)</span>
+                    <p className="text-slate-400">
+                      Toggle <strong>"I Have Materials / Ingredients"</strong> in Refining, Gear Crafting, Chef's Hearth (Food), or Alchemist's Lab (Potions). Enter your inventory stack (e.g., 5,000 raw hide, 500 corn, or 500 burdock). The engine tells you what secondary materials you need and your total yield!
+                    </p>
+                  </div>
+                  <div className="bg-[#0b121d] p-3 rounded-lg border border-[#1e2a3c] space-y-1">
+                    <span className="font-bold text-slate-100 block">2. Compounded Multi-Pass RRR</span>
+                    <p className="text-slate-400">
+                      When refining or crafting with return rates (RRR), returned materials go back to your bag. When <em>Compounded RRR</em> is enabled, the calculator re-runs those returned mats through successive passes until leftovers drop below recipe costs, showing the full compound production yield.
+                    </p>
+                  </div>
+                  <div className="bg-[#0b121d] p-3 rounded-lg border border-[#1e2a3c] space-y-1">
+                    <span className="font-bold text-slate-100 block">3. Cargo Weight &amp; 30k Focus Cap</span>
+                    <p className="text-slate-400">
+                      Refining calculates total haul weight (input materials &rarr; output blocks/bars) and recommends transport mounts (Horse, Ox, Bear, Mammoth) so you never get overburdened. All calculators alert you when focus exceeds your 30,000 bank capacity!
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -850,6 +881,31 @@ export default function PlayerHandbookModal({
                     <li>At 100/100 mastery & spec: T8 item costs only ~<strong>423 Focus</strong> to craft!</li>
                     <li>That means you can craft <strong>20x more items</strong> with the same 10,000 daily focus.</li>
                   </ul>
+                </div>
+              </div>
+
+              {/* Focus Dual-Switch Location Guide */}
+              <div className="p-4 rounded-xl bg-gradient-to-r from-sky-950/40 via-[#0b121d] to-[#070b13] border border-sky-500/40 space-y-2 text-xs shadow-inner">
+                <h4 className="font-serif font-bold text-sky-300 flex items-center gap-1.5">
+                  <Zap className="w-4 h-4 text-sky-400" />
+                  Where Can I Toggle Focus? (Dual-Switch Controls)
+                </h4>
+                <p className="text-slate-300">
+                  You can toggle Focus ON or OFF at any moment in <strong>two places</strong>:
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  <div className="bg-[#06090f] p-3 rounded-lg border border-[#1e2a3c]">
+                    <span className="font-bold text-amber-300 block mb-1">1. Global Top Header</span>
+                    <p className="text-slate-400">
+                      The persistent <strong>⚡ Focus ON / OFF</strong> button in the top navigation bar updates all calculators simultaneously.
+                    </p>
+                  </div>
+                  <div className="bg-[#06090f] p-3 rounded-lg border border-[#1e2a3c]">
+                    <span className="font-bold text-sky-300 block mb-1">2. Inside Every Spec Card</span>
+                    <p className="text-slate-400">
+                      Every Destiny Board Mastery &amp; Spec card (Refining Stage 06, Crafting Stage 02, Food, Potions, and Farming) now features its own tactile <strong>⚡ Focus: ON / OFF</strong> switch right next to the spec sliders!
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

@@ -1,10 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import NumberInput from './NumberInput';
 import { 
   CRAFTABLE_ITEMS, 
   CRAFTING_CATEGORIES, 
   computeCrafting,
   getCraftingReturnRate,
   getArtifactQty,
+  simulateCraftingFromMaterials,
 } from '../utils/craftingMath';
 import { CITIES } from '../utils/albionMath';
 import { calculateCraftingApi, fetchCraftingPricesApi } from '../services/api';
@@ -43,7 +45,9 @@ import {
   Wallet,
   CheckSquare,
   Square,
-  PackageCheck
+  PackageCheck,
+  Target,
+  Repeat,
 } from 'lucide-react';
 import ItemIcon from './ItemIcon';
 
@@ -97,7 +101,7 @@ export const BASE_QUALITY_CHANCES = {
  */
 export function computeDynamicQualityChances(mastery = 0, spec = 0, hasSalad = false, useFocus = false) {
   const m = Math.max(0, Math.min(100, Number(mastery) || 0));
-  const s = Math.max(0, Math.min(100, Number(spec) || 0));
+  const s = Math.max(0, Math.min(120, Number(spec) || 0));
   const qualityPower = (m * 0.75) + (s * 6.0) + (hasSalad ? 150 : 0) + (useFocus ? 50 : 0);
   
   const fullRolls = Math.floor(qualityPower / 100);
@@ -197,6 +201,7 @@ export default function CraftingCalculator({
   server,
   hasPremium,
   useFocus,
+  setUseFocus,
   onOpenGuide,
   onStartTour,
 }) {
@@ -210,6 +215,13 @@ export default function CraftingCalculator({
   const [quantity, setQuantity] = useState(10);
   const [stationTax, setStationTax] = useState(500);
   const [dailyBonus, setDailyBonus] = useState(0);
+
+  // "I Have Materials" mode states for Crafting
+  const [craftingInputMode, setCraftingInputMode] = useState('target'); // 'target' | 'materials'
+  const [primaryMatsHave, setPrimaryMatsHave] = useState(500);
+  const [secondaryMatsHave, setSecondaryMatsHave] = useState(0);
+  const [constrainBySecondary, setConstrainBySecondary] = useState(false);
+  const [compoundCraftRrr, setCompoundCraftRrr] = useState(true);
 
   // Material, Artifact and Item Prices
   const [primaryPrice, setPrimaryPrice] = useState(35);
@@ -540,12 +552,40 @@ export default function CraftingCalculator({
     };
   }, [actualQualityCounts, resolvedQualityPrices, itemSellPrice]);
 
+  const craftingMaterialSim = useMemo(() => {
+    return simulateCraftingFromMaterials({
+      item: selectedItem,
+      tier: selectedTier,
+      enchantment: selectedEnchantment,
+      primaryHave: primaryMatsHave,
+      secondaryHave: secondaryMatsHave,
+      constrainBySecondary,
+      city: selectedCity,
+      useFocus,
+      dailyBonusPct: dailyBonus,
+    });
+  }, [
+    selectedItem,
+    selectedTier,
+    selectedEnchantment,
+    primaryMatsHave,
+    secondaryMatsHave,
+    constrainBySecondary,
+    selectedCity,
+    useFocus,
+    dailyBonus,
+  ]);
+
   const effectiveBatchQuantity = useMemo(() => {
-    if (valuationMode === 'actual' && actualTotals.totalItems > 0) {
+    if (valuationMode === 'actual' && actualTotals.totalItems > 0 && workflowPhase === 'realized') {
       return actualTotals.totalItems;
     }
+    if (craftingInputMode === 'materials' && craftingMaterialSim) {
+      const crafts = compoundCraftRrr ? craftingMaterialSim.totalCrafts : craftingMaterialSim.pass1Crafts;
+      return Math.max(1, crafts);
+    }
     return quantity;
-  }, [valuationMode, actualTotals.totalItems, quantity]);
+  }, [valuationMode, actualTotals.totalItems, workflowPhase, craftingInputMode, craftingMaterialSim, compoundCraftRrr, quantity]);
 
   // 5. Active Sell Price Fed into Engine
   const activeSellPrice = useMemo(() => {
@@ -571,7 +611,7 @@ export default function CraftingCalculator({
     const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     const rollCount = Math.max(1, Math.round(qualityMetrics.totalRolls));
     
-    for (let i = 0; i < quantity; i++) {
+    for (let i = 0; i < effectiveBatchQuantity; i++) {
       let bestQ = 1;
       for (let r = 0; r < rollCount; r++) {
         const rand = Math.random();
@@ -589,7 +629,7 @@ export default function CraftingCalculator({
     setActualQualityCounts(counts);
     setValuationMode('actual');
 
-    if (quantity === 1) {
+    if (effectiveBatchQuantity === 1) {
       const rolledQ = Number(Object.keys(counts).find(k => counts[k] === 1) || 2);
       const qMeta = ITEM_QUALITIES.find(q => q.id === rolledQ) || ITEM_QUALITIES[1];
       const price = resolvedQualityPrices[rolledQ]?.price || 0;
@@ -608,7 +648,7 @@ export default function CraftingCalculator({
       const hasMp = (counts[5] || 0) > 0;
       setSimulationBanner({
         message: hasMp 
-          ? `👑 JACKPOT in Batch! Rolled ${counts[5]}x Masterpiece in ${quantity} crafts!`
+          ? `👑 JACKPOT in Batch! Rolled ${counts[5]}x Masterpiece in ${effectiveBatchQuantity} crafts!`
           : `🎲 Batch Simulated: ${counts[1] || 0} Normal, ${counts[2] || 0} Good, ${counts[3] || 0} Outstanding, ${counts[4] || 0} Excellent, ${counts[5] || 0} Masterpiece.`,
         tier: hasMp ? 5 : (counts[4] > 0 ? 4 : (counts[3] > 0 ? 3 : 2)),
         counts,
@@ -782,7 +822,7 @@ export default function CraftingCalculator({
       const odds = currentOdds[q.id] || 0;
       const resolved = resolvedQualityPrices[q.id];
       const price = resolved?.price || 0;
-      const expectedUnits = quantity * odds;
+      const expectedUnits = effectiveBatchQuantity * odds;
       const actualCount = Number(actualQualityCounts[q.id]) || 0;
       
       const grossPerUnit = price;
@@ -807,7 +847,7 @@ export default function CraftingCalculator({
         evContribution,
       };
     });
-  }, [totalBatchCost, effectiveBatchQuantity, quantity, taxRate, setupFee, includeJournals, canUseJournals, calculation, currentOdds, resolvedQualityPrices, actualQualityCounts]);
+  }, [totalBatchCost, effectiveBatchQuantity, taxRate, setupFee, includeJournals, canUseJournals, calculation, currentOdds, resolvedQualityPrices, actualQualityCounts]);
 
   // Item icon paths
   const itemIconSrc = `/items/${selectedItem.template.replace('{tier}', selectedTier)}.png`;
@@ -840,19 +880,19 @@ export default function CraftingCalculator({
   }, [calculation, upfrontJournalsCost]);
 
   const handleCopyShoppingList = () => {
-    const primaryGross = calculation?.materials?.primaryGross || (quantity * (selectedItem.primaryQty || 0));
-    const secondaryGross = calculation?.materials?.secondaryGross || (quantity * (selectedItem.secondaryQty || 0));
-    const artCount = quantity * artifactCountPerUnit;
+    const primaryGross = calculation?.materials?.primaryGross || (effectiveBatchQuantity * (selectedItem.primaryQty || 0));
+    const secondaryGross = calculation?.materials?.secondaryGross || (effectiveBatchQuantity * (selectedItem.secondaryQty || 0));
+    const artCount = effectiveBatchQuantity * artifactCountPerUnit;
     const stationFee = calculation?.financials?.stationFee || 0;
     const netProfit = calculation?.financials?.netProfit || 0;
     const margin = calculation?.financials?.marginPct || 0;
 
     const lines = [
       `⚔️ ALBION ONLINE CRAFTING SHOPPING LIST`,
-      `Item: ${quantity}x ${selectedItem.name} (T${selectedTier}.${selectedEnchantment})`,
+      `Item: ${effectiveBatchQuantity}x ${selectedItem.name} (T${selectedTier}.${selectedEnchantment})`,
       `City: ${selectedCity} (${calculation.returnRatePct}% Return Rate)`,
       `----------------------------------------`,
-      `📦 MATERIALS TO BUY ON MARKET:`,
+      `📦 MATERIALS NEEDED:`,
       `• ${primaryGross}x ${selectedItem.primaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} @ ${primaryPrice.toLocaleString()}s = ${(primaryGross * primaryPrice).toLocaleString()}s`,
     ];
     if (selectedItem.secondaryQty > 0) {
@@ -871,7 +911,7 @@ export default function CraftingCalculator({
       lines.push(`• Crafter's Salad / Potato Salad buff (Active: +150 Quality Power)`);
     }
     lines.push(`----------------------------------------`);
-    lines.push(`💰 TOTAL UPFRONT SILVER NEEDED: ${totalUpfrontCapitalRequired.toLocaleString()}s`);
+    lines.push(`💰 TOTAL UPFRONT SILVER VALUE: ${totalUpfrontCapitalRequired.toLocaleString()}s`);
     lines.push(`📈 EXPECTED NET PROFIT: ${netProfit >= 0 ? '+' : ''}${netProfit.toLocaleString()}s (${margin}%)`);
     lines.push(`🎯 BREAK-EVEN SELL PRICE: ${breakEvenUnitPrice.toLocaleString()}s / item`);
 
@@ -883,21 +923,26 @@ export default function CraftingCalculator({
   return (
     <div className="space-y-6">
       {/* Crafting Master Guide Banner */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-gradient-to-r from-sky-950/40 via-albion-card to-sky-950/40 p-3 rounded-xl border border-sky-500/30">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-sky-500/20 border border-sky-500/50 flex items-center justify-center text-sky-400">
+      <div className="forged-tablet p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3 shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500/20 to-[#1c1405] border border-amber-500/50 flex items-center justify-center text-amber-300 shadow-gold-glow shrink-0">
             <Hammer className="w-4 h-4" />
           </div>
           <div>
-            <span className="font-serif font-bold text-xs text-slate-200">Gear & Weapon Crafting Master Guide</span>
-            <p className="text-[11px] text-slate-400">Learn Pre-Craft shopping forecasts, Crafter&apos;s Salad quality bonuses, and roll simulations</p>
+            <span className="font-serif font-bold text-sm text-slate-100 tracking-wide block">
+              Royal Armorer &amp; Weapon Forgemaster Suite
+            </span>
+            <p className="text-[11px] text-slate-400 mt-0.5 font-sans">
+              Pre-Craft procurement shopping manifests, Crafter&apos;s Salad quality bonuses, and discrete quality roll simulations.
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => onOpenGuide ? onOpenGuide('crafting') : null}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 font-mono text-xs font-bold transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#06090f] hover:bg-slate-800 text-amber-300 border border-amber-500/40 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm"
           >
             <BookOpen className="w-3.5 h-3.5" />
             <span>Read Guide</span>
@@ -905,16 +950,16 @@ export default function CraftingCalculator({
           <button
             type="button"
             onClick={() => onStartTour ? onStartTour('crafting') : null}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-400 hover:to-sky-500 text-slate-950 font-mono text-xs font-bold transition-all shadow-md cursor-pointer hover:scale-105"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[#07090e] font-serif text-xs font-bold transition-all shadow-gold-glow cursor-pointer hover:scale-105 active:scale-95"
           >
             <Compass className="w-3.5 h-3.5" />
-            <span>Interactive Tour</span>
+            <span>Spotlight Tour</span>
           </button>
         </div>
       </div>
 
       {/* Category Navigation Tabs */}
-      <div id="tour-craft-categories" className="flex flex-wrap gap-2 border-b border-albion-border/80 pb-3">
+      <div id="tour-craft-categories" className="flex flex-wrap gap-2.5 pb-1">
         {Object.values(CRAFTING_CATEGORIES).map((cat) => {
           const isActive = activeCategory === cat.id;
           return (
@@ -928,43 +973,47 @@ export default function CraftingCalculator({
                 const firstInCat = CRAFTABLE_ITEMS.find((i) => i.category === cat.id);
                 if (firstInCat) handleSelectItem(firstInCat);
               }}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-serif font-bold transition-all ${
+              className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-serif font-bold transition-all cursor-pointer ${
                 isActive
-                  ? 'bg-albion-surface border border-albion-gold text-albion-gold shadow-gold-glow'
-                  : 'bg-albion-card border border-albion-border text-slate-400 hover:text-slate-200 hover:border-slate-600'
+                  ? 'bg-gradient-to-b from-[#1c1405] to-[#0c0d12] border-2 border-amber-500/80 text-amber-200 shadow-gold-glow scale-[1.02]'
+                  : 'bg-[#080d16] border border-[#1b2536] text-slate-400 hover:text-slate-200 hover:border-slate-600 hover:bg-[#0c1320]'
               }`}
             >
               <span className="text-base">{cat.icon}</span>
-              <span>{cat.name}</span>
+              <span className="tracking-wide">{cat.name}</span>
+              {isActive && (
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-gold-glow"></span>
+              )}
             </button>
           );
         })}
       </div>
 
       {/* Workflow Phase Switcher */}
-      <div id="tour-craft-workflow-switcher" className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-albion-card border border-albion-border shadow-lg">
+      <div id="tour-craft-workflow-switcher" className="forged-tablet p-4 sm:p-5 shadow-xl relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
         <div className="flex items-center gap-3">
-          <div className={`w-9 h-9 rounded-lg border flex items-center justify-center shrink-0 ${
+          <div className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 ${
             workflowPhase === 'plan' 
-              ? 'bg-amber-500/20 border-amber-500/40 text-amber-300' 
-              : 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+              ? 'bg-amber-500/20 border-amber-500/50 text-amber-300 shadow-gold-glow' 
+              : 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.25)]'
           }`}>
-            {workflowPhase === 'plan' ? <ShoppingCart className="w-5 h-5" /> : <Scale className="w-5 h-5" />}
+            {workflowPhase === 'plan' ? <ShoppingCart className="w-5 h-5 text-amber-300" /> : <Scale className="w-5 h-5 text-emerald-300" />}
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs uppercase font-serif font-bold text-slate-100 block">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs uppercase font-serif font-bold text-slate-100 tracking-wide block">
                 Crafting Workflow Phase
               </span>
-              <span className={`text-[10px] font-mono px-2 py-0.5 rounded border font-bold ${
+              <span className={`text-[10px] font-mono px-2 py-0.5 rounded-md border font-bold ${
                 workflowPhase === 'plan'
-                  ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
-                  : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                  ? 'bg-amber-500/15 text-amber-300 border-amber-500/40 shadow-gold-glow'
+                  : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40 shadow-[0_0_8px_rgba(16,185,129,0.2)]'
               }`}>
-                {workflowPhase === 'plan' ? '🛒 Phase 1: Planning & Shopping' : '⚖️ Phase 2: Post-Craft Accounting'}
+                {workflowPhase === 'plan' ? '🛒 Phase 1: Planning & Procurement' : '⚖️ Phase 2: Post-Craft Accounting'}
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5">
+            <p className="text-[11px] text-slate-400 mt-0.5 font-sans">
               {workflowPhase === 'plan' 
                 ? "Planning your craft before buying: Calculate upfront capital, material shopping list, and profit forecast."
                 : "Crafting in progress or finished: Log discrete quality rolls, simulation, and realized silver in your pocket."}
@@ -976,14 +1025,14 @@ export default function CraftingCalculator({
           <button
             type="button"
             onClick={() => setWorkflowPhase('plan')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-serif font-bold flex items-center gap-1.5 transition-all ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-serif font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
               workflowPhase === 'plan'
-                ? 'bg-gradient-to-r from-amber-600/30 to-amber-500/20 text-amber-200 border border-amber-500/70 shadow-gold-glow'
-                : 'bg-albion-bg border border-albion-border text-slate-400 hover:text-slate-200'
+                ? 'bg-gradient-to-r from-amber-600/30 to-amber-500/20 text-amber-200 border-2 border-amber-500/80 shadow-gold-glow scale-[1.02]'
+                : 'bg-[#06090f] border border-[#1e2a3c] text-slate-400 hover:text-slate-200 hover:border-slate-500'
             }`}
           >
             <ShoppingCart className="w-3.5 h-3.5 text-amber-400" />
-            <span>🛒 Pre-Craft Planner & Shopping List</span>
+            <span>🛒 Pre-Craft Planner</span>
           </button>
 
           <button
@@ -992,14 +1041,14 @@ export default function CraftingCalculator({
               setWorkflowPhase('realized');
               setValuationMode('actual');
             }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-serif font-bold flex items-center gap-1.5 transition-all ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-serif font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
               workflowPhase === 'realized'
-                ? 'bg-gradient-to-r from-emerald-600/30 to-emerald-500/20 text-emerald-200 border border-emerald-500/70 shadow-emerald-glow'
-                : 'bg-albion-bg border border-albion-border text-slate-400 hover:text-slate-200'
+                ? 'bg-gradient-to-r from-emerald-600/30 to-emerald-500/20 text-emerald-200 border-2 border-emerald-500/80 shadow-[0_0_15px_rgba(16,185,129,0.25)] scale-[1.02]'
+                : 'bg-[#06090f] border border-[#1e2a3c] text-slate-400 hover:text-slate-200 hover:border-slate-500'
             }`}
           >
             <Scale className="w-3.5 h-3.5 text-emerald-400" />
-            <span>⚖️ Post-Craft Realized Ledger</span>
+            <span>⚖️ Realized Ledger</span>
           </button>
         </div>
       </div>
@@ -1009,24 +1058,30 @@ export default function CraftingCalculator({
         {/* Left Column: Crafting Setup (7 Cols) */}
         <div className="lg:col-span-7 space-y-5">
           {/* 1. Item Grid Selector */}
-          <div id="tour-craft-item-picker" className="bg-albion-card border border-albion-border rounded-xl p-4 sm:p-5 shadow-xl space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-albion-border/60 pb-3">
-              <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5 font-serif">
-                <Hammer className="w-3.5 h-3.5 text-albion-gold" />
-                Select Craftable Item ({filteredItems.length})
+          <div id="tour-craft-item-picker" className="forged-tablet p-4 sm:p-5 shadow-2xl space-y-5 relative overflow-hidden">
+            {/* Subtle top edge gold hairline */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-[#1c2738]/80 pb-3">
+              <label className="text-xs uppercase tracking-wider text-slate-200 font-semibold flex items-center gap-2 font-serif">
+                <span className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30 font-bold">
+                  Stage 01
+                </span>
+                <Hammer className="w-3.5 h-3.5 text-amber-400" />
+                <span className="font-serif">Select Craftable Armament ({filteredItems.length})</span>
               </label>
               
               <div className="flex items-center gap-2">
                 {selectedItem.bonusCity ? (
                   <>
-                    <span className="text-[11px] font-mono text-albion-gold">
+                    <span className="text-[11px] font-mono text-amber-300 bg-[#1c1405] px-2 py-0.5 rounded-md border border-amber-500/40 shadow-sm">
                       Bonus City: <strong>{selectedItem.bonusCity}</strong> (+15%)
                     </span>
                     {selectedCity.toLowerCase() !== selectedItem.bonusCity.toLowerCase() && (
                       <button
                         type="button"
                         onClick={() => setSelectedCity(selectedItem.bonusCity)}
-                        className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 transition-all"
+                        className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/50 hover:bg-amber-500/30 transition-all cursor-pointer shadow-gold-glow"
                         title={`Switch city to ${selectedItem.bonusCity} for +15% RRR`}
                       >
                         Snap to {selectedItem.bonusCity}
@@ -1034,7 +1089,7 @@ export default function CraftingCalculator({
                     )}
                   </>
                 ) : (
-                  <span className="text-[11px] font-mono text-slate-400 bg-albion-bg px-2 py-0.5 rounded border border-albion-border">
+                  <span className="text-[11px] font-mono text-slate-400 bg-[#06090f] px-2 py-0.5 rounded-md border border-[#1e2a3c]">
                     Universal Craft (No City Bonus)
                   </span>
                 )}
@@ -1042,21 +1097,21 @@ export default function CraftingCalculator({
             </div>
 
             {/* Quick Search & Subcategory Filter Bar */}
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               <div className="relative">
-                <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400 pointer-events-none" />
+                <Search className="w-4 h-4 absolute left-3.5 top-3 text-amber-400/70 pointer-events-none" />
                 <input
                   type="text"
-                  placeholder="Search item name or artifact (e.g. Blazing, Brimstone, Dragon, Infinity, Cape...)"
+                  placeholder="Search armament name or artifact (e.g. Blazing, Brimstone, Dragon, Infinity, Cape...)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-albion-bg border border-albion-border rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-albion-gold font-mono"
+                  className="w-full bg-[#06090f] border border-[#1e2a3c] rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 font-mono shadow-inner transition-colors"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-2.5 top-1.5 text-xs text-slate-400 hover:text-slate-200"
+                    className="absolute right-3 top-2.5 text-xs text-slate-400 hover:text-slate-200 cursor-pointer"
                   >
                     ✕
                   </button>
@@ -1068,10 +1123,10 @@ export default function CraftingCalculator({
                   <button
                     type="button"
                     onClick={() => setSelectedSubcategory('all')}
-                    className={`px-2.5 py-1 rounded-md text-[10px] font-mono font-bold transition-all ${
+                    className={`px-3 py-1 rounded-lg text-[10px] font-mono font-bold transition-all cursor-pointer ${
                       selectedSubcategory === 'all'
-                        ? 'bg-albion-gold text-albion-bg shadow-sm'
-                        : 'bg-albion-bg border border-albion-border text-slate-400 hover:text-slate-200'
+                        ? 'bg-amber-500 text-[#07090e] shadow-gold-glow'
+                        : 'bg-[#080d16] border border-[#1b2536] text-slate-400 hover:text-slate-200 hover:border-slate-600'
                     }`}
                   >
                     All ({CRAFTABLE_ITEMS.filter(i => i.category === activeCategory).length})
@@ -1086,10 +1141,10 @@ export default function CraftingCalculator({
                         key={sub}
                         type="button"
                         onClick={() => setSelectedSubcategory(sub)}
-                        className={`px-2 py-1 rounded-md text-[10px] font-mono transition-all ${
+                        className={`px-2.5 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
                           isSubActive
-                            ? 'bg-albion-gold text-albion-bg font-bold shadow-sm'
-                            : 'bg-albion-bg border border-albion-border text-slate-400 hover:text-slate-200'
+                            ? 'bg-amber-500 text-[#07090e] font-bold shadow-gold-glow'
+                            : 'bg-[#080d16] border border-[#1b2536] text-slate-400 hover:text-slate-200 hover:border-slate-600'
                         }`}
                       >
                         {label} ({count})
@@ -1100,7 +1155,8 @@ export default function CraftingCalculator({
               )}
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-h-[360px] overflow-y-auto pr-1">
+            {/* Armament Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-h-[380px] overflow-y-auto pr-1">
               {filteredItems.map((item) => {
                 const isSelected = selectedItemId === item.id;
                 const min = item.minTier || 4;
@@ -1113,28 +1169,28 @@ export default function CraftingCalculator({
                     key={item.id}
                     type="button"
                     onClick={() => handleSelectItem(item)}
-                    className={`p-2 rounded-xl border flex flex-col items-center text-center transition-all relative ${
+                    className={`p-3 rounded-xl border flex flex-col items-center text-center transition-all relative cursor-pointer ${
                       isSelected
-                        ? 'bg-albion-surface border-albion-gold text-slate-100 shadow-gold-glow ring-1 ring-albion-gold'
-                        : 'bg-albion-bg/60 border-albion-border text-slate-400 hover:text-slate-200 hover:border-slate-600'
+                        ? 'bg-gradient-to-b from-[#1c1405] to-[#0b0e16] border-2 border-amber-500/90 text-slate-100 shadow-gold-glow scale-[1.02]'
+                        : 'bg-gradient-to-b from-[#0e1422] to-[#070b13] border border-[#1e2a3c] text-slate-400 hover:text-slate-200 hover:border-slate-500'
                     }`}
                   >
                     {item.isArtifact && (
-                      <span className={`absolute top-1 right-1 text-[8px] font-mono font-bold px-1 rounded border ${getArtifactBadgeColor(item.artifactType)}`}>
+                      <span className={`absolute top-1.5 right-1.5 text-[8px] font-mono font-bold px-1.5 py-0.2 rounded border shadow-sm ${getArtifactBadgeColor(item.artifactType)}`}>
                         {item.artifactType}
                       </span>
                     )}
 
-                    <div className="w-12 h-12 my-1 flex items-center justify-center">
+                    <div className="w-14 h-14 my-1 bg-[#06090f] rounded-lg p-1 border border-[#1e2a3c] flex items-center justify-center shadow-inner">
                       <ItemIcon 
                         src={icon} 
                         alt={item.name} 
                         className="w-full h-full object-contain"
                       />
                     </div>
-                    <span className="text-xs font-bold text-slate-200 truncate w-full">{item.name}</span>
-                    <div className="flex items-center gap-1 mt-0.5">
-                      <span className="text-[9px] font-mono text-amber-400 bg-amber-950/40 px-1 rounded">
+                    <span className="text-xs font-serif font-bold text-slate-200 truncate w-full mt-0.5">{item.name}</span>
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <span className="text-[9px] font-mono font-bold text-amber-400 bg-amber-950/60 px-1.5 py-0.2 rounded border border-amber-500/30">
                         {item.maxTier && item.maxTier < 8 ? `T${item.minTier || 4}–T${item.maxTier}` : `T${min}+`}
                       </span>
                       <span className="text-[9px] font-mono text-slate-400 truncate">
@@ -1147,27 +1203,27 @@ export default function CraftingCalculator({
             </div>
 
             {/* Tier & Enchantment Bars */}
-            <div id="tour-craft-tier-ench" className="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-albion-border/60">
+            <div id="tour-craft-tier-ench" className="pt-3 grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-[#1c2738]/80">
               {/* Tier Selection (T2 to T8) */}
               <div>
                 <div className="flex justify-between items-center mb-1.5">
-                  <label className="text-[11px] uppercase font-semibold text-slate-400">
-                    Item Tier
+                  <label className="text-[11px] uppercase tracking-wider font-semibold text-slate-300 font-serif">
+                    Armament Tier
                   </label>
                   <div className="flex items-center gap-1.5 font-mono text-[10px]">
                     {(selectedItem.minTier || 4) <= 3 && (
-                      <span className="text-emerald-400">
+                      <span className="text-emerald-400 font-bold">
                         T{selectedItem.minTier} Available
                       </span>
                     )}
                     {selectedItem.maxTier && selectedItem.maxTier < 8 && (
-                      <span className="text-amber-400">
+                      <span className="text-amber-400 font-bold">
                         Max Tier {selectedItem.maxTier}
                       </span>
                     )}
                   </div>
                 </div>
-                <div className="grid grid-cols-7 gap-1 font-mono">
+                <div className="grid grid-cols-7 gap-1.5 font-mono">
                   {TIERS.map((tier) => {
                     const min = selectedItem.minTier || 4;
                     const isMinEligible = tier.level >= min;
@@ -1179,12 +1235,12 @@ export default function CraftingCalculator({
                         type="button"
                         disabled={!isMinEligible}
                         onClick={() => handleSelectTier(tier.level)}
-                        className={`py-1.5 rounded-lg border text-xs font-bold text-center transition-all active:scale-95 ${
+                        className={`py-2 rounded-xl border text-xs font-extrabold text-center transition-all cursor-pointer active:scale-95 ${
                           !isMinEligible
-                            ? 'opacity-25 cursor-not-allowed bg-albion-bg/30 border-albion-border/30 text-slate-600'
+                            ? 'opacity-20 cursor-not-allowed bg-[#06090f] border-slate-800 text-slate-600'
                             : isSelected
-                            ? `${tier.gemClass ? `${tier.gemClass} text-white font-extrabold shadow-lg ring-2 ring-albion-gold scale-105` : `${tier.color} ring-2 ring-albion-gold scale-105 shadow-md`}`
-                            : 'bg-albion-bg/80 border-albion-border/70 text-slate-400 hover:text-slate-200 hover:border-slate-500'
+                            ? `${tier.gemClass ? `${tier.gemClass} text-white shadow-lg ring-2 ring-amber-400 scale-105` : `${tier.color} ring-2 ring-amber-400 scale-105 shadow-md`}`
+                            : 'bg-[#080d16] border-[#1e2a3c] text-slate-400 hover:text-slate-200 hover:border-slate-500'
                         }`}
                         title={
                           !isMinEligible 
@@ -1202,8 +1258,8 @@ export default function CraftingCalculator({
               {/* Enchantment Selection */}
               <div>
                 <div className="flex justify-between items-center mb-1.5">
-                  <label className="text-[11px] uppercase font-semibold text-slate-400">
-                    Enchantment
+                  <label className="text-[11px] uppercase tracking-wider font-semibold text-slate-300 font-serif">
+                    Enchantment Level
                   </label>
                   {selectedItem.allowEnchantment === false ? (
                     <span className="text-[10px] font-mono text-amber-400 font-semibold">
@@ -1229,14 +1285,14 @@ export default function CraftingCalculator({
                           setSelectedEnchantment(ench.level);
                           setManualQualityPrices({});
                         }}
-                        className={`py-1.5 rounded-lg border text-xs font-bold text-center transition-all active:scale-95 ${
+                        className={`py-2 rounded-xl border text-xs font-extrabold text-center transition-all cursor-pointer active:scale-95 ${
                           isEnchantDisabled
-                            ? 'opacity-20 cursor-not-allowed bg-albion-bg/30 border-albion-border/30 text-slate-600'
+                            ? 'opacity-20 cursor-not-allowed bg-[#06090f] border-slate-800 text-slate-600'
                             : isSelected
                             ? (ench.level === 0 
-                                ? 'bg-slate-700/90 border-slate-400 text-white ring-1 ring-slate-300 scale-105 shadow-md' 
-                                : `ench-glow-${ench.level} ${ench.color} font-extrabold ring-1 ring-white/50 scale-105 shadow-lg`)
-                            : 'bg-albion-bg/80 border-albion-border/70 text-slate-400 hover:text-slate-200 hover:border-slate-500'
+                                ? 'bg-slate-700/90 border-slate-400 text-white ring-2 ring-slate-300 scale-105 shadow-md' 
+                                : `ench-glow-${ench.level} ${ench.color} font-extrabold ring-2 ring-white/60 scale-105 shadow-lg`)
+                            : 'bg-[#080d16] border-[#1e2a3c] text-slate-400 hover:text-slate-200 hover:border-slate-500'
                         }`}
                         title={
                           selectedItem.allowEnchantment === false && ench.level > 0
@@ -1256,37 +1312,62 @@ export default function CraftingCalculator({
           </div>
 
           {/* 2. Destiny Board Mastery & Specialization Card */}
-          <div className="bg-albion-card border border-albion-border rounded-xl shadow-xl overflow-hidden">
+          <div className="forged-tablet shadow-2xl relative overflow-hidden">
+            {/* Subtle top edge arcane cyan hairline */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-sky-400/50 to-transparent" />
+
             <div 
               onClick={() => setIsDestinyBoardOpen(!isDestinyBoardOpen)}
-              className="p-4 sm:p-5 flex flex-wrap items-center justify-between cursor-pointer hover:bg-albion-surface/40 transition-colors border-b border-albion-border/60 gap-2"
+              className="p-4 sm:p-5 flex flex-wrap items-center justify-between cursor-pointer hover:bg-slate-800/20 transition-colors border-b border-[#1c2738]/80 gap-3"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg border bg-amber-500/15 border-amber-500/40 text-amber-400">
+                <div className="p-2.5 rounded-xl border bg-sky-500/20 border-sky-500/50 text-sky-300 shadow-[0_0_15px_rgba(56,189,248,0.25)]">
                   <Sparkles className="w-5 h-5 animate-pulse" />
                 </div>
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-xs uppercase tracking-wider text-slate-200 font-semibold font-serif">
-                      Destiny Board Mastery & Specialization
+                    <span className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/30 font-bold">
+                      Stage 02
+                    </span>
+                    <h3 className="text-xs uppercase tracking-wider text-slate-100 font-serif font-bold tracking-wide">
+                      Destiny Board Mastery &amp; Quality Specialization
                     </h3>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/20 font-bold">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/30 font-bold">
                       +{qualityMetrics.qualityPower} Quality Rating
                     </span>
                   </div>
-                  <p className="text-[10px] text-slate-400 mt-0.5">
-                    Destiny Board levels increase rerolls per craft and cut focus cost per item dynamically
+                  <p className="text-[11px] text-slate-400 mt-0.5 font-sans">
+                    Destiny Board levels increase rerolls per craft and cut focus cost per item dynamically.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono text-albion-gold hidden sm:inline">
+              <div className="flex items-center flex-wrap gap-2.5">
+                {/* Stage 02 Direct Focus Toggle Button */}
+                {setUseFocus && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setUseFocus(!useFocus);
+                    }}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-serif font-bold transition-all border cursor-pointer ${
+                      useFocus
+                        ? 'bg-gradient-to-r from-sky-600/35 to-sky-500/20 border-sky-400 text-sky-200 shadow-[0_0_12px_rgba(56,189,248,0.3)]'
+                        : 'bg-[#06090f] border-[#1e2a3c] text-slate-400 hover:text-slate-200 hover:border-sky-500/40'
+                    }`}
+                    title={useFocus ? 'Crafting Focus is ACTIVE (+47.9% to +53.9% RRR) - Click to turn OFF' : 'Crafting Focus is OFF - Click to turn ON'}
+                  >
+                    <Sparkles className={`w-3.5 h-3.5 ${useFocus ? 'text-sky-300 fill-sky-300 animate-pulse' : 'text-slate-500'}`} />
+                    <span>{useFocus ? '⚡ Focus: ON' : 'Focus: OFF'}</span>
+                  </button>
+                )}
+                <span className="text-xs font-mono text-amber-300 font-bold hidden sm:inline bg-[#06090f] px-2.5 py-1 rounded-md border border-[#1e2a3c]">
                   Mastery: {masteryLevel}/100 &bull; Spec: {specLevel}/120
                 </span>
                 <button
                   type="button"
-                  className="p-1 rounded text-slate-400 hover:text-slate-200"
+                  className="p-1.5 rounded-lg bg-[#06090f] border border-[#1e2a3c] text-slate-300 hover:text-white cursor-pointer"
                 >
                   {isDestinyBoardOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                 </button>
@@ -1294,56 +1375,128 @@ export default function CraftingCalculator({
             </div>
 
             {isDestinyBoardOpen && (
-              <div className="p-4 sm:p-5 bg-albion-bg/40 space-y-4">
+              <div className="p-4 sm:p-5 bg-[#070b13]/60 space-y-4">
+                {/* Quick Focus Status & Toggle Strip */}
+                <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-[#0b121d] border border-[#1e2a3c] shadow-inner">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className={`w-4 h-4 ${useFocus ? 'text-sky-400 animate-pulse' : 'text-slate-500'}`} />
+                    <span className="text-xs text-slate-300 font-sans">
+                      {useFocus
+                        ? `Focus Crafting is ACTIVE: High RRR applied (${calculation.focusPerUnit} focus / craft, ${calculation.totalFocusNeeded.toLocaleString()} total needed).`
+                        : 'Focus Crafting is currently OFF. Click the button to calculate with Royal Focus (boosts return rate to 47.9% - 53.9%).'}
+                    </span>
+                  </div>
+                  {setUseFocus && (
+                    <button
+                      type="button"
+                      onClick={() => setUseFocus(!useFocus)}
+                      className={`px-3 py-1 rounded-lg text-xs font-serif font-bold transition-all border cursor-pointer ${
+                        useFocus
+                          ? 'bg-sky-500/25 border-sky-400 text-sky-200 shadow-[0_0_10px_rgba(56,189,248,0.25)]'
+                          : 'bg-[#06090f] border-[#1e2a3c] text-slate-300 hover:text-white hover:border-sky-500/50'
+                      }`}
+                    >
+                      {useFocus ? '⚡ Focus: ON' : 'Turn Focus ON'}
+                    </button>
+                  )}
+                </div>
+
                 {/* Telemetry pill strip */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-xs">
-                  <div className="bg-albion-card/80 p-2.5 rounded-lg border border-albion-border">
-                    <span className="text-[9px] uppercase text-slate-400 block font-sans">Quality Rating</span>
-                    <span className="text-sm font-bold text-amber-300">+{qualityMetrics.qualityPower}</span>
-                    <span className="text-[9px] text-slate-500 block">({qualityMetrics.totalRolls} rolls/craft)</span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono text-xs">
+                  <div className="bg-[#0b121d] p-3 rounded-xl border border-amber-500/40 shadow-inner">
+                    <span className="text-[9px] uppercase tracking-wider text-slate-400 block font-sans font-semibold">Quality Rating</span>
+                    <span className="text-sm sm:text-base font-extrabold text-amber-300 block mt-0.5">+{qualityMetrics.qualityPower}</span>
+                    <span className="text-[9px] text-slate-400 block">({qualityMetrics.totalRolls} rolls/craft)</span>
                   </div>
-                  <div className="bg-albion-card/80 p-2.5 rounded-lg border border-albion-border">
-                    <span className="text-[9px] uppercase text-slate-400 block font-sans">Focus / Unit</span>
-                    <span className="text-sm font-bold text-sky-400">{calculation.focusPerUnit}</span>
-                    <span className="text-[9px] text-slate-500 block">({calculation.totalFocusNeeded.toLocaleString()} total)</span>
+                  <div className="bg-[#0b121d] p-3 rounded-xl border border-sky-500/40 shadow-inner">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[9px] uppercase tracking-wider text-slate-400 block font-sans font-semibold">Focus / Unit</span>
+                      {setUseFocus && (
+                        <button
+                          type="button"
+                          onClick={() => setUseFocus(!useFocus)}
+                          className={`text-[9px] font-mono px-1.5 py-0.5 rounded border transition-all cursor-pointer ${
+                            useFocus
+                              ? 'bg-sky-500/30 text-sky-200 border-sky-400 font-bold'
+                              : 'bg-[#06090f] text-slate-400 border-slate-700 hover:border-sky-500/50'
+                          }`}
+                        >
+                          {useFocus ? '⚡ ON' : 'OFF'}
+                        </button>
+                      )}
+                    </div>
+                    <span className="text-sm sm:text-base font-extrabold text-sky-400 block mt-0.5">{calculation.focusPerUnit}</span>
+                    <span className="text-[9px] text-slate-400 block">({calculation.totalFocusNeeded.toLocaleString()} total)</span>
                   </div>
-                  <div className="bg-albion-card/80 p-2.5 rounded-lg border border-albion-border">
-                    <span className="text-[9px] uppercase text-slate-400 block font-sans">Normal Q1 Odds</span>
-                    <span className="text-sm font-bold text-slate-300">{(currentOdds[1] * 100).toFixed(1)}%</span>
+                  <div className="bg-[#0b121d] p-3 rounded-xl border border-[#1e2a3c] shadow-inner">
+                    <span className="text-[9px] uppercase tracking-wider text-slate-400 block font-sans font-semibold">Normal Q1 Odds</span>
+                    <span className="text-sm sm:text-base font-bold text-slate-200 block mt-0.5">{(currentOdds[1] * 100).toFixed(1)}%</span>
                     <span className="text-[9px] text-emerald-400 block">
                       {currentOdds[1] < 0.1 ? 'Normal almost extinct' : 'Base chance'}
                     </span>
                   </div>
-                  <div className="bg-albion-card/80 p-2.5 rounded-lg border border-albion-border">
-                    <span className="text-[9px] uppercase text-slate-400 block font-sans">Good + Out Odds</span>
-                    <span className="text-sm font-bold text-emerald-300">
+                  <div className="bg-[#0b121d] p-3 rounded-xl border border-emerald-500/40 shadow-inner">
+                    <span className="text-[9px] uppercase tracking-wider text-slate-400 block font-sans font-semibold">Good + Out Odds</span>
+                    <span className="text-sm sm:text-base font-bold text-emerald-300 block mt-0.5">
                       {(((currentOdds[2] || 0) + (currentOdds[3] || 0)) * 100).toFixed(1)}%
                     </span>
-                    <span className="text-[9px] text-slate-500 block">Dominates results</span>
+                    <span className="text-[9px] text-slate-400 block">Dominates results</span>
                   </div>
                 </div>
 
+                {/* Focus Pool Capacity & Regeneration Alert */}
+                {useFocus && calculation?.totalFocusNeeded > 0 && (
+                  <div className={`p-3 rounded-xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-inner ${
+                    calculation.totalFocusNeeded > 30000
+                      ? 'bg-rose-950/70 border-rose-500/60 text-rose-300 shadow-[0_0_12px_rgba(244,63,94,0.25)]'
+                      : calculation.totalFocusNeeded > 10000
+                      ? 'bg-amber-950/60 border-amber-500/40 text-amber-300'
+                      : 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300'
+                  }`}>
+                    <div className="flex items-center gap-2.5">
+                      <Zap className={`w-4 h-4 shrink-0 ${calculation.totalFocusNeeded > 30000 ? 'text-rose-400' : 'text-sky-300'}`} />
+                      <div>
+                        <span className="font-serif font-bold block text-slate-100">
+                          {calculation.totalFocusNeeded > 30000
+                            ? `⚠️ Exceeds 30,000 Max Focus Bank (${calculation.totalFocusNeeded.toLocaleString()} Focus Needed)`
+                            : calculation.totalFocusNeeded > 10000
+                            ? `⚡ ${calculation.totalFocusNeeded.toLocaleString()} Focus (~${(calculation.totalFocusNeeded / 10000).toFixed(1)} days • Within 30k bank limit)`
+                            : `⚡ ${calculation.totalFocusNeeded.toLocaleString()} Focus (~${(calculation.totalFocusNeeded / 10000).toFixed(1)} days • Ready in 1 day)`}
+                        </span>
+                        <span className="text-[10px] text-slate-400 block font-sans">
+                          {calculation.totalFocusNeeded > 30000
+                            ? `Requires ~${(calculation.totalFocusNeeded / 10000).toFixed(1)} days of Premium focus regeneration (10,000/day). Plan this large batch across multiple days.`
+                            : 'Focus points regenerate at 10,000 daily with Premium active (30,000 maximum bank capacity).'}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="font-mono text-xs font-bold shrink-0 bg-[#06090f]/80 px-2.5 py-1 rounded-md border border-[#1e2a3c]">
+                      {calculation.totalFocusNeeded.toLocaleString()} Focus Total
+                    </span>
+                  </div>
+                )}
+
                 {/* Sliders Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
                   {/* Node Mastery */}
-                  <div className="bg-albion-card/90 p-3.5 rounded-xl border border-albion-border space-y-2">
+                  <div className="bg-[#0b121d] p-3.5 rounded-xl border border-[#1e2a3c] space-y-2 shadow-inner">
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="text-xs font-serif font-bold text-slate-200 block">
+                        <span className="text-xs font-serif font-bold text-slate-100 block">
                           Category Crafting Mastery
                         </span>
-                        <span className="text-[10px] text-slate-400">
+                        <span className="text-[10px] text-slate-400 font-mono">
                           +0.75 Quality Power &bull; +30 Focus Eff / lvl
                         </span>
                       </div>
                       <div className="flex items-center gap-1 font-mono">
-                        <input
+                        <NumberInput
                           type="number"
                           min="0"
                           max="100"
                           value={masteryLevel}
                           onChange={(e) => setMasteryLevel(Math.max(0, Math.min(100, parseInt(e.target.value) || 0)))}
-                          className="w-14 text-center bg-albion-bg border border-albion-border rounded py-0.5 text-xs font-bold text-albion-gold focus:outline-none focus:border-albion-gold"
+                          className="w-14 text-center bg-[#06090f] border border-[#1e2a3c] rounded-md py-1 text-xs font-bold text-amber-300 focus:outline-none focus:border-amber-400 shadow-inner"
                         />
                         <span className="text-[10px] text-slate-400">/ 100</span>
                       </div>
@@ -1354,7 +1507,7 @@ export default function CraftingCalculator({
                       max="100"
                       value={masteryLevel}
                       onChange={(e) => setMasteryLevel(Number(e.target.value))}
-                      className="w-full accent-amber-500 cursor-pointer"
+                      className="w-full accent-amber-400 cursor-pointer"
                     />
                     <div className="flex gap-1.5 pt-1">
                       {[0, 25, 50, 75, 100].map((lvl) => (
@@ -1362,10 +1515,10 @@ export default function CraftingCalculator({
                           key={lvl}
                           type="button"
                           onClick={() => setMasteryLevel(lvl)}
-                          className={`flex-1 py-0.5 rounded text-[10px] font-mono border transition-all ${
+                          className={`flex-1 py-1 rounded-md text-[10px] font-mono border transition-all cursor-pointer ${
                             masteryLevel === lvl 
-                              ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 font-bold'
-                              : 'bg-albion-bg border-albion-border text-slate-400 hover:text-slate-200'
+                              ? 'bg-amber-500/25 text-amber-300 border-amber-500/60 font-bold shadow-gold-glow'
+                              : 'bg-[#06090f] border-[#1e2a3c] text-slate-400 hover:text-slate-200'
                           }`}
                         >
                           {lvl}
@@ -1375,24 +1528,24 @@ export default function CraftingCalculator({
                   </div>
 
                   {/* Item Specialization */}
-                  <div className="bg-albion-card/90 p-3.5 rounded-xl border border-albion-border space-y-2">
+                  <div className="bg-[#0b121d] p-3.5 rounded-xl border border-[#1e2a3c] space-y-2 shadow-inner">
                     <div className="flex items-center justify-between">
                       <div className="min-w-0 pr-2">
-                        <span className="text-xs font-serif font-bold text-slate-200 block truncate">
+                        <span className="text-xs font-serif font-bold text-slate-100 block truncate">
                           {selectedItem.name} Specialization
                         </span>
-                        <span className="text-[10px] text-slate-400">
-                          +6.00 Quality Power &bull; +250 Focus Eff / lvl
+                        <span className="text-[10px] text-slate-400 font-mono">
+                          +6.00 Quality Power &bull; +280 Focus Eff / lvl
                         </span>
                       </div>
                       <div className="flex items-center gap-1 font-mono shrink-0">
-                        <input
+                        <NumberInput
                           type="number"
                           min="0"
                           max="120"
                           value={specLevel}
                           onChange={(e) => setSpecLevel(Math.max(0, Math.min(120, parseInt(e.target.value) || 0)))}
-                          className="w-14 text-center bg-albion-bg border border-albion-border rounded py-0.5 text-xs font-bold text-emerald-400 focus:outline-none focus:border-albion-gold"
+                          className="w-14 text-center bg-[#06090f] border border-[#1e2a3c] rounded-md py-1 text-xs font-bold text-emerald-400 focus:outline-none focus:border-emerald-400 shadow-inner"
                         />
                         <span className="text-[10px] text-slate-400">/ 120</span>
                       </div>
@@ -1403,7 +1556,7 @@ export default function CraftingCalculator({
                       max="120"
                       value={specLevel}
                       onChange={(e) => setSpecLevel(Number(e.target.value))}
-                      className="w-full accent-emerald-500 cursor-pointer"
+                      className="w-full accent-emerald-400 cursor-pointer"
                     />
                     <div className="flex gap-1.5 pt-1">
                       {[
@@ -1416,10 +1569,10 @@ export default function CraftingCalculator({
                           key={lvl}
                           type="button"
                           onClick={() => setSpecLevel(lvl)}
-                          className={`flex-1 py-0.5 rounded text-[10px] font-mono border transition-all ${
+                          className={`flex-1 py-1 rounded-md text-[10px] font-mono border transition-all cursor-pointer ${
                             specLevel === lvl 
-                              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 font-bold'
-                              : 'bg-albion-bg border-albion-border text-slate-400 hover:text-slate-200'
+                              ? 'bg-emerald-500/25 text-emerald-300 border-emerald-500/60 font-bold shadow-[0_0_8px_rgba(16,185,129,0.2)]'
+                              : 'bg-[#06090f] border-[#1e2a3c] text-slate-400 hover:text-slate-200'
                           }`}
                         >
                           {label}
@@ -1433,30 +1586,236 @@ export default function CraftingCalculator({
           </div>
 
           {/* 3. Visual Recipe & Material Cost Inputs (Refined Mats + Artifact Slot) */}
-          <div id="tour-craft-planner-details" className="bg-albion-card border border-albion-border rounded-xl p-4 sm:p-5 shadow-xl space-y-4">
-            <div className="flex flex-wrap items-center justify-between border-b border-albion-border/60 pb-2 gap-2">
-              <h3 className="text-xs uppercase tracking-wider text-slate-300 font-semibold flex items-center gap-1.5 font-serif">
-                <Coins className="w-3.5 h-3.5 text-albion-gold" />
-                Recipe Inputs & Sale Price
-              </h3>
+          <div id="tour-craft-planner-details" className="forged-tablet p-5 sm:p-6 space-y-5">
+            <div className="flex flex-wrap items-center justify-between border-b border-[#1e2a3c] pb-3 gap-2">
               <div className="flex items-center gap-2">
-                <span className={`text-[10px] font-mono px-2 py-0.5 rounded border font-bold ${selectedQualityMeta.badge}`}>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-widest bg-amber-500/10 text-amber-300 border border-amber-500/30 font-bold">
+                  Stage 03
+                </span>
+                <h3 className="text-xs uppercase tracking-wider text-slate-200 font-bold flex items-center gap-2 font-serif">
+                  <Coins className="w-4 h-4 text-albion-gold" />
+                  Recipe Inputs & Live Valuation
+                </h3>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Mode Toggle: Target Batch vs I Have Materials */}
+                <div className="flex items-center bg-[#070b12] p-0.5 rounded-lg border border-[#1e2a3c] text-[10px] font-mono shadow-inner">
+                  <button
+                    type="button"
+                    onClick={() => setCraftingInputMode('target')}
+                    className={`px-3 py-1 rounded-md flex items-center gap-1.5 transition-all cursor-pointer ${
+                      craftingInputMode === 'target'
+                        ? 'bg-amber-500/20 text-amber-200 border border-amber-500/50 font-bold shadow-[0_0_10px_rgba(217,119,6,0.2)]'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    <Target className="w-3 h-3 text-amber-400" />
+                    <span>Target Batch</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCraftingInputMode('materials')}
+                    className={`px-3 py-1 rounded-md flex items-center gap-1.5 transition-all cursor-pointer ${
+                      craftingInputMode === 'materials'
+                        ? 'bg-emerald-500/20 text-emerald-200 border border-emerald-500/50 font-bold shadow-[0_0_10px_rgba(16,185,129,0.2)]'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    <PackageCheck className="w-3 h-3 text-emerald-400" />
+                    <span>I Have Materials</span>
+                  </button>
+                </div>
+
+                <span className={`text-[10px] font-mono px-2.5 py-0.5 rounded border font-bold ${selectedQualityMeta.badge}`}>
                   {selectedQualityMeta.name} Quality
                 </span>
-                <span className="text-[11px] text-slate-400 font-mono">
-                  Batch: <strong>{quantity}x</strong>
+                <span className="text-[11px] text-slate-300 font-mono bg-[#070b12] px-2.5 py-0.5 rounded border border-[#1e2a3c]">
+                  Batch: <strong className="text-albion-gold">{effectiveBatchQuantity}x</strong>
                 </span>
               </div>
             </div>
 
+            {/* "I Have Materials" Mode Panel */}
+            {craftingInputMode === 'materials' && (
+              <div className="p-4 rounded-xl bg-gradient-to-br from-[#061810] to-[#0a151d] border border-emerald-500/40 space-y-3.5 shadow-[0_0_20px_rgba(16,185,129,0.08)]">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-emerald-500/20 pb-2.5">
+                  <div>
+                    <span className="text-xs font-serif font-bold text-emerald-300 flex items-center gap-1.5">
+                      <PackageCheck className="w-4 h-4 text-emerald-400" />
+                      Material Vault &rarr; What You Need & What You Achieve
+                    </span>
+                    <p className="text-[10px] text-slate-400 mt-0.5">
+                      Enter the refined materials in your bag. The forge calculates missing components and total finished gear (accounting for RRR loops).
+                    </p>
+                  </div>
+
+                  {/* Compound RRR vs Pass 1 Only Toggle */}
+                  <div className="flex items-center bg-[#070b12] p-0.5 rounded-lg border border-emerald-500/40 text-[10px] font-mono shadow-inner">
+                    <button
+                      type="button"
+                      onClick={() => setCompoundCraftRrr(true)}
+                      className={`px-3 py-1 rounded-md flex items-center gap-1.5 transition-all cursor-pointer ${
+                        compoundCraftRrr
+                          ? 'bg-emerald-500/30 text-emerald-200 border border-emerald-500/60 font-bold shadow-[0_0_8px_rgba(16,185,129,0.25)]'
+                          : 'text-slate-400 hover:text-slate-200'
+                      }`}
+                      title="Keep re-crafting all returned materials until less than 1 craft remains"
+                    >
+                      <Repeat className="w-3 h-3 text-emerald-400" />
+                      <span>Re-Craft RRR ({craftingMaterialSim.passCount} passes)</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setCompoundCraftRrr(false)}
+                      className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+                        !compoundCraftRrr
+                          ? 'bg-amber-500/25 text-amber-200 border border-amber-500/60 font-bold shadow-[0_0_8px_rgba(217,119,6,0.25)]'
+                          : 'text-slate-400 hover:text-slate-200'
+                      }`}
+                      title="Craft only 1 initial pass and keep returned materials in bag"
+                    >
+                      1st Pass Only
+                    </button>
+                  </div>
+                </div>
+
+                {/* Material Quantity Inputs */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="bg-[#070b12] p-3 rounded-xl border border-emerald-500/40 flex items-center gap-3 shadow-inner">
+                    <div className="w-11 h-11 bg-[#0c121e] rounded-lg p-0.5 border border-emerald-500/40 flex items-center justify-center shrink-0 shadow-md">
+                      <ItemIcon
+                        src={primaryIconSrc}
+                        alt={selectedItem.primaryMatName}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <label className="text-[10px] uppercase tracking-wider text-emerald-300 font-bold block truncate">
+                        I Have {selectedItem.primaryMatName}{selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} ({selectedItem.primaryQty}/craft)
+                      </label>
+                      <NumberInput
+                        type="number"
+                        min="0"
+                        value={primaryMatsHave}
+                        onChange={(e) => setPrimaryMatsHave(Math.max(0, parseInt(e.target.value) || 0))}
+                        className="w-full mt-1 bg-[#0c121e] border border-emerald-500/50 focus:border-emerald-400 rounded-lg px-3 py-1.5 text-sm font-mono font-extrabold text-emerald-200 focus:outline-none shadow-inner"
+                      />
+                    </div>
+                  </div>
+
+                  {selectedItem.secondaryQty > 0 && (
+                    <div className="bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c] flex items-center gap-3 shadow-inner">
+                      <div className="w-11 h-11 bg-[#0c121e] rounded-lg p-0.5 border border-[#1e2a3c] flex items-center justify-center shrink-0 shadow-md">
+                        <ItemIcon
+                          src={secondaryIconSrc}
+                          alt={selectedItem.secondaryMatName}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1">
+                          <label className="text-[10px] uppercase tracking-wider text-slate-300 font-bold block truncate">
+                            I Also Have {selectedItem.secondaryMatName} ({selectedItem.secondaryQty}/craft)
+                          </label>
+                          <label className="flex items-center gap-1 text-[9px] text-amber-300 cursor-pointer shrink-0" title="If checked, caps your crafts to the Secondary Mats you currently own instead of buying missing ones">
+                            <input
+                              type="checkbox"
+                              checked={constrainBySecondary}
+                              onChange={(e) => setConstrainBySecondary(e.target.checked)}
+                              className="accent-amber-500 rounded cursor-pointer"
+                            />
+                            <span>Cap by this</span>
+                          </label>
+                        </div>
+                        <NumberInput
+                          type="number"
+                          min="0"
+                          value={secondaryMatsHave}
+                          onChange={(e) => setSecondaryMatsHave(Math.max(0, parseInt(e.target.value) || 0))}
+                          placeholder="0 (will calculate how many to buy)"
+                          className="w-full mt-1 bg-[#0c121e] border border-[#1e2a3c] focus:border-amber-400 rounded-lg px-3 py-1.5 text-sm font-mono font-extrabold text-amber-200 focus:outline-none shadow-inner"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* 4-Card Breakdown of What You Need & What You Achieve */}
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-2.5 text-xs font-mono">
+                  <div className="bg-[#070b12] p-3 rounded-xl border border-amber-500/30">
+                    <span className="text-[10px] text-slate-400 font-sans block uppercase tracking-wider font-semibold">
+                      1. Complementary Mats
+                    </span>
+                    <div className="mt-1 space-y-0.5">
+                      {selectedItem.secondaryQty > 0 ? (
+                        <span className="text-xs font-bold text-amber-300 block">
+                          {compoundCraftRrr ? craftingMaterialSim.secondaryToBuyTotal.toLocaleString() : craftingMaterialSim.secondaryToBuyPass1.toLocaleString()}x {selectedItem.secondaryMatName}
+                        </span>
+                      ) : (
+                        <span className="text-xs font-bold text-emerald-400 block">
+                          0x (Single-Mat Recipe)
+                        </span>
+                      )}
+                      {selectedItem.isArtifact && (
+                        <span className="text-[11px] font-bold text-purple-300 block">
+                          + {compoundCraftRrr ? craftingMaterialSim.artifactsTotal : craftingMaterialSim.artifactsPass1}x {selectedItem.artifactName}
+                        </span>
+                      )}
+                      {includeJournals && canUseJournals && (
+                        <span className="text-[10px] text-slate-400 block">
+                          + {compoundCraftRrr ? craftingMaterialSim.journalsFilledTotal : craftingMaterialSim.journalsFilledPass1}x Empty Books
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c]">
+                    <span className="text-[10px] text-slate-400 font-sans block uppercase tracking-wider font-semibold">
+                      2. Initial Pass
+                    </span>
+                    <span className="text-sm font-bold text-slate-200 block mt-0.5">
+                      {craftingMaterialSim.pass1Crafts.toLocaleString()}x {selectedItem.name}
+                    </span>
+                    <span className="text-[10px] text-sky-400 block mt-0.5">
+                      +{craftingMaterialSim.pass1PrimaryReturned.toLocaleString()} {selectedItem.primaryMatName} returned
+                    </span>
+                  </div>
+
+                  <div className="bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c]">
+                    <span className="text-[10px] text-slate-400 font-sans block uppercase tracking-wider font-semibold">
+                      3. RRR Recycles
+                    </span>
+                    <span className="text-sm font-bold text-sky-400 block mt-0.5">
+                      +{compoundCraftRrr ? craftingMaterialSim.bonusRrrCrafts.toLocaleString() : 0}x {selectedItem.name}
+                    </span>
+                    <span className="text-[10px] text-slate-500 block mt-0.5">
+                      {compoundCraftRrr ? `At ${calculation.returnRatePct}% RRR` : 'Kept as returned'}
+                    </span>
+                  </div>
+
+                  <div className="bg-emerald-950/40 p-3 rounded-xl border border-emerald-500/50 shadow-[0_0_12px_rgba(16,185,129,0.15)]">
+                    <span className="text-[10px] text-emerald-300 font-sans uppercase tracking-wider font-bold block">
+                      4. Total Finished
+                    </span>
+                    <span className="text-base font-extrabold text-emerald-400 block mt-0.5">
+                      {effectiveBatchQuantity.toLocaleString()}x {selectedItem.name}
+                    </span>
+                    <span className="text-[10px] text-slate-400 block mt-0.5">
+                      Leftover: {compoundCraftRrr ? craftingMaterialSim.leftoverPrimary : (primaryMatsHave - craftingMaterialSim.pass1Crafts * selectedItem.primaryQty + craftingMaterialSim.pass1PrimaryReturned)} {selectedItem.primaryMatName}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Live Price Sync Header Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 bg-albion-bg/60 p-2.5 rounded-xl border border-albion-border/80">
-              <div className="flex items-center gap-2.5">
+            <div className="flex flex-wrap items-center justify-between gap-3 bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c]">
+              <div className="flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() => handleFetchPrices(selectedQuality)}
                   disabled={loadingPrices}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold bg-albion-card hover:bg-albion-surface border-albion-border hover:border-albion-gold text-slate-200 transition-all disabled:opacity-50 shadow-sm"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold bg-[#0c121e] hover:bg-[#141d2e] border-amber-500/40 hover:border-amber-400 text-amber-200 transition-all disabled:opacity-50 shadow-sm cursor-pointer"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 text-albion-gold ${loadingPrices ? 'animate-spin' : ''}`} />
                   <span>{loadingPrices ? 'Syncing...' : 'Fetch Live Prices'}</span>
@@ -1469,12 +1828,12 @@ export default function CraftingCalculator({
                     onChange={(e) => setAutoFetchEnabled(e.target.checked)}
                     className="accent-amber-500 rounded cursor-pointer"
                   />
-                  <span>Auto-fetch</span>
+                  <span>Auto-fetch on change</span>
                 </label>
               </div>
 
               {priceStatus && (
-                <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5">
+                <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 bg-[#0c121e] px-2.5 py-1 rounded-md border border-[#1e2a3c]">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                   <span>{priceStatus}</span>
                 </div>
@@ -1487,8 +1846,8 @@ export default function CraftingCalculator({
                 : 'grid-cols-1 sm:grid-cols-3'
             }`}>
               {/* Primary Refined Material */}
-              <div className={`p-3 rounded-xl border flex items-start gap-2.5 transition-all ${getMaterialTactileClass(selectedItem.primaryMatName)}`}>
-                <div className="w-11 h-11 shrink-0 bg-albion-surface/90 rounded-lg p-0.5 border border-albion-border flex items-center justify-center">
+              <div className={`p-3.5 rounded-xl border flex items-start gap-3 transition-all ${getMaterialTactileClass(selectedItem.primaryMatName)}`}>
+                <div className="w-12 h-12 shrink-0 bg-[#070b12] rounded-lg p-0.5 border border-[#1e2a3c] flex items-center justify-center shadow-md">
                   <ItemIcon 
                     src={primaryIconSrc} 
                     alt={selectedItem.primaryMatName} 
@@ -1497,35 +1856,35 @@ export default function CraftingCalculator({
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-1">
-                    <label className="text-[11px] font-semibold text-slate-100 block truncate">
-                      {selectedItem.primaryMatName}{selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} (x{selectedItem.primaryQty})
+                    <label className="text-[11px] font-bold text-slate-100 block truncate">
+                      {selectedItem.primaryMatName}{selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} ({selectedItem.primaryQty}x)
                     </label>
-                    <span className="text-[8px] font-mono px-1 rounded bg-slate-800 text-slate-400 border border-slate-700/60 shrink-0">
+                    <span className="text-[8px] font-mono px-1.5 py-0.2 rounded bg-[#070b12] text-slate-400 border border-[#1e2a3c] shrink-0">
                       Normal (Q1)
                     </span>
                   </div>
-                  <div className="relative mt-1">
-                    <input
+                  <div className="relative mt-1.5">
+                    <NumberInput
                       type="number"
                       min="0"
                       value={primaryPrice}
                       onChange={(e) => setPrimaryPrice(Math.max(0, parseFloat(e.target.value) || 0))}
-                      className="w-full bg-albion-card/90 border border-albion-border rounded px-2 py-1 text-xs font-mono text-slate-100 focus:outline-none focus:border-albion-gold"
+                      className="w-full bg-[#070b12] border border-[#1e2a3c] focus:border-amber-400 rounded-lg px-2.5 py-1 text-xs font-mono font-bold text-slate-100 focus:outline-none shadow-inner"
                     />
-                    <span className="absolute right-1.5 top-1 text-[9px] text-slate-500 font-mono">silver</span>
+                    <span className="absolute right-2 top-1 text-[9px] text-slate-500 font-mono">silver</span>
                   </div>
                 </div>
               </div>
 
               {/* Secondary Refined Material */}
-              <div className={`p-3 rounded-xl border flex items-start gap-2.5 transition-all ${
+              <div className={`p-3.5 rounded-xl border flex items-start gap-3 transition-all ${
                 selectedItem.secondaryQty > 0 
                   ? getMaterialTactileClass(selectedItem.secondaryMatName) 
-                  : 'bg-albion-bg/30 border-albion-border/40 opacity-40'
+                  : 'bg-[#070b12]/40 border-[#1e2a3c]/40 opacity-40'
               }`}>
                 {selectedItem.secondaryQty > 0 ? (
                   <>
-                    <div className="w-11 h-11 shrink-0 bg-albion-surface/90 rounded-lg p-0.5 border border-albion-border flex items-center justify-center">
+                    <div className="w-12 h-12 shrink-0 bg-[#070b12] rounded-lg p-0.5 border border-[#1e2a3c] flex items-center justify-center shadow-md">
                       <ItemIcon 
                         src={secondaryIconSrc} 
                         alt={selectedItem.secondaryMatName} 
@@ -1534,27 +1893,27 @@ export default function CraftingCalculator({
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-1">
-                        <label className="text-[11px] font-semibold text-slate-100 block truncate">
-                          {selectedItem.secondaryMatName}{selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} (x{selectedItem.secondaryQty})
+                        <label className="text-[11px] font-bold text-slate-100 block truncate">
+                          {selectedItem.secondaryMatName}{selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} ({selectedItem.secondaryQty}x)
                         </label>
-                        <span className="text-[8px] font-mono px-1 rounded bg-slate-800 text-slate-400 border border-slate-700/60 shrink-0">
+                        <span className="text-[8px] font-mono px-1.5 py-0.2 rounded bg-[#070b12] text-slate-400 border border-[#1e2a3c] shrink-0">
                           Normal (Q1)
                         </span>
                       </div>
-                      <div className="relative mt-1">
-                        <input
+                      <div className="relative mt-1.5">
+                        <NumberInput
                           type="number"
                           min="0"
                           value={secondaryPrice}
                           onChange={(e) => setSecondaryPrice(Math.max(0, parseFloat(e.target.value) || 0))}
-                          className="w-full bg-albion-card/90 border border-albion-border rounded px-2 py-1 text-xs font-mono text-slate-100 focus:outline-none focus:border-albion-gold"
+                          className="w-full bg-[#070b12] border border-[#1e2a3c] focus:border-amber-400 rounded-lg px-2.5 py-1 text-xs font-mono font-bold text-slate-100 focus:outline-none shadow-inner"
                         />
-                        <span className="absolute right-1.5 top-1 text-[9px] text-slate-500 font-mono">silver</span>
+                        <span className="absolute right-2 top-1 text-[9px] text-slate-500 font-mono">silver</span>
                       </div>
                     </div>
                   </>
                 ) : (
-                  <div className="text-xs text-slate-500 italic py-2 text-center w-full">
+                  <div className="text-xs text-slate-500 italic py-3 text-center w-full">
                     No secondary material
                   </div>
                 )}
@@ -1562,8 +1921,8 @@ export default function CraftingCalculator({
 
               {/* Artifact Component Slot (if item is Artifact) */}
               {selectedItem.isArtifact && (
-                <div className="bg-gradient-to-br from-purple-950/40 to-albion-card p-3 rounded-xl border border-purple-500/40 flex items-start gap-2.5 shadow-md">
-                  <div className="w-11 h-11 shrink-0 bg-albion-surface rounded-lg p-0.5 border border-purple-500/40 flex items-center justify-center">
+                <div className="bg-gradient-to-br from-[#160b29] to-[#0d091a] p-3.5 rounded-xl border border-purple-500/50 flex items-start gap-3 shadow-[0_0_15px_rgba(168,85,247,0.15)]">
+                  <div className="w-12 h-12 shrink-0 bg-[#070b12] rounded-lg p-0.5 border border-purple-500/50 flex items-center justify-center shadow-md">
                     <ItemIcon 
                       src={artifactIconSrc} 
                       alt={selectedItem.artifactName} 
@@ -1572,30 +1931,30 @@ export default function CraftingCalculator({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <label className="text-[10px] font-semibold text-purple-300 block truncate">
-                        {selectedItem.artifactName} (x{artifactCountPerUnit})
+                      <label className="text-[10px] font-bold text-purple-300 block truncate">
+                        {selectedItem.artifactName} ({artifactCountPerUnit}x)
                       </label>
-                      <span className={`text-[8px] font-mono px-1 rounded border ${getArtifactBadgeColor(selectedItem.artifactType)}`}>
+                      <span className={`text-[8px] font-mono px-1.5 py-0.2 rounded border ${getArtifactBadgeColor(selectedItem.artifactType)}`}>
                         {selectedItem.artifactType}
                       </span>
                     </div>
-                    <div className="relative mt-1">
-                      <input
+                    <div className="relative mt-1.5">
+                      <NumberInput
                         type="number"
                         min="0"
                         value={artifactPrice}
                         onChange={(e) => setArtifactPrice(Math.max(0, parseFloat(e.target.value) || 0))}
-                        className="w-full bg-albion-card border border-purple-500/50 rounded px-2 py-1 text-xs font-mono text-purple-200 focus:outline-none focus:border-albion-gold"
+                        className="w-full bg-[#070b12] border border-purple-500/50 focus:border-purple-400 rounded-lg px-2.5 py-1 text-xs font-mono font-bold text-purple-200 focus:outline-none shadow-inner"
                       />
-                      <span className="absolute right-1.5 top-1 text-[9px] text-slate-500 font-mono">silver</span>
+                      <span className="absolute right-2 top-1 text-[9px] text-purple-400/60 font-mono">silver</span>
                     </div>
                   </div>
                 </div>
               )}
 
               {/* Output Item Sale Price */}
-              <div className="bg-albion-bg/90 p-3 rounded-xl border border-albion-gold/60 flex items-start gap-2.5 shadow-gold-glow">
-                <div className="w-11 h-11 shrink-0 bg-albion-surface rounded-lg p-0.5 border border-albion-gold/40 flex items-center justify-center">
+              <div className="bg-gradient-to-br from-[#1c1407] to-[#0d121c] p-3.5 rounded-xl border border-amber-500/60 flex items-start gap-3 shadow-[0_0_15px_rgba(217,119,6,0.15)]">
+                <div className="w-12 h-12 shrink-0 bg-[#070b12] rounded-lg p-0.5 border border-amber-500/40 flex items-center justify-center shadow-md">
                   <ItemIcon 
                     src={itemIconSrc} 
                     alt="Output" 
@@ -1604,19 +1963,19 @@ export default function CraftingCalculator({
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-1">
-                    <label className="text-[11px] font-semibold text-slate-200 block truncate font-serif">
+                    <label className="text-[11px] font-bold text-slate-100 block truncate font-serif">
                       {workflowPhase === 'plan' ? 'Base Sale Price (Normal / Good)' : 'Realized Avg Sale Price'}
                     </label>
-                    <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded border font-bold ${
+                    <span className={`text-[9px] font-mono px-2 py-0.5 rounded border font-bold ${
                       workflowPhase === 'plan' 
                         ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-gold-glow'
                         : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50'
                     }`}>
-                      {workflowPhase === 'plan' ? '🛡️ Safe Base Price' : '🎲 Realized Avg'}
+                      {workflowPhase === 'plan' ? '🛡️ Safe Base' : '🎲 Realized'}
                     </span>
                   </div>
-                  <div className="relative mt-1">
-                    <input
+                  <div className="relative mt-1.5">
+                    <NumberInput
                       type="number"
                       min="0"
                       value={workflowPhase === 'plan' ? (itemSellPrice || 0) : activeSellPrice}
@@ -1625,13 +1984,13 @@ export default function CraftingCalculator({
                         setItemSellPrice(val);
                         setManualQualityPrices(prev => ({ ...prev, 1: val, 2: val }));
                       }}
-                      className="w-full bg-albion-card border border-albion-border rounded px-2 py-1 text-xs font-mono text-emerald-400 font-bold focus:outline-none focus:border-albion-gold"
+                      className="w-full bg-[#070b12] border border-amber-500/50 focus:border-amber-400 rounded-lg px-2.5 py-1 text-xs font-mono text-emerald-400 font-extrabold focus:outline-none shadow-inner"
                     />
-                    <span className="absolute right-1.5 top-1 text-[9px] text-slate-500 font-mono">silver</span>
+                    <span className="absolute right-2 top-1 text-[9px] text-slate-500 font-mono">silver</span>
                   </div>
                   <div className="mt-1 flex items-center justify-between text-[9px] font-mono text-slate-400">
                     <span>
-                      {workflowPhase === 'plan' ? 'Standard market baseline' : `Avg: ${activeSellPrice.toLocaleString()}s`}
+                      {workflowPhase === 'plan' ? 'Market baseline' : `Avg: ${activeSellPrice.toLocaleString()}s`}
                     </span>
                     {priceTimestamps.item && (
                       <span className={getFreshness(priceTimestamps.item).color.split(' ')[0]}>
@@ -1644,18 +2003,18 @@ export default function CraftingCalculator({
             </div>
 
             {selectedItem.isRoyal ? (
-              <div className="bg-amber-950/20 px-3 py-1.5 rounded-lg border border-amber-600/30 text-[10px] text-amber-300 flex items-center gap-1.5">
-                <Info className="w-3.5 h-3.5 shrink-0" />
-                <span>Notice: Royal gear is created via Royal Transmutation combining base equipment and Royal Sigils. They have <strong>0% Return Rate</strong> and do not consume focus.</span>
+              <div className="bg-amber-950/30 px-3.5 py-2 rounded-xl border border-amber-500/40 text-[10px] text-amber-200 flex items-center gap-2">
+                <Info className="w-4 h-4 shrink-0 text-amber-400" />
+                <span>Notice: Royal gear is forged via Royal Transmutation combining base equipment and Royal Sigils. They have <strong>0% Return Rate</strong> and do not consume focus.</span>
               </div>
             ) : selectedItem.isFactionCape ? (
-              <div className="bg-amber-950/20 px-3 py-1.5 rounded-lg border border-amber-600/30 text-[10px] text-amber-300 flex items-center gap-1.5">
-                <Info className="w-3.5 h-3.5 shrink-0" />
+              <div className="bg-amber-950/30 px-3.5 py-2 rounded-xl border border-amber-500/40 text-[10px] text-amber-200 flex items-center gap-2">
+                <Info className="w-4 h-4 shrink-0 text-amber-400" />
                 <span>Notice: Faction Capes are special transmutation recipes combining a base cape, faction crest, and faction hearts. They have <strong>0% Return Rate</strong> and do not consume focus.</span>
               </div>
             ) : selectedItem.isArtifact && (
-              <div className="bg-purple-950/20 px-3 py-1.5 rounded-lg border border-purple-600/30 text-[10px] text-purple-300 flex items-center gap-1.5">
-                <Info className="w-3.5 h-3.5 shrink-0" />
+              <div className="bg-purple-950/30 px-3.5 py-2 rounded-xl border border-purple-500/40 text-[10px] text-purple-200 flex items-center gap-2">
+                <Info className="w-4 h-4 shrink-0 text-purple-400" />
                 <span>Notice: In Albion Online, <strong>Artifacts are 100% consumed</strong>. Resource Return Rate (RRR) refunds base materials only.</span>
               </div>
             )}
@@ -1663,357 +2022,366 @@ export default function CraftingCalculator({
 
           {/* 4. Backpack Quality Roll Tracker & Roll Simulator (rendered ONLY in 'realized' phase!) */}
           {workflowPhase === 'realized' && (
-            <div id="tour-craft-realized-ledger" className="bg-albion-card border border-emerald-500/50 rounded-xl p-4 sm:p-5 shadow-xl space-y-4">
+            <div id="tour-craft-realized-ledger" className="forged-tablet p-5 sm:p-6 space-y-5 border-emerald-500/40 shadow-[0_0_20px_rgba(16,185,129,0.08)]">
               {/* Header with Crafter's Salad Buff Switch & Quality Power Badge */}
-              <div className="flex flex-wrap items-center justify-between border-b border-albion-border/60 pb-3 gap-2">
+              <div className="flex flex-wrap items-center justify-between border-b border-[#1e2a3c] pb-3.5 gap-2">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-widest bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 font-bold">
+                      Stage 04
+                    </span>
                     <Dices className="w-4 h-4 text-emerald-400" />
-                    <h3 className="text-xs uppercase tracking-wider text-slate-100 font-semibold font-serif">
-                      Backpack Quality Roll Tracker & Simulator
+                    <h3 className="text-xs uppercase tracking-wider text-slate-100 font-bold font-serif">
+                      Inventory Quality Roll Tracker & Dice Simulator
                     </h3>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-bold flex items-center gap-1">
+                    <span className="text-[10px] font-mono px-2.5 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/40 text-emerald-200 font-bold flex items-center gap-1 shadow-sm">
                       <Zap className="w-3 h-3 text-emerald-400" />
                       +{qualityMetrics.qualityPower} Quality Rating ({qualityMetrics.totalRolls} rolls/craft)
                     </span>
                   </div>
-                  <p className="text-[10px] text-slate-400 mt-0.5">
-                    Log the actual items that rolled into your inventory, or click Roll Simulator to test-drive discrete dice rolls.
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    Log the exact items that landed in your bag, or launch the Roll Simulator to roll discrete game dice for your batch.
                   </p>
                 </div>
 
-              {/* Crafter's Salad Buff Toggle & Roll Simulator */}
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handleSimulateRoll}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold bg-gradient-to-r from-amber-600/30 to-amber-500/20 hover:from-amber-600/50 hover:to-amber-500/40 border-amber-500/60 text-amber-200 shadow-gold-glow transition-all active:scale-95"
-                  title={`Simulate discrete game roll for ${quantity} craft${quantity > 1 ? 's' : ''} using your Destiny Board roll power`}
-                >
-                  <Dices className="w-3.5 h-3.5 text-amber-400" />
-                  <span>🎲 Roll Craft Simulator ({quantity}x)</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setHasCraftersSalad(!hasCraftersSalad)}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all active:scale-95 ${
-                    hasCraftersSalad
-                      ? 'bg-amber-950/40 border-amber-500/70 text-amber-200 shadow-gold-glow ring-1 ring-amber-400/40'
-                      : 'bg-albion-bg border-albion-border text-slate-400 hover:text-slate-200'
-                  }`}
-                  title="Toggle Crafter's Salad / Potato Salad buff (+150 Quality Bonus rating)"
-                >
-                  <Utensils className={`w-3.5 h-3.5 ${hasCraftersSalad ? 'text-amber-400' : 'text-slate-500'}`} />
-                  <span>Crafter's Salad:</span>
-                  <span className={`font-mono font-bold ${hasCraftersSalad ? 'text-emerald-400' : 'text-slate-500'}`}>
-                    {hasCraftersSalad ? '+150 ACTIVE' : 'OFF'}
-                  </span>
-                </button>
-              </div>
-            </div>
-
-            {/* Simulation Notification Banner */}
-            {simulationBanner && (
-              <div className={`p-3 rounded-xl border flex items-center justify-between gap-2 animate-stagger-fade ${
-                simulationBanner.tier === 5 
-                  ? 'bg-amber-950/70 border-amber-400/90 shadow-gold-glow text-amber-200' 
-                  : simulationBanner.tier === 4 
-                  ? 'bg-purple-950/60 border-purple-500/80 text-purple-200' 
-                  : simulationBanner.tier === 3 
-                  ? 'bg-sky-950/60 border-sky-500/80 text-sky-200' 
-                  : 'bg-albion-surface border-albion-border text-slate-200'
-              }`}>
-                <div className="flex items-center gap-2">
-                  <Dices className={`w-4 h-4 shrink-0 ${simulationBanner.tier === 5 ? 'text-amber-400 animate-bounce' : 'text-slate-300'}`} />
-                  <span className="text-xs font-serif font-bold">{simulationBanner.message}</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setSimulationBanner(null)}
-                  className="text-slate-400 hover:text-white text-xs px-2 py-0.5 rounded border border-white/10"
-                >
-                  Dismiss
-                </button>
-              </div>
-            )}
-
-            {/* Valuation Mode Selector */}
-            <div className="flex flex-wrap items-center justify-between gap-3 bg-albion-bg/60 p-2.5 rounded-xl border border-albion-border/80">
-              <div className="flex flex-wrap items-center gap-1.5 text-xs">
-                <span className="text-[11px] font-serif uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1 mr-1">
-                  <Scale className="w-3.5 h-3.5 text-albion-gold" />
-                  Valuation Mode:
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setValuationMode('ev')}
-                  className={`px-2.5 py-1 rounded-md text-xs font-semibold border transition-all active:scale-95 ${
-                    valuationMode === 'ev'
-                      ? 'bg-amber-500/20 text-amber-300 border-amber-500/60 shadow-gold-glow font-bold'
-                      : 'bg-albion-card border-albion-border/70 text-slate-400 hover:text-slate-200'
-                  }`}
-                  title="Probability-weighted return based on your exact Destiny Board specs and food"
-                >
-                  ✨ Statistical EV <span className="text-[9px] opacity-80 font-normal">[Forecast]</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setValuationMode('actual')}
-                  className={`px-2.5 py-1 rounded-md text-xs font-semibold border transition-all active:scale-95 ${
-                    valuationMode === 'actual'
-                      ? 'bg-emerald-500/25 text-emerald-300 border-emerald-500/70 shadow-emerald-glow font-bold'
-                      : 'bg-albion-card border-albion-border/70 text-slate-400 hover:text-slate-200'
-                  }`}
-                  title="Enter exact items rolled (e.g. 1 Masterpiece jackpot, or actual craft results)"
-                >
-                  🎲 Actual Realized Craft ({actualTotals.totalItems}x)
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setValuationMode('floor')}
-                  className={`px-2.5 py-1 rounded-md text-xs font-semibold border transition-all active:scale-95 ${
-                    valuationMode === 'floor'
-                      ? 'bg-sky-500/20 text-sky-300 border-sky-500/60 font-bold'
-                      : 'bg-albion-card border-albion-border/70 text-slate-400 hover:text-slate-200'
-                  }`}
-                  title="Assume 100% of your crafts roll worst-case Normal (Q1)"
-                >
-                  🛡️ Floor (Normal Q1)
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setValuationMode('inspect')}
-                  className={`px-2.5 py-1 rounded-md text-xs font-semibold border transition-all active:scale-95 ${
-                    valuationMode === 'inspect'
-                      ? 'bg-purple-500/20 text-purple-300 border-purple-500/60 font-bold'
-                      : 'bg-albion-card border-albion-border/70 text-slate-400 hover:text-slate-200'
-                  }`}
-                  title="Inspect economics of a single specific quality tier"
-                >
-                  🎯 Inspect ({selectedQualityMeta.name})
-                </button>
-              </div>
-
-              {Object.keys(manualQualityPrices).length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setManualQualityPrices({})}
-                  className="text-[10px] text-amber-400 hover:text-amber-300 underline font-mono flex items-center gap-1"
-                >
-                  <RotateCcw className="w-3 h-3" /> Reset Overrides
-                </button>
-              )}
-            </div>
-
-            {/* 5-Tier Odds & Valuation Ladder */}
-            <div className="space-y-2">
-              <div className="grid grid-cols-12 gap-2 text-[10px] uppercase font-semibold text-slate-400 px-3 py-1 font-mono">
-                <div className="col-span-3">Quality Tier</div>
-                <div className="col-span-2">Roll Probability</div>
-                <div className="col-span-3 text-right">Market Price</div>
-                <div className="col-span-2 text-right">Unit Net Profit</div>
-                <div className="col-span-2 text-right">
-                  {valuationMode === 'actual' ? 'Actual Rolled' : 'EV Silver'}
-                </div>
-              </div>
-
-              {qualityLadderData.map((q) => {
-                const isInspected = inspectQuality === q.id && valuationMode === 'inspect';
-                const isProfitableTier = q.unitNetProfit >= 0;
-
-                return (
-                  <div
-                    key={q.id}
-                    onClick={() => {
-                      setInspectQuality(q.id);
-                      if (valuationMode !== 'inspect' && valuationMode !== 'actual') setValuationMode('inspect');
-                    }}
-                    className={`grid grid-cols-12 gap-2 items-center p-2.5 rounded-xl border transition-all cursor-pointer active:scale-[0.99] ${
-                      isInspected
-                        ? `${q.color} ring-1 ring-white/50 shadow-lg scale-[1.01]`
-                        : 'border-albion-border/80 bg-albion-surface/40 hover:bg-albion-surface/80 hover:border-slate-600'
-                    }`}
-                  >
-                    {/* Quality Badge & Name */}
-                    <div className="col-span-3 flex items-center gap-2 min-w-0">
-                      <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${q.badge.includes('amber') ? 'bg-amber-400 shadow-gold-glow' : q.badge.includes('purple') ? 'bg-purple-400' : q.badge.includes('sky') ? 'bg-sky-400' : q.badge.includes('emerald') ? 'bg-emerald-400' : 'bg-slate-400'}`} />
-                      <div className="truncate">
-                        <span className="text-xs font-serif font-bold text-slate-100 block truncate">
-                          {q.name}
-                        </span>
-                        <span className="text-[9px] font-mono text-slate-400">
-                          Q{q.id} &bull; est. ~{q.expectedUnits}x
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Roll Probability Bar */}
-                    <div className="col-span-2">
-                      <div className="flex items-baseline justify-between font-mono text-[10px] mb-0.5">
-                        <span className="font-bold text-slate-200">{q.oddsPct}%</span>
-                      </div>
-                      <div className="w-full h-1.5 bg-albion-bg rounded-full overflow-hidden border border-albion-border/50">
-                        <div
-                          className={`h-full rounded-full transition-all duration-300 ${
-                            q.id === 5 ? 'bg-amber-400' : q.id === 4 ? 'bg-purple-400' : q.id === 3 ? 'bg-sky-400' : q.id === 2 ? 'bg-emerald-400' : 'bg-slate-500'
-                          }`}
-                          style={{ width: `${Math.max(2, Math.min(100, q.odds * 100))}%` }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Market Price & Input */}
-                    <div className="col-span-3 text-right">
-                      <div className="relative inline-block w-full max-w-[120px]">
-                        <input
-                          type="number"
-                          min="0"
-                          value={manualQualityPrices[q.id] !== undefined ? manualQualityPrices[q.id] : q.price}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            setManualQualityPrices(prev => ({ ...prev, [q.id]: val }));
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                          className="w-full bg-albion-card/90 border border-albion-border/80 focus:border-albion-gold rounded px-1.5 py-0.5 text-right font-mono text-xs font-bold text-amber-300 focus:outline-none"
-                        />
-                      </div>
-                      <div className="text-[8px] font-mono mt-0.5 truncate text-slate-400">
-                        {q.isFallback ? (
-                          <span className="text-amber-400/80">Cascaded fallback</span>
-                        ) : q.isManual ? (
-                          <span className="text-sky-300">Manual override</span>
-                        ) : q.updatedAt ? (
-                          <span className={getFreshness(q.updatedAt).color.split(' ')[0]}>{getFreshness(q.updatedAt).label}</span>
-                        ) : (
-                          <span>Market sync</span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Unit Profit / Loss */}
-                    <div className="col-span-2 text-right">
-                      <span className={`inline-block font-mono text-xs font-bold px-1.5 py-0.5 rounded border ${
-                        isProfitableTier
-                          ? 'bg-emerald-950/60 text-emerald-300 border-emerald-600/50'
-                          : 'bg-rose-950/60 text-rose-300 border-rose-600/50'
-                      }`}>
-                        {q.unitNetProfit >= 0 ? '+' : ''}{q.unitNetProfit.toLocaleString()}s
-                      </span>
-                      <span className="block text-[8px] font-mono text-slate-400 mt-0.5">
-                        per item
-                      </span>
-                    </div>
-
-                    {/* EV Silver Contribution OR Actual Rolled Counter */}
-                    {valuationMode === 'actual' ? (
-                      <div className="col-span-2 text-right" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-end gap-1 font-mono">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setActualQualityCounts(prev => ({ ...prev, [q.id]: Math.max(0, (prev[q.id] || 0) - 1) }));
-                            }}
-                            className="w-5 h-5 rounded bg-albion-card border border-albion-border text-slate-300 hover:border-albion-gold flex items-center justify-center text-xs active:scale-95"
-                          >
-                            -
-                          </button>
-                          <input
-                            type="number"
-                            min="0"
-                            value={actualQualityCounts[q.id] || 0}
-                            onChange={(e) => {
-                              const val = Math.max(0, parseInt(e.target.value) || 0);
-                              setActualQualityCounts(prev => ({ ...prev, [q.id]: val }));
-                            }}
-                            className="w-10 text-center bg-albion-card border border-albion-border/90 rounded py-0.5 text-xs font-bold text-amber-300 focus:outline-none focus:border-albion-gold"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setActualQualityCounts(prev => ({ ...prev, [q.id]: (prev[q.id] || 0) + 1 }));
-                            }}
-                            className="w-5 h-5 rounded bg-albion-card border border-albion-border text-slate-300 hover:border-albion-gold flex items-center justify-center text-xs active:scale-95"
-                          >
-                            +
-                          </button>
-                        </div>
-                        <span className="block text-[8px] text-slate-400 font-mono mt-0.5">
-                          {actualQualityCounts[q.id] ? `${((actualQualityCounts[q.id] || 0) * q.price).toLocaleString()}s` : '0 rolled'}
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="col-span-2 text-right font-mono">
-                        <span className="text-xs font-bold text-slate-200">
-                          +{q.evContribution.toLocaleString()}s
-                        </span>
-                        <span className="block text-[8px] text-slate-400">
-                          EV share
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* In Actual Mode: Sync bar */}
-            {valuationMode === 'actual' && (
-              <div className="flex flex-wrap items-center justify-between gap-2 p-2 rounded-lg bg-emerald-950/30 border border-emerald-500/40 text-xs font-mono">
-                <span className="text-slate-300">
-                  Actual Rolled: <strong className="text-emerald-400">{actualTotals.totalItems} items</strong> (Revenue: {actualTotals.totalGrossRev.toLocaleString()} silver)
-                </span>
-                {actualTotals.totalItems !== quantity && actualTotals.totalItems > 0 && (
+                {/* Crafter's Salad Buff Toggle & Roll Simulator */}
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => setQuantity(actualTotals.totalItems)}
-                    className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 font-bold transition-all"
+                    onClick={handleSimulateRoll}
+                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border text-xs font-bold bg-gradient-to-r from-amber-600/40 to-amber-500/30 hover:from-amber-600/60 hover:to-amber-500/50 border-amber-500/60 text-amber-200 shadow-gold-glow transition-all active:scale-95 cursor-pointer"
+                    title={`Simulate discrete game roll for ${effectiveBatchQuantity} craft${effectiveBatchQuantity > 1 ? 's' : ''} using your Destiny Board roll power`}
                   >
-                    Set Batch Size to {actualTotals.totalItems}x
+                    <Dices className="w-3.5 h-3.5 text-amber-400" />
+                    <span>🎲 Roll Craft Simulator ({effectiveBatchQuantity}x)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setHasCraftersSalad(!hasCraftersSalad)}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all active:scale-95 cursor-pointer ${
+                      hasCraftersSalad
+                        ? 'bg-amber-950/50 border-amber-500/70 text-amber-200 shadow-gold-glow ring-1 ring-amber-400/40'
+                        : 'bg-[#070b12] border-[#1e2a3c] text-slate-400 hover:text-slate-200'
+                    }`}
+                    title="Toggle Crafter's Salad / Potato Salad buff (+150 Quality Bonus rating)"
+                  >
+                    <Utensils className={`w-3.5 h-3.5 ${hasCraftersSalad ? 'text-amber-400' : 'text-slate-500'}`} />
+                    <span>Crafter's Salad:</span>
+                    <span className={`font-mono font-bold ${hasCraftersSalad ? 'text-emerald-400' : 'text-slate-500'}`}>
+                      {hasCraftersSalad ? '+150 ACTIVE' : 'OFF'}
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Simulation Notification Banner */}
+              {simulationBanner && (
+                <div className={`p-3.5 rounded-xl border flex items-center justify-between gap-2 animate-stagger-fade ${
+                  simulationBanner.tier === 5 
+                    ? 'bg-amber-950/70 border-amber-400/90 shadow-gold-glow text-amber-200' 
+                    : simulationBanner.tier === 4 
+                    ? 'bg-purple-950/60 border-purple-500/80 text-purple-200' 
+                    : simulationBanner.tier === 3 
+                    ? 'bg-sky-950/60 border-sky-500/80 text-sky-200' 
+                    : 'bg-[#0c121e] border-[#1e2a3c] text-slate-200'
+                }`}>
+                  <div className="flex items-center gap-2">
+                    <Dices className={`w-4 h-4 shrink-0 ${simulationBanner.tier === 5 ? 'text-amber-400 animate-bounce' : 'text-slate-300'}`} />
+                    <span className="text-xs font-serif font-bold">{simulationBanner.message}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSimulationBanner(null)}
+                    className="text-slate-400 hover:text-white text-xs px-2.5 py-0.5 rounded border border-white/10 cursor-pointer"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              )}
+
+              {/* Valuation Mode Selector */}
+              <div className="flex flex-wrap items-center justify-between gap-3 bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c]">
+                <div className="flex flex-wrap items-center gap-2 text-xs">
+                  <span className="text-[11px] font-serif uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5 mr-1">
+                    <Scale className="w-3.5 h-3.5 text-albion-gold" />
+                    Valuation Mode:
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setValuationMode('ev')}
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold border transition-all active:scale-95 cursor-pointer ${
+                      valuationMode === 'ev'
+                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/60 shadow-gold-glow font-bold'
+                        : 'bg-[#0c121e] border-[#1e2a3c] text-slate-400 hover:text-slate-200'
+                    }`}
+                    title="Probability-weighted return based on your exact Destiny Board specs and food"
+                  >
+                    ✨ Statistical EV <span className="text-[9px] opacity-80 font-normal">[Forecast]</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setValuationMode('actual')}
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold border transition-all active:scale-95 cursor-pointer ${
+                      valuationMode === 'actual'
+                        ? 'bg-emerald-500/25 text-emerald-300 border-emerald-500/70 shadow-emerald-glow font-bold'
+                        : 'bg-[#0c121e] border-[#1e2a3c] text-slate-400 hover:text-slate-200'
+                    }`}
+                    title="Enter exact items rolled (e.g. 1 Masterpiece jackpot, or actual craft results)"
+                  >
+                    🎲 Actual Realized Craft ({actualTotals.totalItems}x)
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setValuationMode('floor')}
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold border transition-all active:scale-95 cursor-pointer ${
+                      valuationMode === 'floor'
+                        ? 'bg-sky-500/20 text-sky-300 border-sky-500/60 font-bold shadow-[0_0_8px_rgba(56,189,248,0.2)]'
+                        : 'bg-[#0c121e] border-[#1e2a3c] text-slate-400 hover:text-slate-200'
+                    }`}
+                    title="Assume 100% of your crafts roll worst-case Normal (Q1)"
+                  >
+                    🛡️ Floor (Normal Q1)
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setValuationMode('inspect')}
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold border transition-all active:scale-95 cursor-pointer ${
+                      valuationMode === 'inspect'
+                        ? 'bg-purple-500/20 text-purple-300 border-purple-500/60 font-bold shadow-[0_0_8px_rgba(168,85,247,0.2)]'
+                        : 'bg-[#0c121e] border-[#1e2a3c] text-slate-400 hover:text-slate-200'
+                    }`}
+                    title="Inspect economics of a single specific quality tier"
+                  >
+                    🎯 Inspect ({selectedQualityMeta.name})
+                  </button>
+                </div>
+
+                {Object.keys(manualQualityPrices).length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setManualQualityPrices({})}
+                    className="text-[10px] text-amber-400 hover:text-amber-300 underline font-mono flex items-center gap-1 cursor-pointer"
+                  >
+                    <RotateCcw className="w-3 h-3" /> Reset Overrides
                   </button>
                 )}
               </div>
-            )}
 
-            {/* Realism Footer Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-albion-border/60 text-xs font-mono">
-              <div className="bg-albion-bg/60 p-2 rounded-lg border border-albion-border/60">
-                <span className="text-[9px] uppercase text-slate-500 block font-sans">Active Effective Price</span>
-                <span className="text-sm font-bold text-albion-gold">{activeSellPrice.toLocaleString()}s</span>
+              {/* 5-Tier Odds & Valuation Ladder */}
+              <div className="space-y-2">
+                <div className="grid grid-cols-12 gap-2 text-[10px] uppercase font-semibold text-slate-400 px-3 py-1 font-mono">
+                  <div className="col-span-3">Quality Tier</div>
+                  <div className="col-span-2">Roll Probability</div>
+                  <div className="col-span-3 text-right">Market Price</div>
+                  <div className="col-span-2 text-right">Unit Net Profit</div>
+                  <div className="col-span-2 text-right">
+                    {valuationMode === 'actual' ? 'Actual Rolled' : 'EV Silver'}
+                  </div>
+                </div>
+
+                {qualityLadderData.map((q) => {
+                  const isInspected = inspectQuality === q.id && valuationMode === 'inspect';
+                  const isProfitableTier = q.unitNetProfit >= 0;
+
+                  return (
+                    <div
+                      key={q.id}
+                      onClick={() => {
+                        setInspectQuality(q.id);
+                        if (valuationMode !== 'inspect' && valuationMode !== 'actual') setValuationMode('inspect');
+                      }}
+                      className={`grid grid-cols-12 gap-2 items-center p-3 rounded-xl border transition-all cursor-pointer active:scale-[0.99] ${
+                        isInspected
+                          ? `${q.color} ring-1 ring-white/50 shadow-lg scale-[1.01]`
+                          : 'border-[#1e2a3c] bg-[#070b12] hover:bg-[#0c121e] hover:border-slate-600'
+                      }`}
+                    >
+                      {/* Quality Badge & Name */}
+                      <div className="col-span-3 flex items-center gap-2.5 min-w-0">
+                        <span className={`w-3 h-3 rounded-full shrink-0 ${q.badge.includes('amber') ? 'bg-amber-400 shadow-gold-glow' : q.badge.includes('purple') ? 'bg-purple-400' : q.badge.includes('sky') ? 'bg-sky-400' : q.badge.includes('emerald') ? 'bg-emerald-400' : 'bg-slate-400'}`} />
+                        <div className="truncate">
+                          <span className="text-xs font-serif font-bold text-slate-100 block truncate">
+                            {q.name}
+                          </span>
+                          <span className="text-[9px] font-mono text-slate-400">
+                            Q{q.id} &bull; est. ~{q.expectedUnits}x
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Roll Probability Bar */}
+                      <div className="col-span-2">
+                        <div className="flex items-baseline justify-between font-mono text-[10px] mb-1">
+                          <span className="font-bold text-slate-200">{q.oddsPct}%</span>
+                        </div>
+                        <div className="w-full h-2 bg-[#05080e] rounded-full overflow-hidden border border-[#1e2a3c]">
+                          <div
+                            className={`h-full rounded-full transition-all duration-300 ${
+                              q.id === 5 ? 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.5)]' : q.id === 4 ? 'bg-purple-400 shadow-[0_0_8px_rgba(192,132,252,0.5)]' : q.id === 3 ? 'bg-sky-400' : q.id === 2 ? 'bg-emerald-400' : 'bg-slate-500'
+                            }`}
+                            style={{ width: `${Math.max(2, Math.min(100, q.odds * 100))}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Market Price & Input */}
+                      <div className="col-span-3 text-right">
+                        <div className="relative inline-block w-full max-w-[130px]">
+                          <NumberInput
+                            type="number"
+                            min="0"
+                            value={manualQualityPrices[q.id] !== undefined ? manualQualityPrices[q.id] : q.price}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setManualQualityPrices(prev => ({ ...prev, [q.id]: val }));
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full bg-[#0c121e] border border-[#1e2a3c] focus:border-amber-400 rounded-lg px-2 py-1 text-right font-mono text-xs font-extrabold text-amber-300 focus:outline-none shadow-inner"
+                          />
+                        </div>
+                        <div className="text-[8px] font-mono mt-0.5 truncate text-slate-400">
+                          {q.isFallback ? (
+                            <span className="text-amber-400/80">Cascaded fallback</span>
+                          ) : q.isManual ? (
+                            <span className="text-sky-300">Manual override</span>
+                          ) : q.updatedAt ? (
+                            <span className={getFreshness(q.updatedAt).color.split(' ')[0]}>{getFreshness(q.updatedAt).label}</span>
+                          ) : (
+                            <span>Market sync</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Unit Profit / Loss */}
+                      <div className="col-span-2 text-right">
+                        <span className={`inline-block font-mono text-xs font-bold px-2 py-0.5 rounded-md border ${
+                          isProfitableTier
+                            ? 'bg-emerald-950/60 text-emerald-300 border-emerald-600/50'
+                            : 'bg-rose-950/60 text-rose-300 border-rose-600/50'
+                        }`}>
+                          {q.unitNetProfit >= 0 ? '+' : ''}{q.unitNetProfit.toLocaleString()}s
+                        </span>
+                        <span className="block text-[8px] font-mono text-slate-400 mt-0.5">
+                          per item
+                        </span>
+                      </div>
+
+                      {/* EV Silver Contribution OR Actual Rolled Counter */}
+                      {valuationMode === 'actual' ? (
+                        <div className="col-span-2 text-right" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex items-center justify-end gap-1 font-mono">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setActualQualityCounts(prev => ({ ...prev, [q.id]: Math.max(0, (prev[q.id] || 0) - 1) }));
+                              }}
+                              className="w-6 h-6 rounded-md bg-[#0c121e] border border-[#1e2a3c] text-slate-300 hover:border-amber-400 hover:text-amber-200 flex items-center justify-center text-xs active:scale-95 cursor-pointer"
+                            >
+                              -
+                            </button>
+                            <NumberInput
+                              type="number"
+                              min="0"
+                              value={actualQualityCounts[q.id] || 0}
+                              onChange={(e) => {
+                                const val = Math.max(0, parseInt(e.target.value) || 0);
+                                setActualQualityCounts(prev => ({ ...prev, [q.id]: val }));
+                              }}
+                              className="w-12 text-center bg-[#0c121e] border border-[#1e2a3c] rounded-md py-1 text-xs font-extrabold text-amber-300 focus:outline-none focus:border-amber-400 shadow-inner"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setActualQualityCounts(prev => ({ ...prev, [q.id]: (prev[q.id] || 0) + 1 }));
+                              }}
+                              className="w-6 h-6 rounded-md bg-[#0c121e] border border-[#1e2a3c] text-slate-300 hover:border-amber-400 hover:text-amber-200 flex items-center justify-center text-xs active:scale-95 cursor-pointer"
+                            >
+                              +
+                            </button>
+                          </div>
+                          <span className="block text-[8px] text-slate-400 font-mono mt-0.5">
+                            {actualQualityCounts[q.id] ? `${((actualQualityCounts[q.id] || 0) * q.price).toLocaleString()}s` : '0 rolled'}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="col-span-2 text-right font-mono">
+                          <span className="text-xs font-bold text-slate-200">
+                            +{q.evContribution.toLocaleString()}s
+                          </span>
+                          <span className="block text-[8px] text-slate-400">
+                            EV share
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
 
-              <div className="bg-albion-bg/60 p-2 rounded-lg border border-albion-border/60">
-                <span className="text-[9px] uppercase text-slate-500 block font-sans">Floor Value (Worst-Case Q1)</span>
-                <span className="text-sm font-bold text-slate-300">{(resolvedQualityPrices[1]?.price || 0).toLocaleString()}s</span>
-              </div>
+              {/* In Actual Mode: Sync bar */}
+              {valuationMode === 'actual' && (
+                <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-emerald-950/30 border border-emerald-500/40 text-xs font-mono shadow-sm">
+                  <span className="text-slate-300">
+                    Actual Rolled: <strong className="text-emerald-400">{actualTotals.totalItems} items</strong> (Revenue: {actualTotals.totalGrossRev.toLocaleString()} silver)
+                  </span>
+                  {actualTotals.totalItems !== effectiveBatchQuantity && actualTotals.totalItems > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCraftingInputMode('target');
+                        setQuantity(actualTotals.totalItems);
+                      }}
+                      className="text-[10px] px-3 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 font-bold transition-all cursor-pointer"
+                    >
+                      Set Batch Size to {actualTotals.totalItems}x
+                    </button>
+                  )}
+                </div>
+              )}
 
-              <div className="bg-albion-bg/60 p-2 rounded-lg border border-albion-border/60">
-                <span className="text-[9px] uppercase text-slate-500 block font-sans">Crafter Salad Uplift</span>
-                <span className="text-sm font-bold text-amber-400">+{batchSaladUplift.toLocaleString()}s / batch</span>
-              </div>
+              {/* Realism Footer Stats */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-3 border-t border-[#1e2a3c] text-xs font-mono">
+                <div className="bg-[#070b12] p-2.5 rounded-xl border border-[#1e2a3c]">
+                  <span className="text-[9px] uppercase text-slate-500 block font-sans font-semibold">Active Effective Price</span>
+                  <span className="text-sm font-bold text-albion-gold">{activeSellPrice.toLocaleString()}s</span>
+                </div>
 
-              <div className="bg-albion-bg/60 p-2 rounded-lg border border-albion-border/60">
-                <span className="text-[9px] uppercase text-slate-500 block font-sans">Break-Even Unit Price</span>
-                <span className="text-sm font-bold text-sky-300">{breakEvenUnitPrice.toLocaleString()}s</span>
+                <div className="bg-[#070b12] p-2.5 rounded-xl border border-[#1e2a3c]">
+                  <span className="text-[9px] uppercase text-slate-500 block font-sans font-semibold">Floor Value (Q1)</span>
+                  <span className="text-sm font-bold text-slate-300">{(resolvedQualityPrices[1]?.price || 0).toLocaleString()}s</span>
+                </div>
+
+                <div className="bg-[#070b12] p-2.5 rounded-xl border border-[#1e2a3c]">
+                  <span className="text-[9px] uppercase text-slate-500 block font-sans font-semibold">Crafter Salad Uplift</span>
+                  <span className="text-sm font-bold text-amber-400">+{batchSaladUplift.toLocaleString()}s / batch</span>
+                </div>
+
+                <div className="bg-[#070b12] p-2.5 rounded-xl border border-[#1e2a3c]">
+                  <span className="text-[9px] uppercase text-slate-500 block font-sans font-semibold">Break-Even Unit Price</span>
+                  <span className="text-sm font-bold text-sky-300">{breakEvenUnitPrice.toLocaleString()}s</span>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
           {/* 3. Crafting Journals System with Explicit ON / OFF Toggle */}
-          <div id="tour-craft-salad-journals" className="bg-albion-card border border-albion-border rounded-xl p-4 sm:p-5 shadow-xl space-y-3">
-            <div className="flex items-center justify-between border-b border-albion-border/60 pb-2.5">
+          <div id="tour-craft-salad-journals" className="forged-tablet p-5 sm:p-6 space-y-4">
+            <div className="flex flex-wrap items-center justify-between border-b border-[#1e2a3c] pb-3 gap-2">
               <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-widest bg-amber-500/10 text-amber-300 border border-amber-500/30 font-bold">
+                  Stage 05
+                </span>
                 <BookOpen className="w-4 h-4 text-amber-400" />
                 <div>
-                  <h3 className="text-xs uppercase tracking-wider text-slate-200 font-semibold font-serif">
-                    Crafting Journals (Fame Profit)
+                  <h3 className="text-xs uppercase tracking-wider text-slate-100 font-bold font-serif">
+                    Crafting Journals & Fame Resale
                   </h3>
                   <p className="text-[10px] text-slate-400">
-                    Optionally fill laborer journals while crafting for additional silver
+                    Optionally fill laborer journals while crafting for substantial secondary silver profit.
                   </p>
                 </div>
               </div>
@@ -2022,10 +2390,10 @@ export default function CraftingCalculator({
               <button
                 type="button"
                 onClick={() => setIncludeJournals(!includeJournals)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border font-mono text-xs font-bold transition-all ${
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border font-mono text-xs font-bold transition-all cursor-pointer ${
                   includeJournals
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-gold-glow'
-                    : 'bg-albion-bg border-albion-border text-slate-500 hover:text-slate-300'
+                    ? 'bg-amber-500/20 text-amber-200 border-amber-500/50 shadow-gold-glow'
+                    : 'bg-[#070b12] border-[#1e2a3c] text-slate-500 hover:text-slate-300'
                 }`}
               >
                 <span className={`w-2 h-2 rounded-full ${includeJournals ? 'bg-amber-400 animate-pulse' : 'bg-slate-600'}`} />
@@ -2035,15 +2403,15 @@ export default function CraftingCalculator({
 
             {/* When Journals are Disabled */}
             {!includeJournals && (
-              <div className="bg-albion-bg/40 p-3 rounded-lg border border-albion-border/60 text-xs text-slate-400 flex items-center justify-between">
+              <div className="bg-[#070b12] p-3.5 rounded-xl border border-[#1e2a3c] text-xs text-slate-400 flex items-center justify-between">
                 <span className="flex items-center gap-2">
-                  <Info className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                  Journals are turned <strong>OFF</strong>. Calculating raw item crafting profit only (zero journal overhead).
+                  <Info className="w-4 h-4 text-slate-500 shrink-0" />
+                  Journals are currently <strong>OFF</strong>. Calculating pure item crafting profit with zero journal overhead.
                 </span>
                 <button 
                   type="button"
                   onClick={() => setIncludeJournals(true)}
-                  className="text-[11px] text-amber-400 hover:text-amber-300 font-semibold underline shrink-0 ml-2"
+                  className="text-[11px] text-amber-400 hover:text-amber-300 font-semibold underline shrink-0 ml-2 cursor-pointer"
                 >
                   Enable Journals
                 </button>
@@ -2052,12 +2420,12 @@ export default function CraftingCalculator({
 
             {/* When Journals are Enabled but Tier is T2 or T3 */}
             {includeJournals && !canUseJournals && (
-              <div className="bg-amber-950/30 p-3 rounded-lg border border-amber-600/40 text-xs text-amber-300/90 flex items-start gap-2.5">
+              <div className="bg-amber-950/30 p-3.5 rounded-xl border border-amber-500/40 text-xs text-amber-200 flex items-start gap-2.5">
                 <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400 mt-0.5" />
                 <div>
-                  <strong className="block text-amber-300">Notice: Crafting Journals start at Tier 4</strong>
-                  <span className="text-[11px] text-amber-200/80">
-                    Albion Online does not have T{selectedTier} laborer journals. Crafting Tier {selectedTier} items generates zero journal fame profit.
+                  <strong className="block text-amber-300 font-serif">Notice: Crafting Journals start at Tier 4</strong>
+                  <span className="text-[11px] text-slate-300 mt-0.5 block">
+                    Albion Online does not have T{selectedTier} laborer journals. Crafting Tier {selectedTier} items generates zero journal fame resale.
                   </span>
                 </div>
               </div>
@@ -2066,8 +2434,8 @@ export default function CraftingCalculator({
             {/* When Journals are Enabled and Tier >= 4 */}
             {includeJournals && canUseJournals && (
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-center pt-1">
-                <div className="flex items-center gap-2.5 bg-albion-bg/60 p-2.5 rounded-lg border border-albion-border">
-                  <div className="w-10 h-10 shrink-0 bg-albion-surface rounded p-0.5 border border-albion-border flex items-center justify-center">
+                <div className="flex items-center gap-3 bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c]">
+                  <div className="w-11 h-11 shrink-0 bg-[#0c121e] rounded-lg p-0.5 border border-[#1e2a3c] flex items-center justify-center shadow-md">
                     <ItemIcon 
                       src={journalIconSrc} 
                       alt="Journal" 
@@ -2075,52 +2443,63 @@ export default function CraftingCalculator({
                     />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-xs font-bold text-slate-200 block truncate">
+                    <span className="text-xs font-bold text-slate-100 block truncate">
                       {selectedItem.journalName} (T{selectedTier})
                     </span>
-                    <span className="text-[10px] text-emerald-400 font-mono">
+                    <span className="text-[10px] text-emerald-400 font-mono font-bold">
                       Fills ~{calculation.journals.journalsFilled} journals
                     </span>
                   </div>
                 </div>
 
-                <div>
-                  <label className="text-[10px] text-slate-400 font-mono block mb-1">
+                <div className="bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c]">
+                  <label className="text-[10px] text-slate-400 font-mono block mb-1 uppercase tracking-wider font-semibold">
                     Empty Journal Buy Price
                   </label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={emptyJournalPrice}
-                    onChange={(e) => setEmptyJournalPrice(Math.max(0, parseFloat(e.target.value) || 0))}
-                    className="w-full bg-albion-bg border border-albion-border rounded px-2 py-1 text-xs font-mono text-slate-100 focus:outline-none focus:border-albion-gold"
-                  />
+                  <div className="relative">
+                    <NumberInput
+                      type="number"
+                      min="0"
+                      value={emptyJournalPrice}
+                      onChange={(e) => setEmptyJournalPrice(Math.max(0, parseFloat(e.target.value) || 0))}
+                      className="w-full bg-[#0c121e] border border-[#1e2a3c] focus:border-amber-400 rounded-lg px-2.5 py-1 text-xs font-mono font-bold text-slate-100 focus:outline-none shadow-inner"
+                    />
+                    <span className="absolute right-2 top-1 text-[9px] text-slate-500 font-mono">silver</span>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="text-[10px] text-slate-400 font-mono block mb-1">
+                <div className="bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c]">
+                  <label className="text-[10px] text-slate-400 font-mono block mb-1 uppercase tracking-wider font-semibold">
                     Full Journal Sell Price
                   </label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={fullJournalPrice}
-                    onChange={(e) => setFullJournalPrice(Math.max(0, parseFloat(e.target.value) || 0))}
-                    className="w-full bg-albion-bg border border-albion-border rounded px-2 py-1 text-xs font-mono text-emerald-400 font-bold focus:outline-none focus:border-albion-gold"
-                  />
+                  <div className="relative">
+                    <NumberInput
+                      type="number"
+                      min="0"
+                      value={fullJournalPrice}
+                      onChange={(e) => setFullJournalPrice(Math.max(0, parseFloat(e.target.value) || 0))}
+                      className="w-full bg-[#0c121e] border border-emerald-500/50 focus:border-emerald-400 rounded-lg px-2.5 py-1 text-xs font-mono font-extrabold text-emerald-400 focus:outline-none shadow-inner"
+                    />
+                    <span className="absolute right-2 top-1 text-[9px] text-emerald-500 font-mono">silver</span>
+                  </div>
                 </div>
               </div>
             )}
           </div>
 
           {/* 4. City, Station Fee & Quantity */}
-          <div className="bg-albion-card border border-albion-border rounded-xl p-4 sm:p-5 shadow-xl space-y-4">
+          <div className="forged-tablet p-5 sm:p-6 space-y-5">
             <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5 font-serif">
-                  <MapPin className="w-3.5 h-3.5 text-albion-gold" />
-                  Crafting City Location
-                </label>
+              <div className="flex justify-between items-center mb-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-widest bg-amber-500/10 text-amber-300 border border-amber-500/30 font-bold">
+                    Stage 06
+                  </span>
+                  <label className="text-xs uppercase tracking-wider text-slate-200 font-bold flex items-center gap-1.5 font-serif">
+                    <MapPin className="w-4 h-4 text-albion-gold" />
+                    City Jurisdiction & Station Taxes
+                  </label>
+                </div>
                 <span className="text-[11px] font-mono">
                   {selectedItem.isNoReturn || selectedItem.isRoyal ? (
                     <span className="text-slate-400 font-semibold">
@@ -2128,14 +2507,14 @@ export default function CraftingCalculator({
                     </span>
                   ) : selectedItem.bonusCity ? (
                     selectedCity.toLowerCase() === selectedItem.bonusCity.toLowerCase() ? (
-                      <span className="text-emerald-400 flex items-center gap-1 font-semibold">
-                        <CheckCircle2 className="w-3 h-3" />
+                      <span className="text-emerald-400 flex items-center gap-1 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30 shadow-[0_0_8px_rgba(16,185,129,0.2)]">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
                         Matching City Specialty (+15% Production Bonus)
                       </span>
                     ) : (
-                      <span className="text-amber-400 flex items-center gap-1">
-                        <AlertTriangle className="w-3 h-3" />
-                        Standard City (18% Royal Base)
+                      <span className="text-amber-400 flex items-center gap-1 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+                        <AlertTriangle className="w-3.5 h-3.5" />
+                        Standard Royal Base (18% RRR)
                       </span>
                     )
                   ) : (
@@ -2155,14 +2534,14 @@ export default function CraftingCalculator({
                       key={c.name}
                       type="button"
                       onClick={() => setSelectedCity(c.name)}
-                      className={`p-2 rounded-lg border text-center transition-all ${
+                      className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
                         isSelected
-                          ? 'bg-albion-surface border-albion-gold text-slate-100 shadow-gold-glow'
-                          : 'bg-albion-bg border-albion-border text-slate-400 hover:text-slate-200'
+                          ? 'bg-[#0c121e] border-amber-500/80 text-amber-200 shadow-gold-glow'
+                          : 'bg-[#070b12] border-[#1e2a3c] text-slate-400 hover:text-slate-200 hover:border-slate-600'
                       }`}
                     >
-                      <div className="text-xs font-bold">{c.name}</div>
-                      {isSpecialty && <div className="text-[9px] text-emerald-400 font-bold">+15%</div>}
+                      <div className="text-xs font-bold font-serif">{c.name}</div>
+                      {isSpecialty && <div className="text-[9px] text-emerald-400 font-bold mt-0.5">+15% Specialty</div>}
                     </button>
                   );
                 })}
@@ -2170,43 +2549,62 @@ export default function CraftingCalculator({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-1">
-              <div>
-                <label className="text-[11px] uppercase font-semibold text-slate-400 block mb-1">
-                  Crafting Batch Quantity
-                </label>
-                <input
-                  type="number"
-                  min="1"
-                  value={quantity}
-                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-full bg-albion-bg border border-albion-border rounded-lg px-3 py-1.5 text-sm font-mono text-slate-100 focus:outline-none focus:border-albion-gold"
-                />
+              <div className="bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c]">
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-[10px] uppercase font-bold text-slate-400 truncate tracking-wider font-mono">
+                    {craftingInputMode === 'materials' ? `I Have ${selectedItem.primaryMatName}` : 'Batch Quantity'}
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setCraftingInputMode(craftingInputMode === 'materials' ? 'target' : 'materials')}
+                    className="text-[9px] font-mono text-emerald-400 hover:text-emerald-300 underline shrink-0 cursor-pointer"
+                  >
+                    {craftingInputMode === 'materials' ? 'Switch to Target' : 'I Have Mats'}
+                  </button>
+                </div>
+                {craftingInputMode === 'materials' ? (
+                  <NumberInput
+                    type="number"
+                    min="0"
+                    value={primaryMatsHave}
+                    onChange={(e) => setPrimaryMatsHave(Math.max(0, parseInt(e.target.value) || 0))}
+                    className="w-full bg-[#0c121e] border border-emerald-500/60 rounded-lg px-2.5 py-1 text-sm font-mono font-extrabold text-emerald-300 focus:outline-none focus:border-emerald-400 shadow-inner"
+                  />
+                ) : (
+                  <NumberInput
+                    type="number"
+                    min="1"
+                    value={quantity}
+                    onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                    className="w-full bg-[#0c121e] border border-[#1e2a3c] rounded-lg px-2.5 py-1 text-sm font-mono font-bold text-slate-100 focus:outline-none focus:border-amber-400 shadow-inner"
+                  />
+                )}
               </div>
 
-              <div>
-                <label className="text-[11px] uppercase font-semibold text-slate-400 block mb-1">
-                  Station Tax (per 100 food)
+              <div className="bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c]">
+                <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1.5 tracking-wider font-mono">
+                  Station Fee (/ 100 food)
                 </label>
-                <input
+                <NumberInput
                   type="number"
                   min="0"
                   value={stationTax}
                   onChange={(e) => setStationTax(Math.max(0, parseFloat(e.target.value) || 0))}
-                  className="w-full bg-albion-bg border border-albion-border rounded-lg px-3 py-1.5 text-sm font-mono text-slate-100 focus:outline-none focus:border-albion-gold"
+                  className="w-full bg-[#0c121e] border border-[#1e2a3c] rounded-lg px-2.5 py-1 text-sm font-mono font-bold text-slate-100 focus:outline-none focus:border-amber-400 shadow-inner"
                 />
               </div>
 
-              <div>
-                <label className="text-[11px] uppercase font-semibold text-slate-400 block mb-1">
+              <div className="bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c]">
+                <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1.5 tracking-wider font-mono">
                   Crafter's Salad Buff
                 </label>
                 <button
                   type="button"
                   onClick={() => setHasCraftersSalad(!hasCraftersSalad)}
-                  className={`w-full py-1.5 px-2.5 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                  className={`w-full py-1.5 px-2.5 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     hasCraftersSalad
                       ? 'bg-amber-500/20 text-amber-200 border-amber-500/60 shadow-gold-glow'
-                      : 'bg-albion-bg border-albion-border text-slate-400 hover:text-slate-200'
+                      : 'bg-[#0c121e] border-[#1e2a3c] text-slate-400 hover:text-slate-200'
                   }`}
                   title="Toggle Crafter's Salad / Potato Salad buff (+150 Quality Rating)"
                 >
@@ -2215,11 +2613,11 @@ export default function CraftingCalculator({
                 </button>
               </div>
 
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-[11px] uppercase font-semibold text-slate-400 flex items-center gap-1">
+              <div className="bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c]">
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1 tracking-wider font-mono">
                     <Flame className="w-3.5 h-3.5 text-amber-500" />
-                    Daily Event Bonus
+                    Event Bonus
                   </label>
                   {dailyBonus > 0 && (
                     <span className="text-[10px] font-mono text-emerald-400 font-bold">
@@ -2237,10 +2635,10 @@ export default function CraftingCalculator({
                       key={b.val}
                       type="button"
                       onClick={() => setDailyBonus(b.val)}
-                      className={`py-1.5 rounded-lg border text-xs font-bold text-center transition-all ${
+                      className={`py-1 rounded-md border text-xs font-bold text-center transition-all cursor-pointer ${
                         dailyBonus === b.val
-                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/60 shadow-gold-glow ring-1 ring-amber-400/40'
-                          : 'bg-albion-bg border-albion-border text-slate-400 hover:text-slate-200'
+                          ? 'bg-amber-500/25 text-amber-300 border-amber-500/60 shadow-gold-glow ring-1 ring-amber-400/40'
+                          : 'bg-[#0c121e] border-[#1e2a3c] text-slate-400 hover:text-slate-200'
                       }`}
                     >
                       {b.label}
@@ -2256,10 +2654,10 @@ export default function CraftingCalculator({
         <div id="tour-craft-ledger" className="lg:col-span-5 space-y-5">
           {/* Pre-Craft Shopping List & Required Upfront Capital (when in 'plan' phase) */}
           {workflowPhase === 'plan' && (
-            <div className="bg-albion-card border border-albion-gold/60 rounded-xl p-5 shadow-xl space-y-4 relative overflow-hidden">
-              <div className="flex flex-wrap items-center justify-between border-b border-albion-border/60 pb-3 gap-2">
+            <div className="forged-tablet p-5 sm:p-6 space-y-5 border-amber-500/40 shadow-[0_0_20px_rgba(217,119,6,0.1)] relative overflow-hidden">
+              <div className="flex flex-wrap items-center justify-between border-b border-[#1e2a3c] pb-3.5 gap-2">
                 <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-lg bg-amber-500/15 border border-amber-500/40 text-albion-gold">
+                  <div className="p-2 rounded-lg bg-amber-500/15 border border-amber-500/40 text-albion-gold shadow-sm">
                     <ShoppingCart className="w-5 h-5" />
                   </div>
                   <div>
@@ -2267,7 +2665,7 @@ export default function CraftingCalculator({
                       Pre-Craft Procurement & Shopping List
                     </h3>
                     <p className="text-[10px] text-slate-400">
-                      Exact items to buy on the Market Board before heading to the crafting station
+                      Exact items to buy on the Market Board before heading to the crafting station.
                     </p>
                   </div>
                 </div>
@@ -2276,7 +2674,7 @@ export default function CraftingCalculator({
                   <button
                     type="button"
                     onClick={handleCopyShoppingList}
-                    className="flex items-center gap-1.5 text-xs font-mono px-2.5 py-1.5 rounded-lg bg-amber-500/20 text-amber-200 hover:bg-amber-500/30 border border-amber-500/50 shadow-gold-glow transition-all active:scale-95"
+                    className="flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-200 hover:bg-amber-500/30 border border-amber-500/50 shadow-gold-glow transition-all active:scale-95 cursor-pointer"
                     title="Copy full procurement shopping list to clipboard for Discord or notepad"
                   >
                     {copiedShoppingList ? (
@@ -2296,7 +2694,7 @@ export default function CraftingCalculator({
                     <button
                       type="button"
                       onClick={() => setShoppingChecked({})}
-                      className="text-[10px] text-slate-400 hover:text-slate-200 underline font-mono"
+                      className="text-[10px] text-slate-400 hover:text-slate-200 underline font-mono cursor-pointer"
                     >
                       Reset
                     </button>
@@ -2305,19 +2703,19 @@ export default function CraftingCalculator({
               </div>
 
               {/* Big Upfront Cash In Wallet Requirement */}
-              <div className="p-3.5 rounded-xl bg-gradient-to-r from-amber-950/40 via-albion-bg to-albion-surface border border-albion-gold/40">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[11px] uppercase tracking-wider font-semibold text-slate-300 font-serif flex items-center gap-1.5">
-                    <Wallet className="w-3.5 h-3.5 text-albion-gold" />
+              <div className="p-4 rounded-xl bg-gradient-to-r from-[#1c1407] via-[#0c121e] to-[#070b12] border border-amber-500/50 shadow-inner">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[11px] uppercase tracking-wider font-bold text-slate-200 font-serif flex items-center gap-1.5">
+                    <Wallet className="w-4 h-4 text-albion-gold" />
                     Total Cash Required In Inventory:
                   </span>
-                  <span className="text-[10px] font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+                  <span className="text-[10px] font-mono text-amber-300 bg-amber-500/10 px-2.5 py-0.5 rounded border border-amber-500/30 font-bold">
                     Wallet Budget
                   </span>
                 </div>
 
                 <div className="flex items-baseline gap-2">
-                  <h2 className="font-mono text-2xl sm:text-3xl font-extrabold text-albion-gold tracking-tight">
+                  <h2 className="font-mono text-3xl sm:text-4xl font-black text-albion-gold tracking-tight drop-shadow-[0_2px_8px_rgba(217,119,6,0.3)]">
                     {totalUpfrontCapitalRequired.toLocaleString()}
                   </h2>
                   <span className="font-mono text-xs text-slate-400">silver needed</span>
@@ -2327,18 +2725,18 @@ export default function CraftingCalculator({
                   You must possess this liquid silver in your bag to buy raw ingredients, empty journals, and pay station nutrition fees.
                 </p>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 mt-2.5 pt-2 border-t border-albion-border/40 text-[10px] font-mono text-slate-300">
-                  <div>
-                    <span className="text-slate-500 block">Upfront Mats:</span>
-                    <strong className="text-slate-200">{calculation.financials.upfrontMaterials.toLocaleString()}s</strong>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3 pt-2.5 border-t border-[#1e2a3c] text-[10px] font-mono text-slate-300">
+                  <div className="bg-[#070b12] p-2 rounded-lg border border-[#1e2a3c]">
+                    <span className="text-slate-500 block uppercase">Upfront Mats:</span>
+                    <strong className="text-slate-100">{calculation.financials.upfrontMaterials.toLocaleString()}s</strong>
                   </div>
-                  <div>
-                    <span className="text-slate-500 block">Station Tax:</span>
+                  <div className="bg-[#070b12] p-2 rounded-lg border border-[#1e2a3c]">
+                    <span className="text-slate-500 block uppercase">Station Tax:</span>
                     <strong className="text-rose-300">{calculation.financials.stationFee.toLocaleString()}s</strong>
                   </div>
                   {includeJournals && canUseJournals && (
-                    <div>
-                      <span className="text-slate-500 block">Empty Journals:</span>
+                    <div className="bg-[#070b12] p-2 rounded-lg border border-[#1e2a3c]">
+                      <span className="text-slate-500 block uppercase">Empty Books:</span>
                       <strong className="text-amber-300">{upfrontJournalsCost.toLocaleString()}s</strong>
                     </div>
                   )}
@@ -2346,35 +2744,37 @@ export default function CraftingCalculator({
               </div>
 
               {/* Interactive Checklist Table */}
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 px-1">
-                  <span>MARKET PROCUREMENT CHECKLIST</span>
+                  <span className="uppercase tracking-wider font-semibold">MARKET PROCUREMENT CHECKLIST</span>
                   <span>CLICK CHECKBOX AS YOU BUY</span>
                 </div>
 
                 {/* Primary Material Item */}
                 <div 
                   onClick={() => setShoppingChecked(prev => ({ ...prev, primary: !prev.primary }))}
-                  className={`p-2.5 rounded-lg border flex items-center justify-between gap-2 cursor-pointer transition-all ${
+                  className={`p-3 rounded-xl border flex items-center justify-between gap-2.5 cursor-pointer transition-all ${
                     shoppingChecked.primary 
                       ? 'bg-emerald-950/20 border-emerald-500/40 line-through opacity-75' 
-                      : 'bg-albion-bg/70 border-albion-border hover:border-slate-500'
+                      : 'bg-[#070b12] border-[#1e2a3c] hover:border-slate-500'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex items-center gap-3 min-w-0">
                     <input
                       type="checkbox"
                       checked={!!shoppingChecked.primary}
                       onChange={() => {}}
                       className="accent-amber-500 rounded cursor-pointer"
                     />
-                    <ItemIcon 
-                      src={primaryIconSrc} 
-                      alt="" 
-                      className="w-7 h-7 object-contain bg-albion-surface rounded p-0.5 border border-albion-border"
-                    />
+                    <div className="w-8 h-8 rounded-lg bg-[#0c121e] p-0.5 border border-[#1e2a3c] flex items-center justify-center shrink-0 shadow-sm">
+                      <ItemIcon 
+                        src={primaryIconSrc} 
+                        alt="" 
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
                     <div className="min-w-0">
-                      <span className="text-xs font-bold text-slate-200 block truncate font-mono">
+                      <span className="text-xs font-bold text-slate-100 block truncate font-mono">
                         {calculation.materials.primaryGross}x {selectedItem.primaryMatName}{selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''}
                       </span>
                       <span className="text-[10px] text-slate-400 font-mono">
@@ -2394,26 +2794,28 @@ export default function CraftingCalculator({
                 {selectedItem.secondaryQty > 0 && (
                   <div 
                     onClick={() => setShoppingChecked(prev => ({ ...prev, secondary: !prev.secondary }))}
-                    className={`p-2.5 rounded-lg border flex items-center justify-between gap-2 cursor-pointer transition-all ${
+                    className={`p-3 rounded-xl border flex items-center justify-between gap-2.5 cursor-pointer transition-all ${
                       shoppingChecked.secondary 
                         ? 'bg-emerald-950/20 border-emerald-500/40 line-through opacity-75' 
-                        : 'bg-albion-bg/70 border-albion-border hover:border-slate-500'
+                        : 'bg-[#070b12] border-[#1e2a3c] hover:border-slate-500'
                     }`}
                   >
-                    <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="flex items-center gap-3 min-w-0">
                       <input
                         type="checkbox"
                         checked={!!shoppingChecked.secondary}
                         onChange={() => {}}
                         className="accent-amber-500 rounded cursor-pointer"
                       />
-                      <ItemIcon 
-                        src={secondaryIconSrc} 
-                        alt="" 
-                        className="w-7 h-7 object-contain bg-albion-surface rounded p-0.5 border border-albion-border"
-                      />
+                      <div className="w-8 h-8 rounded-lg bg-[#0c121e] p-0.5 border border-[#1e2a3c] flex items-center justify-center shrink-0 shadow-sm">
+                        <ItemIcon 
+                          src={secondaryIconSrc} 
+                          alt="" 
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
                       <div className="min-w-0">
-                        <span className="text-xs font-bold text-slate-200 block truncate font-mono">
+                        <span className="text-xs font-bold text-slate-100 block truncate font-mono">
                           {calculation.materials.secondaryGross}x {selectedItem.secondaryMatName}{selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''}
                         </span>
                         <span className="text-[10px] text-slate-400 font-mono">
@@ -2434,27 +2836,29 @@ export default function CraftingCalculator({
                 {selectedItem.isArtifact && (
                   <div 
                     onClick={() => setShoppingChecked(prev => ({ ...prev, artifact: !prev.artifact }))}
-                    className={`p-2.5 rounded-lg border flex items-center justify-between gap-2 cursor-pointer transition-all ${
+                    className={`p-3 rounded-xl border flex items-center justify-between gap-2.5 cursor-pointer transition-all ${
                       shoppingChecked.artifact 
                         ? 'bg-purple-950/20 border-purple-500/40 line-through opacity-75' 
-                        : 'bg-gradient-to-r from-purple-950/30 to-albion-bg border-purple-500/40 hover:border-purple-400'
+                        : 'bg-gradient-to-r from-purple-950/30 to-[#070b12] border-purple-500/40 hover:border-purple-400'
                     }`}
                   >
-                    <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="flex items-center gap-3 min-w-0">
                       <input
                         type="checkbox"
                         checked={!!shoppingChecked.artifact}
                         onChange={() => {}}
                         className="accent-purple-500 rounded cursor-pointer"
                       />
-                      <ItemIcon 
-                        src={artifactIconSrc} 
-                        alt="" 
-                        className="w-7 h-7 object-contain bg-albion-surface rounded p-0.5 border border-purple-500/40"
-                      />
+                      <div className="w-8 h-8 rounded-lg bg-[#0c121e] p-0.5 border border-purple-500/40 flex items-center justify-center shrink-0 shadow-sm">
+                        <ItemIcon 
+                          src={artifactIconSrc} 
+                          alt="" 
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
                       <div className="min-w-0">
                         <span className="text-xs font-bold text-purple-200 block truncate font-mono">
-                          {quantity * artifactCountPerUnit}x {selectedItem.artifactName}
+                          {effectiveBatchQuantity * artifactCountPerUnit}x {selectedItem.artifactName}
                         </span>
                         <span className="text-[10px] text-purple-300/80 font-mono">
                           @{artifactPrice.toLocaleString()}s each
@@ -2474,26 +2878,28 @@ export default function CraftingCalculator({
                 {includeJournals && canUseJournals && (
                   <div 
                     onClick={() => setShoppingChecked(prev => ({ ...prev, journals: !prev.journals }))}
-                    className={`p-2.5 rounded-lg border flex items-center justify-between gap-2 cursor-pointer transition-all ${
+                    className={`p-3 rounded-xl border flex items-center justify-between gap-2.5 cursor-pointer transition-all ${
                       shoppingChecked.journals 
                         ? 'bg-emerald-950/20 border-emerald-500/40 line-through opacity-75' 
-                        : 'bg-albion-bg/70 border-albion-border hover:border-slate-500'
+                        : 'bg-[#070b12] border-[#1e2a3c] hover:border-slate-500'
                     }`}
                   >
-                    <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="flex items-center gap-3 min-w-0">
                       <input
                         type="checkbox"
                         checked={!!shoppingChecked.journals}
                         onChange={() => {}}
                         className="accent-amber-500 rounded cursor-pointer"
                       />
-                      <ItemIcon 
-                        src={journalIconSrc} 
-                        alt="" 
-                        className="w-7 h-7 object-contain bg-albion-surface rounded p-0.5 border border-albion-border"
-                      />
+                      <div className="w-8 h-8 rounded-lg bg-[#0c121e] p-0.5 border border-[#1e2a3c] flex items-center justify-center shrink-0 shadow-sm">
+                        <ItemIcon 
+                          src={journalIconSrc} 
+                          alt="" 
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
                       <div className="min-w-0">
-                        <span className="text-xs font-bold text-slate-200 block truncate font-mono">
+                        <span className="text-xs font-bold text-slate-100 block truncate font-mono">
                           {calculation.journals.journalsFilled}x Empty {selectedItem.journalName || 'Journals'}
                         </span>
                         <span className="text-[10px] text-slate-400 font-mono">
@@ -2513,24 +2919,24 @@ export default function CraftingCalculator({
                 {/* Station Nutrition Tax In Pocket */}
                 <div 
                   onClick={() => setShoppingChecked(prev => ({ ...prev, stationFee: !prev.stationFee }))}
-                  className={`p-2.5 rounded-lg border flex items-center justify-between gap-2 cursor-pointer transition-all ${
+                  className={`p-3 rounded-xl border flex items-center justify-between gap-2.5 cursor-pointer transition-all ${
                     shoppingChecked.stationFee 
                       ? 'bg-rose-950/20 border-rose-500/40 line-through opacity-75' 
-                      : 'bg-albion-bg/70 border-albion-border hover:border-slate-500'
+                      : 'bg-[#070b12] border-[#1e2a3c] hover:border-slate-500'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex items-center gap-3 min-w-0">
                     <input
                       type="checkbox"
                       checked={!!shoppingChecked.stationFee}
                       onChange={() => {}}
                       className="accent-rose-500 rounded cursor-pointer"
                     />
-                    <div className="w-7 h-7 bg-albion-surface rounded flex items-center justify-center text-rose-400 border border-albion-border text-xs font-bold">
+                    <div className="w-8 h-8 bg-[#0c121e] rounded-lg flex items-center justify-center text-rose-400 border border-[#1e2a3c] text-xs font-bold shrink-0 shadow-sm">
                       🏛️
                     </div>
                     <div className="min-w-0">
-                      <span className="text-xs font-bold text-slate-200 block truncate font-mono">
+                      <span className="text-xs font-bold text-slate-100 block truncate font-mono">
                         Station Nutrition Fee (Silver in Purse)
                       </span>
                       <span className="text-[10px] text-slate-400 font-mono">
@@ -2548,7 +2954,7 @@ export default function CraftingCalculator({
               </div>
 
               {/* Resource Return Rate & Recycling Ledger */}
-              <div className="p-3 rounded-xl bg-albion-bg/80 border border-albion-border/70 text-xs font-mono space-y-1.5">
+              <div className="p-3.5 rounded-xl bg-[#070b12] border border-[#1e2a3c] text-xs font-mono space-y-2 shadow-inner">
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400 text-[11px] font-sans flex items-center gap-1.5">
                     <RotateCcw className="w-3.5 h-3.5 text-sky-400 shrink-0" />
@@ -2567,26 +2973,26 @@ export default function CraftingCalculator({
           )}
 
           {/* Main Profit Card */}
-          <div className={`rounded-xl border p-5 sm:p-6 shadow-xl relative overflow-hidden transition-all ${
+          <div className={`forged-tablet p-6 sm:p-7 space-y-5 relative overflow-hidden transition-all ${
             isProfitable
-              ? 'bg-gradient-to-br from-emerald-950/40 via-albion-card to-albion-surface border-emerald-600/40'
-              : 'bg-gradient-to-br from-rose-950/40 via-albion-card to-albion-surface border-rose-600/40'
+              ? 'border-emerald-500/60 shadow-[0_0_30px_rgba(16,185,129,0.12)]'
+              : 'border-rose-500/60 shadow-[0_0_30px_rgba(244,63,94,0.12)]'
           }`}>
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <span className="text-xs uppercase tracking-wider font-semibold text-slate-400 font-serif">
+                <span className="text-xs uppercase tracking-wider font-bold text-slate-300 font-serif">
                   {workflowPhase === 'plan' 
-                    ? 'Conservative Net Crafting Profit (Base Price Forecast)' 
+                    ? 'Conservative Net Profit (Safe Baseline)' 
                     : valuationMode === 'ev' 
-                    ? 'Expected Net Crafting Profit (EV Weighted)' 
+                    ? 'Expected Net Profit (EV Weighted)' 
                     : valuationMode === 'floor' 
-                    ? 'Floor Net Crafting Profit (Worst-Case Q1)' 
+                    ? 'Floor Net Profit (Worst-Case Q1)' 
                     : valuationMode === 'actual'
-                    ? 'Realized Net Crafting Profit (Actual Backpack Rolls)'
+                    ? 'Realized Net Profit (Actual Backpack Rolls)'
                     : `Inspected Profit (Q${inspectQuality} ${selectedQualityMeta.name})`}
                 </span>
                 <span 
-                  className={`text-[9px] font-mono px-2 py-0.5 rounded-full flex items-center gap-1 border ${
+                  className={`text-[9px] font-mono px-2.5 py-0.5 rounded-full flex items-center gap-1 border ${
                     isBackendConnected
                       ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40'
                       : 'bg-amber-500/15 text-amber-300 border-amber-500/40'
@@ -2599,16 +3005,18 @@ export default function CraftingCalculator({
                   <span>{isBackendCalculating ? 'Django Calculating' : (isBackendConnected ? 'Django Engine' : 'Client Math')}</span>
                 </span>
               </div>
-              <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
+              <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded border ${
                 isProfitable ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/20 text-rose-300 border-rose-500/30'
               }`}>
-                {calculation.financials.marginPct >= 0 ? `+${calculation.financials.marginPct}%` : `${calculation.financials.marginPct}%`} Margin ({workflowPhase === 'plan' ? 'Base Price' : (valuationMode === 'ev' ? 'EV' : valuationMode === 'floor' ? 'Floor' : valuationMode === 'actual' ? 'Actual' : 'Inspect')})
+                {calculation.financials.marginPct >= 0 ? `+${calculation.financials.marginPct}%` : `${calculation.financials.marginPct}%`} Margin
               </span>
             </div>
 
             <div className="flex items-baseline gap-2">
-              <h2 className={`font-mono text-3xl sm:text-4xl font-extrabold tracking-tight ${
-                isProfitable ? 'text-emerald-400' : 'text-rose-400'
+              <h2 className={`font-mono text-4xl sm:text-5xl font-black tracking-tight ${
+                isProfitable 
+                  ? 'text-emerald-400 drop-shadow-[0_2px_12px_rgba(16,185,129,0.35)]' 
+                  : 'text-rose-400 drop-shadow-[0_2px_12px_rgba(244,63,94,0.35)]'
               }`}>
                 {calculation.financials.netProfit >= 0 ? '+' : ''}{calculation.financials.netProfit.toLocaleString()}
               </h2>
@@ -2617,11 +3025,11 @@ export default function CraftingCalculator({
 
             <div className="flex flex-wrap items-center justify-between gap-1 mt-1 text-xs text-slate-400">
               <p>
-                Profit per item: <strong className="text-slate-200 font-mono">
+                Profit per item: <strong className="text-slate-100 font-mono">
                   {calculation.financials.profitPerUnit >= 0 ? '+' : ''}{calculation.financials.profitPerUnit.toLocaleString()} silver
                 </strong>
               </p>
-              <span className={`text-[10px] font-mono px-2 py-0.5 rounded border font-bold ${
+              <span className={`text-[10px] font-mono px-2.5 py-0.5 rounded border font-bold ${
                 workflowPhase === 'plan'
                   ? 'bg-sky-500/15 text-sky-300 border-sky-500/40 shadow-sm'
                   : (valuationMode === 'ev' 
@@ -2641,7 +3049,7 @@ export default function CraftingCalculator({
 
             {/* Risk & EV / Proc Insights Strip */}
             {workflowPhase === 'plan' ? (
-              <div className="mt-3.5 p-3.5 rounded-xl bg-albion-bg/80 border border-albion-border/70 text-xs font-mono space-y-2.5">
+              <div className="mt-3.5 p-3.5 rounded-xl bg-[#070b12] border border-[#1e2a3c] text-xs font-mono space-y-2.5 shadow-inner">
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400 text-[11px] font-sans flex items-center gap-1.5">
                     <Coins className="w-3.5 h-3.5 text-albion-gold shrink-0" />
@@ -2663,7 +3071,7 @@ export default function CraftingCalculator({
                 </div>
 
                 {/* Quality Proc Upside Banner */}
-                <div className="pt-2 border-t border-albion-border/50 text-[11px] font-sans text-slate-300 space-y-1">
+                <div className="pt-2 border-t border-[#1e2a3c] text-[11px] font-sans text-slate-300 space-y-1">
                   <div className="flex items-center gap-1.5 text-amber-300 font-semibold font-serif">
                     <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                     Quality Proc Upside (Pure Bonus):
@@ -2674,14 +3082,14 @@ export default function CraftingCalculator({
                 </div>
               </div>
             ) : (
-              <div className="mt-3.5 p-3 rounded-xl bg-albion-bg/80 border border-albion-border/70 text-xs font-mono space-y-2">
+              <div className="mt-3.5 p-3.5 rounded-xl bg-[#070b12] border border-[#1e2a3c] text-xs font-mono space-y-2.5 shadow-inner">
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400 text-[11px] font-sans flex items-center gap-1.5">
                     <PackageCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                     Realized Items Logged in Bag:
                   </span>
-                  <span className={`font-bold ${actualTotals.totalItems === quantity ? 'text-emerald-400' : 'text-amber-400'}`}>
-                    {actualTotals.totalItems} / {quantity} items
+                  <span className={`font-bold ${actualTotals.totalItems === effectiveBatchQuantity ? 'text-emerald-400' : 'text-amber-400'}`}>
+                    {actualTotals.totalItems} / {effectiveBatchQuantity} items
                   </span>
                 </div>
 
@@ -2695,7 +3103,7 @@ export default function CraftingCalculator({
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between pt-1.5 border-t border-albion-border/50">
+                <div className="flex items-center justify-between pt-1.5 border-t border-[#1e2a3c]">
                   <span className="text-slate-400 text-[11px] font-sans flex items-center gap-1.5">
                     <Coins className="w-3.5 h-3.5 text-albion-gold shrink-0" />
                     Break-Even Unit Sale Price:
@@ -2707,19 +3115,19 @@ export default function CraftingCalculator({
               </div>
             )}
 
-            <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-white/10 font-mono text-center">
-              <div className="bg-albion-bg/60 p-2 rounded">
-                <span className="text-[10px] text-slate-500 block">Craft Return</span>
+            <div className="grid grid-cols-3 gap-2.5 mt-4 pt-3.5 border-t border-[#1e2a3c] font-mono text-center">
+              <div className="bg-[#070b12] p-2.5 rounded-xl border border-[#1e2a3c]">
+                <span className="text-[10px] text-slate-500 block uppercase">Craft Return</span>
                 <span className="text-base font-bold text-sky-400">{calculation.returnRatePct}%</span>
               </div>
-              <div className="bg-albion-bg/60 p-2 rounded">
-                <span className="text-[10px] text-slate-500 block">Journal Net</span>
+              <div className="bg-[#070b12] p-2.5 rounded-xl border border-[#1e2a3c]">
+                <span className="text-[10px] text-slate-500 block uppercase">Journal Net</span>
                 <span className="text-base font-bold text-amber-300">
                   {includeJournals && canUseJournals ? `+${calculation.journals.journalProfit.toLocaleString()}` : '0 (Off)'}
                 </span>
               </div>
-              <div className="bg-albion-bg/60 p-2 rounded">
-                <span className="text-[10px] text-slate-500 block">Silver / Focus</span>
+              <div className="bg-[#070b12] p-2.5 rounded-xl border border-[#1e2a3c]">
+                <span className="text-[10px] text-slate-500 block uppercase">Silver / Focus</span>
                 <span className="text-base font-bold text-emerald-400">{calculation.silverPerFocus}</span>
               </div>
             </div>
@@ -2733,7 +3141,7 @@ export default function CraftingCalculator({
                   setValuationMode('actual');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="w-full mt-4 py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-bold font-mono text-xs tracking-wide shadow-lg shadow-amber-500/10 flex items-center justify-center gap-2 transition-all cursor-pointer border border-amber-400/40"
+                className="w-full mt-4 py-3 px-4 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-bold font-mono text-xs tracking-wide shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 transition-all cursor-pointer border border-amber-400/40"
               >
                 <PackageCheck className="w-4 h-4 text-slate-950" />
                 <span>Ready to craft? Record Backpack Rolls in Realized Ledger &rarr;</span>
@@ -2745,7 +3153,7 @@ export default function CraftingCalculator({
                   setWorkflowPhase('plan');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="w-full mt-4 py-2.5 px-4 rounded-xl bg-albion-surface hover:bg-albion-border/40 text-slate-300 hover:text-white border border-albion-border font-mono text-xs tracking-wide shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="w-full mt-4 py-3 px-4 rounded-xl bg-[#0c121e] hover:bg-[#141d2e] text-slate-200 hover:text-white border border-[#1e2a3c] hover:border-slate-500 font-mono text-xs tracking-wide shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5 text-sky-400" />
                 <span>&larr; Need to plan another craft? Back to Pre-Craft Planner</span>
@@ -2754,15 +3162,15 @@ export default function CraftingCalculator({
           </div>
 
           {/* Material Refund Counters */}
-          <div className="bg-albion-card border border-albion-border rounded-xl p-4 sm:p-5 shadow-xl space-y-3">
-            <h3 className="text-xs uppercase tracking-wider text-slate-300 font-semibold flex items-center gap-1.5 font-serif border-b border-albion-border/60 pb-2">
-              <RotateCcw className="w-3.5 h-3.5 text-sky-400" />
+          <div className="forged-tablet p-5 sm:p-6 space-y-3.5">
+            <h3 className="text-xs uppercase tracking-wider text-slate-200 font-bold flex items-center gap-1.5 font-serif border-b border-[#1e2a3c] pb-2.5">
+              <RotateCcw className="w-4 h-4 text-sky-400" />
               Refined Materials Refunded ({selectedItem.isNoReturn || selectedItem.isRoyal ? '0% RRR - Transmute' : `${calculation.returnRatePct}% RRR`})
             </h3>
 
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between items-center bg-albion-bg/60 p-2.5 rounded-lg border border-albion-border">
-                <span className="text-slate-300 font-medium">
+              <div className="flex justify-between items-center bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c]">
+                <span className="text-slate-200 font-medium">
                   {selectedItem.primaryMatName}
                 </span>
                 <div className="font-mono text-right">
@@ -2772,8 +3180,8 @@ export default function CraftingCalculator({
               </div>
 
               {selectedItem.secondaryQty > 0 && (
-                <div className="flex justify-between items-center bg-albion-bg/60 p-2.5 rounded-lg border border-albion-border">
-                  <span className="text-slate-300 font-medium">
+                <div className="flex justify-between items-center bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c]">
+                  <span className="text-slate-200 font-medium">
                     {selectedItem.secondaryMatName}
                   </span>
                   <div className="font-mono text-right">
@@ -2784,13 +3192,13 @@ export default function CraftingCalculator({
               )}
 
               {selectedItem.isArtifact && (
-                <div className="flex justify-between items-center bg-purple-950/30 p-2.5 rounded-lg border border-purple-500/30">
-                  <span className="text-purple-300 font-medium flex items-center gap-1">
-                    <Gem className="w-3 h-3 text-purple-400" />
+                <div className="flex justify-between items-center bg-purple-950/30 p-3 rounded-xl border border-purple-500/40">
+                  <span className="text-purple-300 font-medium flex items-center gap-1.5">
+                    <Gem className="w-3.5 h-3.5 text-purple-400" />
                     {selectedItem.artifactName}
                   </span>
                   <div className="font-mono text-right text-purple-300">
-                    <span>{quantity * artifactCountPerUnit} consumed &rarr; </span>
+                    <span>{effectiveBatchQuantity * artifactCountPerUnit} consumed &rarr; </span>
                     <span className="text-rose-400 font-semibold">0 returned (100% used)</span>
                   </div>
                 </div>
@@ -2799,40 +3207,40 @@ export default function CraftingCalculator({
           </div>
 
           {/* Complete Financial Ledger */}
-          <div className="bg-albion-card border border-albion-border rounded-xl p-4 sm:p-5 shadow-xl space-y-2.5 text-xs font-mono">
-            <h3 className="text-xs uppercase tracking-wider text-slate-300 font-semibold flex items-center gap-1.5 font-serif border-b border-albion-border/60 pb-2">
+          <div className="forged-tablet p-5 sm:p-6 space-y-3 text-xs font-mono">
+            <h3 className="text-xs uppercase tracking-wider text-slate-200 font-bold flex items-center gap-1.5 font-serif border-b border-[#1e2a3c] pb-2.5">
               Financial Breakdown
             </h3>
 
-            <div className="flex justify-between py-1 border-b border-albion-border/40">
+            <div className="flex justify-between py-1.5 border-b border-[#1e2a3c]">
               <span className="text-slate-400 font-sans">Upfront Materials Cost:</span>
-              <span className="text-slate-200">{calculation.financials.upfrontMaterials.toLocaleString()} silver</span>
+              <span className="text-slate-100 font-bold">{calculation.financials.upfrontMaterials.toLocaleString()} silver</span>
             </div>
             {selectedItem.isArtifact && (
-              <div className="flex justify-between py-1 border-b border-albion-border/40 text-purple-300">
-                <span className="font-sans">Artifact Cost ({quantity * artifactCountPerUnit}x):</span>
-                <span>{calculation.materials.artifactGrossCost.toLocaleString()} silver</span>
+              <div className="flex justify-between py-1.5 border-b border-[#1e2a3c] text-purple-300">
+                <span className="font-sans">Artifact Cost ({effectiveBatchQuantity * artifactCountPerUnit}x):</span>
+                <span className="font-bold">{calculation.materials.artifactGrossCost.toLocaleString()} silver</span>
               </div>
             )}
-            <div className="flex justify-between py-1 border-b border-albion-border/40">
+            <div className="flex justify-between py-1.5 border-b border-[#1e2a3c]">
               <span className="text-slate-400 font-sans">Station Nutrition Fee:</span>
-              <span className="text-rose-300">{calculation.financials.stationFee.toLocaleString()} silver</span>
+              <span className="text-rose-300 font-bold">{calculation.financials.stationFee.toLocaleString()} silver</span>
             </div>
-            <div className="flex justify-between py-1 border-b border-albion-border/40">
+            <div className="flex justify-between py-1.5 border-b border-[#1e2a3c]">
               <span className="text-slate-400 font-sans">Market Taxes & Fees:</span>
-              <span className="text-amber-300">{calculation.financials.marketTaxes.toLocaleString()} silver</span>
+              <span className="text-amber-300 font-bold">{calculation.financials.marketTaxes.toLocaleString()} silver</span>
             </div>
-            <div className="flex justify-between py-1 border-b border-albion-border/40">
+            <div className="flex justify-between py-1.5 border-b border-[#1e2a3c]">
               <span className="text-slate-400 font-sans">Journal Fame Resale Profit:</span>
-              <span className={includeJournals && canUseJournals ? "text-emerald-400" : "text-slate-500"}>
+              <span className={includeJournals && canUseJournals ? "text-emerald-400 font-bold" : "text-slate-500"}>
                 {includeJournals && canUseJournals 
                   ? `+${calculation.journals.journalProfit.toLocaleString()} silver` 
                   : '0 silver (Disabled / T2-T3)'}
               </span>
             </div>
-            <div className="flex justify-between py-1 font-bold text-sm pt-2">
+            <div className="flex justify-between py-2 font-bold text-sm pt-3 border-t border-[#1e2a3c] bg-[#070b12] px-3 rounded-lg">
               <span className="text-slate-200 font-sans">Total Net Batch Cost:</span>
-              <span className="text-slate-100">{calculation.financials.totalCost.toLocaleString()} silver</span>
+              <span className="text-albion-gold text-base">{calculation.financials.totalCost.toLocaleString()} silver</span>
             </div>
           </div>
         </div>

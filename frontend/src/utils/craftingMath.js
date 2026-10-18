@@ -19,15 +19,45 @@ export const CITY_CRAFTING_BONUSES = {
   Brecilien: ['bags', 'capes', 'potions'],
 };
 
-export const CRAFTABLE_ITEMS = craftableItemsData;
+export const CRAFTING_FAME_PER_RESOURCE = {
+  2: 7.5,
+  3: 15.0,
+  4: 22.5,
+  5: 90.0,
+  6: 270.0,
+  7: 645.0,
+  8: 1395.0,
+};
 
 export const JOURNAL_FAME_REQUIRED = {
-  4: 900,
-  5: 1800,
-  6: 3600,
-  7: 7200,
-  8: 14400,
+  2: 900,
+  3: 1800,
+  4: 3600,
+  5: 7200,
+  6: 14400,
+  7: 28380,
+  8: 58590,
 };
+
+export const ARTIFACT_BASE_ITEM_VALUE = {
+  Rune: 64,
+  Soul: 192,
+  Relic: 448,
+  Tracking: 448,
+  Avalonian: 960,
+  Crystal: 960,
+  Dragon: 448,
+};
+
+export const CRAFTABLE_ITEMS = craftableItemsData.map((it) => {
+  const matCount = (it.primaryQty || 0) + (it.secondaryQty || 0);
+  return {
+    ...it,
+    famePerUnit: Number((matCount * 22.5).toFixed(1)),
+    baseItemValue: matCount * 16,
+    baseFocus: Math.round(matCount * 53.59375),
+  };
+});
 
 export function getArtifactQty(item, tier = 4) {
   if (!item || !item.isArtifact) return 0;
@@ -72,6 +102,130 @@ export function getCraftingReturnRate(item, city, useFocus = false, dailyBonusPc
   return totalBonus > 0 ? totalBonus / (1.0 + totalBonus) : 0.0;
 }
 
+/**
+ * Simulates pass-by-pass crafting at a station starting from a player's on-hand material stack.
+ * Computes Pass 1 crafts, bonus RRR crafts across subsequent passes, secondary materials needed,
+ * artifacts required, journals filled, and leftover materials in bag.
+ */
+export function simulateCraftingFromMaterials({
+  item,
+  tier = 4,
+  enchantment = 0,
+  primaryHave = 0,
+  secondaryHave = 0,
+  constrainBySecondary = false,
+  city = 'Lymhurst',
+  useFocus = false,
+  dailyBonusPct = 0,
+}) {
+  const t = Number(tier);
+  const ench = Number(enchantment);
+  const pQty = Math.max(1, Number(item?.primaryQty) || 1);
+  const sQty = Math.max(0, Number(item?.secondaryQty) || 0);
+  const rrr = getCraftingReturnRate(item, city, useFocus, dailyBonusPct);
+  const isTransmutation = Boolean(item?.isNoReturn || item?.isRoyal);
+
+  let remPrimary = Math.max(0, Math.floor(Number(primaryHave) || 0));
+  let remSecondary = Math.max(0, Math.floor(Number(secondaryHave) || 0));
+
+  let pass1Crafts = 0;
+  let totalCrafts = 0;
+  let secondaryTotalNeeded = 0;
+  let simSecondaryBag = 0;
+  const passes = [];
+
+  let passIndex = 0;
+  while (remPrimary >= pQty && passIndex < 50) {
+    let craftsInPass = Math.floor(remPrimary / pQty);
+    if (sQty > 0 && constrainBySecondary) {
+      craftsInPass = Math.min(craftsInPass, Math.floor(remSecondary / sQty));
+    }
+    if (craftsInPass <= 0) break;
+
+    passIndex += 1;
+    if (passIndex === 1) {
+      pass1Crafts = craftsInPass;
+    }
+    totalCrafts += craftsInPass;
+
+    const pUsed = craftsInPass * pQty;
+    const pReturned = isTransmutation ? 0 : Math.floor(pUsed * rrr);
+    remPrimary = remPrimary - pUsed + pReturned;
+
+    let sUsed = 0;
+    let sReturned = 0;
+    if (sQty > 0) {
+      sUsed = craftsInPass * sQty;
+      sReturned = isTransmutation ? 0 : Math.floor(sUsed * rrr);
+      if (constrainBySecondary) {
+        remSecondary = remSecondary - sUsed + sReturned;
+      } else {
+        if (simSecondaryBag < sUsed) {
+          const shortfall = sUsed - simSecondaryBag;
+          secondaryTotalNeeded += shortfall;
+          simSecondaryBag += shortfall;
+        }
+        simSecondaryBag = simSecondaryBag - sUsed + sReturned;
+      }
+    }
+
+    passes.push({
+      pass: passIndex,
+      crafts: craftsInPass,
+      primaryUsed: pUsed,
+      primaryReturned: pReturned,
+      secondaryUsed: sUsed,
+      secondaryReturned: sReturned,
+    });
+
+    if (pReturned <= 0) break;
+  }
+
+  const bonusRrrCrafts = Math.max(0, totalCrafts - pass1Crafts);
+  const secondaryNeededPass1 = pass1Crafts * sQty;
+  if (sQty > 0 && constrainBySecondary) {
+    secondaryTotalNeeded = Math.max(0, Math.floor(Number(secondaryHave) || 0) - remSecondary);
+  }
+  const secondaryToBuyPass1 = Math.max(0, secondaryNeededPass1 - Math.max(0, Math.floor(Number(secondaryHave) || 0)));
+  const secondaryToBuyTotal = Math.max(0, secondaryTotalNeeded - Math.max(0, Math.floor(Number(secondaryHave) || 0)));
+
+  const artPerUnit = getArtifactQty(item, t);
+  const artifactsPass1 = pass1Crafts * artPerUnit;
+  const artifactsTotal = totalCrafts * artPerUnit;
+
+  const matCount = pQty + sQty;
+  const famePerRes = CRAFTING_FAME_PER_RESOURCE[t] || 22.5;
+  const famePerUnit = isTransmutation ? 0 : matCount * famePerRes * Math.pow(2, ench);
+  const fameReq = JOURNAL_FAME_REQUIRED[t] || 3600;
+  const journalsFilledPass1 = (t >= 4 && !isTransmutation) ? Number(((famePerUnit * pass1Crafts) / fameReq).toFixed(2)) : 0;
+  const journalsFilledTotal = (t >= 4 && !isTransmutation) ? Number(((famePerUnit * totalCrafts) / fameReq).toFixed(2)) : 0;
+
+  return {
+    rrr,
+    returnRatePct: Number((rrr * 100).toFixed(2)),
+    pass1Crafts,
+    bonusRrrCrafts,
+    totalCrafts,
+    passCount: passes.length,
+    passes,
+    leftoverPrimary: remPrimary,
+    leftoverSecondary: constrainBySecondary ? remSecondary : simSecondaryBag,
+    secondaryNeededPass1,
+    secondaryTotalNeeded,
+    secondaryToBuyPass1,
+    secondaryToBuyTotal,
+    artPerUnit,
+    artifactsPass1,
+    artifactsTotal,
+    famePerUnit,
+    fameReq,
+    journalsFilledPass1,
+    journalsFilledTotal,
+    emptyJournalsToBuyPass1: Math.ceil(journalsFilledPass1),
+    emptyJournalsToBuyTotal: Math.ceil(journalsFilledTotal),
+  };
+}
+
 export function computeCrafting({
   item,
   tier = 4,
@@ -96,6 +250,8 @@ export function computeCrafting({
   const qty = Math.max(1, Number(quantity) || 1);
   const t = Number(tier);
   const ench = Number(enchantment);
+  const isTransmutation = Boolean(item.isNoReturn || item.isRoyal);
+  const matCount = (item.primaryQty || 0) + (item.secondaryQty || 0);
   
   // Return rates
   const rrrCurrent = getCraftingReturnRate(item, city, useFocus, dailyBonusPct);
@@ -123,18 +279,26 @@ export function computeCrafting({
                           (secondaryConsumed * secondaryMatPrice) + 
                           artifactGrossCost;
   
-  // Nutrition & Station Fee (Doubles per tier, T3 is 0.5x, T2 is 0.25x)
-  const ivMultiplier = Math.pow(2, t - 4 + ench);
-  const totalIv = (item.baseItemValue || 100) * ivMultiplier;
-  const nutrition = totalIv * 0.1125;
-  const stationFee = nutrition * ((stationTaxPer100 || 0) / 100.0) * qty;
+  // Nutrition & Station Fee (Tier 2 and transmutations have 0 station fee in Albion Online)
+  let stationFee = 0;
+  if (t > 2 && !isTransmutation) {
+    const resourceIv = (matCount * 16) * Math.pow(2, t - 4 + ench);
+    const artifactIv = (hasArtifact && t >= 4)
+      ? (ARTIFACT_BASE_ITEM_VALUE[item.artifactType] || 0) * Math.pow(2, t - 4)
+      : 0;
+    const totalIv = resourceIv + artifactIv;
+    const nutrition = totalIv * 0.1125;
+    stationFee = nutrition * ((stationTaxPer100 || 0) / 100.0) * qty;
+  }
   
   // Journals (Crafting journals start at Tier 4 in Albion Online)
   let journalProfit = 0;
   let journalsFilled = 0;
-  if (includeJournals && t >= 4 && item.journalName) {
-    const totalFame = (item.famePerUnit || 100) * ivMultiplier * qty;
-    const fameReq = JOURNAL_FAME_REQUIRED[t] || 900;
+  const famePerRes = CRAFTING_FAME_PER_RESOURCE[t] || 22.5;
+  const famePerUnit = isTransmutation ? 0 : matCount * famePerRes * Math.pow(2, ench);
+  const fameReq = JOURNAL_FAME_REQUIRED[t] || 3600;
+  if (includeJournals && t >= 4 && item.journalName && !isTransmutation) {
+    const totalFame = famePerUnit * qty;
     journalsFilled = Number((totalFame / fameReq).toFixed(2));
     const unitProfit = Math.max(0, fullJournalPrice - emptyJournalPrice);
     journalProfit = Math.round(journalsFilled * unitProfit);
@@ -152,13 +316,14 @@ export function computeCrafting({
   const marginPct = totalCost > 0 ? (netProfit / totalCost) * 100 : 0;
   const profitPerUnit = qty > 0 ? netProfit / qty : 0;
   
-  // Focus scaling
-  const isTransmutation = Boolean(item.isNoReturn || item.isRoyal);
-  const baseFocus = isTransmutation ? 0 : (item.baseFocus || 100) * ivMultiplier;
+  // Focus scaling (Base focus per resource = 10 * 1.75^(tier - 1 + ench), Spec = +280 eff/lvl)
+  const baseFocus = (isTransmutation || t <= 2 || matCount <= 0)
+    ? 0
+    : matCount * 10.0 * Math.pow(1.75, t - 1 + ench);
   const m = Math.max(0, Math.min(100, Number(masteryLevel) || 0));
-  const s = Math.max(0, Math.min(100, Number(specLevel) || 0));
-  const efficiency = (m * 30) + (s * 250);
-  const focusPerUnit = isTransmutation ? 0 : Math.max(1, Math.floor(baseFocus * Math.pow(0.5, efficiency / 10000.0)));
+  const s = Math.max(0, Math.min(120, Number(specLevel) || 0));
+  const efficiency = (m * 30) + (s * 280);
+  const focusPerUnit = baseFocus <= 0 ? 0 : Math.max(1, Math.floor((baseFocus * Math.pow(0.5, efficiency / 10000.0)) + 0.5));
   const totalFocus = useFocus ? focusPerUnit * qty : 0;
   
   // Profit without focus
@@ -195,6 +360,8 @@ export function computeCrafting({
       included: includeJournals,
       journalsFilled,
       journalProfit,
+      famePerUnit: Math.round(famePerUnit),
+      fameReq,
     },
     financials: {
       upfrontMaterials: Math.round(upfrontMaterials),

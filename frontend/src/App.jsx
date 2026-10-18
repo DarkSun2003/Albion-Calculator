@@ -17,73 +17,87 @@ import InteractiveTour from './components/InteractiveTour';
 import PlayerHandbookModal from './components/PlayerHandbookModal';
 import CommandNavigator, { spotlightElement } from './components/CommandNavigator';
 import LiveScannerModal from './components/LiveScannerModal';
-import { computeRefining, RESOURCES, calculateFocusCost } from './utils/albionMath';
+import { computeRefining, RESOURCES, calculateFocusCost, simulateRefiningFromMaterials } from './utils/albionMath';
 import { fetchLivePricesApi, calculateRefiningApi } from './services/api';
 import { Layers, Hammer, Flame, FlaskConical, Wheat, Users, Skull, Compass, BookOpen, Sparkles, X, Search, RefreshCw, ArrowUpRight } from 'lucide-react';
 
 const MODULE_DECK = [
   {
     id: 'refining',
-    label: 'Refining',
-    sublabel: '+40% Royal RRR',
+    label: 'Refining Works',
+    sublabel: 'Royal Cities (+40% RRR)',
+    discipline: 'Smelter & Tanner',
     icon: Layers,
-    activeClass: 'bg-gradient-to-br from-amber-950/80 via-[#141926] to-amber-900/30 border-amber-400 text-amber-200 shadow-[0_0_20px_rgba(245,158,11,0.28)] ring-1 ring-amber-400/50',
+    activeClass: 'bg-gradient-to-br from-amber-950/90 via-[#0f1523] to-amber-900/40 border-amber-400 text-amber-100 shadow-[0_0_24px_rgba(245,158,11,0.32)] ring-1 ring-amber-400/60',
     iconColor: 'text-amber-400',
-    tagColor: 'text-amber-300/90 bg-amber-500/15 border-amber-500/30',
+    tagColor: 'text-amber-200 bg-amber-500/20 border-amber-500/40',
+    cityHighlight: 'Martlock / Thetford / Fort Sterling',
   },
   {
     id: 'crafting',
     label: 'Gear Forge',
     sublabel: '3,400+ Equipment',
+    discipline: 'Grand Forgemaster',
     icon: Hammer,
-    activeClass: 'bg-gradient-to-br from-sky-950/80 via-[#141926] to-sky-900/30 border-sky-400 text-sky-200 shadow-[0_0_20px_rgba(56,189,248,0.28)] ring-1 ring-sky-400/50',
+    activeClass: 'bg-gradient-to-br from-sky-950/90 via-[#0f1523] to-sky-900/40 border-sky-400 text-sky-100 shadow-[0_0_24px_rgba(56,189,248,0.32)] ring-1 ring-sky-400/60',
     iconColor: 'text-sky-400',
-    tagColor: 'text-sky-300/90 bg-sky-500/15 border-sky-500/30',
+    tagColor: 'text-sky-200 bg-sky-500/20 border-sky-500/40',
+    cityHighlight: 'Royal Specialty Cities',
   },
   {
     id: 'cooking',
     label: "Chef's Hearth",
-    sublabel: '+15% Caerleon',
+    sublabel: '+15% Caerleon Bonus',
+    discipline: 'Master Provisions',
     icon: Flame,
-    activeClass: 'bg-gradient-to-br from-orange-950/80 via-[#141926] to-orange-900/30 border-orange-400 text-orange-200 shadow-[0_0_20px_rgba(249,115,22,0.28)] ring-1 ring-orange-400/50',
+    activeClass: 'bg-gradient-to-br from-orange-950/90 via-[#0f1523] to-orange-900/40 border-orange-400 text-orange-100 shadow-[0_0_24px_rgba(249,115,22,0.32)] ring-1 ring-orange-400/60',
     iconColor: 'text-orange-400',
-    tagColor: 'text-orange-300/90 bg-orange-500/15 border-orange-500/30',
+    tagColor: 'text-orange-200 bg-orange-500/20 border-orange-500/40',
+    cityHighlight: 'Caerleon Outlaw City',
   },
   {
     id: 'potions',
     label: 'Alchemy Lab',
-    sublabel: '+15% Brecilien',
+    sublabel: '+15% Brecilien Bonus',
+    discipline: 'Apothecary Guild',
     icon: FlaskConical,
-    activeClass: 'bg-gradient-to-br from-emerald-950/80 via-[#141926] to-emerald-900/30 border-emerald-400 text-emerald-200 shadow-[0_0_20px_rgba(16,185,129,0.28)] ring-1 ring-emerald-400/50',
+    activeClass: 'bg-gradient-to-br from-emerald-950/90 via-[#0f1523] to-emerald-900/40 border-emerald-400 text-emerald-100 shadow-[0_0_24px_rgba(16,185,129,0.32)] ring-1 ring-emerald-400/60',
     iconColor: 'text-emerald-400',
-    tagColor: 'text-emerald-300/90 bg-emerald-500/15 border-emerald-500/30',
+    tagColor: 'text-emerald-200 bg-emerald-500/20 border-emerald-500/40',
+    cityHighlight: 'Brecilien Mist City',
   },
   {
     id: 'farming',
     label: 'Agriculture',
-    sublabel: 'Crops & Pastures',
+    sublabel: 'Crops & Livestock',
+    discipline: 'Island Husbandry',
     icon: Wheat,
-    activeClass: 'bg-gradient-to-br from-lime-950/80 via-[#141926] to-lime-900/30 border-lime-400 text-lime-200 shadow-[0_0_20px_rgba(132,204,22,0.28)] ring-1 ring-lime-400/50',
+    activeClass: 'bg-gradient-to-br from-lime-950/90 via-[#0f1523] to-lime-900/40 border-lime-400 text-lime-100 shadow-[0_0_24px_rgba(132,204,22,0.32)] ring-1 ring-lime-400/60',
     iconColor: 'text-lime-400',
-    tagColor: 'text-lime-300/90 bg-lime-500/15 border-lime-500/30',
+    tagColor: 'text-lime-200 bg-lime-500/20 border-lime-500/40',
+    cityHighlight: 'Personal & Guild Islands',
   },
   {
     id: 'laborers',
-    label: 'Laborers',
-    sublabel: 'Journal Yields',
+    label: 'Laborer Lodge',
+    sublabel: 'Fame & Journals',
+    discipline: 'Workforce Bureau',
     icon: Users,
-    activeClass: 'bg-gradient-to-br from-yellow-950/80 via-[#141926] to-amber-900/30 border-amber-300 text-amber-100 shadow-[0_0_20px_rgba(251,191,36,0.28)] ring-1 ring-amber-300/50',
+    activeClass: 'bg-gradient-to-br from-yellow-950/90 via-[#0f1523] to-amber-900/40 border-amber-300 text-amber-50 shadow-[0_0_24px_rgba(251,191,36,0.32)] ring-1 ring-amber-300/60',
     iconColor: 'text-amber-300',
-    tagColor: 'text-amber-200/90 bg-amber-500/15 border-amber-400/30',
+    tagColor: 'text-amber-100 bg-amber-500/20 border-amber-400/40',
+    cityHighlight: 'House Furniture & Trophies',
   },
   {
     id: 'blackmarket',
     label: 'Black Market',
-    sublabel: 'Caerleon Flipper',
+    sublabel: 'Caerleon Contraband',
+    discipline: 'Red-Zone Fence',
     icon: Skull,
-    activeClass: 'bg-gradient-to-br from-rose-950/80 via-[#141926] to-rose-900/40 border-rose-500 text-rose-200 shadow-[0_0_20px_rgba(244,63,94,0.32)] ring-1 ring-rose-400/50',
+    activeClass: 'bg-gradient-to-br from-rose-950/90 via-[#0f1523] to-rose-900/45 border-rose-500 text-rose-100 shadow-[0_0_26px_rgba(244,63,94,0.38)] ring-1 ring-rose-400/60',
     iconColor: 'text-rose-400',
-    tagColor: 'text-rose-300/90 bg-rose-500/15 border-rose-500/30',
+    tagColor: 'text-rose-200 bg-rose-500/20 border-rose-500/40',
+    cityHighlight: 'Underworld System Buys',
   },
 ];
 
@@ -170,6 +184,12 @@ export default function App() {
   const [quantity, setQuantity] = useState(100);
   const [dailyBonus, setDailyBonus] = useState(0);
 
+  // "I Have Materials" mode states for Refining
+  const [refiningInputMode, setRefiningInputMode] = useState('target'); // 'target' | 'materials'
+  const [rawMaterialsHave, setRawMaterialsHave] = useState(5000);
+  const [prevRefinedHave, setPrevRefinedHave] = useState(0);
+  const [compoundRrrPasses, setCompoundRrrPasses] = useState(true);
+
   // Market prices
   const [rawPrice, setRawPrice] = useState(70);
   const [prevRefinedPrice, setPrevRefinedPrice] = useState(50);
@@ -190,14 +210,46 @@ export default function App() {
   const [loadingPrices, setLoadingPrices] = useState(false);
   const [priceFetchStatus, setPriceFetchStatus] = useState('');
 
+  // Simulate multi-pass refining from user's on-hand raw stack
+  const refiningMaterialSim = useMemo(() => {
+    return simulateRefiningFromMaterials({
+      resourceType: selectedResource,
+      tier: selectedTier,
+      enchantment: selectedEnchantment,
+      rawHave: rawMaterialsHave,
+      prevRefinedHave,
+      constrainByPrevRefined: false,
+      city: selectedCity,
+      useFocus,
+      dailyBonusPct: dailyBonus,
+    });
+  }, [
+    selectedResource,
+    selectedTier,
+    selectedEnchantment,
+    rawMaterialsHave,
+    prevRefinedHave,
+    selectedCity,
+    useFocus,
+    dailyBonus,
+  ]);
+
+  const effectiveRefiningQuantity = useMemo(() => {
+    if (refiningInputMode === 'materials' && refiningMaterialSim) {
+      const crafts = compoundRrrPasses ? refiningMaterialSim.totalCrafts : refiningMaterialSim.pass1Crafts;
+      return Math.max(1, crafts);
+    }
+    return quantity;
+  }, [refiningInputMode, refiningMaterialSim, compoundRrrPasses, quantity]);
+
   // Focus cost calculation
   const focusPerUnit = useMemo(() => {
     return calculateFocusCost(selectedResource, selectedTier, selectedEnchantment, masteryLevel, specLevels);
   }, [selectedResource, selectedTier, selectedEnchantment, masteryLevel, specLevels]);
 
   const totalFocusNeeded = useMemo(() => {
-    return useFocus ? focusPerUnit * quantity : 0;
-  }, [useFocus, focusPerUnit, quantity]);
+    return useFocus ? focusPerUnit * effectiveRefiningQuantity : 0;
+  }, [useFocus, focusPerUnit, effectiveRefiningQuantity]);
 
   // Backend calculation engine states
   const [backendCalculation, setBackendCalculation] = useState(null);
@@ -210,7 +262,7 @@ export default function App() {
       resourceType: selectedResource,
       tier: selectedTier,
       enchantment: selectedEnchantment,
-      quantity,
+      quantity: effectiveRefiningQuantity,
       rawPrice,
       prevRefinedPrice,
       refinedSellPrice,
@@ -227,7 +279,7 @@ export default function App() {
     selectedResource,
     selectedTier,
     selectedEnchantment,
-    quantity,
+    effectiveRefiningQuantity,
     rawPrice,
     prevRefinedPrice,
     refinedSellPrice,
@@ -252,7 +304,7 @@ export default function App() {
           resource_type: selectedResource,
           tier: selectedTier,
           enchantment: selectedEnchantment,
-          quantity,
+          quantity: effectiveRefiningQuantity,
           raw_price: rawPrice,
           prev_refined_price: prevRefinedPrice,
           refined_sell_price: refinedSellPrice,
@@ -290,7 +342,7 @@ export default function App() {
     selectedResource,
     selectedTier,
     selectedEnchantment,
-    quantity,
+    effectiveRefiningQuantity,
     rawPrice,
     prevRefinedPrice,
     refinedSellPrice,
@@ -382,25 +434,28 @@ export default function App() {
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
-        {/* First-Time Visitor Welcome Banner */}
+        {/* First-Time Visitor Welcome Banner: Royal Trade Charter */}
         {showWelcomeBanner && (
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-950/70 via-[#121824] to-amber-950/50 border border-amber-500/50 p-4 sm:p-5 shadow-[0_0_25px_rgba(245,158,11,0.15)] ring-1 ring-amber-400/30 animate-fade-in">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-950/80 via-[#0d131f] to-amber-950/60 border border-amber-500/50 p-4 sm:p-5 shadow-[0_12px_35px_rgba(0,0,0,0.85)] ring-1 ring-amber-400/40 animate-fade-in">
+            {/* Subtle top edge gold filament */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400/80 to-transparent" />
+            
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
               <div className="flex items-start gap-3.5 min-w-0">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/50 flex items-center justify-center text-amber-300 shadow-gold-glow shrink-0 mt-0.5">
-                  <Compass className="w-5 h-5 animate-spin-slow" />
+                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500/25 to-amber-900/40 border border-amber-400/60 flex items-center justify-center text-amber-300 shadow-gold-glow shrink-0 mt-0.5">
+                  <Compass className="w-5 h-5 animate-spin-slow text-amber-300" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-serif text-sm sm:text-base font-bold text-slate-100 flex items-center gap-2">
+                    <span className="text-[9.5px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold uppercase tracking-widest shadow-gold-glow">
+                      ⚔️ ROYAL TRADE CHARTER
+                    </span>
+                    <h3 className="font-decorative text-sm sm:text-base font-bold text-amber-100 flex items-center gap-2 drop-shadow">
                       Welcome to Albion Artisan Forgemaster
                     </h3>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold uppercase">
-                      Interactive Map &amp; Tour
-                    </span>
                   </div>
                   <p className="text-xs text-slate-300 mt-1 font-sans leading-relaxed">
-                    Never get lost: use <strong className="text-amber-300">Find Tool (Ctrl+K)</strong> in the top bar to jump straight to any setting, explore all 7 economic calculators below, or open the interactive UI Map.
+                    Royal City economy &amp; Caerleon underworld suite. Use <strong className="text-amber-300">Find Tool (Ctrl+K)</strong> to jump anywhere in seconds, explore the 7 Guild Disciplines below, or launch the interactive Handbook.
                   </p>
                 </div>
               </div>
@@ -409,7 +464,7 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => setIsCommandOpen(true)}
-                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#0d121d] hover:bg-slate-800 text-amber-300 border border-amber-500/40 font-mono font-bold text-xs transition-colors cursor-pointer"
+                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#090e17] hover:bg-slate-800 text-amber-300 border border-amber-500/40 font-mono font-bold text-xs transition-colors cursor-pointer shadow-sm active:scale-95"
                 >
                   <Search className="w-3.5 h-3.5" />
                   <span>Where Is...?</span>
@@ -417,7 +472,7 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => handleStartTour()}
-                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold font-mono text-xs shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold font-mono text-xs shadow-gold-glow transition-all hover:scale-105 active:scale-95 cursor-pointer"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Start 60s Tour</span>
@@ -428,16 +483,16 @@ export default function App() {
                     handleDismissWelcome();
                     handleOpenHandbook('uimap');
                   }}
-                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-albion-surface hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold font-serif text-xs transition-colors cursor-pointer"
+                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#101624] hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold font-serif text-xs transition-colors cursor-pointer active:scale-95"
                 >
                   <BookOpen className="w-3.5 h-3.5 text-amber-400" />
-                  <span>UI Map &amp; Guide</span>
+                  <span>UI Map &amp; Codex</span>
                 </button>
                 <button
                   type="button"
                   onClick={handleDismissWelcome}
                   className="flex items-center gap-1 px-2.5 py-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 text-xs font-mono transition-colors cursor-pointer"
-                  title="Dismiss banner"
+                  title="Dismiss charter"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -446,24 +501,24 @@ export default function App() {
           </div>
         )}
 
-        {/* 7-Discipline Guild Command Matrix (All 7 Calculators Visible At Once — Zero Hidden Scroll) */}
-        <section id="tour-module-tabs" className="space-y-2">
+        {/* 7-Discipline Guild Sigil Deck */}
+        <section id="tour-module-tabs" className="space-y-2.5">
           <div className="flex items-center justify-between px-1">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-slate-400 font-bold flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
-              Select Economic Discipline (7 Calculators)
+            <span className="text-[10.5px] font-mono uppercase tracking-widest text-slate-400 font-bold flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)] animate-pulse" />
+              Guild Economic Disciplines &bull; 7 Royal Stations
             </span>
             <button
               type="button"
               onClick={() => setIsCommandOpen(true)}
-              className="text-[11px] font-mono text-amber-400 hover:text-amber-300 flex items-center gap-1 cursor-pointer"
+              className="text-[10.5px] font-mono text-amber-400 hover:text-amber-300 flex items-center gap-1 cursor-pointer transition-colors"
             >
               <Search className="w-3 h-3" />
-              <span>Can&apos;t find a setting? Click here</span>
+              <span>Can&apos;t find a tool? (Ctrl+K)</span>
             </button>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5">
             {MODULE_DECK.map((mod) => {
               const Icon = mod.icon;
               const isActive = activeTab === mod.id;
@@ -472,28 +527,35 @@ export default function App() {
                   key={mod.id}
                   type="button"
                   onClick={() => setActiveTab(mod.id)}
-                  className={`group relative flex flex-col justify-between p-2.5 sm:p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                  className={`group relative flex flex-col justify-between p-3 rounded-xl border text-left transition-all duration-200 cursor-pointer hover:-translate-y-0.5 ${
                     isActive
-                      ? mod.activeClass
-                      : 'bg-[#0c1018]/90 hover:bg-[#131926] border-slate-800/90 hover:border-slate-600 text-slate-300'
+                      ? `${mod.activeClass} scale-[1.02]`
+                      : 'bg-[#080d15]/90 hover:bg-[#0f1726] border-slate-800/90 hover:border-slate-600/80 text-slate-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
                   }`}
                 >
-                  <div className="flex items-center justify-between w-full mb-1.5">
-                    <div className={`w-7 h-7 rounded-lg bg-black/40 border border-white/10 flex items-center justify-center ${mod.iconColor}`}>
+                  {/* Active Heraldic Gold Pips */}
+                  {isActive && (
+                    <div className="absolute top-1.5 right-2 flex items-center gap-1 text-[8.5px] font-mono font-bold tracking-wider text-amber-300 uppercase">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(245,158,11,1)] animate-ping" />
+                      <span>Active</span>
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className={`w-8 h-8 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 shadow-inner ${mod.iconColor} transition-transform group-hover:scale-110`}>
                       <Icon className="w-4 h-4" />
                     </div>
-                    {isActive && (
-                      <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-white/10 text-white font-bold">
-                        Active
-                      </span>
-                    )}
                   </div>
-                  <div>
-                    <div className="font-serif font-bold text-xs sm:text-[13px] leading-tight truncate">
+
+                  <div className="space-y-1">
+                    <div className="font-serif font-bold text-xs sm:text-[13px] leading-tight truncate text-slate-100 group-hover:text-amber-200 transition-colors">
                       {mod.label}
                     </div>
-                    <div className={`text-[10px] font-mono mt-1 px-1.5 py-0.5 rounded border inline-block truncate max-w-full ${
-                      isActive ? mod.tagColor : 'text-slate-500 bg-black/30 border-slate-800'
+                    <div className="text-[9.5px] text-slate-400 font-sans truncate block">
+                      {mod.discipline}
+                    </div>
+                    <div className={`text-[9.5px] font-mono px-1.5 py-0.5 rounded border inline-block truncate max-w-full font-semibold ${
+                      isActive ? mod.tagColor : 'text-slate-400 bg-black/40 border-slate-800/80'
                     }`}>
                       {mod.sublabel}
                     </div>
@@ -524,6 +586,7 @@ export default function App() {
             server={server}
             hasPremium={hasPremium}
             useFocus={useFocus}
+            setUseFocus={setUseFocus}
             onOpenGuide={handleOpenHandbook}
             onStartTour={handleStartTour}
           />
@@ -532,6 +595,7 @@ export default function App() {
             server={server}
             hasPremium={hasPremium}
             useFocus={useFocus}
+            setUseFocus={setUseFocus}
             onOpenGuide={handleOpenHandbook}
             onStartTour={handleStartTour}
           />
@@ -540,6 +604,7 @@ export default function App() {
             server={server}
             hasPremium={hasPremium}
             useFocus={useFocus}
+            setUseFocus={setUseFocus}
             onOpenGuide={handleOpenHandbook}
             onStartTour={handleStartTour}
           />
@@ -548,6 +613,7 @@ export default function App() {
             server={server}
             hasPremium={hasPremium}
             useFocus={useFocus}
+            setUseFocus={setUseFocus}
             onOpenGuide={handleOpenHandbook}
             onStartTour={handleStartTour}
           />
@@ -562,10 +628,11 @@ export default function App() {
                 </span>
                 {[
                   { label: '01 Material & Tier', target: '#tour-resource-picker' },
-                  { label: '02 City & Tax', target: '#tour-city-controls' },
-                  { label: '03 Market Prices', target: '#tour-price-inputs' },
-                  { label: '04 Focus & Spec', target: '#tour-focus-spec' },
-                  { label: '05 Profit & Cities', target: '#tour-profit-ledger' },
+                  { label: '02 Recipe & Vault', target: '#tour-crafting-flow' },
+                  { label: '03 City & Tax', target: '#tour-city-controls' },
+                  { label: '04 Market Prices', target: '#tour-price-inputs' },
+                  { label: '05 Net Profit', target: '#tour-profit-ledger' },
+                  { label: '06 Focus & Spec', target: '#tour-focus-spec' },
                 ].map((st) => (
                   <button
                     key={st.target}
@@ -614,13 +681,24 @@ export default function App() {
                 </div>
 
                 {/* 2. Visual Blueprint Flow with Local Item Renders */}
-                <CraftingFlowCard
-                  selectedResource={selectedResource}
-                  selectedTier={selectedTier}
-                  selectedEnchantment={selectedEnchantment}
-                  quantity={quantity}
-                  calculation={calculation}
-                />
+                <div id="tour-crafting-flow">
+                  <CraftingFlowCard
+                    selectedResource={selectedResource}
+                    selectedTier={selectedTier}
+                    selectedEnchantment={selectedEnchantment}
+                    quantity={effectiveRefiningQuantity}
+                    calculation={calculation}
+                    refiningInputMode={refiningInputMode}
+                    setRefiningInputMode={setRefiningInputMode}
+                    rawMaterialsHave={rawMaterialsHave}
+                    setRawMaterialsHave={setRawMaterialsHave}
+                    prevRefinedHave={prevRefinedHave}
+                    setPrevRefinedHave={setPrevRefinedHave}
+                    compoundRrrPasses={compoundRrrPasses}
+                    setCompoundRrrPasses={setCompoundRrrPasses}
+                    materialSim={refiningMaterialSim}
+                  />
+                </div>
 
                 {/* 3. Location, Station Nutrition Tax & Batch Quantity */}
                 <div id="tour-city-controls">
@@ -634,6 +712,12 @@ export default function App() {
                     setQuantity={setQuantity}
                     dailyBonus={dailyBonus}
                     setDailyBonus={setDailyBonus}
+                    refiningInputMode={refiningInputMode}
+                    setRefiningInputMode={setRefiningInputMode}
+                    rawMaterialsHave={rawMaterialsHave}
+                    setRawMaterialsHave={setRawMaterialsHave}
+                    compoundRrrPasses={compoundRrrPasses}
+                    materialSim={refiningMaterialSim}
                   />
                 </div>
 
@@ -685,6 +769,7 @@ export default function App() {
                     specLevels={specLevels}
                     setSpecLevels={setSpecLevels}
                     useFocus={useFocus}
+                    setUseFocus={setUseFocus}
                     focusPerUnit={focusPerUnit}
                     totalFocusNeeded={totalFocusNeeded}
                   />
@@ -708,7 +793,7 @@ export default function App() {
                     selectedResource={selectedResource}
                     selectedTier={selectedTier}
                     selectedEnchantment={selectedEnchantment}
-                    quantity={quantity}
+                    quantity={effectiveRefiningQuantity}
                     rawPrice={rawPrice}
                     prevRefinedPrice={prevRefinedPrice}
                     refinedSellPrice={refinedSellPrice}

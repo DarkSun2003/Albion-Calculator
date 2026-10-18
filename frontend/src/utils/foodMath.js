@@ -227,3 +227,105 @@ export function computeFoodCrafting({
     },
   };
 }
+
+/**
+ * Simulates pass-by-pass food cooking starting from on-hand ingredient stack
+ * (e.g. "I have 500 Bundle of Corn — tell me how many Pork Pies I can make and what else I need").
+ */
+export function simulateFoodCraftingFromMaterials({
+  item,
+  enchantment = 0,
+  primaryHave = 0,
+  city = 'Caerleon',
+  useFocus = false,
+  dailyBonusPct = 0,
+}) {
+  if (!item || !item.ingredients || item.ingredients.length === 0) return null;
+  const ench = Math.max(0, Math.min(item.maxEnchantment || 0, parseInt(enchantment || 0, 10)));
+  const primary = item.ingredients[0];
+  const primaryCount = primary.count || primary.quantity || 1;
+  const rrr = calculateFoodReturnRate(item, city, useFocus, dailyBonusPct);
+  const yieldPerBatch = item.amountCrafted || 1;
+
+  // Active ingredients list including sauce if enchanted
+  const activeIngredients = (item.ingredients || []).map((ing) => ({
+    uniqueName: ing.uniqueName,
+    name: ing.name,
+    count: ing.count || ing.quantity || 1,
+    noRefund: Boolean(ing.noRefund),
+    icon: ing.icon || `${ing.uniqueName}.png`,
+  }));
+
+  if (ench > 0 && item.enchantments?.[ench]?.sauce) {
+    const s = item.enchantments[ench].sauce;
+    activeIngredients.push({
+      uniqueName: s.uniqueName,
+      name: s.name,
+      count: s.count || 10,
+      noRefund: false,
+      icon: s.icon || `${s.uniqueName}.png`,
+    });
+  }
+
+  let remPrimary = Math.max(0, Math.floor(Number(primaryHave) || 0));
+  const pass1Batches = Math.floor(remPrimary / primaryCount);
+  let totalBatches = 0;
+  const passes = [];
+  let passIdx = 0;
+
+  while (remPrimary >= primaryCount && passIdx < 50) {
+    passIdx += 1;
+    const batchesInPass = Math.floor(remPrimary / primaryCount);
+    if (batchesInPass <= 0) break;
+    totalBatches += batchesInPass;
+
+    const used = batchesInPass * primaryCount;
+    const returned = Math.floor(used * rrr);
+    remPrimary = remPrimary - used + returned;
+
+    passes.push({
+      pass: passIdx,
+      batches: batchesInPass,
+      produced: batchesInPass * yieldPerBatch,
+      usedPrimary: used,
+      returnedPrimary: returned,
+      leftoverPrimary: remPrimary,
+    });
+
+    if (returned <= 0) break;
+  }
+
+  const bonusRrrBatches = Math.max(0, totalBatches - pass1Batches);
+
+  // Calculate secondary ingredients needed for pass1 and total
+  const secondaryIngredientsPass1 = activeIngredients.slice(1).map((ing) => ({
+    ...ing,
+    grossNeeded: ing.count * pass1Batches,
+    netNeeded: Math.ceil(ing.count * pass1Batches * (ing.noRefund ? 1 : (1 - rrr))),
+  }));
+
+  const secondaryIngredientsTotal = activeIngredients.slice(1).map((ing) => ({
+    ...ing,
+    grossNeeded: ing.count * totalBatches,
+    netNeeded: Math.ceil(ing.count * totalBatches * (ing.noRefund ? 1 : (1 - rrr))),
+  }));
+
+  return {
+    primary,
+    primaryName: primary.name,
+    primaryCount,
+    rrr,
+    returnRatePct: Math.round(rrr * 10000) / 100,
+    yieldPerBatch,
+    pass1Batches,
+    pass1Output: pass1Batches * yieldPerBatch,
+    bonusRrrBatches,
+    totalBatches,
+    totalOutput: totalBatches * yieldPerBatch,
+    passCount: passes.length,
+    passes,
+    leftoverPrimary: remPrimary,
+    secondaryIngredientsPass1,
+    secondaryIngredientsTotal,
+  };
+}

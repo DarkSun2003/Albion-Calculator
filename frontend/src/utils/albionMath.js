@@ -165,29 +165,204 @@ export function calculateFocusCost(resourceType, tier, enchantment, mastery = 0,
   const multiplier = ENCHANTMENT_FOCUS_MULTIPLIER[enchantment] || 1.0;
   const baseFocus = baseCost * multiplier;
   
-  // Efficiency
+  // Efficiency: Mastery gives +30/lvl, active Tier Spec gives +280/lvl (+250 specific + 30 shared), other 4 specs give +30/lvl
   const m = Math.max(0, Math.min(100, Number(mastery) || 0));
   let efficiency = m * 30;
   
   [4, 5, 6, 7, 8].forEach(t => {
     const spec = Math.max(0, Math.min(100, Number(specLevels[t]) || 0));
     if (t === tier) {
-      efficiency += spec * 250;
+      efficiency += spec * 280;
     } else {
       efficiency += spec * 30;
     }
   });
   
   const actualFocus = baseFocus * Math.pow(0.5, efficiency / 10000.0);
-  return Math.max(1, Math.floor(actualFocus));
+  return Math.max(1, Math.floor(actualFocus + 0.5));
 }
 
 export function calculateStationFee(tier, enchantment, stationTaxPer100 = 0, quantity = 1) {
+  if (Number(tier) <= 2) return 0;
   const tierVals = BASE_ITEM_VALUES[tier] || {};
   const itemVal = tierVals[enchantment] ?? tierVals[0] ?? 14;
   const nutrition = itemVal * 0.1125;
   const feePerUnit = nutrition * ((stationTaxPer100 || 0) / 100.0);
   return feePerUnit * quantity;
+}
+
+/**
+ * Simulates pass-by-pass refining at a station starting from a player's on-hand Raw Material stack
+ * (e.g., "I have 5,000 T4 Hide — tell me how much T3 Leather I need and how much T4 Leather I will get").
+ */
+export function simulateRefiningFromMaterials({
+  resourceType = 'hide',
+  tier = 4,
+  enchantment = 0,
+  rawHave = 0,
+  prevRefinedHave = 0,
+  constrainByPrevRefined = false,
+  city = 'Martlock',
+  useFocus = false,
+  dailyBonusPct = 0,
+}) {
+  const t = Number(tier);
+  const ench = Math.min(resourceType === 'stone' ? 3 : 4, Number(enchantment));
+  const rawPerCraft = RAW_PER_TIER[t] || 2;
+  const prevPerCraft = t > 2 ? 1 : 0;
+  const rrr = calculateReturnRate(resourceType, city, useFocus, dailyBonusPct);
+  const isStone = resourceType === 'stone';
+  const stoneMultiplier = isStone ? (STONE_ENCHANTMENT_YIELD[ench] || 1) : 1;
+
+  let remRaw = Math.max(0, Math.floor(Number(rawHave) || 0));
+  let remPrev = Math.max(0, Math.floor(Number(prevRefinedHave) || 0));
+
+  let pass1Crafts = 0;
+  let totalCrafts = 0;
+  let prevTotalNeeded = 0;
+  let simPrevBag = 0;
+  const passes = [];
+
+  let passIndex = 0;
+  while (remRaw >= rawPerCraft && passIndex < 50) {
+    let craftsInPass = Math.floor(remRaw / rawPerCraft);
+    if (prevPerCraft > 0 && constrainByPrevRefined) {
+      craftsInPass = Math.min(craftsInPass, Math.floor(remPrev / prevPerCraft));
+    }
+    if (craftsInPass <= 0) break;
+
+    passIndex += 1;
+    if (passIndex === 1) {
+      pass1Crafts = craftsInPass;
+    }
+    totalCrafts += craftsInPass;
+
+    const rawUsed = craftsInPass * rawPerCraft;
+    const rawReturned = Math.floor(rawUsed * rrr);
+    remRaw = remRaw - rawUsed + rawReturned;
+
+    let prevUsed = 0;
+    let prevReturned = 0;
+    if (prevPerCraft > 0) {
+      prevUsed = craftsInPass * prevPerCraft;
+      prevReturned = Math.floor(prevUsed * rrr);
+      if (constrainByPrevRefined) {
+        remPrev = remPrev - prevUsed + prevReturned;
+      } else {
+        if (simPrevBag < prevUsed) {
+          const shortfall = prevUsed - simPrevBag;
+          prevTotalNeeded += shortfall;
+          simPrevBag += shortfall;
+        }
+        simPrevBag = simPrevBag - prevUsed + prevReturned;
+      }
+    }
+
+    passes.push({
+      pass: passIndex,
+      crafts: craftsInPass,
+      output: craftsInPass * stoneMultiplier,
+      rawUsed,
+      rawReturned,
+      prevUsed,
+      prevReturned,
+    });
+
+    if (rawReturned <= 0) break;
+  }
+
+  const bonusRrrCrafts = Math.max(0, totalCrafts - pass1Crafts);
+  const prevNeededPass1 = pass1Crafts * prevPerCraft;
+  if (prevPerCraft > 0 && constrainByPrevRefined) {
+    prevTotalNeeded = Math.max(0, Math.floor(Number(prevRefinedHave) || 0) - remPrev);
+  }
+  const prevToBuyPass1 = Math.max(0, prevNeededPass1 - Math.max(0, Math.floor(Number(prevRefinedHave) || 0)));
+  const prevToBuyTotal = Math.max(0, prevTotalNeeded - Math.max(0, Math.floor(Number(prevRefinedHave) || 0)));
+
+  return {
+    rrr,
+    returnRatePct: Number((rrr * 100).toFixed(2)),
+    rawPerCraft,
+    prevPerCraft,
+    stoneMultiplier,
+    pass1Crafts,
+    bonusRrrCrafts,
+    totalCrafts,
+    pass1Output: pass1Crafts * stoneMultiplier,
+    bonusRrrOutput: bonusRrrCrafts * stoneMultiplier,
+    totalOutput: totalCrafts * stoneMultiplier,
+    passCount: passes.length,
+    passes,
+    leftoverRaw: remRaw,
+    leftoverPrevRefined: constrainByPrevRefined ? remPrev : simPrevBag,
+    prevNeededPass1,
+    prevTotalNeeded,
+    prevToBuyPass1,
+    prevToBuyTotal,
+  };
+}
+
+export const RESOURCE_WEIGHTS = {
+  raw: { 2: 0.1, 3: 0.2, 4: 0.3, 5: 0.5, 6: 0.8, 7: 1.2, 8: 1.8 },
+  refined: { 2: 0.2, 3: 0.3, 4: 0.5, 5: 0.8, 6: 1.3, 7: 2.0, 8: 3.0 },
+};
+
+export const REFINING_MOUNT_THRESHOLDS = [
+  { maxWeight: 150, name: 'T4 Riding Horse / Swiftclaw', badge: 'text-emerald-400 border-emerald-600/50 bg-emerald-950/40' },
+  { maxWeight: 600, name: 'T5 Transport Ox / Direboar', badge: 'text-sky-300 border-sky-500/50 bg-sky-950/40' },
+  { maxWeight: 1800, name: 'T7 Transport Ox / Grizzly Bear', badge: 'text-amber-300 border-amber-500/50 bg-amber-950/40' },
+  { maxWeight: Infinity, name: 'T8 Transport Mammoth / Guild Caravan', badge: 'text-rose-300 border-rose-500/50 bg-rose-950/40' },
+];
+
+export function getRefiningMountRecommendation(weightKg) {
+  const w = Number(weightKg) || 0;
+  for (const m of REFINING_MOUNT_THRESHOLDS) {
+    if (w <= m.maxWeight) return m;
+  }
+  return REFINING_MOUNT_THRESHOLDS[REFINING_MOUNT_THRESHOLDS.length - 1];
+}
+
+export function getFocusPoolAnalysis(totalFocus) {
+  const f = Math.max(0, Number(totalFocus) || 0);
+  const days = f / 10000;
+  if (f <= 0) {
+    return {
+      status: 'none',
+      days: 0,
+      daysText: '0 days',
+      isOverBank: false,
+      badgeText: '0 Focus',
+      colorClass: 'text-slate-400 bg-slate-900/60 border-slate-700',
+    };
+  }
+  if (f <= 10000) {
+    return {
+      status: 'single_session',
+      days: Number(days.toFixed(1)),
+      daysText: `${days.toFixed(1)} daily pool`,
+      isOverBank: false,
+      badgeText: `⚡ ${f.toLocaleString()} Focus (~${days.toFixed(1)} days • Ready in 1 day)`,
+      colorClass: 'text-emerald-300 bg-emerald-950/60 border-emerald-500/40',
+    };
+  }
+  if (f <= 30000) {
+    return {
+      status: 'within_bank',
+      days: Number(days.toFixed(1)),
+      daysText: `${days.toFixed(1)} days`,
+      isOverBank: false,
+      badgeText: `⚡ ${f.toLocaleString()} Focus (~${days.toFixed(1)} days • Within 30k bank limit)`,
+      colorClass: 'text-amber-300 bg-amber-950/60 border-amber-500/40',
+    };
+  }
+  return {
+    status: 'over_bank',
+    days: Number(days.toFixed(1)),
+    daysText: `${days.toFixed(1)} days`,
+    isOverBank: true,
+    badgeText: `⚠️ Exceeds 30k Bank Cap (${f.toLocaleString()} Focus • ~${days.toFixed(1)} days regen)`,
+    colorClass: 'text-rose-300 bg-rose-950/70 border-rose-500/60 shadow-[0_0_12px_rgba(244,63,94,0.25)]',
+  };
 }
 
 export function computeRefining({
@@ -281,7 +456,15 @@ export function computeRefining({
       extraProfit: profitDiff,
     };
   }
-  
+
+  const rawUnitWeight = RESOURCE_WEIGHTS.raw[t] || 0.3;
+  const prevUnitWeight = RESOURCE_WEIGHTS.refined[t - 1] || 0.2;
+  const outputUnitWeight = RESOURCE_WEIGHTS.refined[t] || 0.5;
+  const inputCargoWeightKg = Math.round((rawGross * rawUnitWeight + prevRefinedGross * prevUnitWeight) * 10) / 10;
+  const outputCargoWeightKg = Math.round((outputQuantity * outputUnitWeight) * 10) / 10;
+  const recommendedMount = getRefiningMountRecommendation(Math.max(inputCargoWeightKg, outputCargoWeightKg));
+  const focusPool = getFocusPoolAnalysis(totalFocus);
+
   return {
     resourceType,
     tier: t,
@@ -296,6 +479,13 @@ export function computeRefining({
     returnRateNoFocusPct: Number((rrrNoFocus * 100).toFixed(2)),
     focusPerUnit,
     totalFocusNeeded: totalFocus,
+    focusPool,
+    cargo: {
+      inputCargoWeightKg,
+      outputCargoWeightKg,
+      maxCargoWeightKg: Math.max(inputCargoWeightKg, outputCargoWeightKg),
+      recommendedMount,
+    },
     silverPerFocus: Number(silverPerFocus.toFixed(2)),
     materials: {
       rawGross,

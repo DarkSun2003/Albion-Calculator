@@ -53,13 +53,38 @@ CITY_CRAFTING_BONUSES = {
     'Brecilien': ['bags', 'capes', 'potions'],
 }
 
-# Fame required to fill a journal by tier (Journals start at Tier 4)
+# Base crafting fame earned per 1 refined resource at each tier (.0 flat)
+# Enchanted materials multiply fame by 2 ** enchantment (.1 = 2x, .2 = 4x, .3 = 8x, .4 = 16x)
+CRAFTING_FAME_PER_RESOURCE = {
+    2: 7.5,
+    3: 15.0,
+    4: 22.5,
+    5: 90.0,
+    6: 270.0,
+    7: 645.0,
+    8: 1395.0,
+}
+
+# Fame required to fill a crafting journal by tier (Crafting Journals start at Tier 4)
 JOURNAL_FAME_REQUIRED = {
-    4: 900,
-    5: 1800,
-    6: 3600,
-    7: 7200,
-    8: 14400,
+    2: 900,
+    3: 1800,
+    4: 3600,
+    5: 7200,
+    6: 14400,
+    7: 28380,
+    8: 58590,
+}
+
+# Additional Item Value added by artifacts at Tier 4 baseline (scales by 2 ** (tier - 4))
+ARTIFACT_BASE_ITEM_VALUE = {
+    'Rune': 64,
+    'Soul': 192,
+    'Relic': 448,
+    'Tracking': 448,
+    'Avalonian': 960,
+    'Crystal': 960,
+    'Dragon': 448,
 }
 
 def _load_catalog():
@@ -82,9 +107,15 @@ def _load_catalog():
         it['artifact_template'] = it.get('artifactTemplate', it.get('artifact_template', ''))
         it['journal_name'] = it.get('journalName', it.get('journal_name', ''))
         it['journal_template'] = it.get('journalTemplate', it.get('journal_template', ''))
-        it['fame_per_unit'] = it.get('famePerUnit', it.get('fame_per_unit', 0))
-        it['base_item_value'] = it.get('baseItemValue', it.get('base_item_value', 0))
-        it['base_focus'] = it.get('baseFocus', it.get('base_focus', 0))
+
+        mat_count = (it['primary_qty'] or 0) + (it['secondary_qty'] or 0)
+        it['fame_per_unit'] = round(mat_count * 22.5, 1)
+        it['famePerUnit'] = it['fame_per_unit']
+        it['base_item_value'] = mat_count * 16
+        it['baseItemValue'] = it['base_item_value']
+        it['base_focus'] = round(mat_count * 53.59375)
+        it['baseFocus'] = it['base_focus']
+
         it['min_tier'] = it.get('minTier', it.get('min_tier', 4))
         it['max_tier'] = it.get('maxTier', it.get('max_tier', 8))
         it['allow_enchantment'] = it.get('allowEnchantment', it.get('allow_enchantment', True))

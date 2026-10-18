@@ -41,7 +41,7 @@ def calculate_focus_efficiency(mastery: int, spec_levels: dict, current_tier: in
     """
     Calculates total focus efficiency points for a specific tier.
     - Mastery (1-100) gives +30 efficiency to all tiers.
-    - Spec for current tier gives +250 efficiency per level.
+    - Spec for current tier gives +280 efficiency per level (+250 tier-specific + 30 shared to all tiers).
     - Spec for other 4 tiers gives +30 efficiency per level.
     """
     mastery = max(0, min(100, int(mastery or 0)))
@@ -50,7 +50,7 @@ def calculate_focus_efficiency(mastery: int, spec_levels: dict, current_tier: in
     for t in [4, 5, 6, 7, 8]:
         level = max(0, min(100, int(spec_levels.get(t, 0) or spec_levels.get(str(t), 0) or 0)))
         if t == current_tier:
-            total_eff += level * 250
+            total_eff += level * 280
         else:
             total_eff += level * 30
             
@@ -74,14 +74,17 @@ def calculate_focus_cost(resource_type: str, tier: int, enchantment: int, master
     efficiency = calculate_focus_efficiency(mastery, spec_levels, tier)
     
     actual_focus = base_focus * (0.5 ** (efficiency / 10000.0))
-    return max(1, math.floor(actual_focus))
+    return max(1, math.floor(actual_focus + 0.5))
 
 
 def calculate_station_fee(tier: int, enchantment: int, station_tax_per_100: float, quantity: int) -> float:
     """
     Calculates the silver fee charged by the crafting/refining station.
     Formula: ItemValue * 0.1125 * (Station Tax / 100) * Quantity
+    Note: Tier 2 refining has 0 nutrition cost (free in Albion Online).
     """
+    if tier <= 2:
+        return 0.0
     tier_vals = BASE_ITEM_VALUES.get(tier, {})
     item_val = tier_vals.get(enchantment, tier_vals.get(0, 14))
     

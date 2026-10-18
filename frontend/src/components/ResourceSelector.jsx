@@ -60,18 +60,21 @@ export default function ResourceSelector({
   };
 
   return (
-    <div className="bg-albion-card border border-albion-border rounded-xl p-4 sm:p-5 shadow-xl space-y-5">
+    <div className="forged-tablet rounded-2xl p-4 sm:p-5 shadow-[0_12px_36px_rgba(0,0,0,0.85)] border border-albion-border/80 space-y-5 relative overflow-hidden">
+      {/* Subtle top edge gold hairline */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
+
       {/* 1. Resource Selector with Real Tactile Textures & Albion Icons */}
       <div>
         <div className="flex items-center justify-between mb-2.5">
-          <label className="text-xs uppercase tracking-wider text-slate-300 font-semibold flex items-center gap-2">
-            <span className="text-[10px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/40 font-bold">
-              Stage 01
+          <label className="text-xs uppercase tracking-wider text-slate-200 font-serif font-bold flex items-center gap-2">
+            <span className="text-[9.5px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/50 font-extrabold shadow-gold-glow">
+              STAGE 01
             </span>
-            <span>Material, Tier &amp; Enchantment</span>
+            <span>Raw Resource &bull; Refining Station</span>
           </label>
           <span className="text-[11px] font-mono text-slate-400">
-            Selected: <span className="text-albion-gold font-bold">{currentResource.name}</span>
+            Active: <span className="text-amber-300 font-bold">{currentResource.name}</span>
           </span>
         </div>
 
@@ -89,8 +92,8 @@ export default function ResourceSelector({
                 key={key}
                 type="button"
                 onClick={() => handleResourceChange(key)}
-                className={`relative flex flex-col items-center justify-between p-2.5 rounded-xl border text-center transition-all ${matClass} ${
-                  isSelected ? 'active ring-2 ring-albion-gold/80 scale-[1.02]' : 'opacity-85 hover:opacity-100'
+                className={`relative flex flex-col items-center justify-between p-3 rounded-xl border text-center transition-all duration-200 cursor-pointer ${matClass} ${
+                  isSelected ? 'active ring-2 ring-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.35)] scale-[1.03]' : 'opacity-85 hover:opacity-100 hover:-translate-y-0.5'
                 }`}
               >
                 {/* Local or CDN Albion Official Item Icon */}
@@ -99,17 +102,17 @@ export default function ResourceSelector({
                     src={iconSrc}
                     itemId={previewItemId}
                     alt={res.name}
-                    className="w-14 h-14 object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.7)]"
+                    className="w-14 h-14 object-contain drop-shadow-[0_6px_10px_rgba(0,0,0,0.8)]"
                   />
                   <span className="text-2xl absolute opacity-20 pointer-events-none">{res.icon}</span>
                 </div>
 
                 <div className="w-full">
-                  <span className="font-bold text-xs text-slate-100 block truncate">{res.rawName}</span>
-                  <span className="text-[10px] text-slate-400 block truncate">
+                  <span className="font-serif font-bold text-xs text-slate-100 block truncate">{res.rawName}</span>
+                  <span className="text-[10px] text-slate-400 block truncate font-sans">
                     Refines: <strong className="text-slate-200">{res.refinedName}</strong>
                   </span>
-                  <span className="text-[9px] font-mono mt-1 px-1.5 py-0.5 rounded bg-black/50 border border-white/10 text-amber-300 block truncate">
+                  <span className="text-[9.5px] font-mono mt-1 px-1.5 py-0.5 rounded bg-black/60 border border-white/10 text-amber-300 block truncate font-semibold">
                     🏛️ {res.bonusCity}
                   </span>
                 </div>
@@ -122,12 +125,12 @@ export default function ResourceSelector({
       {/* 2. Official Game Tier Selector (T2 - T8) */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-albion-gold" />
-            Resource Tier (Official Game Palette)
+          <label className="text-xs uppercase tracking-wider text-slate-300 font-serif font-bold flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-gold-glow" />
+            Resource Tier
           </label>
           <span className="text-xs font-mono text-slate-400">
-            Active: <span className="text-slate-100 font-bold">Tier {selectedTier}</span>
+            Active: <span className="text-slate-100 font-bold">Tier {selectedTier} ({TIERS.find(t => t.level === selectedTier)?.name})</span>
           </span>
         </div>
 
@@ -140,13 +143,13 @@ export default function ResourceSelector({
                 key={tier.level}
                 type="button"
                 onClick={() => handleTierChange(tier.level)}
-                className={`py-2 px-1 rounded-lg border font-mono font-bold text-center transition-all text-xs sm:text-sm ${
+                className={`py-2 px-1 rounded-xl border font-mono font-bold text-center transition-all duration-200 cursor-pointer text-xs sm:text-sm ${
                   isSelected
-                    ? `${tier.border} ${tier.text} ${tier.bg} ${tier.activeGlow} ring-1 ring-white/30 scale-[1.03]`
-                    : 'bg-albion-bg/80 border-albion-border text-slate-400 hover:text-slate-200 hover:border-slate-600'
+                    ? `${tier.border} ${tier.text} ${tier.bg} ${tier.activeGlow} ring-1 ring-white/40 scale-[1.04] shadow-lg`
+                    : 'bg-[#090e18] border-slate-800/80 text-slate-400 hover:text-slate-200 hover:border-slate-600 hover:-translate-y-0.5'
                 }`}
               >
-                <div>T{tier.level}</div>
+                <div className="tracking-tight">T{tier.level}</div>
                 <div className="text-[9px] font-normal opacity-75 hidden sm:block truncate">{tier.name}</div>
               </button>
             );
@@ -158,9 +161,9 @@ export default function ResourceSelector({
       <div>
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-albion-gold" />
-              Enchantment (Game Hues)
+            <label className="text-xs uppercase tracking-wider text-slate-300 font-serif font-bold flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-gold-glow" />
+              Enchantment
             </label>
             {isLowTier ? (
               <span className="text-[10px] text-sky-400/90 flex items-center gap-1 font-mono bg-sky-500/10 px-2 py-0.5 rounded border border-sky-500/20">
@@ -176,7 +179,7 @@ export default function ResourceSelector({
           </div>
 
           <span className="text-xs font-mono text-slate-400">
-            Yield: <span className="text-amber-400 font-bold">
+            Multiplier: <span className="text-amber-300 font-bold">
               {isLowTier
                 ? 'Standard 1x'
                 : isStone 
@@ -197,16 +200,16 @@ export default function ResourceSelector({
                 type="button"
                 disabled={isDisabled}
                 onClick={() => setSelectedEnchantment(ench.level)}
-                className={`py-2 px-1.5 rounded-lg border font-mono font-bold text-center transition-all text-xs sm:text-sm relative ${
+                className={`py-2 px-1.5 rounded-xl border font-mono font-bold text-center transition-all duration-200 text-xs sm:text-sm relative cursor-pointer ${
                   isDisabled
                     ? 'opacity-20 bg-slate-950 border-slate-900 text-slate-600 cursor-not-allowed'
                     : isSelected
-                    ? `${ench.color} ${ench.glow} ring-1 ring-white/40 scale-[1.03]`
-                    : 'bg-albion-bg/80 border-albion-border text-slate-400 hover:text-slate-200 hover:border-slate-600'
+                    ? `${ench.color} ${ench.glow} ring-1 ring-white/50 scale-[1.04] shadow-lg`
+                    : 'bg-[#090e18] border-slate-800/80 text-slate-400 hover:text-slate-200 hover:border-slate-600 hover:-translate-y-0.5'
                 }`}
               >
                 <div>{ench.label}</div>
-                <div className="text-[9px] font-normal opacity-80 hidden sm:block truncate">
+                <div className="text-[9px] font-normal opacity-85 hidden sm:block truncate">
                   {isStone 
                     ? (ench.level === 0 ? '1x Blocks' : `${Math.pow(2, ench.level)}x Blocks`)
                     : ench.name.split(' ')[1]}

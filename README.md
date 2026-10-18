@@ -40,12 +40,16 @@ Make sure you have both installed on your computer:
 ## 🌟 All 7 Economic Calculators Included
 
 1. **💎 Refining Workshop:**
+   - **"I Have Materials" Reverse Mode & Multi-Pass Compounded RRR:** Input your raw materials (e.g. 5,000 T4 hide) to instantly calculate how many lower-tier refined mats to buy, with simulated re-refining passes compounding your returned resources until exhausted.
    - Exact Resource Return Rate (RRR) formulas across all 6 Royal Cities (`36.7%` base specialty bonus, `53.9%` with Focus) and Personal/Guild Islands.
+   - In-card **⚡ Focus: ON / OFF** switches directly inside the Destiny Board Mastery & Spec cards.
    - Verified special Stone mechanics (`.1 → 2×`, `.2 → 4×`, `.3 → 8×` flat blocks).
    - 6-City Cross-Market Arbitrage & Optimal Transport Haul advisor.
 2. **⚔️ Gear & Weapon Forgemaster (3,400+ Items):**
+   - **"I Have Materials" Mode:** Input your available primary materials to see how many items you can craft and which secondary materials/artifacts to purchase.
    - Two-phase **Pre-Craft Shopping List** & **Post-Craft Quality Realized Ledger**.
    - Kraken/Crafter's Salad quality buff simulation, Discrete Quality Dice Simulator, and Crafting Journal profit integration.
+   - In-card **⚡ Focus: ON / OFF** toggle directly in Stage 02 Destiny Board Mastery & Spec.
 3. **🍲 The Master Chef's Hearth (Cooking & Butchery):**
    - Caerleon `+15%` local cooking bonus (`24.8%` base / `53.9%` Focus RRR), Fish Sauce enchantment infusions (`.1`–`.3`), and multi-ingredient batch yields.
 4. **🧪 The Alchemist's Laboratory (Potions & Distillery):**

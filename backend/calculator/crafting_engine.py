@@ -2,13 +2,14 @@ import math
 from .crafting_constants import (
     CRAFTABLE_ITEMS,
     CITY_CRAFTING_BONUSES,
+    CRAFTING_FAME_PER_RESOURCE,
     JOURNAL_FAME_REQUIRED,
+    ARTIFACT_BASE_ITEM_VALUE,
 )
 from .constants import (
     TAX_PREMIUM,
     TAX_NON_PREMIUM,
     ORDER_SETUP_FEE,
-    ENCHANTMENT_FOCUS_MULTIPLIER,
 )
 
 def get_craftable_item(item_id: str):
@@ -68,21 +69,24 @@ def calculate_crafting_rrr(item_def: dict, city: str, use_focus: bool = False, d
     return round(total_bonus / (1.0 + total_bonus), 6) if total_bonus > 0 else 0.0
 
 
-def calculate_crafting_focus(base_focus: int, enchantment: int, mastery: int = 0, spec: int = 0) -> int:
+def calculate_crafting_focus(mat_count: int, tier: int, enchantment: int, mastery: int = 0, spec: int = 0) -> int:
     """
-    Calculates focus cost per craft.
+    Calculates focus cost per craft in Albion Online.
+    Base Focus per resource = 10 * (1.75 ^ (tier - 1 + enchantment))
+    (At T4.0: 53.59375 per resource -> 8 mats = 429, 16 mats = 858, 24 mats = 1286, 32 mats = 1715)
     Mastery (1-100): +30 eff/lvl
-    Spec (1-100): +250 eff/lvl
+    Item Spec (1-120): +280 eff/lvl (+250 item-specific + 30 shared category bonus)
     """
-    multiplier = ENCHANTMENT_FOCUS_MULTIPLIER.get(enchantment, 1.0)
-    base_cost = base_focus * multiplier
+    if tier <= 2 or mat_count <= 0:
+        return 0
+    base_cost = mat_count * 10.0 * (1.75 ** (tier - 1 + enchantment))
     
     m = max(0, min(100, int(mastery or 0)))
-    s = max(0, min(100, int(spec or 0)))
-    efficiency = (m * 30) + (s * 250)
+    s = max(0, min(120, int(spec or 0)))
+    efficiency = (m * 30) + (s * 280)
     
     actual_focus = base_cost * (0.5 ** (efficiency / 10000.0))
-    return max(1, math.floor(actual_focus))
+    return max(1, math.floor(actual_focus + 0.5))
 
 
 def calculate_crafting(
@@ -114,6 +118,9 @@ def calculate_crafting(
     t = int(tier)
     ench = int(enchantment)
 
+    is_transmutation = bool(item_def.get('is_no_return') or item_def.get('isNoReturn') or item_def.get('is_royal') or item_def.get('isRoyal'))
+    mat_count = (item_def.get('primary_qty') or 0) + (item_def.get('secondary_qty') or 0)
+
     # 1. Return rates
     rrr_current = calculate_crafting_rrr(item_def, city, use_focus, daily_bonus_pct)
     rrr_no_focus = calculate_crafting_rrr(item_def, city, False, daily_bonus_pct)
@@ -135,21 +142,25 @@ def calculate_crafting(
     upfront_materials_cost = (primary_needed_gross * primary_mat_price) + (secondary_needed_gross * secondary_mat_price) + artifact_gross_cost
     net_materials_cost = (primary_consumed_net * primary_mat_price) + (secondary_consumed_net * secondary_mat_price) + artifact_gross_cost
 
-    # 3. Station nutrition tax
-    # Scale item value by tier and enchantment (doubles per tier, T3 is 0.5x, T2 is 0.25x)
-    base_iv = item_def.get('base_item_value', 160)
-    iv_multiplier = 2 ** (t - 4 + ench)
-    total_iv = base_iv * iv_multiplier
-    nutrition = total_iv * 0.1125
-    station_fee = nutrition * ((station_tax_per_100 or 0.0) / 100.0) * qty
+    # 3. Station nutrition tax (Tier 2 and transmutations have 0 station fee in Albion Online)
+    if t <= 2 or is_transmutation:
+        station_fee = 0.0
+    else:
+        resource_iv = (mat_count * 16) * (2 ** (t - 4 + ench))
+        art_type = item_def.get('artifact_type') or item_def.get('artifactType', '')
+        artifact_iv = (ARTIFACT_BASE_ITEM_VALUE.get(art_type, 0) * (2 ** (t - 4))) if (has_artifact and t >= 4) else 0
+        total_iv = resource_iv + artifact_iv
+        nutrition = total_iv * 0.1125
+        station_fee = nutrition * ((station_tax_per_100 or 0.0) / 100.0) * qty
 
     # 4. Journals logic (In Albion Online, crafting journals start at Tier 4)
     journal_profit = 0.0
     journals_filled = 0.0
-    if include_journals and t >= 4:
-        fame_per_unit = item_def.get('fame_per_unit', 360) * iv_multiplier
+    if include_journals and t >= 4 and (item_def.get('journal_name') or item_def.get('journalName')) and not is_transmutation:
+        fame_per_res = CRAFTING_FAME_PER_RESOURCE.get(t, 22.5)
+        fame_per_unit = mat_count * fame_per_res * (2 ** ench)
         total_fame = fame_per_unit * qty
-        fame_req = JOURNAL_FAME_REQUIRED.get(t, 900)
+        fame_req = JOURNAL_FAME_REQUIRED.get(t, 3600)
         journals_filled = round(total_fame / fame_req, 2)
         journal_unit_profit = max(0.0, full_journal_price - empty_journal_price)
         journal_profit = round(journals_filled * journal_unit_profit, 2)
@@ -167,15 +178,13 @@ def calculate_crafting(
     profit_per_unit = net_profit / qty if qty > 0 else 0.0
 
     # 6. Focus scaling
-    is_transmutation = bool(item_def.get('is_no_return') or item_def.get('isNoReturn') or item_def.get('is_royal') or item_def.get('isRoyal'))
-    base_focus = 0 if is_transmutation else (item_def.get('base_focus', 140) * iv_multiplier)
-    focus_per_unit = 0 if is_transmutation else calculate_crafting_focus(base_focus, ench, mastery_level, spec_level)
+    focus_per_unit = 0 if is_transmutation else calculate_crafting_focus(mat_count, t, ench, mastery_level, spec_level)
     total_focus = focus_per_unit * qty if use_focus else 0
 
     # Profit without focus
     primary_consumed_no_focus = primary_needed_gross * (1.0 - rrr_no_focus)
     secondary_consumed_no_focus = secondary_needed_gross * (1.0 - rrr_no_focus)
-    cost_no_focus = (primary_consumed_no_focus * primary_mat_price) + (secondary_consumed_no_focus * secondary_mat_price) + station_fee
+    cost_no_focus = (primary_consumed_no_focus * primary_mat_price) + (secondary_consumed_no_focus * secondary_mat_price) + artifact_gross_cost + station_fee
     profit_no_focus = net_revenue - cost_no_focus
 
     silver_per_focus = 0.0

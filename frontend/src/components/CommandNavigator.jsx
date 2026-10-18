@@ -284,15 +284,15 @@ export default function CommandNavigator({
 
   return (
     <div
-      className="fixed inset-0 z-[110] flex items-start justify-center pt-12 sm:pt-20 p-4 bg-black/80 backdrop-blur-md animate-fade-in"
+      className="fixed inset-0 z-[110] flex items-start justify-center pt-12 sm:pt-20 p-4 bg-black/85 backdrop-blur-md animate-fadeIn"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl rounded-2xl bg-[#0a0d14] border border-amber-500/50 shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(245,158,11,0.18)] overflow-hidden text-slate-100"
+        className="w-full max-w-2xl rounded-2xl bg-[#070b14] border border-amber-500/50 shadow-[0_25px_80px_rgba(0,0,0,0.95),0_0_50px_rgba(212,163,75,0.25)] overflow-hidden text-slate-100 ring-1 ring-amber-500/30"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Input Bar */}
-        <div className="p-4 border-b border-slate-800 bg-[#0f1420] flex items-center gap-3">
+        <div className="p-4 border-b border-[#1e2a3c] bg-[#04060a] flex items-center gap-3">
           <Search className="w-5 h-5 text-amber-400 shrink-0" />
           <input
             type="text"
@@ -306,7 +306,7 @@ export default function CommandNavigator({
             <button
               type="button"
               onClick={() => setQuery('')}
-              className="text-xs text-slate-400 hover:text-slate-200 px-2 py-1 rounded bg-slate-800"
+              className="text-xs text-slate-400 hover:text-amber-200 px-2.5 py-1 rounded-lg bg-[#090e17] border border-[#1a2436] cursor-pointer"
             >
               Clear
             </button>
@@ -314,14 +314,14 @@ export default function CommandNavigator({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
+            className="p-1.5 rounded-xl bg-[#05080e] hover:bg-[#111827] border border-[#1a2436] hover:border-amber-500/50 text-slate-400 hover:text-amber-200 transition-colors cursor-pointer active:scale-95"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Quick Helper Banner */}
-        <div className="px-4 py-2 bg-amber-950/30 border-b border-amber-500/20 flex flex-wrap items-center justify-between gap-2 text-[11px] text-amber-200/90">
+        <div className="px-4 py-2.5 bg-gradient-to-r from-amber-950/60 via-[#0a0f18] to-amber-950/40 border-b border-amber-500/30 flex flex-wrap items-center justify-between gap-2 text-[11px] text-amber-200/90 font-sans">
           <span>
             💡 <strong>Click any feature below</strong> — we will switch tabs, scroll straight to it, and highlight it in gold!
           </span>
@@ -332,7 +332,7 @@ export default function CommandNavigator({
                 onClose();
                 if (onOpenHandbook) onOpenHandbook('uimap');
               }}
-              className="underline text-amber-300 hover:text-amber-200 font-mono font-bold cursor-pointer"
+              className="underline text-amber-300 hover:text-amber-200 font-serif font-bold cursor-pointer"
             >
               Open Full UI Map
             </button>
@@ -340,9 +340,9 @@ export default function CommandNavigator({
         </div>
 
         {/* Results List */}
-        <div className="max-h-[60vh] overflow-y-auto p-3 space-y-1.5">
+        <div className="max-h-[60vh] overflow-y-auto p-3 space-y-2 bg-[#070b14] scrollbar-thin">
           {filteredItems.length === 0 ? (
-            <div className="py-10 text-center text-slate-400 text-sm">
+            <div className="py-10 text-center text-slate-400 text-sm font-sans">
               No matching controls found for &ldquo;{query}&rdquo;. Try searching &ldquo;focus&rdquo;, &ldquo;tax&rdquo;, &ldquo;price&rdquo;, or &ldquo;black market&rdquo;.
             </div>
           ) : (
@@ -353,22 +353,22 @@ export default function CommandNavigator({
                   key={item.id}
                   type="button"
                   onClick={() => handleTrigger(item)}
-                  className="w-full text-left p-3 rounded-xl bg-[#111726]/70 hover:bg-[#172033] border border-slate-800/80 hover:border-amber-500/50 transition-all flex items-center justify-between gap-3 group cursor-pointer"
+                  className="w-full text-left p-3 rounded-xl bg-[#05080e] hover:bg-[#0c121e] border border-[#1a2436] hover:border-amber-400/80 transition-all flex items-center justify-between gap-3 group cursor-pointer shadow-inner"
                 >
                   <div className="flex items-start gap-3 min-w-0">
-                    <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 mt-0.5 ${item.accent}`}>
+                    <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 mt-0.5 shadow-sm ${item.accent}`}>
                       <Icon className="w-4 h-4" />
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs sm:text-sm font-bold text-slate-100 group-hover:text-amber-300 transition-colors">
+                        <span className="text-xs sm:text-sm font-serif font-bold text-slate-100 group-hover:text-amber-200 transition-colors">
                           {item.title}
                         </span>
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800/90 text-slate-400 border border-slate-700">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#0a0f18] text-slate-400 border border-[#1e2a3c]">
                           {item.category}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-400 mt-0.5 truncate">
+                      <p className="text-xs text-slate-400 mt-0.5 truncate font-sans">
                         {item.description}
                       </p>
                     </div>
@@ -384,10 +384,10 @@ export default function CommandNavigator({
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-2.5 bg-[#080b11] border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+        <div className="px-4 py-2.5 bg-[#04060a] border-t border-[#1e2a3c] flex items-center justify-between text-[11px] text-slate-400">
           <div className="flex items-center gap-2">
             <span>Shortcut:</span>
-            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[10px] text-slate-300">
+            <kbd className="px-1.5 py-0.5 rounded bg-[#090e17] border border-[#1a2436] font-mono text-[10px] text-amber-300">
               Ctrl + K
             </kbd>
           </div>
@@ -397,9 +397,9 @@ export default function CommandNavigator({
               onClose();
               if (onStartTour) onStartTour();
             }}
-            className="text-amber-300 hover:text-amber-200 font-mono font-bold flex items-center gap-1 cursor-pointer"
+            className="text-amber-300 hover:text-amber-200 font-serif font-bold flex items-center gap-1 cursor-pointer"
           >
-            <Compass className="w-3.5 h-3.5" />
+            <Compass className="w-3.5 h-3.5 text-amber-400" />
             <span>Launch Step-by-Step Spotlight Tour</span>
           </button>
         </div>
