@@ -7,6 +7,7 @@ export const CRAFTING_CATEGORIES = {
   warrior: { id: 'warrior', name: "Warrior's Forge", station: "Warrior's Forge", icon: '⚔️' },
   hunter: { id: 'hunter', name: "Hunter's Lodge", station: "Hunter's Lodge", icon: '🏹' },
   mage: { id: 'mage', name: "Mage's Tower", station: "Mage's Tower", icon: '🔮' },
+  mounts: { id: 'mounts', name: 'Saddler & War Mounts', station: 'Saddler / Energy Manipulator', icon: '🐎' },
 };
 
 export const CITY_CRAFTING_BONUSES = {
@@ -62,6 +63,12 @@ export const CRAFTABLE_ITEMS = craftableItemsData.map((it) => {
 export function getArtifactQty(item, tier = 4) {
   if (!item || !item.isArtifact) return 0;
   const t = Number(tier);
+  if (item.artifactQty) {
+    if (typeof item.artifactQty === 'object') {
+      return item.artifactQty[t] || item.artifactQty[String(t)] || 1;
+    }
+    return Number(item.artifactQty);
+  }
   if (item.id === 'capeitem_avalon') {
     const avalonMap = { 4: 15, 5: 25, 6: 45, 7: 75, 8: 150 };
     return avalonMap[t] || 15;
@@ -200,6 +207,9 @@ export function simulateCraftingFromMaterials({
   const journalsFilledPass1 = (t >= 4 && !isTransmutation) ? Number(((famePerUnit * pass1Crafts) / fameReq).toFixed(2)) : 0;
   const journalsFilledTotal = (t >= 4 && !isTransmutation) ? Number(((famePerUnit * totalCrafts) / fameReq).toFixed(2)) : 0;
 
+  const pass1PrimaryReturned = passes[0]?.primaryReturned || 0;
+  const pass1SecondaryReturned = passes[0]?.secondaryReturned || 0;
+
   return {
     rrr,
     returnRatePct: Number((rrr * 100).toFixed(2)),
@@ -208,6 +218,8 @@ export function simulateCraftingFromMaterials({
     totalCrafts,
     passCount: passes.length,
     passes,
+    pass1PrimaryReturned,
+    pass1SecondaryReturned,
     leftoverPrimary: remPrimary,
     leftoverSecondary: constrainBySecondary ? remSecondary : simSecondaryBag,
     secondaryNeededPass1,

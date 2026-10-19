@@ -53,6 +53,7 @@ const ELIGIBLE_BM_ITEMS = (CRAFTABLE_ITEMS || []).filter(
   (it) =>
     !String(it.category || '').includes('tool') &&
     !String(it.category || '').includes('furniture') &&
+    !String(it.category || '').includes('mount') &&
     !String(it.id || '').includes('bed') &&
     !String(it.id || '').includes('chest') &&
     !String(it.id || '').includes('table')

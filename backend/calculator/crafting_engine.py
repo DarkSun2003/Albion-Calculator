@@ -20,9 +20,14 @@ def get_craftable_item(item_id: str):
 
 
 def get_artifact_qty(item_def: dict, tier: int = 4) -> int:
-    if not item_def.get('is_artifact'):
+    if not item_def.get('is_artifact') and not item_def.get('isArtifact'):
         return 0
     t = int(tier)
+    custom_qty = item_def.get('artifact_qty') or item_def.get('artifactQty')
+    if custom_qty:
+        if isinstance(custom_qty, dict):
+            return int(custom_qty.get(t, custom_qty.get(str(t), 1)))
+        return int(custom_qty)
     if item_def.get('id') == 'capeitem_avalon':
         avalon_map = {4: 15, 5: 25, 6: 45, 7: 75, 8: 150}
         return avalon_map.get(t, 15)

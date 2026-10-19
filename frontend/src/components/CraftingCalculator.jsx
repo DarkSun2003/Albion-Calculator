@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import NumberInput from './NumberInput';
 import { 
   CRAFTABLE_ITEMS, 
@@ -173,6 +173,58 @@ const TIER_DEFAULT_PRICES = {
   8: { primary: 17500, secondary: 16500, artifact: 1200000, sell: 560000 },
 };
 
+const MOUNT_DEFAULT_PRICES = {
+  mount_flame_basilisk: { primary: 480000, secondary: 5400, artifact: 13000, sell: 68000000 },
+  mount_venom_basilisk: { primary: 480000, secondary: 5800, artifact: 13000, sell: 68000000 },
+  mount_avalon_basilisk: { primary: 480000, secondary: 0, artifact: 2500, sell: 18000000 },
+  mount_siege_ballista: { primary: 730000, secondary: 1950, artifact: 13000, sell: 8500000 },
+  mount_command_mammoth: { primary: 125000000, secondary: 17500, artifact: 13000, sell: 260000000 },
+  mount_spectral_bonehorse: { primary: 7200000, secondary: 0, artifact: 16500000, sell: 27000000 },
+  mount_rageclaw: { primary: 180000, secondary: 0, artifact: 7500000, sell: 9200000 },
+  mount_morgana_nightmare: { primary: 8500000, secondary: 0, artifact: 12500000, sell: 23500000 },
+  mount_armored_horse: {
+    5: { primary: 245000, secondary: 680, artifact: 620, sell: 280000 },
+    6: { primary: 730000, secondary: 1950, artifact: 1800, sell: 820000 },
+    7: { primary: 2180000, secondary: 5800, artifact: 5400, sell: 2400000 },
+    8: { primary: 6450000, secondary: 17500, artifact: 16500, sell: 7200000 },
+  },
+  mount_riding_horse: {
+    3: { primary: 6500, secondary: 80, artifact: 0, sell: 28000 },
+    4: { primary: 28000, secondary: 240, artifact: 0, sell: 82000 },
+    5: { primary: 82000, secondary: 680, artifact: 0, sell: 245000 },
+    6: { primary: 245000, secondary: 1950, artifact: 0, sell: 730000 },
+    7: { primary: 730000, secondary: 5800, artifact: 0, sell: 2180000 },
+    8: { primary: 2180000, secondary: 17500, artifact: 0, sell: 6450000 },
+  },
+  mount_transport_ox: {
+    3: { primary: 6500, secondary: 75, artifact: 0, sell: 28000 },
+    4: { primary: 28000, secondary: 210, artifact: 0, sell: 82000 },
+    5: { primary: 82000, secondary: 620, artifact: 0, sell: 245000 },
+    6: { primary: 245000, secondary: 1800, artifact: 0, sell: 730000 },
+    7: { primary: 730000, secondary: 5400, artifact: 0, sell: 2180000 },
+    8: { primary: 2180000, secondary: 16500, artifact: 0, sell: 6450000 },
+  },
+  mount_giant_stag: { primary: 65000, secondary: 240, artifact: 0, sell: 85000 },
+  mount_direwolf: { primary: 310000, secondary: 1950, artifact: 0, sell: 380000 },
+  mount_moose: { primary: 450000, secondary: 1950, artifact: 0, sell: 520000 },
+  mount_direboar: { primary: 950000, secondary: 5800, artifact: 0, sell: 1100000 },
+  mount_swampdragon: { primary: 1200000, secondary: 5800, artifact: 0, sell: 1400000 },
+  mount_direbear: { primary: 2800000, secondary: 17500, artifact: 0, sell: 3200000 },
+  mount_mammoth_transport: { primary: 95000000, secondary: 17500, artifact: 0, sell: 105000000 },
+  mount_fw_bear_t5: { primary: 140000, secondary: 680, artifact: 42000, sell: 240000 },
+  mount_fw_bear_t8: { primary: 3500000, secondary: 17500, artifact: 42000, sell: 5500000 },
+  mount_fw_boar_t5: { primary: 140000, secondary: 680, artifact: 42000, sell: 240000 },
+  mount_fw_boar_t8: { primary: 3500000, secondary: 17500, artifact: 42000, sell: 5500000 },
+  mount_fw_ram_t5: { primary: 140000, secondary: 680, artifact: 42000, sell: 240000 },
+  mount_fw_ram_t8: { primary: 3500000, secondary: 17500, artifact: 42000, sell: 5500000 },
+  mount_fw_moabird_t5: { primary: 140000, secondary: 680, artifact: 42000, sell: 240000 },
+  mount_fw_moabird_t8: { primary: 3500000, secondary: 17500, artifact: 42000, sell: 5500000 },
+  mount_fw_salamander_t5: { primary: 140000, secondary: 680, artifact: 42000, sell: 240000 },
+  mount_fw_salamander_t8: { primary: 3500000, secondary: 17500, artifact: 42000, sell: 5500000 },
+  mount_fw_greywolf_t5: { primary: 140000, secondary: 680, artifact: 42000, sell: 240000 },
+  mount_fw_greywolf_t8: { primary: 3500000, secondary: 17500, artifact: 42000, sell: 5500000 },
+};
+
 function getMaterialTactileClass(matName) {
   if (!matName) return 'bg-albion-bg/80 border-albion-border';
   const lower = matName.toLowerCase();
@@ -181,6 +233,7 @@ function getMaterialTactileClass(matName) {
   if (lower.includes('leather') || lower.includes('hide')) return 'mat-hide';
   if (lower.includes('cloth') || lower.includes('fiber')) return 'mat-fiber';
   if (lower.includes('stone') || lower.includes('block')) return 'mat-stone';
+  if (lower.includes('horse') || lower.includes('dragon') || lower.includes('ox') || lower.includes('stag') || lower.includes('wolf') || lower.includes('bear') || lower.includes('mammoth') || lower.includes('mount') || lower.includes('claw') || lower.includes('ram') || lower.includes('boar') || lower.includes('moa') || lower.includes('salamander')) return 'mat-hide';
   return 'bg-albion-bg/80 border-albion-border';
 }
 
@@ -189,10 +242,14 @@ function getArtifactBadgeColor(type) {
     case 'Rune': return 'bg-sky-500/20 text-sky-300 border-sky-500/40';
     case 'Soul': return 'bg-purple-500/20 text-purple-300 border-purple-500/40';
     case 'Relic': return 'bg-amber-500/20 text-amber-300 border-amber-500/40';
-    case 'Avalonian': return 'bg-amber-400/25 text-amber-200 border-amber-400/50 shadow-gold-glow';
+    case 'Avalonian':
+    case 'Avalonian Shard': return 'bg-amber-400/25 text-amber-200 border-amber-400/50 shadow-gold-glow';
     case 'Tracking': return 'bg-rose-500/20 text-rose-300 border-rose-500/40';
     case 'Crystal': return 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40';
     case 'Dragon': return 'bg-orange-500/20 text-orange-300 border-orange-500/40';
+    case 'Siphoned Energy': return 'bg-purple-600/25 text-purple-200 border-purple-500/50 shadow-[0_0_10px_rgba(168,85,247,0.3)]';
+    case 'World Boss Artifact': return 'bg-rose-600/25 text-rose-200 border-rose-500/50 shadow-[0_0_10px_rgba(244,63,94,0.3)]';
+    case 'Faction Crest': return 'bg-emerald-500/25 text-emerald-200 border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.3)]';
     default: return 'bg-amber-500/20 text-amber-300 border-amber-500/40';
   }
 }
@@ -204,6 +261,7 @@ export default function CraftingCalculator({
   setUseFocus,
   onOpenGuide,
   onStartTour,
+  navigationOptions,
 }) {
   const [activeCategory, setActiveCategory] = useState('accessories');
   const [selectedSubcategory, setSelectedSubcategory] = useState('all');
@@ -215,6 +273,22 @@ export default function CraftingCalculator({
   const [quantity, setQuantity] = useState(10);
   const [stationTax, setStationTax] = useState(500);
   const [dailyBonus, setDailyBonus] = useState(0);
+
+  // Auto-switch to category or item from navigationOptions (e.g. from Agriculture War Mount link)
+  useEffect(() => {
+    if (navigationOptions?.category) {
+      setActiveCategory(navigationOptions.category);
+      if (navigationOptions.subcategory) {
+        setSelectedSubcategory(navigationOptions.subcategory);
+      }
+    }
+    if (navigationOptions?.itemId) {
+      const targetItem = CRAFTABLE_ITEMS.find((i) => i.id === navigationOptions.itemId);
+      if (targetItem) {
+        handleSelectItem(targetItem, navigationOptions.tier || targetItem.minTier || null);
+      }
+    }
+  }, [navigationOptions]);
 
   // "I Have Materials" mode states for Crafting
   const [craftingInputMode, setCraftingInputMode] = useState('target'); // 'target' | 'materials'
@@ -286,8 +360,8 @@ export default function CraftingCalculator({
   // Filter items by category, subcategory, search query, and current tier
   const filteredItems = useMemo(() => {
     return CRAFTABLE_ITEMS.filter((i) => {
-      // If an item only exists up to a lower tier (e.g. Chest at maxTier: 5), remove it for T6+
-      if (i.maxTier && selectedTier > i.maxTier) return false;
+      // In equipment categories, if an item only exists up to a lower tier (e.g. Chest at maxTier: 5), remove it for T6+
+      if (!searchQuery.trim() && i.category !== 'mounts' && i.maxTier && selectedTier > i.maxTier) return false;
 
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
@@ -321,16 +395,22 @@ export default function CraftingCalculator({
     setSelectedTier(nextTier);
     
     // Auto-fill prices
-    const def = TIER_DEFAULT_PRICES[nextTier] || TIER_DEFAULT_PRICES[4];
-    setPrimaryPrice(def.primary);
-    setSecondaryPrice(def.secondary);
-    setArtifactPrice(def.artifact);
+    let def = TIER_DEFAULT_PRICES[nextTier] || TIER_DEFAULT_PRICES[4];
+    if (item.category === 'mounts' && MOUNT_DEFAULT_PRICES[item.id]) {
+      const mDef = MOUNT_DEFAULT_PRICES[item.id];
+      def = (mDef[nextTier] || mDef);
+    }
+    setPrimaryPrice(def.primary || 0);
+    setSecondaryPrice(def.secondary || 0);
+    setArtifactPrice(def.artifact || 0);
     
-    // Default sell price for artifacts is higher
-    if (item.isArtifact) {
-      setItemSellPrice(Math.round((def.sell + def.artifact) * 1.35));
-    } else {
+    // Default sell price
+    if (def.sell) {
       setItemSellPrice(def.sell);
+    } else if (item.isArtifact) {
+      setItemSellPrice(Math.round(((def.sell || 0) + (def.artifact || 0)) * 1.35));
+    } else {
+      setItemSellPrice(def.sell || 5000);
     }
 
     if (item.allowEnchantment === false || nextTier < 4) {
@@ -359,15 +439,21 @@ export default function CraftingCalculator({
     if (tierLevel < min || tierLevel > max) return;
     setSelectedTier(tierLevel);
 
-    const def = TIER_DEFAULT_PRICES[tierLevel] || TIER_DEFAULT_PRICES[4];
-    setPrimaryPrice(def.primary);
-    setSecondaryPrice(def.secondary);
-    setArtifactPrice(def.artifact);
+    let def = TIER_DEFAULT_PRICES[tierLevel] || TIER_DEFAULT_PRICES[4];
+    if (selectedItem.category === 'mounts' && MOUNT_DEFAULT_PRICES[selectedItem.id]) {
+      const mDef = MOUNT_DEFAULT_PRICES[selectedItem.id];
+      def = (mDef[tierLevel] || mDef);
+    }
+    setPrimaryPrice(def.primary || 0);
+    setSecondaryPrice(def.secondary || 0);
+    setArtifactPrice(def.artifact || 0);
 
-    if (selectedItem.isArtifact) {
-      setItemSellPrice(Math.round((def.sell + def.artifact) * 1.35));
-    } else {
+    if (def.sell) {
       setItemSellPrice(def.sell);
+    } else if (selectedItem.isArtifact) {
+      setItemSellPrice(Math.round(((def.sell || 0) + (def.artifact || 0)) * 1.35));
+    } else {
+      setItemSellPrice(def.sell || 5000);
     }
 
     if (selectedItem.allowEnchantment === false || tierLevel < 4) {
@@ -464,7 +550,12 @@ export default function CraftingCalculator({
     return computeDynamicQualityChances(masteryLevel, specLevel, hasCraftersSalad, useFocus);
   }, [masteryLevel, specLevel, hasCraftersSalad, useFocus]);
 
-  const currentOdds = qualityMetrics.chances;
+  const currentOdds = useMemo(() => {
+    if (selectedItem?.category === 'mounts') {
+      return { 1: 1.0, 2: 0.0, 3: 0.0, 4: 0.0, 5: 0.0 };
+    }
+    return qualityMetrics.chances;
+  }, [selectedItem, qualityMetrics]);
 
   // 2. Resolved Quality Prices with Intelligent Fallback Cascade
   const resolvedQualityPrices = useMemo(() => {
@@ -577,15 +668,66 @@ export default function CraftingCalculator({
   ]);
 
   const effectiveBatchQuantity = useMemo(() => {
-    if (valuationMode === 'actual' && actualTotals.totalItems > 0 && workflowPhase === 'realized') {
-      return actualTotals.totalItems;
-    }
     if (craftingInputMode === 'materials' && craftingMaterialSim) {
       const crafts = compoundCraftRrr ? craftingMaterialSim.totalCrafts : craftingMaterialSim.pass1Crafts;
       return Math.max(1, crafts);
     }
-    return quantity;
-  }, [valuationMode, actualTotals.totalItems, workflowPhase, craftingInputMode, craftingMaterialSim, compoundCraftRrr, quantity]);
+    return Math.max(1, Number(quantity) || 1);
+  }, [craftingInputMode, craftingMaterialSim, compoundCraftRrr, quantity]);
+
+  // Keep track of previous batch quantity to detect batch adjustments
+  const prevBatchRef = useRef(effectiveBatchQuantity);
+
+  useEffect(() => {
+    const prevBatch = prevBatchRef.current;
+    prevBatchRef.current = effectiveBatchQuantity;
+
+    if (!prevBatch || prevBatch === effectiveBatchQuantity) return;
+
+    // If actualTotals was previously in sync with the batch size, automatically scale/sync rolls to the new batch!
+    if (actualTotals.totalItems > 0 && actualTotals.totalItems === prevBatch) {
+      const activeQualities = Object.entries(actualQualityCounts).filter(([_, cnt]) => (Number(cnt) || 0) > 0);
+      if (activeQualities.length <= 1) {
+        const targetQ = activeQualities.length === 1 ? activeQualities[0][0] : 2;
+        setActualQualityCounts({
+          1: 0, 2: 0, 3: 0, 4: 0, 5: 0,
+          [targetQ]: effectiveBatchQuantity,
+        });
+      } else {
+        let remaining = effectiveBatchQuantity;
+        const newCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+        for (let i = 5; i >= 1; i--) {
+          const ratio = (Number(actualQualityCounts[i]) || 0) / prevBatch;
+          const scaled = i === 1 ? remaining : Math.round(ratio * effectiveBatchQuantity);
+          newCounts[i] = Math.max(0, scaled);
+          remaining -= newCounts[i];
+        }
+        setActualQualityCounts(newCounts);
+      }
+    }
+  }, [effectiveBatchQuantity, actualTotals.totalItems, actualQualityCounts]);
+
+  const handleSyncRolledToBatch = () => {
+    const activeQualities = Object.entries(actualQualityCounts).filter(([_, cnt]) => (Number(cnt) || 0) > 0);
+    if (activeQualities.length <= 1) {
+      const targetQ = activeQualities.length === 1 ? activeQualities[0][0] : 2;
+      setActualQualityCounts({
+        1: 0, 2: 0, 3: 0, 4: 0, 5: 0,
+        [targetQ]: effectiveBatchQuantity,
+      });
+    } else {
+      let remaining = effectiveBatchQuantity;
+      const newCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+      const currentTotal = actualTotals.totalItems || 1;
+      for (let i = 5; i >= 1; i--) {
+        const ratio = (Number(actualQualityCounts[i]) || 0) / currentTotal;
+        const scaled = i === 1 ? remaining : Math.round(ratio * effectiveBatchQuantity);
+        newCounts[i] = Math.max(0, scaled);
+        remaining -= newCounts[i];
+      }
+      setActualQualityCounts(newCounts);
+    }
+  };
 
   // 5. Active Sell Price Fed into Engine
   const activeSellPrice = useMemo(() => {
@@ -775,7 +917,7 @@ export default function CraftingCalculator({
   // Use authoritative backend calculation if available, otherwise local fallback
   const calculation = backendCalculation || localCalculation;
 
-  const canUseJournals = selectedTier >= 4;
+  const canUseJournals = selectedTier >= 4 && Boolean(selectedItem?.journalTemplate);
   const totalBatchCost = calculation?.financials?.totalCost || 0;
   const taxRate = hasPremium ? 0.04 : 0.08;
   const setupFee = isSellOrder ? 0.025 : 0.0;
@@ -858,7 +1000,7 @@ export default function CraftingCalculator({
   const artifactIconSrc = selectedItem.isArtifact && selectedItem.artifactTemplate
     ? `/items/${selectedItem.artifactTemplate.replace('{tier}', selectedTier)}.png`
     : null;
-  const journalIconSrc = selectedTier >= 4
+  const journalIconSrc = (canUseJournals && selectedItem?.journalTemplate)
     ? `/items/${selectedItem.journalTemplate.replace('{tier}', selectedTier)}.png`
     : null;
 
@@ -873,36 +1015,121 @@ export default function CraftingCalculator({
       : 0;
   }, [includeJournals, selectedTier, calculation?.journals?.journalsFilled, emptyJournalPrice]);
 
+  const materialsModeShopping = useMemo(() => {
+    if (craftingInputMode !== 'materials' || !craftingMaterialSim) {
+      return null;
+    }
+    const secondaryToBuy = selectedItem.secondaryQty > 0
+      ? (compoundCraftRrr ? (craftingMaterialSim.secondaryToBuyTotal || 0) : (craftingMaterialSim.secondaryToBuyPass1 || 0))
+      : 0;
+    const secondaryCost = secondaryToBuy * (Number(secondaryPrice) || 0);
+
+    const artifactsToBuy = selectedItem.isArtifact
+      ? (compoundCraftRrr ? (craftingMaterialSim.artifactsTotal || 0) : (craftingMaterialSim.artifactsPass1 || 0))
+      : 0;
+    const artifactCost = artifactsToBuy * (Number(artifactPrice) || 0);
+
+    const journalsToBuy = (includeJournals && canUseJournals)
+      ? (compoundCraftRrr ? (craftingMaterialSim.emptyJournalsToBuyTotal || 0) : (craftingMaterialSim.emptyJournalsToBuyPass1 || 0))
+      : 0;
+    const journalCost = journalsToBuy * (Number(emptyJournalPrice) || 0);
+
+    const stationFee = calculation?.financials?.stationFee || 0;
+    const upfrontWalletCash = secondaryCost + artifactCost + journalCost + stationFee;
+
+    return {
+      primaryOwned: primaryMatsHave,
+      primaryToBuy: 0,
+      primaryCost: 0,
+      secondaryOwned: secondaryMatsHave,
+      secondaryToBuy,
+      secondaryCost,
+      artifactsToBuy,
+      artifactCost,
+      journalsToBuy,
+      journalCost,
+      stationFee,
+      upfrontWalletCash,
+    };
+  }, [
+    craftingInputMode,
+    craftingMaterialSim,
+    selectedItem,
+    compoundCraftRrr,
+    secondaryPrice,
+    artifactPrice,
+    includeJournals,
+    canUseJournals,
+    emptyJournalPrice,
+    calculation?.financials?.stationFee,
+    primaryMatsHave,
+    secondaryMatsHave,
+  ]);
+
   const totalUpfrontCapitalRequired = useMemo(() => {
+    if (craftingInputMode === 'materials' && materialsModeShopping) {
+      return materialsModeShopping.upfrontWalletCash;
+    }
     const mats = calculation?.financials?.upfrontMaterials || 0;
     const fee = calculation?.financials?.stationFee || 0;
     return mats + fee + upfrontJournalsCost;
-  }, [calculation, upfrontJournalsCost]);
+  }, [craftingInputMode, materialsModeShopping, calculation, upfrontJournalsCost]);
 
   const handleCopyShoppingList = () => {
-    const primaryGross = calculation?.materials?.primaryGross || (effectiveBatchQuantity * (selectedItem.primaryQty || 0));
-    const secondaryGross = calculation?.materials?.secondaryGross || (effectiveBatchQuantity * (selectedItem.secondaryQty || 0));
-    const artCount = effectiveBatchQuantity * artifactCountPerUnit;
     const stationFee = calculation?.financials?.stationFee || 0;
     const netProfit = calculation?.financials?.netProfit || 0;
     const margin = calculation?.financials?.marginPct || 0;
 
-    const lines = [
-      `⚔️ ALBION ONLINE CRAFTING SHOPPING LIST`,
-      `Item: ${effectiveBatchQuantity}x ${selectedItem.name} (T${selectedTier}.${selectedEnchantment})`,
-      `City: ${selectedCity} (${calculation.returnRatePct}% Return Rate)`,
-      `----------------------------------------`,
-      `📦 MATERIALS NEEDED:`,
-      `• ${primaryGross}x ${selectedItem.primaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} @ ${primaryPrice.toLocaleString()}s = ${(primaryGross * primaryPrice).toLocaleString()}s`,
-    ];
-    if (selectedItem.secondaryQty > 0) {
-      lines.push(`• ${secondaryGross}x ${selectedItem.secondaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} @ ${secondaryPrice.toLocaleString()}s = ${(secondaryGross * secondaryPrice).toLocaleString()}s`);
-    }
-    if (selectedItem.isArtifact) {
-      lines.push(`• ${artCount}x ${selectedItem.artifactName} @ ${artifactPrice.toLocaleString()}s = ${(artCount * artifactPrice).toLocaleString()}s`);
-    }
-    if (includeJournals && canUseJournals) {
-      lines.push(`• ${calculation.journals.journalsFilled}x Empty ${selectedItem.journalName || 'Journals'} @ ${emptyJournalPrice.toLocaleString()}s = ${upfrontJournalsCost.toLocaleString()}s`);
+    let lines = [];
+    if (craftingInputMode === 'materials' && materialsModeShopping) {
+      lines = [
+        `⚔️ ALBION ONLINE CRAFTING SHOPPING LIST (BAG MATERIALS MODE)`,
+        `Target Batch: ${effectiveBatchQuantity}x ${selectedItem.name} (T${selectedTier}.${selectedEnchantment})`,
+        `City: ${selectedCity} (${calculation.returnRatePct}% Return Rate)`,
+        `----------------------------------------`,
+        `🎒 IN YOUR BAG (OWNED):`,
+        `• ${primaryMatsHave.toLocaleString()}x ${selectedItem.primaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} (Already Owned - 0s market buy)`,
+      ];
+      if (selectedItem.secondaryQty > 0 && secondaryMatsHave > 0) {
+        lines.push(`• ${secondaryMatsHave.toLocaleString()}x ${selectedItem.secondaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} (Already Owned in Bag)`);
+      }
+      lines.push(`----------------------------------------`);
+      lines.push(`🛒 MARKET PURCHASES TO COMPLETE CRAFT:`);
+      if (selectedItem.secondaryQty > 0) {
+        if (materialsModeShopping.secondaryToBuy > 0) {
+          lines.push(`• ${materialsModeShopping.secondaryToBuy.toLocaleString()}x ${selectedItem.secondaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} @ ${secondaryPrice.toLocaleString()}s = ${materialsModeShopping.secondaryCost.toLocaleString()}s`);
+        } else {
+          lines.push(`• 0x ${selectedItem.secondaryMatName} (Fully covered by bag)`);
+        }
+      }
+      if (selectedItem.isArtifact) {
+        lines.push(`• ${materialsModeShopping.artifactsToBuy.toLocaleString()}x ${selectedItem.artifactName} @ ${artifactPrice.toLocaleString()}s = ${materialsModeShopping.artifactCost.toLocaleString()}s`);
+      }
+      if (includeJournals && canUseJournals && materialsModeShopping.journalsToBuy > 0) {
+        lines.push(`• ${materialsModeShopping.journalsToBuy.toLocaleString()}x Empty ${selectedItem.journalName || 'Journals'} @ ${emptyJournalPrice.toLocaleString()}s = ${materialsModeShopping.journalCost.toLocaleString()}s`);
+      }
+    } else {
+      const primaryGross = calculation?.materials?.primaryGross || (effectiveBatchQuantity * (selectedItem.primaryQty || 0));
+      const secondaryGross = calculation?.materials?.secondaryGross || (effectiveBatchQuantity * (selectedItem.secondaryQty || 0));
+      const artCount = effectiveBatchQuantity * artifactCountPerUnit;
+
+      lines = [
+        `⚔️ ALBION ONLINE CRAFTING SHOPPING LIST`,
+        `Item: ${effectiveBatchQuantity}x ${selectedItem.name} (T${selectedTier}.${selectedEnchantment})`,
+        `City: ${selectedCity} (${calculation.returnRatePct}% Return Rate)`,
+        `----------------------------------------`,
+        `📦 MATERIALS NEEDED:`,
+        `• ${primaryGross}x ${selectedItem.primaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} @ ${primaryPrice.toLocaleString()}s = ${(primaryGross * primaryPrice).toLocaleString()}s`,
+      ];
+      if (selectedItem.secondaryQty > 0) {
+        lines.push(`• ${secondaryGross}x ${selectedItem.secondaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} @ ${secondaryPrice.toLocaleString()}s = ${(secondaryGross * secondaryPrice).toLocaleString()}s`);
+      }
+      if (selectedItem.isArtifact) {
+        lines.push(`• ${artCount}x ${selectedItem.artifactName} @ ${artifactPrice.toLocaleString()}s = ${(artCount * artifactPrice).toLocaleString()}s`);
+      }
+      if (includeJournals && canUseJournals) {
+        lines.push(`• ${calculation.journals.journalsFilled}x Empty ${selectedItem.journalName || 'Journals'} @ ${emptyJournalPrice.toLocaleString()}s = ${upfrontJournalsCost.toLocaleString()}s`);
+      }
     }
     lines.push(`----------------------------------------`);
     lines.push(`🪙 CASH TO BRING IN POCKET:`);
@@ -911,7 +1138,7 @@ export default function CraftingCalculator({
       lines.push(`• Crafter's Salad / Potato Salad buff (Active: +150 Quality Power)`);
     }
     lines.push(`----------------------------------------`);
-    lines.push(`💰 TOTAL UPFRONT SILVER VALUE: ${totalUpfrontCapitalRequired.toLocaleString()}s`);
+    lines.push(`💰 TOTAL UPFRONT SILVER REQUIRED: ${totalUpfrontCapitalRequired.toLocaleString()}s`);
     lines.push(`📈 EXPECTED NET PROFIT: ${netProfit >= 0 ? '+' : ''}${netProfit.toLocaleString()}s (${margin}%)`);
     lines.push(`🎯 BREAK-EVEN SELL PRICE: ${breakEvenUnitPrice.toLocaleString()}s / item`);
 
@@ -1226,25 +1453,28 @@ export default function CraftingCalculator({
                 <div className="grid grid-cols-7 gap-1.5 font-mono">
                   {TIERS.map((tier) => {
                     const min = selectedItem.minTier || 4;
-                    const isMinEligible = tier.level >= min;
+                    const max = selectedItem.maxTier || 8;
+                    const isEligible = tier.level >= min && tier.level <= max;
                     const isSelected = selectedTier === tier.level;
 
                     return (
                       <button
                         key={tier.level}
                         type="button"
-                        disabled={!isMinEligible}
+                        disabled={!isEligible}
                         onClick={() => handleSelectTier(tier.level)}
                         className={`py-2 rounded-xl border text-xs font-extrabold text-center transition-all cursor-pointer active:scale-95 ${
-                          !isMinEligible
+                          !isEligible
                             ? 'opacity-20 cursor-not-allowed bg-[#06090f] border-slate-800 text-slate-600'
                             : isSelected
                             ? `${tier.gemClass ? `${tier.gemClass} text-white shadow-lg ring-2 ring-amber-400 scale-105` : `${tier.color} ring-2 ring-amber-400 scale-105 shadow-md`}`
                             : 'bg-[#080d16] border-[#1e2a3c] text-slate-400 hover:text-slate-200 hover:border-slate-500'
                         }`}
                         title={
-                          !isMinEligible 
-                            ? `${selectedItem.name} starts at Tier ${min}` 
+                          !isEligible 
+                            ? (tier.level < min 
+                                ? `${selectedItem.name} starts at Tier ${min}` 
+                                : `${selectedItem.name} maxes at Tier ${max}`)
                             : `${tier.name} (T${tier.level})`
                         }
                       >
@@ -1749,7 +1979,7 @@ export default function CraftingCalculator({
                     <div className="mt-1 space-y-0.5">
                       {selectedItem.secondaryQty > 0 ? (
                         <span className="text-xs font-bold text-amber-300 block">
-                          {compoundCraftRrr ? craftingMaterialSim.secondaryToBuyTotal.toLocaleString() : craftingMaterialSim.secondaryToBuyPass1.toLocaleString()}x {selectedItem.secondaryMatName}
+                          {compoundCraftRrr ? (craftingMaterialSim?.secondaryToBuyTotal ?? 0).toLocaleString() : (craftingMaterialSim?.secondaryToBuyPass1 ?? 0).toLocaleString()}x {selectedItem.secondaryMatName}
                         </span>
                       ) : (
                         <span className="text-xs font-bold text-emerald-400 block">
@@ -1758,12 +1988,12 @@ export default function CraftingCalculator({
                       )}
                       {selectedItem.isArtifact && (
                         <span className="text-[11px] font-bold text-purple-300 block">
-                          + {compoundCraftRrr ? craftingMaterialSim.artifactsTotal : craftingMaterialSim.artifactsPass1}x {selectedItem.artifactName}
+                          + {compoundCraftRrr ? (craftingMaterialSim?.artifactsTotal ?? 0) : (craftingMaterialSim?.artifactsPass1 ?? 0)}x {selectedItem.artifactName}
                         </span>
                       )}
                       {includeJournals && canUseJournals && (
                         <span className="text-[10px] text-slate-400 block">
-                          + {compoundCraftRrr ? craftingMaterialSim.journalsFilledTotal : craftingMaterialSim.journalsFilledPass1}x Empty Books
+                          + {compoundCraftRrr ? (craftingMaterialSim?.journalsFilledTotal ?? 0) : (craftingMaterialSim?.journalsFilledPass1 ?? 0)}x Empty Books
                         </span>
                       )}
                     </div>
@@ -1774,10 +2004,10 @@ export default function CraftingCalculator({
                       2. Initial Pass
                     </span>
                     <span className="text-sm font-bold text-slate-200 block mt-0.5">
-                      {craftingMaterialSim.pass1Crafts.toLocaleString()}x {selectedItem.name}
+                      {(craftingMaterialSim?.pass1Crafts ?? 0).toLocaleString()}x {selectedItem.name}
                     </span>
                     <span className="text-[10px] text-sky-400 block mt-0.5">
-                      +{craftingMaterialSim.pass1PrimaryReturned.toLocaleString()} {selectedItem.primaryMatName} returned
+                      +{(craftingMaterialSim?.pass1PrimaryReturned ?? 0).toLocaleString()} {selectedItem.primaryMatName} returned
                     </span>
                   </div>
 
@@ -1786,10 +2016,10 @@ export default function CraftingCalculator({
                       3. RRR Recycles
                     </span>
                     <span className="text-sm font-bold text-sky-400 block mt-0.5">
-                      +{compoundCraftRrr ? craftingMaterialSim.bonusRrrCrafts.toLocaleString() : 0}x {selectedItem.name}
+                      +{compoundCraftRrr ? (craftingMaterialSim?.bonusRrrCrafts ?? 0).toLocaleString() : 0}x {selectedItem.name}
                     </span>
                     <span className="text-[10px] text-slate-500 block mt-0.5">
-                      {compoundCraftRrr ? `At ${calculation.returnRatePct}% RRR` : 'Kept as returned'}
+                      {compoundCraftRrr ? `At ${calculation?.returnRatePct || 0}% RRR` : 'Kept as returned'}
                     </span>
                   </div>
 
@@ -1801,7 +2031,7 @@ export default function CraftingCalculator({
                       {effectiveBatchQuantity.toLocaleString()}x {selectedItem.name}
                     </span>
                     <span className="text-[10px] text-slate-400 block mt-0.5">
-                      Leftover: {compoundCraftRrr ? craftingMaterialSim.leftoverPrimary : (primaryMatsHave - craftingMaterialSim.pass1Crafts * selectedItem.primaryQty + craftingMaterialSim.pass1PrimaryReturned)} {selectedItem.primaryMatName}
+                      Leftover: {compoundCraftRrr ? (craftingMaterialSim?.leftoverPrimary ?? 0) : (primaryMatsHave - (craftingMaterialSim?.pass1Crafts ?? 0) * selectedItem.primaryQty + (craftingMaterialSim?.pass1PrimaryReturned ?? 0))} {selectedItem.primaryMatName}
                     </span>
                   </div>
                 </div>
@@ -2325,20 +2555,48 @@ export default function CraftingCalculator({
               {/* In Actual Mode: Sync bar */}
               {valuationMode === 'actual' && (
                 <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-emerald-950/30 border border-emerald-500/40 text-xs font-mono shadow-sm">
-                  <span className="text-slate-300">
-                    Actual Rolled: <strong className="text-emerald-400">{actualTotals.totalItems} items</strong> (Revenue: {actualTotals.totalGrossRev.toLocaleString()} silver)
-                  </span>
-                  {actualTotals.totalItems !== effectiveBatchQuantity && actualTotals.totalItems > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setCraftingInputMode('target');
-                        setQuantity(actualTotals.totalItems);
-                      }}
-                      className="text-[10px] px-3 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 font-bold transition-all cursor-pointer"
-                    >
-                      Set Batch Size to {actualTotals.totalItems}x
-                    </button>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-slate-300">
+                      Actual Rolled: <strong className="text-emerald-400">{actualTotals.totalItems} items</strong> (Revenue: {actualTotals.totalGrossRev.toLocaleString()} silver)
+                    </span>
+                    {actualTotals.totalItems !== effectiveBatchQuantity && (
+                      <span className="text-[10px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30 font-bold">
+                        Target Batch: {effectiveBatchQuantity}x
+                      </span>
+                    )}
+                  </div>
+                  {actualTotals.totalItems !== effectiveBatchQuantity && (
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={handleSyncRolledToBatch}
+                        className="text-[10px] px-3 py-1 rounded-md bg-emerald-500/25 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-500/35 font-bold transition-all cursor-pointer shadow-sm"
+                        title="Set rolled items count to match current batch size"
+                      >
+                        ⚡ Sync Rolls to {effectiveBatchQuantity}x
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleSimulateRoll}
+                        className="text-[10px] px-3 py-1 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 font-bold transition-all cursor-pointer shadow-sm"
+                        title="Simulate fresh discrete rolls for the full batch"
+                      >
+                        🎲 Re-Roll {effectiveBatchQuantity}x
+                      </button>
+                      {actualTotals.totalItems > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCraftingInputMode('target');
+                            setQuantity(actualTotals.totalItems);
+                          }}
+                          className="text-[10px] px-2.5 py-1 rounded-md bg-[#0c121e] text-slate-400 hover:text-slate-200 border border-[#1e2a3c] transition-all cursor-pointer"
+                          title="Change batch size down to match what you entered"
+                        >
+                          Set Batch to {actualTotals.totalItems}x
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
               )}
@@ -2721,14 +2979,27 @@ export default function CraftingCalculator({
                   <span className="font-mono text-xs text-slate-400">silver needed</span>
                 </div>
 
-                <p className="text-[10px] text-slate-400 mt-1">
-                  You must possess this liquid silver in your bag to buy raw ingredients, empty journals, and pay station nutrition fees.
-                </p>
+                {craftingInputMode === 'materials' ? (
+                  <p className="text-[10px] text-emerald-300 mt-1 flex items-center gap-1.5 font-mono">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                    <span>In Materials Mode: Your {primaryMatsHave.toLocaleString()}x {selectedItem.primaryMatName}{secondaryMatsHave > 0 ? ` & ${secondaryMatsHave.toLocaleString()}x ${selectedItem.secondaryMatName}` : ''} in your bag are already owned and deducted from market costs.</span>
+                  </p>
+                ) : (
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    You must possess this liquid silver in your bag to buy raw ingredients, empty journals, and pay station nutrition fees.
+                  </p>
+                )}
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3 pt-2.5 border-t border-[#1e2a3c] text-[10px] font-mono text-slate-300">
                   <div className="bg-[#070b12] p-2 rounded-lg border border-[#1e2a3c]">
-                    <span className="text-slate-500 block uppercase">Upfront Mats:</span>
-                    <strong className="text-slate-100">{calculation.financials.upfrontMaterials.toLocaleString()}s</strong>
+                    <span className="text-slate-500 block uppercase">
+                      {craftingInputMode === 'materials' ? 'Complementary Mats:' : 'Upfront Mats:'}
+                    </span>
+                    <strong className="text-slate-100">
+                      {craftingInputMode === 'materials' && materialsModeShopping
+                        ? (materialsModeShopping.secondaryCost + materialsModeShopping.artifactCost).toLocaleString()
+                        : calculation.financials.upfrontMaterials.toLocaleString()}s
+                    </strong>
                   </div>
                   <div className="bg-[#070b12] p-2 rounded-lg border border-[#1e2a3c]">
                     <span className="text-slate-500 block uppercase">Station Tax:</span>
@@ -2737,7 +3008,11 @@ export default function CraftingCalculator({
                   {includeJournals && canUseJournals && (
                     <div className="bg-[#070b12] p-2 rounded-lg border border-[#1e2a3c]">
                       <span className="text-slate-500 block uppercase">Empty Books:</span>
-                      <strong className="text-amber-300">{upfrontJournalsCost.toLocaleString()}s</strong>
+                      <strong className="text-amber-300">
+                        {craftingInputMode === 'materials' && materialsModeShopping
+                          ? materialsModeShopping.journalCost.toLocaleString()
+                          : upfrontJournalsCost.toLocaleString()}s
+                      </strong>
                     </div>
                   )}
                 </div>
@@ -2747,24 +3022,24 @@ export default function CraftingCalculator({
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 px-1">
                   <span className="uppercase tracking-wider font-semibold">MARKET PROCUREMENT CHECKLIST</span>
-                  <span>CLICK CHECKBOX AS YOU BUY</span>
+                  <span>{craftingInputMode === 'materials' ? 'BAG OWNED ITEMS AUTO-DEDUCTED' : 'CLICK CHECKBOX AS YOU BUY'}</span>
                 </div>
 
                 {/* Primary Material Item */}
                 <div 
                   onClick={() => setShoppingChecked(prev => ({ ...prev, primary: !prev.primary }))}
                   className={`p-3 rounded-xl border flex items-center justify-between gap-2.5 cursor-pointer transition-all ${
-                    shoppingChecked.primary 
-                      ? 'bg-emerald-950/20 border-emerald-500/40 line-through opacity-75' 
+                    (shoppingChecked.primary || craftingInputMode === 'materials')
+                      ? 'bg-emerald-950/20 border-emerald-500/40 opacity-85' 
                       : 'bg-[#070b12] border-[#1e2a3c] hover:border-slate-500'
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <input
                       type="checkbox"
-                      checked={!!shoppingChecked.primary}
+                      checked={craftingInputMode === 'materials' ? true : !!shoppingChecked.primary}
                       onChange={() => {}}
-                      className="accent-amber-500 rounded cursor-pointer"
+                      className="accent-emerald-500 rounded cursor-pointer"
                     />
                     <div className="w-8 h-8 rounded-lg bg-[#0c121e] p-0.5 border border-[#1e2a3c] flex items-center justify-center shrink-0 shadow-sm">
                       <ItemIcon 
@@ -2774,19 +3049,34 @@ export default function CraftingCalculator({
                       />
                     </div>
                     <div className="min-w-0">
-                      <span className="text-xs font-bold text-slate-100 block truncate font-mono">
-                        {calculation.materials.primaryGross}x {selectedItem.primaryMatName}{selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-bold text-slate-100 block truncate font-mono">
+                          {craftingInputMode === 'materials'
+                            ? `${primaryMatsHave.toLocaleString()}x ${selectedItem.primaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''}`
+                            : `${calculation.materials.primaryGross}x ${selectedItem.primaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''}`}
+                        </span>
+                        {craftingInputMode === 'materials' && (
+                          <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold shrink-0">
+                            Owned in Bag
+                          </span>
+                        )}
+                      </div>
                       <span className="text-[10px] text-slate-400 font-mono">
-                        @{primaryPrice.toLocaleString()}s each
+                        {craftingInputMode === 'materials'
+                          ? 'Already in your bag (0s market buy)'
+                          : `@${primaryPrice.toLocaleString()}s each`}
                       </span>
                     </div>
                   </div>
                   <div className="font-mono text-right shrink-0">
                     <span className="text-xs font-bold text-albion-gold">
-                      {(calculation.materials.primaryGross * primaryPrice).toLocaleString()}s
+                      {craftingInputMode === 'materials'
+                        ? '0s'
+                        : `${(calculation.materials.primaryGross * primaryPrice).toLocaleString()}s`}
                     </span>
-                    <span className="block text-[8px] text-slate-500">primary mat</span>
+                    <span className="block text-[8px] text-slate-500">
+                      {craftingInputMode === 'materials' ? '0s market buy' : 'primary mat'}
+                    </span>
                   </div>
                 </div>
 
@@ -2795,15 +3085,15 @@ export default function CraftingCalculator({
                   <div 
                     onClick={() => setShoppingChecked(prev => ({ ...prev, secondary: !prev.secondary }))}
                     className={`p-3 rounded-xl border flex items-center justify-between gap-2.5 cursor-pointer transition-all ${
-                      shoppingChecked.secondary 
-                        ? 'bg-emerald-950/20 border-emerald-500/40 line-through opacity-75' 
+                      shoppingChecked.secondary || (craftingInputMode === 'materials' && materialsModeShopping && materialsModeShopping.secondaryToBuy === 0)
+                        ? 'bg-emerald-950/20 border-emerald-500/40 opacity-85' 
                         : 'bg-[#070b12] border-[#1e2a3c] hover:border-slate-500'
                     }`}
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <input
                         type="checkbox"
-                        checked={!!shoppingChecked.secondary}
+                        checked={craftingInputMode === 'materials' && materialsModeShopping && materialsModeShopping.secondaryToBuy === 0 ? true : !!shoppingChecked.secondary}
                         onChange={() => {}}
                         className="accent-amber-500 rounded cursor-pointer"
                       />
@@ -2815,17 +3105,32 @@ export default function CraftingCalculator({
                         />
                       </div>
                       <div className="min-w-0">
-                        <span className="text-xs font-bold text-slate-100 block truncate font-mono">
-                          {calculation.materials.secondaryGross}x {selectedItem.secondaryMatName}{selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''}
-                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-bold text-slate-100 block truncate font-mono">
+                            {craftingInputMode === 'materials' && materialsModeShopping
+                              ? `${materialsModeShopping.secondaryToBuy.toLocaleString()}x ${selectedItem.secondaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''}`
+                              : `${calculation.materials.secondaryGross}x ${selectedItem.secondaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''}`}
+                          </span>
+                          {craftingInputMode === 'materials' && secondaryMatsHave > 0 && (
+                            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shrink-0">
+                              {secondaryMatsHave.toLocaleString()} in Bag
+                            </span>
+                          )}
+                        </div>
                         <span className="text-[10px] text-slate-400 font-mono">
-                          @{secondaryPrice.toLocaleString()}s each
+                          {craftingInputMode === 'materials' && materialsModeShopping
+                            ? (materialsModeShopping.secondaryToBuy > 0
+                                ? `@${secondaryPrice.toLocaleString()}s each (${secondaryMatsHave.toLocaleString()} owned in bag)`
+                                : 'Fully covered by bag (0s to buy)')
+                            : `@${secondaryPrice.toLocaleString()}s each`}
                         </span>
                       </div>
                     </div>
                     <div className="font-mono text-right shrink-0">
                       <span className="text-xs font-bold text-albion-gold">
-                        {(calculation.materials.secondaryGross * secondaryPrice).toLocaleString()}s
+                        {craftingInputMode === 'materials' && materialsModeShopping
+                          ? `${materialsModeShopping.secondaryCost.toLocaleString()}s`
+                          : `${(calculation.materials.secondaryGross * secondaryPrice).toLocaleString()}s`}
                       </span>
                       <span className="block text-[8px] text-slate-500">secondary mat</span>
                     </div>
@@ -2858,7 +3163,9 @@ export default function CraftingCalculator({
                       </div>
                       <div className="min-w-0">
                         <span className="text-xs font-bold text-purple-200 block truncate font-mono">
-                          {effectiveBatchQuantity * artifactCountPerUnit}x {selectedItem.artifactName}
+                          {craftingInputMode === 'materials' && materialsModeShopping
+                            ? `${materialsModeShopping.artifactsToBuy.toLocaleString()}x ${selectedItem.artifactName}`
+                            : `${effectiveBatchQuantity * artifactCountPerUnit}x ${selectedItem.artifactName}`}
                         </span>
                         <span className="text-[10px] text-purple-300/80 font-mono">
                           @{artifactPrice.toLocaleString()}s each
@@ -2867,7 +3174,9 @@ export default function CraftingCalculator({
                     </div>
                     <div className="font-mono text-right shrink-0">
                       <span className="text-xs font-bold text-purple-300">
-                        {calculation.materials.artifactGrossCost.toLocaleString()}s
+                        {craftingInputMode === 'materials' && materialsModeShopping
+                          ? `${materialsModeShopping.artifactCost.toLocaleString()}s`
+                          : `${calculation.materials.artifactGrossCost.toLocaleString()}s`}
                       </span>
                       <span className="block text-[8px] text-purple-400">artifact item</span>
                     </div>
@@ -2899,17 +3208,21 @@ export default function CraftingCalculator({
                         />
                       </div>
                       <div className="min-w-0">
-                        <span className="text-xs font-bold text-slate-100 block truncate font-mono">
-                          {calculation.journals.journalsFilled}x Empty {selectedItem.journalName || 'Journals'}
+                        <span className="text-xs font-bold text-amber-200 block truncate font-mono">
+                          {craftingInputMode === 'materials' && materialsModeShopping
+                            ? `${materialsModeShopping.journalsToBuy.toLocaleString()}x Empty ${selectedItem.journalName || 'Journals'}`
+                            : `${calculation.journals.journalsFilled}x Empty ${selectedItem.journalName || 'Journals'}`}
                         </span>
-                        <span className="text-[10px] text-slate-400 font-mono">
+                        <span className="text-[10px] text-amber-400/80 font-mono">
                           @{emptyJournalPrice.toLocaleString()}s each
                         </span>
                       </div>
                     </div>
                     <div className="font-mono text-right shrink-0">
                       <span className="text-xs font-bold text-amber-300">
-                        {upfrontJournalsCost.toLocaleString()}s
+                        {craftingInputMode === 'materials' && materialsModeShopping
+                          ? `${materialsModeShopping.journalCost.toLocaleString()}s`
+                          : `${upfrontJournalsCost.toLocaleString()}s`}
                       </span>
                       <span className="block text-[8px] text-slate-500">empty books</span>
                     </div>

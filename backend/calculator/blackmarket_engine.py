@@ -14,6 +14,7 @@ ELIGIBLE_ITEMS = [
     it for it in RAW_CATALOG
     if 'tool' not in it.get('category', '')
     and 'furniture' not in it.get('category', '')
+    and 'mount' not in it.get('category', '')
     and 'bed' not in it['id']
     and 'chest' not in it['id']
     and 'table' not in it['id']

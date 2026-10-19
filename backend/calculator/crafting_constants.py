@@ -40,6 +40,11 @@ CRAFTING_CATEGORIES = {
         'station': "Mage's Tower",
         'icon': '🔮',
     },
+    'mounts': {
+        'name': 'Saddler & War Mounts',
+        'station': 'Saddler / Energy Manipulator',
+        'icon': '🐎',
+    },
 }
 
 # City Crafting Bonuses (+15% production bonus to specific item types)
@@ -123,6 +128,8 @@ def _load_catalog():
         it['is_royal'] = it.get('isRoyal', it.get('is_royal', False))
         it['sigil_type'] = it.get('sigilType', it.get('sigil_type', 'head_shoes'))
         it['is_no_return'] = it.get('isNoReturn', it.get('is_no_return', False))
+        it['artifact_qty'] = it.get('artifactQty', it.get('artifact_qty', 1))
+        it['artifactQty'] = it['artifact_qty']
     return items
 
 CRAFTABLE_ITEMS = _load_catalog()

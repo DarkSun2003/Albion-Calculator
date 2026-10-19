@@ -36,8 +36,8 @@ const MODULE_DECK = [
   {
     id: 'crafting',
     label: 'Gear Forge',
-    sublabel: '3,400+ Equipment',
-    discipline: 'Grand Forgemaster',
+    sublabel: 'Weapons, Armor & War Mounts',
+    discipline: 'Grand Forgemaster & Saddler',
     icon: Hammer,
     activeClass: 'bg-gradient-to-br from-sky-950/90 via-[#0f1523] to-sky-900/40 border-sky-400 text-sky-100 shadow-[0_0_24px_rgba(56,189,248,0.32)] ring-1 ring-sky-400/60',
     iconColor: 'text-sky-400',
@@ -104,6 +104,15 @@ const MODULE_DECK = [
 export default function App() {
   // Navigation tab
   const [activeTab, setActiveTab] = useState('refining');
+  const [craftingNavigationOptions, setCraftingNavigationOptions] = useState(null);
+
+  const handleNavigateTab = (tab, options = null) => {
+    if (tab === 'crafting' && options) {
+      setCraftingNavigationOptions(options);
+    }
+    setActiveTab(tab);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Global settings
   const [server, setServer] = useState('europe');
@@ -589,6 +598,7 @@ export default function App() {
             setUseFocus={setUseFocus}
             onOpenGuide={handleOpenHandbook}
             onStartTour={handleStartTour}
+            onNavigateTab={handleNavigateTab}
           />
         ) : activeTab === 'potions' ? (
           <PotionCalculator
@@ -616,6 +626,7 @@ export default function App() {
             setUseFocus={setUseFocus}
             onOpenGuide={handleOpenHandbook}
             onStartTour={handleStartTour}
+            navigationOptions={craftingNavigationOptions}
           />
         ) : (
           /* Tab 1: Refining Workshop */
