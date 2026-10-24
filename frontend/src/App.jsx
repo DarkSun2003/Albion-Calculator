@@ -557,11 +557,11 @@ export default function App() {
                       {calculation.financials.netProfit.toLocaleString()} <span className="text-sm font-serif font-normal text-amber-300">silver</span>
                     </div>
                     <div className="text-xs text-slate-400 font-mono mt-0.5">
-                      Margin: <span className={calculation.financials.profitMarginPct >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
-                        {calculation.financials.profitMarginPct.toFixed(1)}%
+                      Margin: <span className={(calculation.financials?.marginPct ?? 0) >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
+                        {(calculation.financials?.marginPct ?? 0).toFixed(1)}%
                       </span>
                       <span className="mx-2 text-slate-600">|</span>
-                      Cost/Unit: {Math.round(calculation.financials.costPerRefinedUnit).toLocaleString()} silver
+                      Cost/Unit: {Math.round(calculation.financials?.costPerUnit ?? 0).toLocaleString()} silver
                     </div>
                   </div>
 
@@ -575,7 +575,7 @@ export default function App() {
                     {useFocus && (
                       <div className="px-2.5 py-1.5 rounded-lg bg-sky-950/50 border border-sky-500/40 text-xs font-mono">
                         <span className="text-sky-400 block text-[9px] uppercase">Silver / Focus</span>
-                        <span className="font-bold text-sky-200">{calculation.silverPerFocus.toFixed(1)} SPF</span>
+                        <span className="font-bold text-sky-200">{(calculation.silverPerFocus ?? 0).toFixed(1)} SPF</span>
                       </div>
                     )}
 
