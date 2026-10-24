@@ -39,6 +39,12 @@ backend/calculator/data/items.json
 backend/calculator/data/formatted_items.json
 scratch/
 
+# Private Prompts & Agent Configs
+prompts/
+.agents/
+.agent/
+_agents/
+
 # OS / Editor Files
 .DS_Store
 Thumbs.db
