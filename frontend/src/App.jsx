@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, lazy, Suspense } from 'react';
 import Header from './components/Header';
 import ResourceSelector from './components/ResourceSelector';
 import CraftingFlowCard from './components/CraftingFlowCard';
@@ -7,19 +7,30 @@ import PriceInputs from './components/PriceInputs';
 import FocusSpecManager from './components/FocusSpecManager';
 import LedgerResults from './components/LedgerResults';
 import CityArbitrageDrawer from './components/CityArbitrageDrawer';
-import CraftingCalculator from './components/CraftingCalculator';
-import FoodCalculator from './components/FoodCalculator';
-import PotionCalculator from './components/PotionCalculator';
-import FarmingCalculator from './components/FarmingCalculator';
-import LaborerCalculator from './components/LaborerCalculator';
-import BlackMarketCalculator from './components/BlackMarketCalculator';
 import InteractiveTour from './components/InteractiveTour';
-import PlayerHandbookModal from './components/PlayerHandbookModal';
 import CommandNavigator, { spotlightElement } from './components/CommandNavigator';
-import LiveScannerModal from './components/LiveScannerModal';
 import { computeRefining, RESOURCES, calculateFocusCost, simulateRefiningFromMaterials } from './utils/albionMath';
 import { fetchLivePricesApi, calculateRefiningApi } from './services/api';
 import { Layers, Hammer, Flame, FlaskConical, Wheat, Users, Skull, Compass, BookOpen, Sparkles, X, Search, RefreshCw, ArrowUpRight } from 'lucide-react';
+
+// Lazy-loaded heavy modules for lightning-fast initial load & mobile performance
+const CraftingCalculator = lazy(() => import('./components/CraftingCalculator'));
+const FoodCalculator = lazy(() => import('./components/FoodCalculator'));
+const PotionCalculator = lazy(() => import('./components/PotionCalculator'));
+const FarmingCalculator = lazy(() => import('./components/FarmingCalculator'));
+const LaborerCalculator = lazy(() => import('./components/LaborerCalculator'));
+const BlackMarketCalculator = lazy(() => import('./components/BlackMarketCalculator'));
+const PlayerHandbookModal = lazy(() => import('./components/PlayerHandbookModal'));
+const LiveScannerModal = lazy(() => import('./components/LiveScannerModal'));
+
+function ModuleLoader() {
+  return (
+    <div className="forged-tablet p-12 rounded-2xl flex flex-col items-center justify-center space-y-3 min-h-[320px]">
+      <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+      <span className="text-xs font-mono text-slate-400">Loading module workspace...</span>
+    </div>
+  );
+}
 
 const MODULE_DECK = [
   {
@@ -440,245 +451,165 @@ export default function App() {
         onOpenHandbook={() => handleOpenHandbook('uimap')}
         onStartTour={handleStartTour}
         onOpenCommandNavigator={() => setIsCommandOpen(true)}
+        onOpenScanner={() => setIsScannerOpen(true)}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
-        {/* First-Time Visitor Welcome Banner: Royal Trade Charter */}
-        {showWelcomeBanner && (
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-950/80 via-[#0d131f] to-amber-950/60 border border-amber-500/50 p-4 sm:p-5 shadow-[0_12px_35px_rgba(0,0,0,0.85)] ring-1 ring-amber-400/40 animate-fade-in">
-            {/* Subtle top edge gold filament */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400/80 to-transparent" />
-            
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="flex items-start gap-3.5 min-w-0">
-                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500/25 to-amber-900/40 border border-amber-400/60 flex items-center justify-center text-amber-300 shadow-gold-glow shrink-0 mt-0.5">
-                  <Compass className="w-5 h-5 animate-spin-slow text-amber-300" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[9.5px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold uppercase tracking-widest shadow-gold-glow">
-                      ⚔️ ROYAL TRADE CHARTER
-                    </span>
-                    <h3 className="font-decorative text-sm sm:text-base font-bold text-amber-100 flex items-center gap-2 drop-shadow">
-                      Welcome to Albion Artisan Forgemaster
-                    </h3>
-                  </div>
-                  <p className="text-xs text-slate-300 mt-1 font-sans leading-relaxed">
-                    Royal City economy &amp; Caerleon underworld suite. Use <strong className="text-amber-300">Find Tool (Ctrl+K)</strong> to jump anywhere in seconds, explore the 7 Guild Disciplines below, or launch the interactive Handbook.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center flex-wrap gap-2 shrink-0 w-full md:w-auto justify-end">
-                <button
-                  type="button"
-                  onClick={() => setIsCommandOpen(true)}
-                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#090e17] hover:bg-slate-800 text-amber-300 border border-amber-500/40 font-mono font-bold text-xs transition-colors cursor-pointer shadow-sm active:scale-95"
-                >
-                  <Search className="w-3.5 h-3.5" />
-                  <span>Where Is...?</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleStartTour()}
-                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold font-mono text-xs shadow-gold-glow transition-all hover:scale-105 active:scale-95 cursor-pointer"
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Start 60s Tour</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleDismissWelcome();
-                    handleOpenHandbook('uimap');
-                  }}
-                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#101624] hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold font-serif text-xs transition-colors cursor-pointer active:scale-95"
-                >
-                  <BookOpen className="w-3.5 h-3.5 text-amber-400" />
-                  <span>UI Map &amp; Codex</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={handleDismissWelcome}
-                  className="flex items-center gap-1 px-2.5 py-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 text-xs font-mono transition-colors cursor-pointer"
-                  title="Dismiss charter"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 7-Discipline Guild Sigil Deck */}
-        <section id="tour-module-tabs" className="space-y-2.5">
-          <div className="flex items-center justify-between px-1">
-            <span className="text-[10.5px] font-mono uppercase tracking-widest text-slate-400 font-bold flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)] animate-pulse" />
-              Guild Economic Disciplines &bull; 7 Royal Stations
-            </span>
-            <button
-              type="button"
-              onClick={() => setIsCommandOpen(true)}
-              className="text-[10.5px] font-mono text-amber-400 hover:text-amber-300 flex items-center gap-1 cursor-pointer transition-colors"
-            >
-              <Search className="w-3 h-3" />
-              <span>Can&apos;t find a tool? (Ctrl+K)</span>
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5">
-            {MODULE_DECK.map((mod) => {
-              const Icon = mod.icon;
-              const isActive = activeTab === mod.id;
-              return (
-                <button
-                  key={mod.id}
-                  type="button"
-                  onClick={() => setActiveTab(mod.id)}
-                  className={`group relative flex flex-col justify-between p-3 rounded-xl border text-left transition-all duration-200 cursor-pointer hover:-translate-y-0.5 ${
-                    isActive
-                      ? `${mod.activeClass} scale-[1.02]`
-                      : 'bg-[#080d15]/90 hover:bg-[#0f1726] border-slate-800/90 hover:border-slate-600/80 text-slate-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
-                  }`}
-                >
-                  {/* Active Heraldic Gold Pips */}
-                  {isActive && (
-                    <div className="absolute top-1.5 right-2 flex items-center gap-1 text-[8.5px] font-mono font-bold tracking-wider text-amber-300 uppercase">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(245,158,11,1)] animate-ping" />
-                      <span>Active</span>
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className={`w-8 h-8 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 shadow-inner ${mod.iconColor} transition-transform group-hover:scale-110`}>
-                      <Icon className="w-4 h-4" />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="font-serif font-bold text-xs sm:text-[13px] leading-tight truncate text-slate-100 group-hover:text-amber-200 transition-colors">
-                      {mod.label}
-                    </div>
-                    <div className="text-[9.5px] text-slate-400 font-sans truncate block">
-                      {mod.discipline}
-                    </div>
-                    <div className={`text-[9.5px] font-mono px-1.5 py-0.5 rounded border inline-block truncate max-w-full font-semibold ${
-                      isActive ? mod.tagColor : 'text-slate-400 bg-black/40 border-slate-800/80'
-                    }`}>
-                      {mod.sublabel}
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </section>
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-5 space-y-4">
+        {/* Streamlined Horizontal Module Bar (Zero-Bloat Navigation) */}
+        <nav id="tour-module-tabs" className="flex items-center overflow-x-auto no-scrollbar gap-1.5 sm:gap-2 pb-1 border-b border-slate-800/80">
+          {MODULE_DECK.map((mod) => {
+            const Icon = mod.icon;
+            const isActive = activeTab === mod.id;
+            return (
+              <button
+                key={mod.id}
+                type="button"
+                onClick={() => handleNavigateTab(mod.id)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
+                  isActive
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow-[0_0_12px_rgba(245,158,11,0.2)]'
+                    : 'bg-slate-900/80 text-slate-400 border border-slate-800/80 hover:text-slate-200 hover:bg-slate-800/60'
+                }`}
+              >
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-amber-400' : 'text-slate-500'}`} />
+                <span>{mod.label}</span>
+                {isActive && <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(245,158,11,1)]" />}
+              </button>
+            );
+          })}
+        </nav>
 
         {/* Tab Content */}
-        {activeTab === 'blackmarket' ? (
-          <BlackMarketCalculator
-            server={server}
-            hasPremium={hasPremium}
-            onOpenGuide={handleOpenHandbook}
-            onStartTour={handleStartTour}
-          />
-        ) : activeTab === 'laborers' ? (
-          <LaborerCalculator
-            server={server}
-            hasPremium={hasPremium}
-            onOpenGuide={handleOpenHandbook}
-            onStartTour={handleStartTour}
-          />
-        ) : activeTab === 'farming' ? (
-          <FarmingCalculator
-            server={server}
-            hasPremium={hasPremium}
-            useFocus={useFocus}
-            setUseFocus={setUseFocus}
-            onOpenGuide={handleOpenHandbook}
-            onStartTour={handleStartTour}
-            onNavigateTab={handleNavigateTab}
-          />
-        ) : activeTab === 'potions' ? (
-          <PotionCalculator
-            server={server}
-            hasPremium={hasPremium}
-            useFocus={useFocus}
-            setUseFocus={setUseFocus}
-            onOpenGuide={handleOpenHandbook}
-            onStartTour={handleStartTour}
-          />
-        ) : activeTab === 'cooking' ? (
-          <FoodCalculator
-            server={server}
-            hasPremium={hasPremium}
-            useFocus={useFocus}
-            setUseFocus={setUseFocus}
-            onOpenGuide={handleOpenHandbook}
-            onStartTour={handleStartTour}
-          />
-        ) : activeTab === 'crafting' ? (
-          <CraftingCalculator
-            server={server}
-            hasPremium={hasPremium}
-            useFocus={useFocus}
-            setUseFocus={setUseFocus}
-            onOpenGuide={handleOpenHandbook}
-            onStartTour={handleStartTour}
-            navigationOptions={craftingNavigationOptions}
-          />
-        ) : (
-          /* Tab 1: Refining Workshop */
+        <Suspense fallback={<ModuleLoader />}>
+          {activeTab === 'blackmarket' ? (
+            <BlackMarketCalculator
+              server={server}
+              hasPremium={hasPremium}
+              onOpenGuide={handleOpenHandbook}
+              onStartTour={handleStartTour}
+            />
+          ) : activeTab === 'laborers' ? (
+            <LaborerCalculator
+              server={server}
+              hasPremium={hasPremium}
+              onOpenGuide={handleOpenHandbook}
+              onStartTour={handleStartTour}
+            />
+          ) : activeTab === 'farming' ? (
+            <FarmingCalculator
+              server={server}
+              hasPremium={hasPremium}
+              useFocus={useFocus}
+              setUseFocus={setUseFocus}
+              onOpenGuide={handleOpenHandbook}
+              onStartTour={handleStartTour}
+              onNavigateTab={handleNavigateTab}
+            />
+          ) : activeTab === 'potions' ? (
+            <PotionCalculator
+              server={server}
+              hasPremium={hasPremium}
+              useFocus={useFocus}
+              setUseFocus={setUseFocus}
+              onOpenGuide={handleOpenHandbook}
+              onStartTour={handleStartTour}
+            />
+          ) : activeTab === 'cooking' ? (
+            <FoodCalculator
+              server={server}
+              hasPremium={hasPremium}
+              useFocus={useFocus}
+              setUseFocus={setUseFocus}
+              onOpenGuide={handleOpenHandbook}
+              onStartTour={handleStartTour}
+            />
+          ) : activeTab === 'crafting' ? (
+            <CraftingCalculator
+              server={server}
+              hasPremium={hasPremium}
+              useFocus={useFocus}
+              setUseFocus={setUseFocus}
+              onOpenGuide={handleOpenHandbook}
+              onStartTour={handleStartTour}
+              navigationOptions={craftingNavigationOptions}
+            />
+          ) : (
+            /* Tab 1: Refining Workshop */
           <div className="space-y-4">
-            {/* Refining Quick Navigation & Stage Jump Bar */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-gradient-to-r from-amber-950/40 via-[#0e131f] to-amber-950/30 p-3 rounded-xl border border-amber-500/30 shadow-lg">
-              <div className="flex items-center flex-wrap gap-1.5">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold mr-1">
-                  Quick Jump:
-                </span>
-                {[
-                  { label: '01 Material & Tier', target: '#tour-resource-picker' },
-                  { label: '02 Recipe & Vault', target: '#tour-crafting-flow' },
-                  { label: '03 City & Tax', target: '#tour-city-controls' },
-                  { label: '04 Market Prices', target: '#tour-price-inputs' },
-                  { label: '05 Net Profit', target: '#tour-profit-ledger' },
-                  { label: '06 Focus & Spec', target: '#tour-focus-spec' },
-                ].map((st) => (
-                  <button
-                    key={st.target}
-                    type="button"
-                    onClick={() => spotlightElement(st.target)}
-                    className="px-2.5 py-1 rounded-lg bg-[#090c14] hover:bg-amber-500/20 text-slate-300 hover:text-amber-200 border border-slate-800 hover:border-amber-500/50 font-mono text-[11px] transition-all cursor-pointer"
-                  >
-                    {st.label}
-                  </button>
-                ))}
-              </div>
+            {/* Live Hero Verdict Card (Instant Profit & RRR Visibility) */}
+            {calculation && (
+              <div className={`p-4 sm:p-5 rounded-2xl border transition-all ${
+                calculation.financials.netProfit >= 0
+                  ? 'bg-gradient-to-r from-emerald-950/40 via-[#0a0f18] to-emerald-950/20 border-emerald-500/40 shadow-[0_4px_25px_rgba(16,185,129,0.12)]'
+                  : 'bg-gradient-to-r from-rose-950/40 via-[#0f0a0d] to-rose-950/20 border-rose-500/40 shadow-[0_4px_25px_rgba(244,63,94,0.12)]'
+              }`}>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2 text-xs text-slate-400 font-mono">
+                      <span>ESTIMATED NET PROFIT</span>
+                      <span className="text-slate-600">•</span>
+                      <span>{effectiveRefiningQuantity}x {selectedResource?.toUpperCase()} T{selectedTier}.{selectedEnchantment}</span>
+                    </div>
+                    <div className={`text-2xl sm:text-3xl font-black font-mono mt-0.5 ${
+                      calculation.financials.netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'
+                    }`}>
+                      {calculation.financials.netProfit >= 0 ? '+' : ''}
+                      {calculation.financials.netProfit.toLocaleString()} <span className="text-sm font-serif font-normal text-amber-300">silver</span>
+                    </div>
+                    <div className="text-xs text-slate-400 font-mono mt-0.5">
+                      Margin: <span className={calculation.financials.profitMarginPct >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
+                        {calculation.financials.profitMarginPct.toFixed(1)}%
+                      </span>
+                      <span className="mx-2 text-slate-600">|</span>
+                      Cost/Unit: {Math.round(calculation.financials.costPerRefinedUnit).toLocaleString()} silver
+                    </div>
+                  </div>
 
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => handleOpenHandbook('refining')}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 font-mono text-xs font-bold transition-all cursor-pointer"
-                >
-                  <BookOpen className="w-3.5 h-3.5" />
-                  <span>Refining Guide</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleStartTour('refining')}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-mono text-xs font-bold transition-all shadow-md cursor-pointer hover:scale-105"
-                >
-                  <Compass className="w-3.5 h-3.5" />
-                  <span>Spotlight Tour</span>
-                </button>
-              </div>
-            </div>
+                  {/* Fast Action Metrics */}
+                  <div className="flex items-center flex-wrap gap-2 sm:justify-end">
+                    <div className="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono">
+                      <span className="text-slate-400 block text-[9px] uppercase">Return Rate</span>
+                      <span className="font-bold text-amber-300">{calculation.returnRatePct}% RRR</span>
+                    </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    {useFocus && (
+                      <div className="px-2.5 py-1.5 rounded-lg bg-sky-950/50 border border-sky-500/40 text-xs font-mono">
+                        <span className="text-sky-400 block text-[9px] uppercase">Silver / Focus</span>
+                        <span className="font-bold text-sky-200">{calculation.silverPerFocus.toFixed(1)} SPF</span>
+                      </div>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => setUseFocus(!useFocus)}
+                      className={`px-3 py-1.5 rounded-lg border text-xs font-bold font-mono transition-all flex items-center gap-1.5 ${
+                        useFocus
+                          ? 'bg-sky-500/20 border-sky-400 text-sky-200 shadow-sm'
+                          : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
+                      }`}
+                    >
+                      <Sparkles className={`w-3.5 h-3.5 ${useFocus ? 'text-sky-300 fill-sky-300' : 'text-slate-500'}`} />
+                      <span>{useFocus ? '⚡ Focus ON' : 'Focus OFF'}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleFetchLivePrices({ force: true })}
+                      disabled={loadingPrices}
+                      className="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white text-xs font-mono flex items-center gap-1 transition-colors"
+                      title="Sync live prices"
+                    >
+                      <RefreshCw className={`w-3.5 h-3.5 ${loadingPrices ? 'animate-spin text-amber-400' : ''}`} />
+                      <span className="hidden sm:inline">Sync Prices</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
               {/* Left Column: Workshop Controls (7 Cols) */}
-              <div className="lg:col-span-7 space-y-5">
+              <div className="lg:col-span-7 space-y-4">
                 {/* 1. Tactile Material, Tier & Enchantment Picker */}
                 <div id="tour-resource-picker">
                   <ResourceSelector
@@ -788,7 +719,7 @@ export default function App() {
               </div>
 
               {/* Right Column: Sticky Artisan Ledger & Cross-City Matrix (5 Cols) */}
-              <div className="lg:col-span-5 space-y-5 lg:sticky lg:top-20">
+              <div className="lg:col-span-5 space-y-4 lg:sticky lg:top-16">
                 {/* 1. Main Profit Ledger & Return Metrics */}
                 <div id="tour-profit-ledger">
                   <LedgerResults 
@@ -822,44 +753,9 @@ export default function App() {
                 </div>
               </div>
             </div>
-
-            {/* Mobile Sticky Bottom Live Verdict Bar (Ensures Phone Users Always See Live Profit Without Scrolling) */}
-            {calculation && (
-              <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#080b12]/95 backdrop-blur-xl border-t border-amber-500/40 px-4 py-2.5 shadow-[0_-10px_30px_rgba(0,0,0,0.85)] flex items-center justify-between gap-3">
-                <div>
-                  <div className="text-[10px] font-mono uppercase text-slate-400 flex items-center gap-1.5">
-                    <span>Net Profit ({calculation.returnRatePct}% RRR)</span>
-                  </div>
-                  <div className={`font-mono text-base font-black ${
-                    calculation.financials.netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'
-                  }`}>
-                    {calculation.financials.netProfit >= 0 ? '+' : ''}
-                    {calculation.financials.netProfit.toLocaleString()} silver
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleFetchLivePrices({ force: true })}
-                    disabled={loadingPrices}
-                    className="px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-amber-300 font-mono text-xs font-bold flex items-center gap-1"
-                  >
-                    <RefreshCw className={`w-3.5 h-3.5 ${loadingPrices ? 'animate-spin' : ''}`} />
-                    <span>Sync</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => spotlightElement('#tour-profit-ledger')}
-                    className="px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-mono text-xs font-black flex items-center gap-1"
-                  >
-                    <span>Ledger</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         )}
+        </Suspense>
       </main>
 
       {/* Footer */}
@@ -884,11 +780,26 @@ export default function App() {
         onStartTour={() => handleStartTour()}
       />
 
-      {/* Live Scanner Modal */}
-      <LiveScannerModal
-        isOpen={isScannerOpen}
-        onClose={() => setIsScannerOpen(false)}
-      />
+      <Suspense fallback={null}>
+        {/* Live Scanner Modal */}
+        {isScannerOpen && (
+          <LiveScannerModal
+            isOpen={isScannerOpen}
+            onClose={() => setIsScannerOpen(false)}
+          />
+        )}
+
+        {/* Comprehensive Player Handbook Modal */}
+        {isHandbookOpen && (
+          <PlayerHandbookModal
+            isOpen={isHandbookOpen}
+            onClose={() => setIsHandbookOpen(false)}
+            onStartTour={handleStartTour}
+            onJumpToFeature={handleJumpToFeature}
+            initialTab={handbookInitialTab}
+          />
+        )}
+      </Suspense>
 
       {/* Interactive Step-by-Step Guided Tour */}
       <InteractiveTour
@@ -903,15 +814,6 @@ export default function App() {
           setIsTourActive(false);
           handleDismissWelcome();
         }}
-      />
-
-      {/* Comprehensive Player Handbook Modal */}
-      <PlayerHandbookModal
-        isOpen={isHandbookOpen}
-        onClose={() => setIsHandbookOpen(false)}
-        onStartTour={handleStartTour}
-        onJumpToFeature={handleJumpToFeature}
-        initialTab={handbookInitialTab}
       />
     </div>
   );

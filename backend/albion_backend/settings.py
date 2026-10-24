@@ -41,9 +41,10 @@ _load_env_file(BASE_DIR.parent / '.env')
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-upqmxliftb85xhxh6gcnmyr506r3%hcj_kkt#(@_l_s)h+)u#c')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() in ('true', '1', 't')
+_is_prod = os.getenv('ENVIRONMENT') == 'production' or os.getenv('RAILWAY_ENVIRONMENT') == 'production'
+DEBUG = os.getenv('DJANGO_DEBUG', 'False' if _is_prod else 'True').lower() in ('true', '1', 't')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', '*').split(',') if h.strip()]
 
 
 # Application definition
@@ -218,3 +219,17 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.railway.app',
     'https://*.onrender.com',
 ]
+
+
+# Pre-Deployment Production Security Headers
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True

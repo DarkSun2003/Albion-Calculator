@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://albion-artisan.vercel.app/sitemap.xml

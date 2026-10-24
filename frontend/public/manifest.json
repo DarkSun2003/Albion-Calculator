@@ -22,5 +22,28 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Refining Workshop",
+      "short_name": "Refining",
+      "description": "Calculate royal city return rates (+40% RRR) and focus costs",
+      "url": "/?tab=refining",
+      "icons": [{ "src": "/logo-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Black Market Arbitrage",
+      "short_name": "Black Market",
+      "description": "Scan Caerleon Black Market transport buy orders",
+      "url": "/?tab=blackmarket",
+      "icons": [{ "src": "/logo-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Gear Crafting Forge",
+      "short_name": "Crafting",
+      "description": "Calculate weapons and armor crafting profits",
+      "url": "/?tab=crafting",
+      "icons": [{ "src": "/logo-192.png", "sizes": "192x192" }]
+    }
   ]
 }

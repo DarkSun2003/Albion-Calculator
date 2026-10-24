@@ -2,22 +2,79 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <link rel="icon" type="image/png" href="/logo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Albion Artisan — Economic Suite & Underworld Ledger</title>
-    <meta name="description" content="All-in-one Albion Online economic suite: Refining, Crafting, Food, Potions, Farming, Laborers, and Caerleon Black Market arbitrage." />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Primary SEO Meta Tags -->
+    <title>Albion Artisan — Albion Online Refining & Crafting Calculator</title>
+    <meta name="title" content="Albion Artisan — Albion Online Refining & Crafting Calculator" />
+    <meta name="description" content="All-in-one Albion Online economic suite: High-precision Refining calculator (+40% Royal City RRR), Gear Forge, Focus efficiency (500/500 spec), and Caerleon Black Market arbitrage with live market prices." />
+    <meta name="keywords" content="albion online calculator, albion refining calculator, albion crafting profit, albion focus calculator, caerleon black market arbitrage, albion online market prices, albion data project, albion economic ledger, albion royal cities return rate, albion artisan" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Albion Artisan" />
+    <link rel="canonical" href="https://albion-artisan.vercel.app/" />
+
+    <!-- Open Graph / Facebook / Discord Embeds -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://albion-artisan.vercel.app/" />
+    <meta property="og:site_name" content="Albion Artisan" />
+    <meta property="og:title" content="Albion Artisan — Albion Online Economy & Profit Calculator" />
+    <meta property="og:description" content="Instant Royal City refining return rates (+40% RRR), 500/500 focus cost calculations, gear crafting profits, and Caerleon Black Market arbitrage with live AODP market prices." />
+    <meta property="og:image" content="https://albion-artisan.vercel.app/logo.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:image:alt" content="Albion Artisan Medieval Forgemaster Crest" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:url" content="https://albion-artisan.vercel.app/" />
+    <meta name="twitter:title" content="Albion Artisan — Albion Online Economy & Profit Calculator" />
+    <meta name="twitter:description" content="High-precision Albion Online calculator for refining, crafting, focus efficiency, and Black Market arbitrage." />
+    <meta name="twitter:image" content="https://albion-artisan.vercel.app/logo.png" />
+
+    <!-- Mobile & PWA Ergonomics -->
     <meta name="theme-color" content="#07090e" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Albion Artisan" />
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="apple-touch-icon" href="/logo.png" />
+
+    <!-- Performance: Preconnect & Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Structured Data (Schema.org WebApplication JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Albion Artisan",
+      "url": "https://albion-artisan.vercel.app/",
+      "applicationCategory": "GameApplication, BusinessApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript",
+      "description": "High-precision economic calculator and market analysis suite for Albion Online. Calculates refining resource return rates, gear crafting profit, focus efficiency, and Caerleon Black Market arbitrage.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Live Albion Data Project price syncing across Europe, Americas, and Asia servers",
+        "Authentic 500/500 refining specialization and focus cost calculator",
+        "Royal City +40% Resource Return Rate (RRR) and daily event bonuses",
+        "Caerleon Black Market buy-order scanner and transport profit routes",
+        "Offline-first PWA with mobile-first touch ergonomics"
+      ]
+    }
+    </script>
   </head>
-  <body class="bg-[#07090e] text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950">
+  <body class="bg-[#07090e] text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950 overflow-x-hidden">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     <script>

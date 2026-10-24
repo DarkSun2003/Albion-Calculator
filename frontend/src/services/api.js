@@ -7,9 +7,11 @@ const isLocalHost =
 
 const hasRemoteBackendUrl = Boolean(import.meta.env.VITE_API_URL);
 
-const API_BASE = !isLocalHost && hasRemoteBackendUrl
+const API_BASE = hasRemoteBackendUrl
   ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
-  : 'http://127.0.0.1:8000/api';
+  : isLocalHost
+  ? 'http://127.0.0.1:8000/api'
+  : '/api';
 
 // If running on a remote HTTPS live server (e.g. Vercel) without VITE_API_URL configured,
 // skip attempting http://127.0.0.1:8000 (which would fail due to mixed content / no local server)
