@@ -251,10 +251,10 @@ export default function App() {
     return quantity;
   }, [refiningInputMode, refiningMaterialSim, compoundRrrPasses, quantity]);
 
-  // Focus cost calculation
+  // Focus cost calculation (Albion Online 500/500 refining spec)
   const focusPerUnit = useMemo(() => {
-    return calculateFocusCost(selectedResource, selectedTier, selectedEnchantment, masteryLevel, specLevels);
-  }, [selectedResource, selectedTier, selectedEnchantment, masteryLevel, specLevels]);
+    return calculateFocusCost(selectedResource, selectedTier, selectedEnchantment, specLevels);
+  }, [selectedResource, selectedTier, selectedEnchantment, specLevels]);
 
   const totalFocusNeeded = useMemo(() => {
     return useFocus ? focusPerUnit * effectiveRefiningQuantity : 0;
@@ -769,7 +769,7 @@ export default function App() {
                   />
                 </div>
 
-                {/* 5. Destiny Board Focus & Mastery Simulator */}
+                {/* 5. Destiny Board Focus & Tier Specialization (500/500 System) */}
                 <div id="tour-focus-spec">
                   <FocusSpecManager
                     selectedResource={selectedResource}

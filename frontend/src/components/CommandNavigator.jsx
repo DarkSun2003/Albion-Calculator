@@ -105,10 +105,10 @@ export const FEATURE_DIRECTORY = [
   },
   {
     id: 'refining-focus-spec',
-    title: 'Stage 04: Destiny Board Mastery & Specialization Sliders (0–100)',
+    title: 'Stage 06: Destiny Board Tier Specialization Sliders (500/500 Spec)',
     category: 'Refining Workshop',
-    keywords: 'focus spec specialization mastery level slider silver per focus spf efficiency',
-    description: 'Refining Tab → Stage 04 card at bottom-left (set Mastery & T4–T8 Spec to slash focus cost).',
+    keywords: 'focus spec specialization refining tiers adept expert master grandmaster elder efficiency 500',
+    description: 'Refining Tab → Stage 06 card (set T4–T8 Tier Specs up to 500/500 to slash focus cost).',
     module: 'refining',
     targetSelector: '#tour-focus-spec',
     icon: Zap,

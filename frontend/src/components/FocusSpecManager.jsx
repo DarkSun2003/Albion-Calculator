@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
-import { Sparkles, ChevronDown, ChevronUp, RotateCcw, Zap } from 'lucide-react';
+import { Sparkles, ChevronDown, ChevronUp, Zap, Award } from 'lucide-react';
 import { calculateFocusCost, calculateReturnRate } from '../utils/albionMath';
+
+const TIER_NODE_NAMES = {
+  4: "Adept's Refiner",
+  5: "Expert's Refiner",
+  6: "Master's Refiner",
+  7: "Grandmaster's Refiner",
+  8: "Elder's Refiner",
+};
 
 export default function FocusSpecManager({
   selectedResource,
@@ -17,6 +25,8 @@ export default function FocusSpecManager({
 }) {
   const [isOpen, setIsOpen] = useState(true);
 
+  const totalSpec = [4, 5, 6, 7, 8].reduce((acc, t) => acc + (Number(specLevels[t]) || 0), 0);
+
   const handleSpecChange = (tier, val) => {
     setSpecLevels((prev) => ({
       ...prev,
@@ -26,12 +36,9 @@ export default function FocusSpecManager({
 
   const handlePreset = (lvl, e) => {
     if (e) e.stopPropagation();
-    setMasteryLevel(lvl);
+    if (setMasteryLevel) setMasteryLevel(lvl);
     setSpecLevels({ 4: lvl, 5: lvl, 6: lvl, 7: lvl, 8: lvl });
   };
-
-  const handleMaxAll = (e) => handlePreset(100, e);
-  const handleReset = (e) => handlePreset(0, e);
 
   return (
     <div className="forged-tablet shadow-2xl relative overflow-hidden">
@@ -53,15 +60,18 @@ export default function FocusSpecManager({
                 Stage 06
               </span>
               <h3 className="text-sm font-serif font-bold text-slate-100 tracking-wide">
-                Destiny Board Focus &amp; Specialization Mastery
+                Destiny Board Focus &amp; Tier Specialization
               </h3>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/30 font-bold">
                 {focusPerUnit} Focus / Craft
               </span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold">
+                {totalSpec} / 500 Spec
+              </span>
             </div>
             <p className="text-xs text-slate-400 mt-1 font-sans">
               {useFocus 
-                ? `Total Focus Needed: ${totalFocusNeeded.toLocaleString()} points (Mastery ${masteryLevel}/100)` 
+                ? `Total Focus Needed: ${totalFocusNeeded.toLocaleString()} points (${totalSpec}/500 total spec)` 
                 : 'Focus is OFF. Click the Focus button to activate +53.9% return rate & Silver/Focus metrics.'}
             </p>
           </div>
@@ -94,9 +104,9 @@ export default function FocusSpecManager({
               type="button"
               onClick={(e) => handlePreset(0, e)}
               className={`text-[10px] font-mono px-2.5 py-1 rounded-md transition-all cursor-pointer ${
-                masteryLevel === 0 ? 'bg-slate-700 text-white font-bold' : 'text-slate-400 hover:text-slate-200'
+                totalSpec === 0 ? 'bg-slate-700 text-white font-bold' : 'text-slate-400 hover:text-slate-200'
               }`}
-              title="Set all specs to 0"
+              title="Set all 5 tier specs to 0 (0 / 500)"
             >
               0 Spec
             </button>
@@ -104,21 +114,21 @@ export default function FocusSpecManager({
               type="button"
               onClick={(e) => handlePreset(50, e)}
               className={`text-[10px] font-mono px-2.5 py-1 rounded-md transition-all cursor-pointer ${
-                masteryLevel === 50 ? 'bg-sky-500/30 text-sky-200 border border-sky-500/40 font-bold' : 'text-slate-400 hover:text-slate-200'
+                totalSpec === 250 ? 'bg-sky-500/30 text-sky-200 border border-sky-500/40 font-bold' : 'text-slate-400 hover:text-slate-200'
               }`}
-              title="Set Mastery & Specs to 50"
+              title="Set all 5 tier specs to 50 (250 / 500)"
             >
-              50 Spec
+              250 Spec
             </button>
             <button
               type="button"
               onClick={(e) => handlePreset(100, e)}
               className={`text-[10px] font-mono px-2.5 py-1 rounded-md transition-all cursor-pointer ${
-                masteryLevel === 100 ? 'bg-amber-500/30 text-amber-200 border border-amber-500/50 font-bold shadow-gold-glow' : 'text-amber-400/80 hover:text-amber-300'
+                totalSpec === 500 ? 'bg-amber-500/30 text-amber-200 border border-amber-500/50 font-bold shadow-gold-glow' : 'text-amber-400/80 hover:text-amber-300'
               }`}
-              title="Set Mastery & All Specs to 100 (Max Efficiency)"
+              title="Set all 5 tier specs to 100 (Max 500 / 500 Spec)"
             >
-              ⚡ Max 100
+              ⚡ Max 500
             </button>
           </div>
 
@@ -160,25 +170,27 @@ export default function FocusSpecManager({
             )}
           </div>
 
-          {/* Mastery Slider */}
-          <div className="bg-[#0b121d] p-3.5 rounded-xl border border-[#1e2a3c] shadow-inner">
-            <div className="flex justify-between items-center text-xs mb-1.5">
-              <span className="font-serif font-bold text-slate-200">
-                Refining Mastery Level (Node 1-100)
-              </span>
-              <span className="font-mono text-amber-300 font-bold text-sm">{masteryLevel} / 100</span>
+          {/* Destiny Board 500/500 Progress & Mechanics Banner */}
+          <div className="bg-[#0b121d] p-3.5 rounded-xl border border-[#1e2a3c] shadow-inner space-y-2">
+            <div className="flex justify-between items-center text-xs">
+              <div className="flex items-center gap-2">
+                <Award className="w-4 h-4 text-amber-400" />
+                <span className="font-serif font-bold text-slate-200">
+                  Destiny Board Refining Progress (500/500 System)
+                </span>
+              </div>
+              <span className="font-mono text-amber-300 font-bold text-sm">{totalSpec} / 500 Spec</span>
             </div>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={masteryLevel}
-              onChange={(e) => setMasteryLevel(parseInt(e.target.value))}
-              className="w-full accent-amber-400 cursor-pointer"
-            />
-            <span className="text-[10px] text-slate-400 mt-1 block font-mono">
-              Grants +30 Focus Efficiency per level to ALL tiers of this resource (+{masteryLevel * 30} total).
-            </span>
+            <div className="w-full bg-slate-900/80 rounded-full h-2 overflow-hidden border border-slate-800">
+              <div 
+                className="bg-gradient-to-r from-sky-500 via-amber-500 to-amber-300 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${(totalSpec / 500) * 100}%` }}
+              />
+            </div>
+            <p className="text-[10px] text-slate-400 font-sans leading-relaxed">
+              Refining in Albion has no central mastery node — it consists of 5 independent tier nodes (T4 Adept to T8 Elder). 
+              Each level grants <span className="text-sky-300 font-mono font-semibold">+250 efficiency</span> to its own tier and <span className="text-amber-300 font-mono font-semibold">+30 cross-tier efficiency</span> across all other tiers.
+            </p>
           </div>
 
           {/* Specialization Sliders (T4 to T8) */}
@@ -186,6 +198,7 @@ export default function FocusSpecManager({
             {[4, 5, 6, 7, 8].map((t) => {
               const specVal = specLevels[t] || 0;
               const isCurrentTier = selectedTier === t;
+              const nodeName = TIER_NODE_NAMES[t];
 
               return (
                 <div
@@ -197,8 +210,10 @@ export default function FocusSpecManager({
                   }`}
                 >
                   <div className="flex justify-between items-center mb-1">
-                    <span className="font-serif font-bold text-slate-200">Tier {t} Spec</span>
-                    <span className="font-mono font-bold text-amber-300">{specVal}</span>
+                    <span className="font-serif font-bold text-slate-200 text-[11px] truncate" title={nodeName}>
+                      {nodeName}
+                    </span>
+                    <span className="font-mono font-bold text-amber-300 ml-1">{specVal}</span>
                   </div>
                   <input
                     type="range"
@@ -208,8 +223,11 @@ export default function FocusSpecManager({
                     onChange={(e) => handleSpecChange(t, e.target.value)}
                     className="w-full accent-amber-400 cursor-pointer"
                   />
-                  <div className="text-[9px] font-mono text-slate-400 mt-1.5 truncate">
-                    {isCurrentTier ? '+250 eff/lvl (active)' : '+30 eff/lvl (cross)'}
+                  <div className="text-[9px] font-mono text-slate-400 mt-1.5 flex justify-between items-center">
+                    <span>Tier {t}</span>
+                    <span className={isCurrentTier ? 'text-sky-300 font-semibold' : 'text-slate-500'}>
+                      {isCurrentTier ? '+280 eff/lvl (active)' : '+30 eff/lvl (cross)'}
+                    </span>
                   </div>
                 </div>
               );

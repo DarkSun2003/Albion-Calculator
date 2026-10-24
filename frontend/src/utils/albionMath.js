@@ -158,19 +158,23 @@ export function calculateReturnRate(resourceType, city, useFocus = false, dailyB
   return totalBonus > 0 ? totalBonus / (1.0 + totalBonus) : 0.0;
 }
 
-export function calculateFocusCost(resourceType, tier, enchantment, mastery = 0, specLevels = {}) {
+export function calculateFocusCost(resourceType, tier, enchantment, masteryOrSpec = 0, specLevelsArg = {}) {
   if (tier < 3) return 0;
   
   const baseCost = BASE_FOCUS_COST[tier] || 54;
   const multiplier = ENCHANTMENT_FOCUS_MULTIPLIER[enchantment] || 1.0;
   const baseFocus = baseCost * multiplier;
   
-  // Efficiency: Mastery gives +30/lvl, active Tier Spec gives +280/lvl (+250 specific + 30 shared), other 4 specs give +30/lvl
-  const m = Math.max(0, Math.min(100, Number(mastery) || 0));
-  let efficiency = m * 30;
+  // In Albion Online, refining has NO central mastery tree (no 'Mastery Level 1-100').
+  // It features 5 independent tier nodes (T4 Adept to T8 Elder) totaling 500/500 spec:
+  // - Active tier spec grants +280 eff/lvl (+250 specific tier + 30 cross-tier shared)
+  // - The other 4 tier specs grant +30 eff/lvl each (cross-tier shared)
+  // Max efficiency at 500/500 = 28,000 + 12,000 = 40,000 efficiency points.
+  const specs = (masteryOrSpec && typeof masteryOrSpec === 'object') ? masteryOrSpec : (specLevelsArg || {});
+  let efficiency = 0;
   
   [4, 5, 6, 7, 8].forEach(t => {
-    const spec = Math.max(0, Math.min(100, Number(specLevels[t]) || 0));
+    const spec = Math.max(0, Math.min(100, Number(specs[t]) || 0));
     if (t === tier) {
       efficiency += spec * 280;
     } else {

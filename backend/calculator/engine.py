@@ -37,15 +37,18 @@ def calculate_return_rate(resource_type: str, city: str, use_focus: bool = False
     return round(rrr, 6)
 
 
-def calculate_focus_efficiency(mastery: int, spec_levels: dict, current_tier: int) -> int:
+def calculate_focus_efficiency(spec_levels: dict, current_tier: int, mastery: int = 0) -> int:
     """
-    Calculates total focus efficiency points for a specific tier.
-    - Mastery (1-100) gives +30 efficiency to all tiers.
-    - Spec for current tier gives +280 efficiency per level (+250 tier-specific + 30 shared to all tiers).
-    - Spec for other 4 tiers gives +30 efficiency per level.
+    Calculates total focus efficiency points for refining in Albion Online (500/500 spec).
+    Refining does NOT have a central mastery tree/node; it consists of 5 independent tier nodes (T4-T8):
+    - Current tier spec gives +280 efficiency per level (+250 tier-specific + 30 cross-tier shared).
+    - Other 4 tier specs give +30 efficiency per level (cross-tier shared).
+    - Total max efficiency at 500/500 spec = 28,000 + 12,000 = 40,000 points.
+    (The 'mastery' argument is preserved with default 0 for API backward compatibility).
     """
-    mastery = max(0, min(100, int(mastery or 0)))
-    total_eff = mastery * 30
+    if spec_levels is None:
+        spec_levels = {}
+    total_eff = 0
     
     for t in [4, 5, 6, 7, 8]:
         level = max(0, min(100, int(spec_levels.get(t, 0) or spec_levels.get(str(t), 0) or 0)))
@@ -59,7 +62,7 @@ def calculate_focus_efficiency(mastery: int, spec_levels: dict, current_tier: in
 
 def calculate_focus_cost(resource_type: str, tier: int, enchantment: int, mastery: int = 0, spec_levels: dict = None) -> int:
     """
-    Calculates focus cost per single refined item unit.
+    Calculates focus cost per single refined item unit based on Albion Online's 500/500 spec.
     Formula: Actual Focus = Base Focus * (0.5 ^ (Efficiency / 10000))
     """
     if tier < 3:
@@ -71,7 +74,7 @@ def calculate_focus_cost(resource_type: str, tier: int, enchantment: int, master
     multiplier = ENCHANTMENT_FOCUS_MULTIPLIER.get(enchantment, 1.0)
     base_focus = base_cost * multiplier
     
-    efficiency = calculate_focus_efficiency(mastery, spec_levels, tier)
+    efficiency = calculate_focus_efficiency(spec_levels, tier, mastery=0)
     
     actual_focus = base_focus * (0.5 ** (efficiency / 10000.0))
     return max(1, math.floor(actual_focus + 0.5))
