@@ -50,6 +50,7 @@ import {
   Repeat,
 } from 'lucide-react';
 import ItemIcon from './ItemIcon';
+import SpecLevelingPlanner from './SpecLevelingPlanner';
 
 const TIERS = [
   { level: 2, name: 'Novice', color: 'border-amber-700/80 text-amber-500 bg-amber-950/30' },
@@ -1814,6 +1815,19 @@ export default function CraftingCalculator({
               </div>
             )}
           </div>
+
+          {/* Crafter Fame-to-Max-Spec Leveling Planner */}
+          <SpecLevelingPlanner
+            mode="gear"
+            item={selectedItem}
+            tier={selectedTier}
+            currentSpec={specLevel}
+            rrr={calculation?.returnRatePct ? calculation.returnRatePct / 100 : 0.248}
+            sellPrice={manualOverrides.sellPrice ? itemSellPrice : (prices[selectedItem?.id]?.sell_min || itemSellPrice)}
+            primaryMatPrice={primaryMatPrice}
+            secondaryMatPrice={secondaryMatPrice}
+            artifactPrice={artifactPrice}
+          />
 
           {/* 3. Visual Recipe & Material Cost Inputs (Refined Mats + Artifact Slot) */}
           <div id="tour-craft-planner-details" className="forged-tablet p-5 sm:p-6 space-y-5">

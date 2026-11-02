@@ -221,6 +221,7 @@ class CraftingCalculateView(APIView):
                 full_journal_price=float(data.get('full_journal_price', 0)),
                 mastery_level=int(data.get('mastery_level', 0)),
                 spec_level=int(data.get('spec_level', 0)),
+                other_spec_avg=int(data.get('other_spec_avg', 0)),
             )
             return Response(result, status=status.HTTP_200_OK)
         except Exception as e:
@@ -482,6 +483,7 @@ class FoodCalculateView(APIView):
                 is_sell_order=bool(data.get('is_sell_order', True)),
                 mastery_level=int(data.get('mastery_level', 0)),
                 spec_level=int(data.get('spec_level', 0)),
+                other_spec_avg=int(data.get('other_spec_avg', 0)),
             )
             return Response(result, status=status.HTTP_200_OK)
         except Exception as e:
@@ -594,6 +596,7 @@ class PotionCalculateView(APIView):
                 is_sell_order=bool(data.get('is_sell_order', True)),
                 mastery_level=int(data.get('mastery_level', 0)),
                 spec_level=int(data.get('spec_level', 0)),
+                other_spec_avg=int(data.get('other_spec_avg', 0)),
             )
             return Response(result, status=status.HTTP_200_OK)
         except Exception as e:

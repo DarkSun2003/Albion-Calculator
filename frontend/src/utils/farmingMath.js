@@ -335,8 +335,9 @@ export function computeFarming({
   const mLevel = Math.min(100, Math.max(0, parseInt(masteryLevel) || 0));
   const sLevel = Math.min(100, Math.max(0, parseInt(specLevel) || 0));
 
-  // Focus formula: 50 pts/mastery + 250 pts/spec (125 focus at 100/100)
-  const efficiencyPoints = (mLevel * 50) + (sLevel * 250);
+  // Focus formula: Harvester Mastery grants 100 eff/lvl (10,000 at Lvl 100 -> 500 focus).
+  // Specific Crop/Animal Spec grants 200 eff/lvl (20,000 at Lvl 100 -> 125 focus at 100/100).
+  const efficiencyPoints = (mLevel * 100) + (sLevel * 200);
   const focusPerSpot = Math.round((itemDef.baseFocus || 1000) * Math.pow(0.5, efficiencyPoints / 10000.0));
   const category = itemDef.category || 'crop';
 
@@ -430,10 +431,13 @@ export function computeFarming({
     const grownPrice = getFarmingPrice(marketPrices, itemDef.id, DEFAULT_FARMING_PRICES[itemDef.id] || 10000);
 
     const favFoodId = itemDef.favoriteFood || 'T3_WHEAT';
-    const feedUnitPrice = getFarmingPrice(marketPrices, favFoodId, 350);
+    const feedFoodId = useFavoriteFood ? favFoodId : 'T1_CARROT';
+    const feedUnitPrice = getFarmingPrice(marketPrices, feedFoodId, useFavoriteFood ? 350 : 280);
 
-    // Food per day: 10 regular crops or 5 favorite crops
-    const feedPerSpot = useFavoriteFood ? 5 : 10;
+    // Albion Online pasture animals have 864 max nutrition capacity.
+    // Favorite food yields 96 nutrition (double) -> requires 9 items per cycle.
+    // Standard crops/herbs (e.g. Carrots/Wheat) yield 48 nutrition -> requires 18 items per cycle.
+    const feedPerSpot = useFavoriteFood ? 9 : 18;
     const totalFeedUnits = totalSpots * feedPerSpot;
     const feedExpense = Math.round(totalFeedUnits * feedUnitPrice);
 
@@ -453,6 +457,9 @@ export function computeFarming({
       const netProfit = grossRevenue - marketTax - feedExpense;
       const profitMargin = grossRevenue > 0 ? Math.round((netProfit / grossRevenue) * 10000) / 100 : 0;
       const profitPerPlot = Math.round((netProfit / safePlots) * 100) / 100;
+      const growthHours = hasPremium ? 22 : 44;
+      const cycleDays = Math.round((growthHours / 24) * 10) / 10;
+      const dailyProfit = Math.round((netProfit / growthHours) * 24 * 100) / 100;
 
       return {
         item: itemDef,
@@ -464,8 +471,8 @@ export function computeFarming({
         hasPremium,
         useFocus: false, // Focus is for young growth nurture, not milking adults
         animalAction: 'produce',
-        cycleDays: 1,
-        growthHours: hasPremium ? 22 : 44,
+        cycleDays,
+        growthHours,
         focus: {
           focusPerSpot: 0,
           totalFocusNeeded: 0,
@@ -476,6 +483,7 @@ export function computeFarming({
           outputIcon: itemDef.productIcon,
           totalOutput,
           feedUnits: totalFeedUnits,
+          feedFoodName: useFavoriteFood ? (itemDef.favoriteFoodName || 'Favorite Food') : 'Standard Crops (Carrots)',
           offspringReturned: 0,
           babiesToBuy: 0,
           surplusBabies: 0,
@@ -490,7 +498,7 @@ export function computeFarming({
           netProfit,
           profitMarginPct: profitMargin,
           profitPerPlot,
-          dailyProfit: netProfit,
+          dailyProfit,
         }
       };
     }
@@ -532,6 +540,9 @@ export function computeFarming({
     const netProfit = grossRevenue - marketTax - totalExpenses;
     const profitMargin = grossRevenue > 0 ? Math.round((netProfit / grossRevenue) * 10000) / 100 : 0;
     const profitPerPlot = Math.round((netProfit / safePlots) * 100) / 100;
+    const growthHours = hasPremium ? 22 : 44;
+    const cycleDays = Math.round((growthHours / 24) * 10) / 10;
+    const dailyProfit = Math.round((netProfit / growthHours) * 24 * 100) / 100;
 
     const silverPerFocus = totalFocusNeeded > 0 ? Math.round(((bonusOffspring * totalSpots * babyPrice) / totalFocusNeeded) * 100) / 100 : 0;
 
@@ -545,8 +556,8 @@ export function computeFarming({
       hasPremium,
       useFocus,
       animalAction: activeAction,
-      cycleDays: 1,
-      growthHours: hasPremium ? 22 : 44,
+      cycleDays,
+      growthHours,
       focus: {
         focusPerSpot,
         totalFocusNeeded,
@@ -557,6 +568,7 @@ export function computeFarming({
         outputIcon,
         totalOutput,
         feedUnits: totalFeedUnits,
+        feedFoodName: useFavoriteFood ? (itemDef.favoriteFoodName || 'Favorite Food') : 'Standard Crops (Carrots)',
         offspringReturned: totalOffspring,
         babiesToBuy,
         surplusBabies,
@@ -571,7 +583,7 @@ export function computeFarming({
         netProfit,
         profitMarginPct: profitMargin,
         profitPerPlot,
-        dailyProfit: netProfit,
+        dailyProfit,
       }
     };
   }
@@ -581,16 +593,25 @@ export function computeFarming({
   // ==========================================
   else {
     const tier = itemDef.tier || 3;
-    // Growth duration: T3 = 1 Albion day (22h with premium), T4 = 2 days (44h), T5 = 3 days (66h), T6 = 4 days, T7 = 5 days, T8 = 6 days
-    const cycleDays = Math.max(1, tier - 2);
-    const growthHours = cycleDays * (hasPremium ? 22 : 44);
+    // Authoritative Albion mount growth hours (Base without premium vs Premium)
+    const MOUNT_GROWTH_HOURS = {
+      3: { base: 44, premium: 22 },
+      4: { base: 92, premium: 46 },
+      5: { base: 140, premium: 70 },
+      6: { base: 188, premium: 94 },
+      7: { base: 236, premium: 118 },
+      8: { base: 284, premium: 142 },
+    };
+    const timing = MOUNT_GROWTH_HOURS[tier] || { base: 44, premium: 22 };
+    const growthHours = hasPremium ? timing.premium : timing.base;
+    const cycleDays = Math.round((growthHours / 24) * 10) / 10;
 
     const totalFocusNeeded = useFocus ? focusPerSpot * totalSpots : 0;
     const babyPrice = getFarmingPrice(marketPrices, itemDef.babyId, DEFAULT_FARMING_PRICES[itemDef.babyId] || 25000);
     const grownPrice = getFarmingPrice(marketPrices, itemDef.id, DEFAULT_FARMING_PRICES[itemDef.id] || 30000);
     const mountPrice = getFarmingPrice(marketPrices, itemDef.mountId, DEFAULT_FARMING_PRICES[itemDef.mountId] || 45000);
 
-    // Diet: Carnivores eat Raw Meat (T3_MEAT); Herbivores eat crops (T3_WHEAT)
+    // Diet: Carnivores eat Raw Meat (T3_MEAT); Herbivores eat crops (T1_CARROT/T3_WHEAT)
     const isCarnivore = Boolean(
       itemDef.diet === 'meat' ||
       itemDef.id.includes('COUGAR') ||
@@ -601,11 +622,13 @@ export function computeFarming({
       itemDef.id.includes('BEAR') ||
       itemDef.id.includes('SALAMANDER')
     );
-    const feedFoodId = isCarnivore ? 'T3_MEAT' : 'T3_WHEAT';
-    const feedUnitPrice = getFarmingPrice(marketPrices, feedFoodId, isCarnivore ? 190 : 350);
+    const feedFoodId = isCarnivore ? 'T3_MEAT' : (useFavoriteFood ? 'T3_WHEAT' : 'T1_CARROT');
+    const feedUnitPrice = getFarmingPrice(marketPrices, feedFoodId, isCarnivore ? 190 : (useFavoriteFood ? 350 : 280));
 
-    // Total feed: 10 units per spot per day across the full cycle
-    const feedPerSpot = 10 * cycleDays;
+    // Nutrition consumption: 18 standard units (or 9 favorite units) per 22h growth stage
+    const growthStages = Math.max(1, growthHours / (hasPremium ? 22 : 44));
+    const feedPerDay = (useFavoriteFood && !isCarnivore) ? 9 : 18;
+    const feedPerSpot = Math.round(feedPerDay * growthStages);
     const totalFeedUnits = totalSpots * feedPerSpot;
     const feedExpense = Math.round(totalFeedUnits * feedUnitPrice);
 

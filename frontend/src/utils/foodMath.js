@@ -59,14 +59,19 @@ export function calculateFoodReturnRate(itemDef, city = 'Caerleon', useFocus = f
 
 /**
  * Calculates Focus Cost per craft batch with Chef Mastery and Specialization.
+ * In Albion Online:
+ * - Chef Mastery (1-100): +30 efficiency/level
+ * - Target Specialization (1-100): +280 efficiency/level (+250 specific + 30 shared)
+ * - Other 6 Food Specializations (1-100): +30 efficiency/level each (up to 6 * 100 * 30 = 18,000)
  */
-export function calculateFoodFocusCost(baseFocus, mastery = 0, spec = 0) {
+export function calculateFoodFocusCost(baseFocus, mastery = 0, spec = 0, otherSpecAvg = 0) {
   if (!baseFocus || baseFocus <= 0) return 0;
   const m = Math.max(0, Math.min(100, parseInt(mastery || 0, 10)));
   const s = Math.max(0, Math.min(100, parseInt(spec || 0, 10)));
-  const efficiency = m * 30 + s * 250;
+  const oth = Math.max(0, Math.min(100, parseInt(otherSpecAvg || 0, 10)));
+  const efficiency = m * 30 + s * 280 + 6 * oth * 30;
   const actualFocus = baseFocus * Math.pow(0.5, efficiency / 10000.0);
-  return Math.max(1, Math.floor(actualFocus));
+  return Math.max(1, Math.floor(actualFocus + 0.5));
 }
 
 /**
@@ -86,6 +91,7 @@ export function computeFoodCrafting({
   isSellOrder = true,
   masteryLevel = 0,
   specLevel = 0,
+  otherSpecAvg = 0,
 }) {
   if (!item) return null;
 
@@ -158,8 +164,9 @@ export function computeFoodCrafting({
   if (ench > 0 && item.enchantments?.[ench]?.focus) {
     baseFocus = item.enchantments[ench].focus;
   }
-  const focusPerBatch = calculateFoodFocusCost(baseFocus, masteryLevel, specLevel);
+  const focusPerBatch = calculateFoodFocusCost(baseFocus, masteryLevel, specLevel, otherSpecAvg);
   const totalFocusUsed = useFocus ? focusPerBatch * batchCount : 0;
+  const focusPerUnit = Math.round((focusPerBatch / Math.max(1, item.amountCrafted || 1)) * 100) / 100;
 
   // Production & Financials
   const amountPerBatch = item.amountCrafted || 1;
@@ -202,6 +209,7 @@ export function computeFoodCrafting({
       useFocus,
       baseFocus,
       focusPerBatch,
+      focusPerUnit,
       totalFocusUsed,
       silverPerFocus: 0,
     },

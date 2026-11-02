@@ -59,14 +59,19 @@ export function calculatePotionReturnRate(itemDef, city = 'Brecilien', useFocus 
 
 /**
  * Calculates Focus Cost per potion craft batch with Alchemist Mastery and Specialization.
+ * In Albion Online:
+ * - Alchemist Mastery (1-100): +30 efficiency/level
+ * - Target Specialization (1-100): +280 efficiency/level (+250 specific + 30 shared)
+ * - Other 12 Potion Specializations (1-100): +30 efficiency/level each (up to 12 * 100 * 30 = 36,000)
  */
-export function calculatePotionFocusCost(baseFocus, mastery = 0, spec = 0) {
+export function calculatePotionFocusCost(baseFocus, mastery = 0, spec = 0, otherSpecAvg = 0) {
   if (!baseFocus || baseFocus <= 0) return 0;
   const m = Math.max(0, Math.min(100, parseInt(mastery || 0, 10)));
   const s = Math.max(0, Math.min(100, parseInt(spec || 0, 10)));
-  const efficiency = m * 30 + s * 250;
+  const oth = Math.max(0, Math.min(100, parseInt(otherSpecAvg || 0, 10)));
+  const efficiency = m * 30 + s * 280 + 12 * oth * 30;
   const actualFocus = baseFocus * Math.pow(0.5, efficiency / 10000.0);
-  return Math.max(1, Math.floor(actualFocus));
+  return Math.max(1, Math.floor(actualFocus + 0.5));
 }
 
 /**
@@ -86,6 +91,7 @@ export function computePotionCrafting({
   isSellOrder = true,
   masteryLevel = 0,
   specLevel = 0,
+  otherSpecAvg = 0,
 }) {
   if (!item) return null;
 
@@ -159,8 +165,9 @@ export function computePotionCrafting({
   if (ench > 0 && item.enchantments?.[ench]?.focus) {
     baseFocus = item.enchantments[ench].focus;
   }
-  const focusPerBatch = calculatePotionFocusCost(baseFocus, masteryLevel, specLevel);
+  const focusPerBatch = calculatePotionFocusCost(baseFocus, masteryLevel, specLevel, otherSpecAvg);
   const totalFocusUsed = useFocus ? focusPerBatch * batchCount : 0;
+  const focusPerUnit = Math.round((focusPerBatch / Math.max(1, item.amountCrafted || 5)) * 100) / 100;
 
   // Production & Financials
   const amountPerBatch = item.amountCrafted || 5;
@@ -203,6 +210,7 @@ export function computePotionCrafting({
       useFocus,
       baseFocus,
       focusPerBatch,
+      focusPerUnit,
       totalFocusUsed,
       silverPerFocus: 0,
     },

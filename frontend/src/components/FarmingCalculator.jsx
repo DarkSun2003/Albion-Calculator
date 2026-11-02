@@ -321,6 +321,7 @@ export default function FarmingCalculator({
     if (currentItem.productId) relatedIds.push(currentItem.productId);
     if (currentItem.meatId) relatedIds.push(currentItem.meatId);
     if (currentItem.favoriteFood) relatedIds.push(currentItem.favoriteFood);
+    if (currentItem.category === 'animal') relatedIds.push('T1_CARROT');
     if (currentItem.mountId) relatedIds.push(currentItem.mountId);
 
     if (currentItem.category === 'mount') {
@@ -899,7 +900,9 @@ export default function FarmingCalculator({
                   <div>
                     <div className="text-xs font-serif font-bold text-slate-200">Favorite Food Feeding</div>
                     <div className="text-[10px] font-mono text-slate-400">
-                      {currentItem.favoriteFoodName} (Consumes 5 per spot instead of 10)
+                      {useFavoriteFood
+                        ? `${currentItem.favoriteFoodName} (Consumes 9 per animal @ 96 nutrition)`
+                        : 'Standard Crops (Consumes 18 per animal @ 48 nutrition)'}
                     </div>
                   </div>
                   <input
@@ -1046,7 +1049,7 @@ export default function FarmingCalculator({
                   {currentItem.category === 'crop' || currentItem.category === 'herb'
                     ? `${currentItem.seedName} Buy Price`
                     : isMilkingMode
-                    ? `${currentItem.favoriteFoodName} Feed Price`
+                    ? `${useFavoriteFood ? currentItem.favoriteFoodName : 'Standard Crop (Carrots)'} Feed Price`
                     : `${currentItem.babyName} Buy Price`}
                 </label>
                 <div className="flex items-center gap-2">
@@ -1056,7 +1059,7 @@ export default function FarmingCalculator({
                         currentItem.category === 'crop' || currentItem.category === 'herb'
                           ? currentItem.seedIcon
                           : isMilkingMode
-                          ? `${currentItem.favoriteFood}.png`
+                          ? (useFavoriteFood ? `${currentItem.favoriteFood}.png` : 'T1_CARROT.png')
                           : currentItem.babyIcon
                       }`}
                       alt={currentItem.babyName || currentItem.seedName}
@@ -1070,7 +1073,7 @@ export default function FarmingCalculator({
                         currentItem.category === 'crop' || currentItem.category === 'herb'
                           ? getPriceVal(currentItem.seedId, 2000)
                           : isMilkingMode
-                          ? getPriceVal(currentItem.favoriteFood, 350)
+                          ? (useFavoriteFood ? getPriceVal(currentItem.favoriteFood, 350) : getPriceVal('T1_CARROT', 280))
                           : getPriceVal(currentItem.babyId, 5000)
                       }
                       onChange={(e) => {
@@ -1079,7 +1082,7 @@ export default function FarmingCalculator({
                           currentItem.category === 'crop' || currentItem.category === 'herb'
                             ? currentItem.seedId
                             : isMilkingMode
-                            ? currentItem.favoriteFood
+                            ? (useFavoriteFood ? currentItem.favoriteFood : 'T1_CARROT')
                             : currentItem.babyId;
                         setPriceVal(key, val);
                       }}
@@ -1094,16 +1097,16 @@ export default function FarmingCalculator({
               {currentItem.category === 'animal' && !isMilkingMode && (
                 <div>
                   <label className="text-[11px] font-mono text-slate-400 block mb-1">
-                    Feed Crop Price ({currentItem.favoriteFoodName})
+                    Feed Price ({useFavoriteFood ? currentItem.favoriteFoodName : 'Standard Crop (Carrots)'})
                   </label>
                   <div className="relative">
                     <NumberInput
                       type="number"
                       min="0"
-                      value={getPriceVal(currentItem.favoriteFood, 350)}
+                      value={useFavoriteFood ? getPriceVal(currentItem.favoriteFood, 350) : getPriceVal('T1_CARROT', 280)}
                       onChange={(e) => {
                         const val = Math.max(0, parseFloat(e.target.value) || 0);
-                        setPriceVal(currentItem.favoriteFood, val);
+                        setPriceVal(useFavoriteFood ? currentItem.favoriteFood : 'T1_CARROT', val);
                       }}
                       className="w-full px-3.5 py-2 rounded-lg bg-[#05080e] border border-[#1a2436] text-xs font-mono text-amber-200 focus:outline-none focus:border-amber-500/80 shadow-inner"
                     />

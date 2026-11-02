@@ -290,8 +290,8 @@ def calculate_farming(params):
 
     category = item_def.get('category', 'crop')
 
-    # Focus reduction formula (exponential decay)
-    efficiency_points = (mastery_level * 50) + (spec_level * 250)
+    # Focus reduction formula: Harvester Mastery grants 100 eff/lvl, Crop Spec grants 200 eff/lvl
+    efficiency_points = (mastery_level * 100) + (spec_level * 200)
     focus_per_spot = round(item_def.get('baseFocus', 1000) * pow(0.5, efficiency_points / 10000.0))
 
     # Biome Island Bonus: +10% Yield if current city matches item's bonusCity
@@ -388,10 +388,13 @@ def calculate_farming(params):
         meat_price = get_farming_price(market_prices, meat_id, 190) if meat_id else 0
         grown_price = get_farming_price(market_prices, item_def.get('id'), DEFAULT_FARMING_PRICES.get(item_def.get('id'), 10000))
 
-        # Feed cost (10 standard crops or 5 favorite crops per day)
+        # Feed cost: In Albion Online, each pasture animal has 864 max nutrition capacity.
+        # - Favorite food yields 96 nutrition per item (double) -> requires 9 items per cycle.
+        # - Standard food (any crop/herb, e.g. Carrots) yields 48 nutrition -> requires 18 items per cycle.
         fav_food_id = item_def.get('favoriteFood', 'T3_WHEAT')
-        feed_unit_price = get_farming_price(market_prices, fav_food_id, 350)
-        feed_per_spot = 5 if use_favorite_food else 10
+        feed_food_id = fav_food_id if use_favorite_food else 'T1_CARROT'
+        feed_unit_price = get_farming_price(market_prices, feed_food_id, 350 if use_favorite_food else 280)
+        feed_per_spot = 9 if use_favorite_food else 18
         total_feed_units = total_spots * feed_per_spot
         feed_expense = round(total_feed_units * feed_unit_price, 2)
 
@@ -411,6 +414,9 @@ def calculate_farming(params):
 
             profit_margin = round((net_profit / gross_revenue) * 100.0, 2) if gross_revenue > 0 else 0.0
             profit_per_plot = round(net_profit / plots, 2)
+            growth_hours = 22 if has_premium else 44
+            cycle_days = round(growth_hours / 24.0, 2)
+            daily_profit = round((net_profit / growth_hours) * 24.0, 2)
 
             return {
                 'item': item_def,
@@ -422,8 +428,8 @@ def calculate_farming(params):
                 'hasPremium': has_premium,
                 'useFocus': False,
                 'animalAction': 'produce',
-                'cycleDays': 1,
-                'growthHours': 22 if has_premium else 44,
+                'cycleDays': cycle_days,
+                'growthHours': growth_hours,
                 'focus': {
                     'focusPerSpot': 0,
                     'totalFocusNeeded': 0,
@@ -434,6 +440,7 @@ def calculate_farming(params):
                     'outputIcon': item_def.get('productIcon'),
                     'totalOutput': total_output,
                     'feedUnits': total_feed_units,
+                    'feedFoodName': item_def.get('favoriteFoodName') if use_favorite_food else 'Standard Crops (Carrots)',
                     'offspringReturned': 0,
                     'babiesToBuy': 0,
                     'surplusBabies': 0,
@@ -448,7 +455,7 @@ def calculate_farming(params):
                     'netProfit': net_profit,
                     'profitMarginPct': profit_margin,
                     'profitPerPlot': profit_per_plot,
-                    'dailyProfit': net_profit,
+                    'dailyProfit': daily_profit,
                 }
             }
 
@@ -488,6 +495,9 @@ def calculate_farming(params):
 
         profit_margin = round((net_profit / gross_revenue) * 100.0, 2) if gross_revenue > 0 else 0.0
         profit_per_plot = round(net_profit / plots, 2)
+        growth_hours = 22 if has_premium else 44
+        cycle_days = round(growth_hours / 24.0, 2)
+        daily_profit = round((net_profit / growth_hours) * 24.0, 2)
 
         silver_per_focus = round((bonus_offspring * total_spots * baby_price) / total_focus_needed, 2) if total_focus_needed > 0 else 0.0
 
@@ -501,8 +511,8 @@ def calculate_farming(params):
             'hasPremium': has_premium,
             'useFocus': use_focus,
             'animalAction': active_action,
-            'cycleDays': 1,
-            'growthHours': 22 if has_premium else 44,
+            'cycleDays': cycle_days,
+            'growthHours': growth_hours,
             'focus': {
                 'focusPerSpot': focus_per_spot,
                 'totalFocusNeeded': total_focus_needed,
@@ -513,6 +523,7 @@ def calculate_farming(params):
                 'outputIcon': output_icon,
                 'totalOutput': total_output,
                 'feedUnits': total_feed_units,
+                'feedFoodName': item_def.get('favoriteFoodName') if use_favorite_food else 'Standard Crops (Carrots)',
                 'offspringReturned': total_offspring_returned,
                 'babiesToBuy': babies_to_buy,
                 'surplusBabies': surplus_babies,
@@ -527,16 +538,25 @@ def calculate_farming(params):
                 'netProfit': net_profit,
                 'profitMarginPct': profit_margin,
                 'profitPerPlot': profit_per_plot,
-                'dailyProfit': net_profit,
+                'dailyProfit': daily_profit,
             }
         }
 
     # 3. Mount Kennels
     else:
         tier = item_def.get('tier', 3)
-        # Cycle days: T3=1, T4=2, T5=3, T6=4, T7=5, T8=6 Albion days
-        cycle_days = max(1, tier - 2)
-        growth_hours = cycle_days * (22 if has_premium else 44)
+        # Authoritative Albion mount growth hours (Base without premium vs Premium)
+        mount_growth_map = {
+            3: {'base': 44, 'premium': 22},
+            4: {'base': 92, 'premium': 46},
+            5: {'base': 140, 'premium': 70},
+            6: {'base': 188, 'premium': 94},
+            7: {'base': 236, 'premium': 118},
+            8: {'base': 284, 'premium': 142},
+        }
+        tier_timing = mount_growth_map.get(tier, {'base': 44, 'premium': 22})
+        growth_hours = tier_timing['premium'] if has_premium else tier_timing['base']
+        cycle_days = round(growth_hours / 24.0, 2)
 
         total_focus_needed = (focus_per_spot * total_spots) if use_focus else 0
         baby_id = item_def.get('babyId')
@@ -545,16 +565,18 @@ def calculate_farming(params):
         mount_id = item_def.get('mountId')
         mount_price = get_farming_price(market_prices, mount_id, DEFAULT_FARMING_PRICES.get(mount_id, 45000))
 
-        # Diet: Carnivores eat Raw Meat (T3_MEAT); Herbivores eat crops (T3_WHEAT)
+        # Diet: Carnivores eat Raw Meat (T3_MEAT); Herbivores eat crops (T1_CARROT/T3_WHEAT)
         is_carnivore = (
             item_def.get('diet') == 'meat' or
             any(k in item_def.get('id', '') for k in ['COUGAR', 'DIREWOLF', 'DIREBEAR', 'DRAKE', 'WOLF', 'BEAR', 'SALAMANDER'])
         )
-        feed_food_id = 'T3_MEAT' if is_carnivore else 'T3_WHEAT'
-        feed_unit_price = get_farming_price(market_prices, feed_food_id, 190 if is_carnivore else 350)
+        feed_food_id = 'T3_MEAT' if is_carnivore else ('T3_WHEAT' if use_favorite_food else 'T1_CARROT')
+        feed_unit_price = get_farming_price(market_prices, feed_food_id, 190 if is_carnivore else 280)
 
-        # Feed consumption: 10 units per spot per day across the full cycle
-        feed_per_spot = 10 * cycle_days
+        # Feed consumption: 18 standard units (or 9 favorite units) per 22h growth stage
+        growth_stages = max(1.0, growth_hours / (22.0 if has_premium else 44.0))
+        feed_units_per_day = 9 if (use_favorite_food and not is_carnivore) else 18
+        feed_per_spot = round(feed_units_per_day * growth_stages)
         total_feed_units = total_spots * feed_per_spot
         feed_expense = round(total_feed_units * feed_unit_price, 2)
 

@@ -13,6 +13,7 @@ import {
 import { CITIES, getFocusPoolAnalysis } from '../utils/albionMath';
 import { calculateFoodApi, fetchFoodPricesApi } from '../services/api';
 import ItemIcon from './ItemIcon';
+import SpecLevelingPlanner from './SpecLevelingPlanner';
 import { 
   Flame, 
   Soup, 
@@ -90,6 +91,7 @@ export default function FoodCalculator({ server, hasPremium, useFocus, setUseFoc
   // Focus Mastery & Specs
   const [masteryLevel, setMasteryLevel] = useState(0);
   const [specLevel, setSpecLevel] = useState(0);
+  const [otherSpecAvg, setOtherSpecAvg] = useState(0);
 
   // "I Have Ingredients" Mode State
   const [foodInputMode, setFoodInputMode] = useState('batches'); // 'batches' | 'materials'
@@ -196,6 +198,7 @@ export default function FoodCalculator({ server, hasPremium, useFocus, setUseFoc
       isSellOrder,
       masteryLevel,
       specLevel,
+      otherSpecAvg,
     });
   }, [
     currentItem,
@@ -211,6 +214,7 @@ export default function FoodCalculator({ server, hasPremium, useFocus, setUseFoc
     isSellOrder,
     masteryLevel,
     specLevel,
+    otherSpecAvg,
   ]);
 
   // Authoritative Backend Calculation Query
@@ -234,6 +238,7 @@ export default function FoodCalculator({ server, hasPremium, useFocus, setUseFoc
           is_sell_order: isSellOrder,
           mastery_level: masteryLevel,
           spec_level: specLevel,
+          other_spec_avg: otherSpecAvg,
         };
 
         const res = await calculateFoodApi(payload);
@@ -270,6 +275,7 @@ export default function FoodCalculator({ server, hasPremium, useFocus, setUseFoc
     isSellOrder,
     masteryLevel,
     specLevel,
+    otherSpecAvg,
   ]);
 
   const calc = backendCalculation || localCalculation;
@@ -1229,15 +1235,70 @@ export default function FoodCalculator({ server, hasPremium, useFocus, setUseFoc
                 />
               </div>
 
-              {/* Calculated Focus Per Batch */}
-              <div className="flex items-center justify-between p-3 rounded-xl bg-[#05080e] border border-[#1a2436] text-xs font-mono shadow-inner">
-                <span className="text-slate-400">Focus Cost Per Batch:</span>
-                <span className="text-sky-300 font-bold">
-                  {calc?.focus?.focusPerBatch || 0} focus
-                </span>
+              {/* Other 6 Food Specs (Cross-spec shared efficiency) */}
+              <div>
+                <div className="flex items-center justify-between text-xs font-mono mb-1">
+                  <span className="text-slate-400">Other 6 Food Specs (Average)</span>
+                  <span className="text-amber-300 font-bold">{otherSpecAvg} / 100</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={otherSpecAvg}
+                  onChange={(e) => setOtherSpecAvg(parseInt(e.target.value, 10))}
+                  className="w-full accent-amber-500 cursor-pointer"
+                />
+                <div className="flex items-center gap-1.5 pt-1">
+                  {[
+                    { label: 'Only This Spec (0)', val: 0 },
+                    { label: 'Half Spec (50)', val: 50 },
+                    { label: 'Full 700/700 (100)', val: 100 },
+                  ].map((preset) => (
+                    <button
+                      key={preset.val}
+                      type="button"
+                      onClick={() => setOtherSpecAvg(preset.val)}
+                      className={`flex-1 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
+                        otherSpecAvg === preset.val
+                          ? 'bg-amber-500/25 border border-amber-400 text-amber-200 font-bold'
+                          : 'bg-[#080d16] border border-[#1a2436] text-slate-400 hover:text-slate-200'
+                      }`}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Calculated Focus Per Batch & Per Dish */}
+              <div className="p-3 rounded-xl bg-[#05080e] border border-[#1a2436] text-xs font-mono shadow-inner space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Focus Cost Per Batch ({currentItem.amountCrafted || 10} dishes):</span>
+                  <span className="text-sky-300 font-bold">
+                    {calc?.focus?.focusPerBatch || 0} focus
+                  </span>
+                </div>
+                <div className="flex items-center justify-between border-t border-[#1a2436] pt-1">
+                  <span className="text-slate-400">Focus Cost Per Single Dish:</span>
+                  <span className="text-amber-300 font-bold">
+                    {calc?.focus?.focusPerUnit || ((calc?.focus?.focusPerBatch || 0) / Math.max(1, currentItem.amountCrafted || 10)).toFixed(1)} focus / dish
+                  </span>
+                </div>
               </div>
             </div>
           </div>
+
+          {/* Chef Fame-to-Max-Spec Planner (0 -> 100 Spec Roadmap) */}
+          <SpecLevelingPlanner
+            mode="food"
+            item={currentItem}
+            tier={currentItem?.tier || 4}
+            currentSpec={specLevel}
+            rrr={calc?.returnRatePct ? calc.returnRatePct / 100 : 0.15}
+            sellPrice={sellPrice}
+            ingredientCosts={ingredientPrices}
+          />
         </div>
       </div>
     </div>

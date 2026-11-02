@@ -57,20 +57,22 @@ def calculate_cooking_rrr(
     return round(total_bonus / (1.0 + total_bonus), 6) if total_bonus > 0 else 0.0
 
 
-def calculate_cooking_focus(base_focus: int, mastery: int = 0, spec: int = 0) -> int:
+def calculate_cooking_focus(base_focus: int, mastery: int = 0, spec: int = 0, other_spec_avg: int = 0) -> int:
     """
     Calculates focus cost per craft batch.
     Chef Mastery (1-100): +30 efficiency/level
-    Chef Specialization (1-100): +250 efficiency/level
+    Chef Target Specialization (1-100): +280 efficiency/level (+250 specific + 30 shared)
+    Other 6 Food Specializations (1-100): +30 efficiency/level each (up to 6 * 100 * 30 = 18,000)
     Formula: base_focus * (0.5 ** (efficiency / 10000.0))
     """
     if not base_focus or base_focus <= 0:
         return 0
     m = max(0, min(100, int(mastery or 0)))
     s = max(0, min(100, int(spec or 0)))
-    efficiency = (m * 30) + (s * 250)
+    oth = max(0, min(100, int(other_spec_avg or 0)))
+    efficiency = (m * 30) + (s * 280) + (6 * oth * 30)
     actual_focus = base_focus * (0.5 ** (efficiency / 10000.0))
-    return max(1, math.floor(actual_focus))
+    return max(1, math.floor(actual_focus + 0.5))
 
 
 def calculate_cooking(
@@ -87,6 +89,7 @@ def calculate_cooking(
     is_sell_order: bool = True,
     mastery_level: int = 0,
     spec_level: int = 0,
+    other_spec_avg: int = 0,
 ) -> Dict[str, Any]:
     """
     Calculates complete cooking financials, batch yields, ingredient refunds, and focus costs.
@@ -175,8 +178,9 @@ def calculate_cooking(
         if ench_data and 'focus' in ench_data:
             base_focus = ench_data['focus']
             
-    focus_per_batch = calculate_cooking_focus(base_focus, mastery_level, spec_level)
+    focus_per_batch = calculate_cooking_focus(base_focus, mastery_level, spec_level, other_spec_avg)
     total_focus_used = focus_per_batch * batch_count if use_focus else 0
+    focus_per_unit = round(focus_per_batch / max(1, amount_per_batch), 2) if amount_per_batch > 0 else focus_per_batch
 
     # 6. Production & Financials
     amount_per_batch = item_def.get('amountCrafted', 1)
@@ -250,6 +254,7 @@ def calculate_cooking(
             'useFocus': use_focus,
             'baseFocus': base_focus,
             'focusPerBatch': focus_per_batch,
+            'focusPerUnit': focus_per_unit,
             'totalFocusUsed': total_focus_used,
             'silverPerFocus': silver_per_focus,
         },
