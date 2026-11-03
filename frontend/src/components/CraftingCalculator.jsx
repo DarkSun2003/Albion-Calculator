@@ -1824,8 +1824,8 @@ export default function CraftingCalculator({
             currentSpec={specLevel}
             rrr={calculation?.returnRatePct ? calculation.returnRatePct / 100 : 0.248}
             sellPrice={activeSellPrice || itemSellPrice || 0}
-            primaryMatPrice={primaryMatPrice}
-            secondaryMatPrice={secondaryMatPrice}
+            primaryMatPrice={primaryPrice || 0}
+            secondaryMatPrice={secondaryPrice || 0}
             artifactPrice={artifactPrice}
           />
 
