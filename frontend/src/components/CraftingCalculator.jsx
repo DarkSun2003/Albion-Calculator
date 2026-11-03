@@ -1823,7 +1823,7 @@ export default function CraftingCalculator({
             tier={selectedTier}
             currentSpec={specLevel}
             rrr={calculation?.returnRatePct ? calculation.returnRatePct / 100 : 0.248}
-            sellPrice={manualOverrides.sellPrice ? itemSellPrice : (prices[selectedItem?.id]?.sell_min || itemSellPrice)}
+            sellPrice={activeSellPrice || itemSellPrice || 0}
             primaryMatPrice={primaryMatPrice}
             secondaryMatPrice={secondaryMatPrice}
             artifactPrice={artifactPrice}

@@ -1296,7 +1296,7 @@ export default function FoodCalculator({ server, hasPremium, useFocus, setUseFoc
             tier={currentItem?.tier || 4}
             currentSpec={specLevel}
             rrr={calc?.returnRatePct ? calc.returnRatePct / 100 : 0.15}
-            sellPrice={sellPrice}
+            sellPrice={itemSellPrice || 0}
             ingredientCosts={ingredientPrices}
           />
         </div>
