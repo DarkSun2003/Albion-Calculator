@@ -16,14 +16,36 @@ export default class ErrorBoundary extends React.Component {
     this.setState({ errorInfo });
   }
 
-  handleReload = () => {
+  handleReload = async () => {
+    try {
+      if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (const reg of registrations) {
+          await reg.update();
+        }
+      }
+    } catch {}
     window.location.reload();
   };
 
-  handleResetState = () => {
-    localStorage.clear();
-    sessionStorage.clear();
-    window.location.href = '/';
+  handleResetState = async () => {
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map((k) => caches.delete(k)));
+      }
+      if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (const reg of registrations) {
+          await reg.unregister();
+        }
+      }
+    } catch (e) {
+      console.warn('Error clearing caches:', e);
+    }
+    window.location.href = '/?reset=' + Date.now();
   };
 
   render() {

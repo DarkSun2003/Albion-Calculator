@@ -1,4 +1,4 @@
-const CACHE_NAME = 'albion-artisan-v1';
+const CACHE_NAME = 'albion-artisan-v2';
 const ICON_CACHE_NAME = 'albion-icons-v1';
 
 const APP_SHELL = [
@@ -7,6 +7,8 @@ const APP_SHELL = [
   '/manifest.json',
   '/logo.png',
   '/logo-192.png',
+  '/favicon.ico',
+  '/favicon.svg',
 ];
 
 self.addEventListener('install', (event) => {
@@ -60,7 +62,23 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 3. Stale-while-revalidate for app UI assets (HTML, JS, CSS, Fonts)
+  // 3. For navigation / HTML requests, ALWAYS use Network-First so updates & bugfixes deploy instantly!
+  if (request.mode === 'navigate' || (request.headers.get('accept') && request.headers.get('accept').includes('text/html'))) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request).then((cached) => cached || caches.match('/index.html')))
+    );
+    return;
+  }
+
+  // 4. Stale-while-revalidate for hashed static assets (JS, CSS, SVGs, images)
   if (url.origin === self.location.origin) {
     event.respondWith(
       caches.open(CACHE_NAME).then(async (cache) => {

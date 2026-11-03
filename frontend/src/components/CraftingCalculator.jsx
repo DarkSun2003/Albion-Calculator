@@ -1826,7 +1826,7 @@ export default function CraftingCalculator({
             sellPrice={activeSellPrice || itemSellPrice || 0}
             primaryMatPrice={primaryPrice || 0}
             secondaryMatPrice={secondaryPrice || 0}
-            artifactPrice={artifactPrice}
+            artifactPrice={artifactPrice || 0}
           />
 
           {/* 3. Visual Recipe & Material Cost Inputs (Refined Mats + Artifact Slot) */}
