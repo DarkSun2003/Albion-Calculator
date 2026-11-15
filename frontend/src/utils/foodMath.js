@@ -1,4 +1,5 @@
 import FOOD_ITEMS_DATA from '../data/foodItems.json';
+import { computeTotalRrr } from './albionMath';
 
 export const FOOD_ITEMS = FOOD_ITEMS_DATA;
 
@@ -42,7 +43,7 @@ export const FOOD_ENCHANTMENTS = [
  * - Caerleon with Focus = 33% + 59% = 92% bonus (47.91% RRR)
  * - Islands have 0% base bonus (0% base RRR, 37.11% with Focus)
  */
-export function calculateFoodReturnRate(itemDef, city = 'Caerleon', useFocus = false, dailyBonusPct = 0) {
+export function calculateFoodReturnRate(itemDef, city = 'Caerleon', useFocus = false, dailyBonusPct = 0, hoOptions = {}) {
   const isIsland = city.toLowerCase() === 'island';
   const baseBonus = isIsland ? 0.0 : 0.18;
 
@@ -50,26 +51,30 @@ export function calculateFoodReturnRate(itemDef, city = 'Caerleon', useFocus = f
   const hasSpecialty = Boolean(bonusCity && city.toLowerCase() === bonusCity.toLowerCase() && !isIsland);
   const specialtyBonus = hasSpecialty ? 0.15 : 0.0;
 
-  const dailyBonus = (parseFloat(dailyBonusPct) || 0.0) / 100.0;
-  const focusBonus = useFocus ? 0.59 : 0.0;
-
-  const totalBonus = baseBonus + specialtyBonus + dailyBonus + focusBonus;
-  return totalBonus > 0 ? totalBonus / (1.0 + totalBonus) : 0.0;
+  return computeTotalRrr({
+    baseCityBonus: baseBonus,
+    citySpecialtyBonus: specialtyBonus,
+    dailyBonusPct,
+    useFocus,
+    specialtyMode: 'food',
+    ...hoOptions,
+  });
 }
 
 /**
  * Calculates Focus Cost per craft batch with Chef Mastery and Specialization.
  * In Albion Online:
- * - Chef Mastery (1-100): +30 efficiency/level
- * - Target Specialization (1-100): +280 efficiency/level (+250 specific + 30 shared)
- * - Other 6 Food Specializations (1-100): +30 efficiency/level each (up to 6 * 100 * 30 = 18,000)
+ * - Chef Mastery (1-100): +30 efficiency/level (3,000 max)
+ * - Target Specialization (1-100): +280 efficiency/level (+250 specific + 30 shared, 28,000 max)
+ * - Other 8 Chef Specializations (1-100): +30 efficiency/level each (8 * 100 * 30 = 24,000 max)
+ * - Total max efficiency (900/900) = 55,000 (~2.21% of base focus).
  */
 export function calculateFoodFocusCost(baseFocus, mastery = 0, spec = 0, otherSpecAvg = 0) {
   if (!baseFocus || baseFocus <= 0) return 0;
   const m = Math.max(0, Math.min(100, parseInt(mastery || 0, 10)));
   const s = Math.max(0, Math.min(100, parseInt(spec || 0, 10)));
   const oth = Math.max(0, Math.min(100, parseInt(otherSpecAvg || 0, 10)));
-  const efficiency = m * 30 + s * 280 + 6 * oth * 30;
+  const efficiency = m * 30 + s * 280 + 8 * oth * 30;
   const actualFocus = baseFocus * Math.pow(0.5, efficiency / 10000.0);
   return Math.max(1, Math.floor(actualFocus + 0.5));
 }
@@ -92,15 +97,28 @@ export function computeFoodCrafting({
   masteryLevel = 0,
   specLevel = 0,
   otherSpecAvg = 0,
+  locationMode = 'city',
+  hoPowerLevel = 1,
+  hoZoneQuality = 1,
+  hoHasSpecialty = false,
+  hoCustomBonusPct = null,
 }) {
   if (!item) return null;
 
   const batchCount = Math.max(1, parseInt(batches || 1, 10));
   const ench = Math.max(0, Math.min(item.maxEnchantment || 0, parseInt(enchantment || 0, 10)));
 
+  const hoOptions = {
+    locationMode,
+    hoPowerLevel,
+    hoZoneQuality,
+    hoHasSpecialty,
+    hoCustomBonusPct,
+  };
+
   // Return rates
-  const rrrCurrent = calculateFoodReturnRate(item, city, useFocus, dailyBonusPct);
-  const rrrNoFocus = calculateFoodReturnRate(item, city, false, dailyBonusPct);
+  const rrrCurrent = calculateFoodReturnRate(item, city, useFocus, dailyBonusPct, hoOptions);
+  const rrrNoFocus = calculateFoodReturnRate(item, city, false, dailyBonusPct, hoOptions);
 
   // Active ingredients (Base + Fish Sauce if enchanted)
   const activeIngredients = (item.ingredients || []).map((ing) => ({
@@ -125,6 +143,7 @@ export function computeFoodCrafting({
   // Material calculations
   let upfrontCost = 0;
   let netCost = 0;
+  let netCostNoFocus = 0;
 
   const breakdown = activeIngredients.map((ing) => {
     const unitPrice = parseFloat(ingredientPrices[ing.uniqueName] || 0);
@@ -135,9 +154,11 @@ export function computeFoodCrafting({
 
     const grossIngCost = grossNeeded * unitPrice;
     const netIngCost = netConsumed * unitPrice;
+    const netIngCostNoFocus = isRefundable ? grossNeeded * (1.0 - rrrNoFocus) * unitPrice : grossIngCost;
 
     upfrontCost += grossIngCost;
     netCost += netIngCost;
+    netCostNoFocus += netIngCostNoFocus;
 
     return {
       uniqueName: ing.uniqueName,
@@ -154,10 +175,11 @@ export function computeFoodCrafting({
     };
   });
 
-  // Station Fee (nutrition)
+  // Station Fee (nutrition — Tier <= 2 items are exempt in Albion Online)
+  const itemTier = Number(item.tier || 1);
   const nutritionPerBatch = parseFloat(item.nutrition || 0);
   const stationTaxRate = parseFloat(stationTaxPer100 || 0) / 100.0;
-  const stationFee = nutritionPerBatch * stationTaxRate * batchCount;
+  const stationFee = itemTier <= 2 ? 0 : nutritionPerBatch * stationTaxRate * batchCount;
 
   // Focus
   let baseFocus = item.baseFocus || 0;
@@ -184,6 +206,10 @@ export function computeFoodCrafting({
   const profitMarginPct = totalCost > 0 ? (netProfit / totalCost) * 100.0 : 0.0;
   const profitPerBatch = netProfit / batchCount;
   const profitPerUnit = totalUnitsProduced > 0 ? netProfit / totalUnitsProduced : 0.0;
+  const silverPerFocus =
+    useFocus && totalFocusUsed > 0
+      ? Math.round(((netCostNoFocus - netCost) / totalFocusUsed) * 100) / 100
+      : 0;
 
   return {
     item: {
@@ -201,8 +227,9 @@ export function computeFoodCrafting({
       rrrCurrentPct: Math.round(rrrCurrent * 10000) / 100,
       rrrNoFocus,
       rrrNoFocusPct: Math.round(rrrNoFocus * 10000) / 100,
-      hasCitySpecialty: city.toLowerCase() === (item.bonusCity || 'caerleon').toLowerCase() && city.toLowerCase() !== 'island',
+      hasCitySpecialty: String(locationMode || 'city').toLowerCase() !== 'hideout' && city.toLowerCase() === (item.bonusCity || 'caerleon').toLowerCase() && city.toLowerCase() !== 'island',
       city,
+      locationMode,
       bonusCity: item.bonusCity || 'Caerleon',
     },
     focus: {
@@ -211,7 +238,7 @@ export function computeFoodCrafting({
       focusPerBatch,
       focusPerUnit,
       totalFocusUsed,
-      silverPerFocus: 0,
+      silverPerFocus,
     },
     materials: {
       upfrontCost: Math.round(upfrontCost * 100) / 100,
@@ -247,12 +274,23 @@ export function simulateFoodCraftingFromMaterials({
   city = 'Caerleon',
   useFocus = false,
   dailyBonusPct = 0,
+  locationMode = 'city',
+  hoPowerLevel = 1,
+  hoZoneQuality = 1,
+  hoHasSpecialty = false,
+  hoCustomBonusPct = null,
 }) {
   if (!item || !item.ingredients || item.ingredients.length === 0) return null;
   const ench = Math.max(0, Math.min(item.maxEnchantment || 0, parseInt(enchantment || 0, 10)));
   const primary = item.ingredients[0];
   const primaryCount = primary.count || primary.quantity || 1;
-  const rrr = calculateFoodReturnRate(item, city, useFocus, dailyBonusPct);
+  const rrr = calculateFoodReturnRate(item, city, useFocus, dailyBonusPct, {
+    locationMode,
+    hoPowerLevel,
+    hoZoneQuality,
+    hoHasSpecialty,
+    hoCustomBonusPct,
+  });
   const yieldPerBatch = item.amountCrafted || 1;
 
   // Active ingredients list including sauce if enchanted

@@ -11,6 +11,7 @@ import {
 import { CITIES, getFocusPoolAnalysis } from '../utils/albionMath';
 import { calculatePotionApi, fetchPotionPricesApi } from '../services/api';
 import ItemIcon from './ItemIcon';
+import HideoutStationPanel from './HideoutStationPanel';
 import { 
   Sparkles, 
   Heart, 
@@ -62,6 +63,11 @@ export default function PotionCalculator({ server, hasPremium, useFocus, setUseF
   const [batches, setBatches] = useState(1);
   const [selectedCity, setSelectedCity] = useState('Brecilien');
   const [dailyBonus, setDailyBonus] = useState(0);
+  const [locationMode, setLocationMode] = useState('city');
+  const [hoPowerLevel, setHoPowerLevel] = useState(1);
+  const [hoZoneQuality, setHoZoneQuality] = useState(1);
+  const [hoHasSpecialty, setHoHasSpecialty] = useState(false);
+  const [hoCustomBonusPct, setHoCustomBonusPct] = useState('');
   const [stationTax, setStationTax] = useState(500);
 
   // Market & Economics
@@ -115,8 +121,13 @@ export default function PotionCalculator({ server, hasPremium, useFocus, setUseF
       city: selectedCity,
       useFocus,
       dailyBonusPct: dailyBonus,
+      locationMode,
+      hoPowerLevel,
+      hoZoneQuality,
+      hoHasSpecialty,
+      hoCustomBonusPct,
     });
-  }, [currentItem, enchantment, primaryIngHave, selectedCity, useFocus, dailyBonus]);
+  }, [currentItem, enchantment, primaryIngHave, selectedCity, useFocus, dailyBonus, locationMode, hoPowerLevel, hoZoneQuality, hoHasSpecialty, hoCustomBonusPct]);
 
   // If in 'materials' mode, calculate effective batches from potionMaterialSim
   const effectiveBatches = useMemo(() => {
@@ -180,6 +191,11 @@ export default function PotionCalculator({ server, hasPremium, useFocus, setUseF
       city: selectedCity,
       useFocus,
       dailyBonusPct: dailyBonus,
+      locationMode,
+      hoPowerLevel,
+      hoZoneQuality,
+      hoHasSpecialty,
+      hoCustomBonusPct,
       stationTaxPer100: stationTax,
       hasPremium,
       isSellOrder,
@@ -196,6 +212,11 @@ export default function PotionCalculator({ server, hasPremium, useFocus, setUseF
     selectedCity,
     useFocus,
     dailyBonus,
+    locationMode,
+    hoPowerLevel,
+    hoZoneQuality,
+    hoHasSpecialty,
+    hoCustomBonusPct,
     stationTax,
     hasPremium,
     isSellOrder,
@@ -220,6 +241,11 @@ export default function PotionCalculator({ server, hasPremium, useFocus, setUseF
           city: selectedCity,
           use_focus: useFocus,
           daily_bonus_pct: dailyBonus,
+          location_mode: locationMode,
+          ho_power_level: hoPowerLevel,
+          ho_zone_quality: hoZoneQuality,
+          ho_has_specialty: hoHasSpecialty,
+          ho_custom_bonus_pct: hoCustomBonusPct === '' ? null : hoCustomBonusPct,
           station_tax_per_100: stationTax,
           has_premium: hasPremium,
           is_sell_order: isSellOrder,
@@ -257,6 +283,11 @@ export default function PotionCalculator({ server, hasPremium, useFocus, setUseF
     selectedCity,
     useFocus,
     dailyBonus,
+    locationMode,
+    hoPowerLevel,
+    hoZoneQuality,
+    hoHasSpecialty,
+    hoCustomBonusPct,
     stationTax,
     hasPremium,
     isSellOrder,
@@ -614,27 +645,76 @@ export default function PotionCalculator({ server, hasPremium, useFocus, setUseF
                 <span>Alchemist&apos;s Lab Conditions</span>
               </div>
               <span className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full ${
-                selectedCity.toLowerCase() === 'brecilien'
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                  : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                locationMode === 'hideout'
+                  ? 'bg-teal-500/20 text-teal-200 border border-teal-500/40'
+                  : selectedCity.toLowerCase() === 'brecilien'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                    : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
               }`}>
-                {selectedCity.toLowerCase() === 'brecilien' ? '★ +15% Specialty Active' : '0% Specialty (Outside Brecilien)'}
+                {locationMode === 'hideout'
+                  ? (hoCustomBonusPct !== '' && hoCustomBonusPct !== null
+                      ? `Hideout Override (+${hoCustomBonusPct}%)`
+                      : `Hideout PL ${hoPowerLevel} • General Only`)
+                  : (selectedCity.toLowerCase() === 'brecilien' ? '★ +15% Specialty Active' : '0% Specialty (Outside Brecilien)')}
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="text-[11px] font-mono text-slate-400 block mb-1">Crafting City</label>
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <label className="text-[11px] font-mono text-slate-400">
+                    {locationMode === 'hideout' ? 'Market City (Prices Only)' : 'Crafting City'}
+                  </label>
+                  <div className="flex items-center bg-[#06090f] p-0.5 rounded-md border border-[#1a2436] text-[10px] font-mono">
+                    <button
+                      type="button"
+                      onClick={() => setLocationMode('city')}
+                      className={`px-2 py-0.5 rounded transition-all cursor-pointer ${
+                        locationMode !== 'hideout'
+                          ? 'bg-teal-500/20 text-teal-200 border border-teal-500/50 font-bold'
+                          : 'text-slate-400 hover:text-slate-200'
+                      }`}
+                    >
+                      City
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (selectedCity.toLowerCase() === 'island') setSelectedCity('Brecilien');
+                        setLocationMode('hideout');
+                      }}
+                      className={`px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer ${
+                        locationMode === 'hideout'
+                          ? 'bg-teal-500/20 text-teal-200 border border-teal-500/50 font-bold'
+                          : 'text-slate-400 hover:text-slate-200'
+                      }`}
+                    >
+                      <Shield className="w-2.5 h-2.5" />
+                      <span>HO</span>
+                    </button>
+                  </div>
+                </div>
                 <select
-                  value={selectedCity}
+                  value={locationMode === 'hideout' && selectedCity.toLowerCase() === 'island' ? 'Brecilien' : selectedCity}
                   onChange={(e) => setSelectedCity(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg bg-[#05080e] border border-[#1a2436] text-xs text-slate-100 font-serif focus:outline-none focus:border-teal-500/80"
                 >
-                  {CITIES.map((c) => {
+                  {CITIES.filter((c) => {
                     const cityName = typeof c === 'string' ? c : c.name;
+                    return locationMode !== 'hideout' || cityName !== 'Island';
+                  }).map((c) => {
+                    const cityName = typeof c === 'string' ? c : c.name;
+                    const suffix =
+                      locationMode === 'hideout'
+                        ? ' (Market Prices)'
+                        : cityName === 'Brecilien'
+                          ? ' ★ (Potion Specialty)'
+                          : cityName === 'Island'
+                            ? ' (0% Base)'
+                            : '';
                     return (
                       <option key={cityName} value={cityName}>
-                        {cityName} {cityName === 'Brecilien' ? '★ (Potion Specialty)' : cityName === 'Island' ? '(0% Base)' : ''}
+                        {cityName}{suffix}
                       </option>
                     );
                   })}
@@ -669,6 +749,24 @@ export default function PotionCalculator({ server, hasPremium, useFocus, setUseF
                 </select>
               </div>
             </div>
+
+            {locationMode === 'hideout' && (
+              <HideoutStationPanel
+                hoPowerLevel={hoPowerLevel}
+                setHoPowerLevel={setHoPowerLevel}
+                hoZoneQuality={hoZoneQuality}
+                setHoZoneQuality={setHoZoneQuality}
+                hoHasSpecialty={hoHasSpecialty}
+                setHoHasSpecialty={setHoHasSpecialty}
+                hoCustomBonusPct={hoCustomBonusPct}
+                setHoCustomBonusPct={setHoCustomBonusPct}
+                dailyBonus={dailyBonus}
+                useFocus={useFocus}
+                specialtyMode="potion"
+                specialtyLabel="Roads / Category +15%"
+                accent="teal"
+              />
+            )}
 
             {/* Mode Switcher: Target Batches vs I Have Ingredients */}
             <div className="flex items-center justify-between pb-1">
@@ -1185,7 +1283,7 @@ export default function PotionCalculator({ server, hasPremium, useFocus, setUseF
               {/* Other 12 Potion Specs (Cross-spec shared efficiency) */}
               <div>
                 <div className="flex items-center justify-between text-xs font-mono mb-1">
-                  <span className="text-slate-400">Other 12 Potion Specs (Average)</span>
+                  <span className="text-slate-400">Other 15 Potion Specs (Average)</span>
                   <span className="text-teal-300 font-bold">{otherSpecAvg} / 100</span>
                 </div>
                 <input
@@ -1200,7 +1298,7 @@ export default function PotionCalculator({ server, hasPremium, useFocus, setUseF
                   {[
                     { label: 'Only This Spec (0)', val: 0 },
                     { label: 'Half Spec (50)', val: 50 },
-                    { label: 'Full 1300/1300 (100)', val: 100 },
+                    { label: 'Full 1600/1600 (100)', val: 100 },
                   ].map((preset) => (
                     <button
                       key={preset.val}

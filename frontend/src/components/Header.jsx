@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Crown, Server, Sparkles, Settings2, X, Compass, Radio, Search, Download, Check } from 'lucide-react';
+import { Crown, Server, Sparkles, Settings2, X, Compass, Radio, Search, Download } from 'lucide-react';
 
 export default function Header({
   server,

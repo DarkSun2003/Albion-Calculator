@@ -49,6 +49,8 @@ def parse_material(mat_uname):
 
 def detect_artifact_type(art_uname):
     u = art_uname.upper()
+    if 'SKILLBOOK' in u:
+        return 'Tome of Insight'
     if 'AVALON' in u:
         return 'Avalonian'
     if 'CRYSTAL' in u:
@@ -63,6 +65,18 @@ def detect_artifact_type(art_uname):
         return 'Relic'
     return 'Rune'
 
+
+ARTIFACT_KEYWORDS = ('ARTEFACT', 'CREST', 'REMNANT', 'TOKEN', 'HEART', 'AVALON', 'SKILLBOOK')
+
+
+def is_artifact_ingredient(rname):
+    u = rname.upper()
+    return any(k in u for k in ARTIFACT_KEYWORDS)
+
+
+def is_extra_ingredient(rname):
+    return 'ALCHEMY' in rname.upper()
+
 RULES = {
     # Warrior's Forge
     'swords': {'category': 'warrior', 'bonusCity': 'Lymhurst', 'journal': ('Blacksmith Journal', 'T{tier}_JOURNAL_WARRIOR')},
@@ -71,7 +85,7 @@ RULES = {
     'hammers': {'category': 'warrior', 'bonusCity': 'Fort Sterling', 'journal': ('Blacksmith Journal', 'T{tier}_JOURNAL_WARRIOR')},
     'crossbows': {'category': 'warrior', 'bonusCity': 'Bridgewatch', 'journal': ('Blacksmith Journal', 'T{tier}_JOURNAL_WARRIOR')},
     'wargloves': {'category': 'warrior', 'bonusCity': 'Caerleon', 'journal': ('Blacksmith Journal', 'T{tier}_JOURNAL_WARRIOR')},
-    'shields': {'category': 'warrior', 'bonusCity': 'Fort Sterling', 'journal': ('Blacksmith Journal', 'T{tier}_JOURNAL_WARRIOR')},
+    'shields': {'category': 'warrior', 'bonusCity': 'Martlock', 'journal': ('Blacksmith Journal', 'T{tier}_JOURNAL_WARRIOR')},
     'plate_armor': {'category': 'warrior', 'bonusCity': 'Bridgewatch', 'journal': ('Blacksmith Journal', 'T{tier}_JOURNAL_WARRIOR')},
     'plate_helmets': {'category': 'warrior', 'bonusCity': 'Fort Sterling', 'journal': ('Blacksmith Journal', 'T{tier}_JOURNAL_WARRIOR')},
     'plate_shoes': {'category': 'warrior', 'bonusCity': 'Martlock', 'journal': ('Blacksmith Journal', 'T{tier}_JOURNAL_WARRIOR')},
@@ -83,7 +97,7 @@ RULES = {
     'daggers': {'category': 'hunter', 'bonusCity': 'Bridgewatch', 'journal': ('Fletcher Journal', 'T{tier}_JOURNAL_HUNTER')},
     'quarterstaffs': {'category': 'hunter', 'bonusCity': 'Martlock', 'journal': ('Fletcher Journal', 'T{tier}_JOURNAL_HUNTER')},
     'shapeshifter': {'category': 'hunter', 'bonusCity': 'Caerleon', 'journal': ('Fletcher Journal', 'T{tier}_JOURNAL_HUNTER')},
-    'torches': {'category': 'hunter', 'bonusCity': 'Lymhurst', 'journal': ('Fletcher Journal', 'T{tier}_JOURNAL_HUNTER')},
+    'torches': {'category': 'hunter', 'bonusCity': 'Martlock', 'journal': ('Fletcher Journal', 'T{tier}_JOURNAL_HUNTER')},
     'leather_armor': {'category': 'hunter', 'bonusCity': 'Thetford', 'journal': ('Fletcher Journal', 'T{tier}_JOURNAL_HUNTER')},
     'leather_helmets': {'category': 'hunter', 'bonusCity': 'Lymhurst', 'journal': ('Fletcher Journal', 'T{tier}_JOURNAL_HUNTER')},
     'leather_shoes': {'category': 'hunter', 'bonusCity': 'Lymhurst', 'journal': ('Fletcher Journal', 'T{tier}_JOURNAL_HUNTER')},
@@ -94,9 +108,9 @@ RULES = {
     'arcane_staves': {'category': 'mage', 'bonusCity': 'Lymhurst', 'journal': ('Imbuer Journal', 'T{tier}_JOURNAL_MAGE')},
     'frost_staves': {'category': 'mage', 'bonusCity': 'Martlock', 'journal': ('Imbuer Journal', 'T{tier}_JOURNAL_MAGE')},
     'cursed_staves': {'category': 'mage', 'bonusCity': 'Bridgewatch', 'journal': ('Imbuer Journal', 'T{tier}_JOURNAL_MAGE')},
-    'tomes': {'category': 'mage', 'bonusCity': 'Fort Sterling', 'journal': ('Imbuer Journal', 'T{tier}_JOURNAL_MAGE')},
+    'tomes': {'category': 'mage', 'bonusCity': 'Martlock', 'journal': ('Imbuer Journal', 'T{tier}_JOURNAL_MAGE')},
     'cloth_armor': {'category': 'mage', 'bonusCity': 'Fort Sterling', 'journal': ('Imbuer Journal', 'T{tier}_JOURNAL_MAGE')},
-    'cloth_helmets': {'category': 'mage', 'bonusCity': 'Martlock', 'journal': ('Imbuer Journal', 'T{tier}_JOURNAL_MAGE')},
+    'cloth_helmets': {'category': 'mage', 'bonusCity': 'Thetford', 'journal': ('Imbuer Journal', 'T{tier}_JOURNAL_MAGE')},
     'cloth_shoes': {'category': 'mage', 'bonusCity': 'Bridgewatch', 'journal': ('Imbuer Journal', 'T{tier}_JOURNAL_MAGE')},
 
     # Accessories & Tools
@@ -265,8 +279,8 @@ ROYAL_SPECS = {
         'category': 'mage',
         'subcategory': 'cloth_armor',
         'template': 'T{tier}_ARMOR_CLOTH_ROYAL',
-        'baseItemName': 'Cleric Robe',
-        'baseItemIcon': 'T{tier}_ARMOR_CLOTH_SET2',
+        'baseItemName': 'Scholar Robe',
+        'baseItemIcon': 'T{tier}_ARMOR_CLOTH_SET1',
         'sigilType': 'armor',
         'journal': ('Imbuer Journal', 'T{tier}_JOURNAL_MAGE'),
     },
@@ -305,8 +319,8 @@ ROYAL_SPECS = {
         'category': 'hunter',
         'subcategory': 'leather_shoes',
         'template': 'T{tier}_SHOES_LEATHER_ROYAL',
-        'baseItemName': 'Hunter Shoes',
-        'baseItemIcon': 'T{tier}_SHOES_LEATHER_SET2',
+        'baseItemName': 'Mercenary Shoes',
+        'baseItemIcon': 'T{tier}_SHOES_LEATHER_SET1',
         'sigilType': 'head_shoes',
         'journal': ('Fletcher Journal', 'T{tier}_JOURNAL_HUNTER'),
     },
@@ -343,6 +357,15 @@ ROYAL_SPECS = {
 }
 
 items_dict = raw_data['items']
+by_uid = {}
+for _lst in items_dict.values():
+    if isinstance(_lst, list):
+        for _obj in _lst:
+            if isinstance(_obj, dict) and _obj.get('@uniquename') and _obj['@uniquename'] not in by_uid:
+                by_uid[_obj['@uniquename']] = _obj
+    elif isinstance(_lst, dict) and _lst.get('@uniquename') and _lst['@uniquename'] not in by_uid:
+        by_uid[_lst['@uniquename']] = _lst
+
 all_items = []
 for itype in ['weapon', 'transformationweapon', 'equipmentitem', 'siegebanner', 'trackingitem', 'furnitureitem']:
     lst = items_dict.get(itype, [])
@@ -459,9 +482,21 @@ for base_template, tier_data in template_groups.items():
     base_fame = float(sample_item.get('@craftingfame') or 270)
     base_focus = float(sample_req.get('@craftingfocus') or 105)
 
+    focus_by_tier = {}
+    max_fame_factor = 1.0
+    for t_i, it_i, req_i, _, _ in tier_data:
+        cf = req_i.get('@craftingfocus') if isinstance(req_i, dict) else None
+        if cf is not None:
+            focus_by_tier[str(t_i)] = round(float(cf))
+        ff = it_i.get('@destinyandjournalcraftfamefactor')
+        if ff is not None:
+            max_fame_factor = max(max_fame_factor, float(ff))
+    destiny_factor = round(max_fame_factor, 2)
+
     # Check if this is a Faction Cape
     if slug in FACTION_CAPE_SPECS:
         fspec = FACTION_CAPE_SPECS[slug]
+        cape_art_qty = {'4': 15, '5': 15, '6': 45, '7': 75, '8': 150} if slug == 'capeitem_avalon' else {'4': 1, '5': 1, '6': 3, '7': 5, '8': 10}
         catalog.append({
             'id': slug,
             'name': clean_name,
@@ -482,19 +517,25 @@ for base_template, tier_data in template_groups.items():
             'artifactType': 'Faction Heart',
             'artifactName': fspec['heartName'],
             'artifactTemplate': fspec['heartTemplate'],
+            'artifactQty': cape_art_qty,
             'isFactionCape': True,
             'isNoReturn': True, # 0% RRR refund in Albion Online
             'journalName': rule['journal'][0],
             'journalTemplate': rule['journal'][1],
             'famePerUnit': 0,
+            'destinyFactor': 1.0,
             'baseItemValue': base_iv,
+            'artifactItemValue': 0,
+            'artifactItemValueByTier': {},
             'baseFocus': 0, # Faction cape crafting does not consume focus
+            'focusByTier': {},
         })
         continue
 
     # Check if this is a Royal Equipment item
     if slug in ROYAL_SPECS:
         rspec = ROYAL_SPECS[slug]
+        royal_sigil_qty = {'4': 4, '5': 8, '6': 16, '7': 16, '8': 16} if rspec['sigilType'] == 'armor' else {'4': 2, '5': 4, '6': 8, '7': 8, '8': 8}
         catalog.append({
             'id': slug,
             'name': rspec['name'],
@@ -515,47 +556,161 @@ for base_template, tier_data in template_groups.items():
             'artifactType': 'Royal Sigil',
             'artifactName': 'Royal Sigil',
             'artifactTemplate': 'QUESTITEM_TOKEN_ROYAL_T{tier}',
+            'artifactQty': royal_sigil_qty,
             'isRoyal': True,
             'sigilType': rspec['sigilType'],
             'isNoReturn': True,
             'journalName': rspec['journal'][0],
             'journalTemplate': rspec['journal'][1],
             'famePerUnit': 0,
+            'destinyFactor': 1.0,
             'baseItemValue': base_iv,
+            'artifactItemValue': 0,
+            'artifactItemValueByTier': {},
             'baseFocus': 0,
+            'focusByTier': {},
         })
         continue
 
-    # Regular craftable gear
+    # Regular craftable gear (parse primary, secondary, artifact, and any 3rd/4th extra slots across all tiers)
     regular_mats = []
     artifact_res = None
     for r in sample_res:
         rname = r.get('@uniquename', '')
         rcount = int(r.get('@count', 1))
-        if any(x in rname for x in ['ARTEFACT', 'CREST', 'REMNANT', 'TOKEN', 'HEART', 'AVALON']):
+        if is_artifact_ingredient(rname):
             artifact_res = (rname, rcount)
-        else:
+        elif not is_extra_ingredient(rname):
             mat_name, icon_tmpl = parse_material(rname)
-            regular_mats.append((mat_name, rcount, icon_tmpl))
+            regular_mats.append((mat_name, rcount, icon_tmpl, r.get('@maxreturnamount') == '0'))
 
     if not regular_mats:
         continue
 
-    primary_name, primary_qty, primary_icon = regular_mats[0]
-    secondary_name, secondary_qty, secondary_icon = (regular_mats[1][0], regular_mats[1][1], regular_mats[1][2]) if len(regular_mats) > 1 else (None, 0, None)
+    # Detect tier-varying quantities on primary/secondary slots (e.g., T2 vs T3-T8 Bag & Siege Hammer)
+    prim_qty_by_tier = {}
+    sec_qty_by_tier = {}
+    extra_slots_by_idx = {}
+
+    for t_i, _, _, res_i, _ in tier_data:
+        tier_reg = []
+        tier_extras = []
+        for r_i in res_i:
+            ru = r_i.get('@uniquename', '')
+            rc = int(r_i.get('@count', 1))
+            no_ret = (r_i.get('@maxreturnamount') == '0')
+            if is_artifact_ingredient(ru):
+                continue
+            elif is_extra_ingredient(ru):
+                tier_extras.append((ru, rc, no_ret))
+            else:
+                mat_name_i, icon_tmpl_i = parse_material(ru)
+                tier_reg.append((mat_name_i, rc, icon_tmpl_i, no_ret))
+        if tier_reg:
+            prim_qty_by_tier[str(t_i)] = tier_reg[0][1]
+            if len(tier_reg) > 1:
+                sec_qty_by_tier[str(t_i)] = tier_reg[1][1]
+            if len(tier_reg) > 2:
+                for extra_r in tier_reg[2:]:
+                    tier_extras.append((extra_r[2], extra_r[1], extra_r[3]))
+        for ex_idx, (ex_u, ex_c, ex_noret) in enumerate(tier_extras):
+            bucket = extra_slots_by_idx.setdefault(ex_idx, {})
+            bucket[str(t_i)] = (ex_u, ex_c, ex_noret)
+
+    primary_name, primary_qty, primary_icon, primary_no_return = regular_mats[0]
+    default_t_key = '4' if '4' in prim_qty_by_tier else str(max_tier)
+    if prim_qty_by_tier and len(set(prim_qty_by_tier.values())) > 1:
+        primary_qty = prim_qty_by_tier.get(default_t_key, primary_qty)
+    else:
+        prim_qty_by_tier = None
+
+    if len(regular_mats) > 1:
+        secondary_name, secondary_qty, secondary_icon, secondary_no_return = regular_mats[1]
+        if sec_qty_by_tier and len(set(sec_qty_by_tier.values())) > 1:
+            secondary_qty = sec_qty_by_tier.get(default_t_key, secondary_qty)
+        else:
+            sec_qty_by_tier = None
+    else:
+        secondary_name, secondary_qty, secondary_icon, secondary_no_return = (None, 0, None, False)
+        sec_qty_by_tier = None
+
+    extra_materials = []
+    for ex_idx in sorted(extra_slots_by_idx.keys()):
+        tmap = extra_slots_by_idx[ex_idx]
+        ref_t = '4' if '4' in tmap else sorted(tmap.keys(), key=int)[0]
+        ref_u, ref_c, ref_noret = tmap[ref_t]
+        ref_name = uname_to_name.get(ref_u, ref_u)
+        slot_id = 'alchemy_remains' if 'ALCHEMY' in ref_u.upper() else f'extra_{ex_idx + 1}'
+        by_tier_payload = {}
+        for t_str, (eu, ec, enr) in sorted(tmap.items(), key=lambda kv: int(kv[0])):
+            by_tier_payload[t_str] = {
+                'template': eu,
+                'name': uname_to_name.get(eu, eu),
+                'qty': ec,
+                'noReturn': enr,
+            }
+        extra_materials.append({
+            'id': slot_id,
+            'name': ref_name,
+            'template': ref_u,
+            'qty': ref_c,
+            'noReturn': ref_noret,
+            'isRefinedResource': not ref_noret and ('ALCHEMY' not in ref_u.upper()),
+            'byTier': by_tier_payload,
+        })
 
     is_artifact = artifact_res is not None
     art_type = None
     art_name = None
     art_tmpl = None
+    art_qty_field = None
+    art_no_return = True
+    art_iv_t4 = 0.0
+    art_iv_by_tier = {}
     if is_artifact:
         art_uname = artifact_res[0]
         art_type = detect_artifact_type(art_uname)
+
+        art_unames_by_tier = {}
+        art_qty_by_tier = {}
+        for t_i, _, _, res_i, _ in tier_data:
+            for r_i in res_i:
+                ru = r_i.get('@uniquename', '')
+                if is_artifact_ingredient(ru):
+                    rc = int(r_i.get('@count', 1))
+                    art_unames_by_tier[str(t_i)] = ru
+                    art_qty_by_tier[str(t_i)] = rc
+                    if r_i.get('@maxreturnamount') not in (None, '0'):
+                        art_no_return = False
+                    art_obj = by_uid.get(ru) or {}
+                    r_iv = float(art_obj.get('@itemvalue') or 0)
+                    if r_iv > 0:
+                        art_iv_by_tier[str(t_i)] = r_iv * rc
+
+        distinct_art_names = set(art_unames_by_tier.values())
         art_parts = art_uname.split('_')
-        art_tmpl = 'T{tier}_' + '_'.join(art_parts[1:])
+        # Keep literal fixed item ID when every tier consumes the exact same ID (e.g. T4_SKILLBOOK_STANDARD)
+        is_fixed_tier_art = len(distinct_art_names) == 1 and len(tier_data) > 1
+        if (not is_fixed_tier_art) and art_uname.startswith('T') and '_' in art_uname and art_parts[0][1:].isdigit():
+            art_tmpl = 'T{tier}_' + '_'.join(art_parts[1:])
+        else:
+            art_tmpl = art_uname
+
         clean_art = art_tmpl.replace("T{tier}_", "")
         art_loc = uname_to_name.get(art_uname) or uname_to_name.get(f'T4_{clean_art}')
-        art_name = clean_item_name(art_loc) if art_loc else f"{clean_name} Artifact"
+        art_name = (art_loc if is_fixed_tier_art else clean_item_name(art_loc)) if art_loc else f"{clean_name} Artifact"
+
+        if art_qty_by_tier:
+            uniq_q = set(art_qty_by_tier.values())
+            if len(uniq_q) > 1:
+                art_qty_field = art_qty_by_tier
+            elif next(iter(uniq_q)) != 1:
+                art_qty_field = next(iter(uniq_q))
+        if '4' in art_iv_by_tier:
+            art_iv_t4 = art_iv_by_tier['4']
+        else:
+            t4_obj = by_uid.get(f'T4_{clean_art}') or by_uid.get(art_uname) or {}
+            art_iv_t4 = float(t4_obj.get('@itemvalue') or 0) * int(artifact_res[1] or 1)
 
     # Enchantment eligibility rule:
     # Gathering Tools (pickaxes, axes, etc.), Furniture (beds, tables, chests),
@@ -576,20 +731,31 @@ for base_template, tier_data in template_groups.items():
         'allowEnchantment': allow_enchantment,
         'primaryMatName': primary_name,
         'primaryQty': primary_qty,
+        **({'primaryQtyByTier': prim_qty_by_tier} if prim_qty_by_tier else {}),
         'primaryMatIcon': primary_icon,
+        'primaryNoReturn': primary_no_return,
         'secondaryMatName': secondary_name,
         'secondaryQty': secondary_qty,
+        **({'secondaryQtyByTier': sec_qty_by_tier} if sec_qty_by_tier else {}),
         'secondaryMatIcon': secondary_icon,
+        'secondaryNoReturn': secondary_no_return,
         'bonusCity': rule['bonusCity'],
         'isArtifact': is_artifact,
         'artifactType': art_type,
         'artifactName': art_name,
         'artifactTemplate': art_tmpl,
+        **({'artifactQty': art_qty_field} if art_qty_field is not None else {}),
+        **({'artifactNoReturn': art_no_return} if is_artifact else {}),
+        'artifactItemValue': art_iv_t4,
+        'artifactItemValueByTier': art_iv_by_tier,
+        **({'extraMaterials': extra_materials} if extra_materials else {}),
         'journalName': rule['journal'][0],
         'journalTemplate': rule['journal'][1],
         'famePerUnit': base_fame,
+        'destinyFactor': destiny_factor,
         'baseItemValue': base_iv,
-        'baseFocus': base_focus,
+        'baseFocus': focus_by_tier.get(str(min_tier), base_focus),
+        'focusByTier': focus_by_tier,
     })
 
 print(f"Successfully generated catalog with {len(catalog)} unique craftable items!")

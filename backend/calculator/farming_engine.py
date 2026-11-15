@@ -1,4 +1,5 @@
 import json
+import math
 import os
 from math import pow
 
@@ -279,6 +280,11 @@ def calculate_farming(params):
     mastery_level = min(100, max(0, int(params.get('mastery_level', 0))))
     spec_level = min(100, max(0, int(params.get('spec_level', 0))))
 
+    use_butcher_focus = bool(params.get('use_butcher_focus', False))
+    butcher_mastery = min(100, max(0, int(params.get('butcher_mastery', 0))))
+    butcher_spec = min(100, max(0, int(params.get('butcher_spec', 0))))
+    other_chef_spec_avg = min(100, max(0, int(params.get('other_chef_spec_avg', 0))))
+
     # Animal actions: 'produce' (eggs/milk), 'slaughter' (meat), or 'sell_grown'
     animal_action = params.get('animal_action', 'produce')
     # Mount action: 'grown' (sell grown animal) or 'saddled' (saddled riding horse/ox)
@@ -476,6 +482,13 @@ def calculate_farming(params):
         baby_expense = round(babies_to_buy * baby_price, 2)
         surplus_baby_revenue = round(surplus_babies * baby_price, 2)
 
+        butcher_active = active_action == 'slaughter'
+        butcher_eff = (butcher_mastery * 30) + (butcher_spec * 280) + (other_chef_spec_avg * 240)
+        butcher_focus_per_animal = max(1, math.floor((38.0 * (0.5 ** (butcher_eff / 10000.0))) + 0.5)) if butcher_active else 0
+        total_butcher_focus = (butcher_focus_per_animal * total_spots) if (butcher_active and use_butcher_focus) else 0
+
+        meat_bonus_mult = 1.0
+        butcher_extra_meat = 0.0
         if active_action == 'sell_grown':
             total_output = total_spots
             output_revenue = round(total_spots * grown_price, 2)
@@ -483,7 +496,10 @@ def calculate_farming(params):
             output_icon = item_def.get('icon')
         else:
             meat_yield_per_spot = item_def.get('meatYield', 18)
-            total_output = round(total_spots * meat_yield_per_spot * city_yield_multiplier, 1)
+            base_meat = total_spots * meat_yield_per_spot * city_yield_multiplier
+            meat_bonus_mult = 1.59 if use_butcher_focus else 1.0
+            total_output = round(base_meat * meat_bonus_mult, 1)
+            butcher_extra_meat = round(max(0.0, total_output - round(base_meat, 1)), 1)
             output_revenue = round(total_output * meat_price, 2)
             output_name = item_def.get('meatName', 'Raw Meat')
             output_icon = item_def.get('meatIcon')
@@ -499,7 +515,11 @@ def calculate_farming(params):
         cycle_days = round(growth_hours / 24.0, 2)
         daily_profit = round((net_profit / growth_hours) * 24.0, 2)
 
-        silver_per_focus = round((bonus_offspring * total_spots * baby_price) / total_focus_needed, 2) if total_focus_needed > 0 else 0.0
+        pasture_focus_value = (bonus_offspring * total_spots * baby_price) if use_focus else 0.0
+        butcher_focus_value = (butcher_extra_meat * meat_price * (1.0 - tax_rate)) if (butcher_active and use_butcher_focus) else 0.0
+        combined_focus_needed = total_focus_needed + total_butcher_focus
+        silver_per_focus = round((pasture_focus_value + butcher_focus_value) / combined_focus_needed, 2) if combined_focus_needed > 0 else 0.0
+        butcher_silver_per_focus = round(butcher_focus_value / total_butcher_focus, 2) if total_butcher_focus > 0 else 0.0
 
         return {
             'item': item_def,
@@ -510,12 +530,17 @@ def calculate_farming(params):
             'bonusCity': bonus_city,
             'hasPremium': has_premium,
             'useFocus': use_focus,
+            'useButcherFocus': butcher_active and use_butcher_focus,
             'animalAction': active_action,
             'cycleDays': cycle_days,
             'growthHours': growth_hours,
             'focus': {
                 'focusPerSpot': focus_per_spot,
-                'totalFocusNeeded': total_focus_needed,
+                'pastureFocusNeeded': total_focus_needed,
+                'butcherFocusPerAnimal': butcher_focus_per_animal,
+                'totalButcherFocus': total_butcher_focus,
+                'butcherSilverPerFocus': butcher_silver_per_focus,
+                'totalFocusNeeded': combined_focus_needed,
                 'silverPerFocus': silver_per_focus,
             },
             'yield': {

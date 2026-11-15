@@ -11,23 +11,30 @@
       "fullJournalName": "Novice Blacksmith's Journal (Full)",
       "emptyJournalId": "T2_JOURNAL_WARRIOR_EMPTY",
       "emptyJournalName": "Novice Blacksmith's Journal (Empty)",
-      "fameRequired": 300,
-      "baseYield100": 7.2,
-      "maxYield150": 10.8,
+      "fameRequired": 900,
+      "baseYield100": 38.0,
+      "maxYield150": 57.0,
       "returns": [
         {
           "item": "T2_METALBAR",
           "name": "Copper Bar",
           "icon": "T2_METALBAR.png",
-          "weight": 0.6,
-          "amount": 4.3
+          "weight": 0.7,
+          "amount": 26.6
         },
         {
           "item": "T2_PLANKS",
           "name": "Birch Planks",
           "icon": "T2_PLANKS.png",
-          "weight": 0.4,
-          "amount": 2.9
+          "weight": 0.2,
+          "amount": 7.6
+        },
+        {
+          "item": "T2_CLOTH",
+          "name": "Simple Cloth",
+          "icon": "T2_CLOTH.png",
+          "weight": 0.1,
+          "amount": 3.8
         }
       ],
       "fullIcon": "T2_JOURNAL_WARRIOR_FULL.png",
@@ -45,23 +52,30 @@
       "fullJournalName": "Journeyman Blacksmith's Journal (Full)",
       "emptyJournalId": "T3_JOURNAL_WARRIOR_EMPTY",
       "emptyJournalName": "Journeyman Blacksmith's Journal (Empty)",
-      "fameRequired": 600,
-      "baseYield100": 8.0,
-      "maxYield150": 12.0,
+      "fameRequired": 1800,
+      "baseYield100": 24.0,
+      "maxYield150": 36.0,
       "returns": [
         {
           "item": "T3_METALBAR",
           "name": "Bronze Bar",
           "icon": "T3_METALBAR.png",
-          "weight": 0.6,
-          "amount": 4.8
+          "weight": 0.7,
+          "amount": 16.8
         },
         {
           "item": "T3_PLANKS",
           "name": "Chestnut Planks",
           "icon": "T3_PLANKS.png",
-          "weight": 0.4,
-          "amount": 3.2
+          "weight": 0.2,
+          "amount": 4.8
+        },
+        {
+          "item": "T3_CLOTH",
+          "name": "Neat Cloth",
+          "icon": "T3_CLOTH.png",
+          "weight": 0.1,
+          "amount": 2.4
         }
       ],
       "fullIcon": "T3_JOURNAL_WARRIOR_FULL.png",
@@ -79,23 +93,30 @@
       "fullJournalName": "Adept Blacksmith's Journal (Full)",
       "emptyJournalId": "T4_JOURNAL_WARRIOR_EMPTY",
       "emptyJournalName": "Adept Blacksmith's Journal (Empty)",
-      "fameRequired": 1200,
-      "baseYield100": 11.5,
-      "maxYield150": 17.2,
+      "fameRequired": 3600,
+      "baseYield100": 16.0,
+      "maxYield150": 24.0,
       "returns": [
         {
           "item": "T4_METALBAR",
           "name": "Steel Bar",
           "icon": "T4_METALBAR.png",
-          "weight": 0.6,
-          "amount": 6.9
+          "weight": 0.7,
+          "amount": 11.2
         },
         {
           "item": "T4_PLANKS",
           "name": "Pine Planks",
           "icon": "T4_PLANKS.png",
-          "weight": 0.4,
-          "amount": 4.6
+          "weight": 0.2,
+          "amount": 3.2
+        },
+        {
+          "item": "T4_CLOTH",
+          "name": "Fine Cloth",
+          "icon": "T4_CLOTH.png",
+          "weight": 0.1,
+          "amount": 1.6
         }
       ],
       "fullIcon": "T4_JOURNAL_WARRIOR_FULL.png",
@@ -113,23 +134,30 @@
       "fullJournalName": "Expert Blacksmith's Journal (Full)",
       "emptyJournalId": "T5_JOURNAL_WARRIOR_EMPTY",
       "emptyJournalName": "Expert Blacksmith's Journal (Empty)",
-      "fameRequired": 2400,
-      "baseYield100": 14.4,
-      "maxYield150": 21.6,
+      "fameRequired": 7200,
+      "baseYield100": 8.0,
+      "maxYield150": 12.0,
       "returns": [
         {
           "item": "T5_METALBAR",
           "name": "Titanium Steel Bar",
           "icon": "T5_METALBAR.png",
-          "weight": 0.6,
-          "amount": 8.6
+          "weight": 0.7,
+          "amount": 5.6
         },
         {
           "item": "T5_PLANKS",
           "name": "Cedar Planks",
           "icon": "T5_PLANKS.png",
-          "weight": 0.4,
-          "amount": 5.8
+          "weight": 0.2,
+          "amount": 1.6
+        },
+        {
+          "item": "T5_CLOTH",
+          "name": "Ornate Cloth",
+          "icon": "T5_CLOTH.png",
+          "weight": 0.1,
+          "amount": 0.8
         }
       ],
       "fullIcon": "T5_JOURNAL_WARRIOR_FULL.png",
@@ -147,23 +175,30 @@
       "fullJournalName": "Master Blacksmith's Journal (Full)",
       "emptyJournalId": "T6_JOURNAL_WARRIOR_EMPTY",
       "emptyJournalName": "Master Blacksmith's Journal (Empty)",
-      "fameRequired": 4800,
-      "baseYield100": 17.6,
-      "maxYield150": 26.4,
+      "fameRequired": 14400,
+      "baseYield100": 5.3333,
+      "maxYield150": 8.0,
       "returns": [
         {
           "item": "T6_METALBAR",
           "name": "Runite Steel Bar",
           "icon": "T6_METALBAR.png",
-          "weight": 0.6,
-          "amount": 10.6
+          "weight": 0.7,
+          "amount": 3.73
         },
         {
           "item": "T6_PLANKS",
           "name": "Bloodoak Planks",
           "icon": "T6_PLANKS.png",
-          "weight": 0.4,
-          "amount": 7.0
+          "weight": 0.2,
+          "amount": 1.07
+        },
+        {
+          "item": "T6_CLOTH",
+          "name": "Lavish Cloth",
+          "icon": "T6_CLOTH.png",
+          "weight": 0.1,
+          "amount": 0.53
         }
       ],
       "fullIcon": "T6_JOURNAL_WARRIOR_FULL.png",
@@ -181,23 +216,30 @@
       "fullJournalName": "Grandmaster Blacksmith's Journal (Full)",
       "emptyJournalId": "T7_JOURNAL_WARRIOR_EMPTY",
       "emptyJournalName": "Grandmaster Blacksmith's Journal (Empty)",
-      "fameRequired": 9600,
-      "baseYield100": 20.8,
-      "maxYield150": 31.2,
+      "fameRequired": 28380,
+      "baseYield100": 4.4,
+      "maxYield150": 6.6,
       "returns": [
         {
           "item": "T7_METALBAR",
           "name": "Meteorite Steel Bar",
           "icon": "T7_METALBAR.png",
-          "weight": 0.6,
-          "amount": 12.5
+          "weight": 0.7,
+          "amount": 3.08
         },
         {
           "item": "T7_PLANKS",
           "name": "Ashenbark Planks",
           "icon": "T7_PLANKS.png",
-          "weight": 0.4,
-          "amount": 8.3
+          "weight": 0.2,
+          "amount": 0.88
+        },
+        {
+          "item": "T7_CLOTH",
+          "name": "Opulent Cloth",
+          "icon": "T7_CLOTH.png",
+          "weight": 0.1,
+          "amount": 0.44
         }
       ],
       "fullIcon": "T7_JOURNAL_WARRIOR_FULL.png",
@@ -215,23 +257,30 @@
       "fullJournalName": "Elder Blacksmith's Journal (Full)",
       "emptyJournalId": "T8_JOURNAL_WARRIOR_EMPTY",
       "emptyJournalName": "Elder Blacksmith's Journal (Empty)",
-      "fameRequired": 19200,
-      "baseYield100": 24.0,
-      "maxYield150": 36.0,
+      "fameRequired": 58590,
+      "baseYield100": 4.2,
+      "maxYield150": 6.3,
       "returns": [
         {
           "item": "T8_METALBAR",
           "name": "Adamantium Steel Bar",
           "icon": "T8_METALBAR.png",
-          "weight": 0.6,
-          "amount": 14.4
+          "weight": 0.7,
+          "amount": 2.94
         },
         {
           "item": "T8_PLANKS",
           "name": "Whitewood Planks",
           "icon": "T8_PLANKS.png",
-          "weight": 0.4,
-          "amount": 9.6
+          "weight": 0.2,
+          "amount": 0.84
+        },
+        {
+          "item": "T8_CLOTH",
+          "name": "Baroque Cloth",
+          "icon": "T8_CLOTH.png",
+          "weight": 0.1,
+          "amount": 0.42
         }
       ],
       "fullIcon": "T8_JOURNAL_WARRIOR_FULL.png",
@@ -249,23 +298,30 @@
       "fullJournalName": "Novice Fletcher's Journal (Full)",
       "emptyJournalId": "T2_JOURNAL_HUNTER_EMPTY",
       "emptyJournalName": "Novice Fletcher's Journal (Empty)",
-      "fameRequired": 300,
-      "baseYield100": 7.2,
-      "maxYield150": 10.8,
+      "fameRequired": 900,
+      "baseYield100": 38.0,
+      "maxYield150": 57.0,
       "returns": [
         {
           "item": "T2_LEATHER",
           "name": "Stiff Leather",
           "icon": "T2_LEATHER.png",
-          "weight": 0.6,
-          "amount": 4.3
+          "weight": 0.4545,
+          "amount": 17.27
         },
         {
           "item": "T2_PLANKS",
           "name": "Birch Planks",
           "icon": "T2_PLANKS.png",
-          "weight": 0.4,
-          "amount": 2.9
+          "weight": 0.2727,
+          "amount": 10.36
+        },
+        {
+          "item": "T2_METALBAR",
+          "name": "Copper Bar",
+          "icon": "T2_METALBAR.png",
+          "weight": 0.2727,
+          "amount": 10.36
         }
       ],
       "fullIcon": "T2_JOURNAL_HUNTER_FULL.png",
@@ -283,23 +339,30 @@
       "fullJournalName": "Journeyman Fletcher's Journal (Full)",
       "emptyJournalId": "T3_JOURNAL_HUNTER_EMPTY",
       "emptyJournalName": "Journeyman Fletcher's Journal (Empty)",
-      "fameRequired": 600,
-      "baseYield100": 8.0,
-      "maxYield150": 12.0,
+      "fameRequired": 1800,
+      "baseYield100": 24.0,
+      "maxYield150": 36.0,
       "returns": [
         {
           "item": "T3_LEATHER",
           "name": "Thick Leather",
           "icon": "T3_LEATHER.png",
-          "weight": 0.6,
-          "amount": 4.8
+          "weight": 0.4545,
+          "amount": 10.91
         },
         {
           "item": "T3_PLANKS",
           "name": "Chestnut Planks",
           "icon": "T3_PLANKS.png",
-          "weight": 0.4,
-          "amount": 3.2
+          "weight": 0.2727,
+          "amount": 6.54
+        },
+        {
+          "item": "T3_METALBAR",
+          "name": "Bronze Bar",
+          "icon": "T3_METALBAR.png",
+          "weight": 0.2727,
+          "amount": 6.54
         }
       ],
       "fullIcon": "T3_JOURNAL_HUNTER_FULL.png",
@@ -317,23 +380,30 @@
       "fullJournalName": "Adept Fletcher's Journal (Full)",
       "emptyJournalId": "T4_JOURNAL_HUNTER_EMPTY",
       "emptyJournalName": "Adept Fletcher's Journal (Empty)",
-      "fameRequired": 1200,
-      "baseYield100": 11.5,
-      "maxYield150": 17.2,
+      "fameRequired": 3600,
+      "baseYield100": 16.0,
+      "maxYield150": 24.0,
       "returns": [
         {
           "item": "T4_LEATHER",
           "name": "Worked Leather",
           "icon": "T4_LEATHER.png",
-          "weight": 0.6,
-          "amount": 6.9
+          "weight": 0.4545,
+          "amount": 7.27
         },
         {
           "item": "T4_PLANKS",
           "name": "Pine Planks",
           "icon": "T4_PLANKS.png",
-          "weight": 0.4,
-          "amount": 4.6
+          "weight": 0.2727,
+          "amount": 4.36
+        },
+        {
+          "item": "T4_METALBAR",
+          "name": "Steel Bar",
+          "icon": "T4_METALBAR.png",
+          "weight": 0.2727,
+          "amount": 4.36
         }
       ],
       "fullIcon": "T4_JOURNAL_HUNTER_FULL.png",
@@ -351,23 +421,30 @@
       "fullJournalName": "Expert Fletcher's Journal (Full)",
       "emptyJournalId": "T5_JOURNAL_HUNTER_EMPTY",
       "emptyJournalName": "Expert Fletcher's Journal (Empty)",
-      "fameRequired": 2400,
-      "baseYield100": 14.4,
-      "maxYield150": 21.6,
+      "fameRequired": 7200,
+      "baseYield100": 8.0,
+      "maxYield150": 12.0,
       "returns": [
         {
           "item": "T5_LEATHER",
           "name": "Cured Leather",
           "icon": "T5_LEATHER.png",
-          "weight": 0.6,
-          "amount": 8.6
+          "weight": 0.4545,
+          "amount": 3.64
         },
         {
           "item": "T5_PLANKS",
           "name": "Cedar Planks",
           "icon": "T5_PLANKS.png",
-          "weight": 0.4,
-          "amount": 5.8
+          "weight": 0.2727,
+          "amount": 2.18
+        },
+        {
+          "item": "T5_METALBAR",
+          "name": "Titanium Steel Bar",
+          "icon": "T5_METALBAR.png",
+          "weight": 0.2727,
+          "amount": 2.18
         }
       ],
       "fullIcon": "T5_JOURNAL_HUNTER_FULL.png",
@@ -385,23 +462,30 @@
       "fullJournalName": "Master Fletcher's Journal (Full)",
       "emptyJournalId": "T6_JOURNAL_HUNTER_EMPTY",
       "emptyJournalName": "Master Fletcher's Journal (Empty)",
-      "fameRequired": 4800,
-      "baseYield100": 17.6,
-      "maxYield150": 26.4,
+      "fameRequired": 14400,
+      "baseYield100": 5.3333,
+      "maxYield150": 8.0,
       "returns": [
         {
           "item": "T6_LEATHER",
           "name": "Hardened Leather",
           "icon": "T6_LEATHER.png",
-          "weight": 0.6,
-          "amount": 10.6
+          "weight": 0.4545,
+          "amount": 2.42
         },
         {
           "item": "T6_PLANKS",
           "name": "Bloodoak Planks",
           "icon": "T6_PLANKS.png",
-          "weight": 0.4,
-          "amount": 7.0
+          "weight": 0.2727,
+          "amount": 1.45
+        },
+        {
+          "item": "T6_METALBAR",
+          "name": "Runite Steel Bar",
+          "icon": "T6_METALBAR.png",
+          "weight": 0.2727,
+          "amount": 1.45
         }
       ],
       "fullIcon": "T6_JOURNAL_HUNTER_FULL.png",
@@ -419,23 +503,30 @@
       "fullJournalName": "Grandmaster Fletcher's Journal (Full)",
       "emptyJournalId": "T7_JOURNAL_HUNTER_EMPTY",
       "emptyJournalName": "Grandmaster Fletcher's Journal (Empty)",
-      "fameRequired": 9600,
-      "baseYield100": 20.8,
-      "maxYield150": 31.2,
+      "fameRequired": 28380,
+      "baseYield100": 4.4,
+      "maxYield150": 6.6,
       "returns": [
         {
           "item": "T7_LEATHER",
           "name": "Reinforced Leather",
           "icon": "T7_LEATHER.png",
-          "weight": 0.6,
-          "amount": 12.5
+          "weight": 0.4545,
+          "amount": 2.0
         },
         {
           "item": "T7_PLANKS",
           "name": "Ashenbark Planks",
           "icon": "T7_PLANKS.png",
-          "weight": 0.4,
-          "amount": 8.3
+          "weight": 0.2727,
+          "amount": 1.2
+        },
+        {
+          "item": "T7_METALBAR",
+          "name": "Meteorite Steel Bar",
+          "icon": "T7_METALBAR.png",
+          "weight": 0.2727,
+          "amount": 1.2
         }
       ],
       "fullIcon": "T7_JOURNAL_HUNTER_FULL.png",
@@ -453,23 +544,30 @@
       "fullJournalName": "Elder Fletcher's Journal (Full)",
       "emptyJournalId": "T8_JOURNAL_HUNTER_EMPTY",
       "emptyJournalName": "Elder Fletcher's Journal (Empty)",
-      "fameRequired": 19200,
-      "baseYield100": 24.0,
-      "maxYield150": 36.0,
+      "fameRequired": 58590,
+      "baseYield100": 4.2,
+      "maxYield150": 6.3,
       "returns": [
         {
           "item": "T8_LEATHER",
           "name": "Fortified Leather",
           "icon": "T8_LEATHER.png",
-          "weight": 0.6,
-          "amount": 14.4
+          "weight": 0.4545,
+          "amount": 1.91
         },
         {
           "item": "T8_PLANKS",
           "name": "Whitewood Planks",
           "icon": "T8_PLANKS.png",
-          "weight": 0.4,
-          "amount": 9.6
+          "weight": 0.2727,
+          "amount": 1.15
+        },
+        {
+          "item": "T8_METALBAR",
+          "name": "Adamantium Steel Bar",
+          "icon": "T8_METALBAR.png",
+          "weight": 0.2727,
+          "amount": 1.15
         }
       ],
       "fullIcon": "T8_JOURNAL_HUNTER_FULL.png",
@@ -487,23 +585,30 @@
       "fullJournalName": "Novice Imbuer's Journal (Full)",
       "emptyJournalId": "T2_JOURNAL_MAGE_EMPTY",
       "emptyJournalName": "Novice Imbuer's Journal (Empty)",
-      "fameRequired": 300,
-      "baseYield100": 7.2,
-      "maxYield150": 10.8,
+      "fameRequired": 900,
+      "baseYield100": 38.0,
+      "maxYield150": 57.0,
       "returns": [
         {
           "item": "T2_CLOTH",
           "name": "Simple Cloth",
           "icon": "T2_CLOTH.png",
-          "weight": 0.6,
-          "amount": 4.3
+          "weight": 0.5,
+          "amount": 19.0
+        },
+        {
+          "item": "T2_PLANKS",
+          "name": "Birch Planks",
+          "icon": "T2_PLANKS.png",
+          "weight": 0.4,
+          "amount": 15.2
         },
         {
           "item": "T2_METALBAR",
           "name": "Copper Bar",
           "icon": "T2_METALBAR.png",
-          "weight": 0.4,
-          "amount": 2.9
+          "weight": 0.1,
+          "amount": 3.8
         }
       ],
       "fullIcon": "T2_JOURNAL_MAGE_FULL.png",
@@ -521,23 +626,30 @@
       "fullJournalName": "Journeyman Imbuer's Journal (Full)",
       "emptyJournalId": "T3_JOURNAL_MAGE_EMPTY",
       "emptyJournalName": "Journeyman Imbuer's Journal (Empty)",
-      "fameRequired": 600,
-      "baseYield100": 8.0,
-      "maxYield150": 12.0,
+      "fameRequired": 1800,
+      "baseYield100": 24.0,
+      "maxYield150": 36.0,
       "returns": [
         {
           "item": "T3_CLOTH",
           "name": "Neat Cloth",
           "icon": "T3_CLOTH.png",
-          "weight": 0.6,
-          "amount": 4.8
+          "weight": 0.5,
+          "amount": 12.0
+        },
+        {
+          "item": "T3_PLANKS",
+          "name": "Chestnut Planks",
+          "icon": "T3_PLANKS.png",
+          "weight": 0.4,
+          "amount": 9.6
         },
         {
           "item": "T3_METALBAR",
           "name": "Bronze Bar",
           "icon": "T3_METALBAR.png",
-          "weight": 0.4,
-          "amount": 3.2
+          "weight": 0.1,
+          "amount": 2.4
         }
       ],
       "fullIcon": "T3_JOURNAL_MAGE_FULL.png",
@@ -555,23 +667,30 @@
       "fullJournalName": "Adept Imbuer's Journal (Full)",
       "emptyJournalId": "T4_JOURNAL_MAGE_EMPTY",
       "emptyJournalName": "Adept Imbuer's Journal (Empty)",
-      "fameRequired": 1200,
-      "baseYield100": 11.5,
-      "maxYield150": 17.2,
+      "fameRequired": 3600,
+      "baseYield100": 16.0,
+      "maxYield150": 24.0,
       "returns": [
         {
           "item": "T4_CLOTH",
           "name": "Fine Cloth",
           "icon": "T4_CLOTH.png",
-          "weight": 0.6,
-          "amount": 6.9
+          "weight": 0.5,
+          "amount": 8.0
+        },
+        {
+          "item": "T4_PLANKS",
+          "name": "Pine Planks",
+          "icon": "T4_PLANKS.png",
+          "weight": 0.4,
+          "amount": 6.4
         },
         {
           "item": "T4_METALBAR",
           "name": "Steel Bar",
           "icon": "T4_METALBAR.png",
-          "weight": 0.4,
-          "amount": 4.6
+          "weight": 0.1,
+          "amount": 1.6
         }
       ],
       "fullIcon": "T4_JOURNAL_MAGE_FULL.png",
@@ -589,23 +708,30 @@
       "fullJournalName": "Expert Imbuer's Journal (Full)",
       "emptyJournalId": "T5_JOURNAL_MAGE_EMPTY",
       "emptyJournalName": "Expert Imbuer's Journal (Empty)",
-      "fameRequired": 2400,
-      "baseYield100": 14.4,
-      "maxYield150": 21.6,
+      "fameRequired": 7200,
+      "baseYield100": 8.0,
+      "maxYield150": 12.0,
       "returns": [
         {
           "item": "T5_CLOTH",
           "name": "Ornate Cloth",
           "icon": "T5_CLOTH.png",
-          "weight": 0.6,
-          "amount": 8.6
+          "weight": 0.5,
+          "amount": 4.0
+        },
+        {
+          "item": "T5_PLANKS",
+          "name": "Cedar Planks",
+          "icon": "T5_PLANKS.png",
+          "weight": 0.4,
+          "amount": 3.2
         },
         {
           "item": "T5_METALBAR",
           "name": "Titanium Steel Bar",
           "icon": "T5_METALBAR.png",
-          "weight": 0.4,
-          "amount": 5.8
+          "weight": 0.1,
+          "amount": 0.8
         }
       ],
       "fullIcon": "T5_JOURNAL_MAGE_FULL.png",
@@ -623,23 +749,30 @@
       "fullJournalName": "Master Imbuer's Journal (Full)",
       "emptyJournalId": "T6_JOURNAL_MAGE_EMPTY",
       "emptyJournalName": "Master Imbuer's Journal (Empty)",
-      "fameRequired": 4800,
-      "baseYield100": 17.6,
-      "maxYield150": 26.4,
+      "fameRequired": 14400,
+      "baseYield100": 5.3333,
+      "maxYield150": 8.0,
       "returns": [
         {
           "item": "T6_CLOTH",
           "name": "Lavish Cloth",
           "icon": "T6_CLOTH.png",
-          "weight": 0.6,
-          "amount": 10.6
+          "weight": 0.5,
+          "amount": 2.67
+        },
+        {
+          "item": "T6_PLANKS",
+          "name": "Bloodoak Planks",
+          "icon": "T6_PLANKS.png",
+          "weight": 0.4,
+          "amount": 2.13
         },
         {
           "item": "T6_METALBAR",
           "name": "Runite Steel Bar",
           "icon": "T6_METALBAR.png",
-          "weight": 0.4,
-          "amount": 7.0
+          "weight": 0.1,
+          "amount": 0.53
         }
       ],
       "fullIcon": "T6_JOURNAL_MAGE_FULL.png",
@@ -657,23 +790,30 @@
       "fullJournalName": "Grandmaster Imbuer's Journal (Full)",
       "emptyJournalId": "T7_JOURNAL_MAGE_EMPTY",
       "emptyJournalName": "Grandmaster Imbuer's Journal (Empty)",
-      "fameRequired": 9600,
-      "baseYield100": 20.8,
-      "maxYield150": 31.2,
+      "fameRequired": 28380,
+      "baseYield100": 4.4,
+      "maxYield150": 6.6,
       "returns": [
         {
           "item": "T7_CLOTH",
           "name": "Opulent Cloth",
           "icon": "T7_CLOTH.png",
-          "weight": 0.6,
-          "amount": 12.5
+          "weight": 0.5,
+          "amount": 2.2
+        },
+        {
+          "item": "T7_PLANKS",
+          "name": "Ashenbark Planks",
+          "icon": "T7_PLANKS.png",
+          "weight": 0.4,
+          "amount": 1.76
         },
         {
           "item": "T7_METALBAR",
           "name": "Meteorite Steel Bar",
           "icon": "T7_METALBAR.png",
-          "weight": 0.4,
-          "amount": 8.3
+          "weight": 0.1,
+          "amount": 0.44
         }
       ],
       "fullIcon": "T7_JOURNAL_MAGE_FULL.png",
@@ -691,23 +831,30 @@
       "fullJournalName": "Elder Imbuer's Journal (Full)",
       "emptyJournalId": "T8_JOURNAL_MAGE_EMPTY",
       "emptyJournalName": "Elder Imbuer's Journal (Empty)",
-      "fameRequired": 19200,
-      "baseYield100": 24.0,
-      "maxYield150": 36.0,
+      "fameRequired": 58590,
+      "baseYield100": 4.2,
+      "maxYield150": 6.3,
       "returns": [
         {
           "item": "T8_CLOTH",
           "name": "Baroque Cloth",
           "icon": "T8_CLOTH.png",
-          "weight": 0.6,
-          "amount": 14.4
+          "weight": 0.5,
+          "amount": 2.1
+        },
+        {
+          "item": "T8_PLANKS",
+          "name": "Whitewood Planks",
+          "icon": "T8_PLANKS.png",
+          "weight": 0.4,
+          "amount": 1.68
         },
         {
           "item": "T8_METALBAR",
           "name": "Adamantium Steel Bar",
           "icon": "T8_METALBAR.png",
-          "weight": 0.4,
-          "amount": 9.6
+          "weight": 0.1,
+          "amount": 0.42
         }
       ],
       "fullIcon": "T8_JOURNAL_MAGE_FULL.png",
@@ -725,30 +872,37 @@
       "fullJournalName": "Novice Tinker's Journal (Full)",
       "emptyJournalId": "T2_JOURNAL_TOOLMAKER_EMPTY",
       "emptyJournalName": "Novice Tinker's Journal (Empty)",
-      "fameRequired": 300,
-      "baseYield100": 7.2,
-      "maxYield150": 10.8,
+      "fameRequired": 900,
+      "baseYield100": 38.0,
+      "maxYield150": 57.0,
       "returns": [
         {
           "item": "T2_PLANKS",
           "name": "Birch Planks",
           "icon": "T2_PLANKS.png",
-          "weight": 0.35,
-          "amount": 2.5
+          "weight": 0.4444,
+          "amount": 16.89
         },
         {
           "item": "T2_METALBAR",
           "name": "Copper Bar",
           "icon": "T2_METALBAR.png",
-          "weight": 0.35,
-          "amount": 2.5
+          "weight": 0.2222,
+          "amount": 8.44
         },
         {
           "item": "T2_CLOTH",
           "name": "Simple Cloth",
           "icon": "T2_CLOTH.png",
-          "weight": 0.3,
-          "amount": 2.2
+          "weight": 0.2222,
+          "amount": 8.44
+        },
+        {
+          "item": "T2_LEATHER",
+          "name": "Stiff Leather",
+          "icon": "T2_LEATHER.png",
+          "weight": 0.1111,
+          "amount": 4.22
         }
       ],
       "fullIcon": "T2_JOURNAL_TOOLMAKER_FULL.png",
@@ -766,30 +920,37 @@
       "fullJournalName": "Journeyman Tinker's Journal (Full)",
       "emptyJournalId": "T3_JOURNAL_TOOLMAKER_EMPTY",
       "emptyJournalName": "Journeyman Tinker's Journal (Empty)",
-      "fameRequired": 600,
-      "baseYield100": 8.0,
-      "maxYield150": 12.0,
+      "fameRequired": 1800,
+      "baseYield100": 24.0,
+      "maxYield150": 36.0,
       "returns": [
         {
           "item": "T3_PLANKS",
           "name": "Chestnut Planks",
           "icon": "T3_PLANKS.png",
-          "weight": 0.35,
-          "amount": 2.8
+          "weight": 0.4444,
+          "amount": 10.67
         },
         {
           "item": "T3_METALBAR",
           "name": "Bronze Bar",
           "icon": "T3_METALBAR.png",
-          "weight": 0.35,
-          "amount": 2.8
+          "weight": 0.2222,
+          "amount": 5.33
         },
         {
           "item": "T3_CLOTH",
           "name": "Neat Cloth",
           "icon": "T3_CLOTH.png",
-          "weight": 0.3,
-          "amount": 2.4
+          "weight": 0.2222,
+          "amount": 5.33
+        },
+        {
+          "item": "T3_LEATHER",
+          "name": "Thick Leather",
+          "icon": "T3_LEATHER.png",
+          "weight": 0.1111,
+          "amount": 2.67
         }
       ],
       "fullIcon": "T3_JOURNAL_TOOLMAKER_FULL.png",
@@ -807,30 +968,37 @@
       "fullJournalName": "Adept Tinker's Journal (Full)",
       "emptyJournalId": "T4_JOURNAL_TOOLMAKER_EMPTY",
       "emptyJournalName": "Adept Tinker's Journal (Empty)",
-      "fameRequired": 1200,
-      "baseYield100": 11.5,
-      "maxYield150": 17.2,
+      "fameRequired": 3600,
+      "baseYield100": 16.0,
+      "maxYield150": 24.0,
       "returns": [
         {
           "item": "T4_PLANKS",
           "name": "Pine Planks",
           "icon": "T4_PLANKS.png",
-          "weight": 0.35,
-          "amount": 4.0
+          "weight": 0.4444,
+          "amount": 7.11
         },
         {
           "item": "T4_METALBAR",
           "name": "Steel Bar",
           "icon": "T4_METALBAR.png",
-          "weight": 0.35,
-          "amount": 4.0
+          "weight": 0.2222,
+          "amount": 3.56
         },
         {
           "item": "T4_CLOTH",
           "name": "Fine Cloth",
           "icon": "T4_CLOTH.png",
-          "weight": 0.3,
-          "amount": 3.4
+          "weight": 0.2222,
+          "amount": 3.56
+        },
+        {
+          "item": "T4_LEATHER",
+          "name": "Worked Leather",
+          "icon": "T4_LEATHER.png",
+          "weight": 0.1111,
+          "amount": 1.78
         }
       ],
       "fullIcon": "T4_JOURNAL_TOOLMAKER_FULL.png",
@@ -848,30 +1016,37 @@
       "fullJournalName": "Expert Tinker's Journal (Full)",
       "emptyJournalId": "T5_JOURNAL_TOOLMAKER_EMPTY",
       "emptyJournalName": "Expert Tinker's Journal (Empty)",
-      "fameRequired": 2400,
-      "baseYield100": 14.4,
-      "maxYield150": 21.6,
+      "fameRequired": 7200,
+      "baseYield100": 8.0,
+      "maxYield150": 12.0,
       "returns": [
         {
           "item": "T5_PLANKS",
           "name": "Cedar Planks",
           "icon": "T5_PLANKS.png",
-          "weight": 0.35,
-          "amount": 5.0
+          "weight": 0.4444,
+          "amount": 3.56
         },
         {
           "item": "T5_METALBAR",
           "name": "Titanium Steel Bar",
           "icon": "T5_METALBAR.png",
-          "weight": 0.35,
-          "amount": 5.0
+          "weight": 0.2222,
+          "amount": 1.78
         },
         {
           "item": "T5_CLOTH",
           "name": "Ornate Cloth",
           "icon": "T5_CLOTH.png",
-          "weight": 0.3,
-          "amount": 4.3
+          "weight": 0.2222,
+          "amount": 1.78
+        },
+        {
+          "item": "T5_LEATHER",
+          "name": "Cured Leather",
+          "icon": "T5_LEATHER.png",
+          "weight": 0.1111,
+          "amount": 0.89
         }
       ],
       "fullIcon": "T5_JOURNAL_TOOLMAKER_FULL.png",
@@ -889,30 +1064,37 @@
       "fullJournalName": "Master Tinker's Journal (Full)",
       "emptyJournalId": "T6_JOURNAL_TOOLMAKER_EMPTY",
       "emptyJournalName": "Master Tinker's Journal (Empty)",
-      "fameRequired": 4800,
-      "baseYield100": 17.6,
-      "maxYield150": 26.4,
+      "fameRequired": 14400,
+      "baseYield100": 5.3333,
+      "maxYield150": 8.0,
       "returns": [
         {
           "item": "T6_PLANKS",
           "name": "Bloodoak Planks",
           "icon": "T6_PLANKS.png",
-          "weight": 0.35,
-          "amount": 6.2
+          "weight": 0.4444,
+          "amount": 2.37
         },
         {
           "item": "T6_METALBAR",
           "name": "Runite Steel Bar",
           "icon": "T6_METALBAR.png",
-          "weight": 0.35,
-          "amount": 6.2
+          "weight": 0.2222,
+          "amount": 1.19
         },
         {
           "item": "T6_CLOTH",
           "name": "Lavish Cloth",
           "icon": "T6_CLOTH.png",
-          "weight": 0.3,
-          "amount": 5.3
+          "weight": 0.2222,
+          "amount": 1.19
+        },
+        {
+          "item": "T6_LEATHER",
+          "name": "Hardened Leather",
+          "icon": "T6_LEATHER.png",
+          "weight": 0.1111,
+          "amount": 0.59
         }
       ],
       "fullIcon": "T6_JOURNAL_TOOLMAKER_FULL.png",
@@ -930,30 +1112,37 @@
       "fullJournalName": "Grandmaster Tinker's Journal (Full)",
       "emptyJournalId": "T7_JOURNAL_TOOLMAKER_EMPTY",
       "emptyJournalName": "Grandmaster Tinker's Journal (Empty)",
-      "fameRequired": 9600,
-      "baseYield100": 20.8,
-      "maxYield150": 31.2,
+      "fameRequired": 28380,
+      "baseYield100": 4.4,
+      "maxYield150": 6.6,
       "returns": [
         {
           "item": "T7_PLANKS",
           "name": "Ashenbark Planks",
           "icon": "T7_PLANKS.png",
-          "weight": 0.35,
-          "amount": 7.3
+          "weight": 0.4444,
+          "amount": 1.96
         },
         {
           "item": "T7_METALBAR",
           "name": "Meteorite Steel Bar",
           "icon": "T7_METALBAR.png",
-          "weight": 0.35,
-          "amount": 7.3
+          "weight": 0.2222,
+          "amount": 0.98
         },
         {
           "item": "T7_CLOTH",
           "name": "Opulent Cloth",
           "icon": "T7_CLOTH.png",
-          "weight": 0.3,
-          "amount": 6.2
+          "weight": 0.2222,
+          "amount": 0.98
+        },
+        {
+          "item": "T7_LEATHER",
+          "name": "Reinforced Leather",
+          "icon": "T7_LEATHER.png",
+          "weight": 0.1111,
+          "amount": 0.49
         }
       ],
       "fullIcon": "T7_JOURNAL_TOOLMAKER_FULL.png",
@@ -971,30 +1160,37 @@
       "fullJournalName": "Elder Tinker's Journal (Full)",
       "emptyJournalId": "T8_JOURNAL_TOOLMAKER_EMPTY",
       "emptyJournalName": "Elder Tinker's Journal (Empty)",
-      "fameRequired": 19200,
-      "baseYield100": 24.0,
-      "maxYield150": 36.0,
+      "fameRequired": 58590,
+      "baseYield100": 4.2,
+      "maxYield150": 6.3,
       "returns": [
         {
           "item": "T8_PLANKS",
           "name": "Whitewood Planks",
           "icon": "T8_PLANKS.png",
-          "weight": 0.35,
-          "amount": 8.4
+          "weight": 0.4444,
+          "amount": 1.87
         },
         {
           "item": "T8_METALBAR",
           "name": "Adamantium Steel Bar",
           "icon": "T8_METALBAR.png",
-          "weight": 0.35,
-          "amount": 8.4
+          "weight": 0.2222,
+          "amount": 0.93
         },
         {
           "item": "T8_CLOTH",
           "name": "Baroque Cloth",
           "icon": "T8_CLOTH.png",
-          "weight": 0.3,
-          "amount": 7.2
+          "weight": 0.2222,
+          "amount": 0.93
+        },
+        {
+          "item": "T8_LEATHER",
+          "name": "Fortified Leather",
+          "icon": "T8_LEATHER.png",
+          "weight": 0.1111,
+          "amount": 0.47
         }
       ],
       "fullIcon": "T8_JOURNAL_TOOLMAKER_FULL.png",
@@ -1012,28 +1208,21 @@
       "fullJournalName": "Novice Lumberjack's Journal (Full)",
       "emptyJournalId": "T2_JOURNAL_WOOD_EMPTY",
       "emptyJournalName": "Novice Lumberjack's Journal (Empty)",
-      "fameRequired": 200,
-      "baseYield100": 24.0,
-      "maxYield150": 36.0,
+      "fameRequired": 450,
+      "baseYield100": 38.0,
+      "maxYield150": 57.0,
       "returns": [
         {
           "item": "T2_WOOD",
           "name": "Birch Logs",
           "icon": "T2_WOOD.png",
-          "weight": 0.75,
-          "amount": 18.0
-        },
-        {
-          "item": "T2_PLANKS",
-          "name": "Birch Planks",
-          "icon": "T2_PLANKS.png",
-          "weight": 0.25,
-          "amount": 6.0
+          "weight": 1.0,
+          "amount": 38.0
         }
       ],
       "fullIcon": "T2_JOURNAL_WOOD_FULL.png",
       "emptyIcon": "T2_JOURNAL_WOOD_EMPTY.png",
-      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes."
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes (returns 100% raw logs)."
     },
     {
       "id": "lumberjack_t3",
@@ -1046,28 +1235,21 @@
       "fullJournalName": "Journeyman Lumberjack's Journal (Full)",
       "emptyJournalId": "T3_JOURNAL_WOOD_EMPTY",
       "emptyJournalName": "Journeyman Lumberjack's Journal (Empty)",
-      "fameRequired": 450,
-      "baseYield100": 32.0,
-      "maxYield150": 48.0,
+      "fameRequired": 900,
+      "baseYield100": 60.0,
+      "maxYield150": 90.0,
       "returns": [
         {
           "item": "T3_WOOD",
           "name": "Chestnut Logs",
           "icon": "T3_WOOD.png",
-          "weight": 0.75,
-          "amount": 24.0
-        },
-        {
-          "item": "T3_PLANKS",
-          "name": "Chestnut Planks",
-          "icon": "T3_PLANKS.png",
-          "weight": 0.25,
-          "amount": 8.0
+          "weight": 1.0,
+          "amount": 60.0
         }
       ],
       "fullIcon": "T3_JOURNAL_WOOD_FULL.png",
       "emptyIcon": "T3_JOURNAL_WOOD_EMPTY.png",
-      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes."
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes (returns 100% raw logs)."
     },
     {
       "id": "lumberjack_t4",
@@ -1080,7 +1262,7 @@
       "fullJournalName": "Adept Lumberjack's Journal (Full)",
       "emptyJournalId": "T4_JOURNAL_WOOD_EMPTY",
       "emptyJournalName": "Adept Lumberjack's Journal (Empty)",
-      "fameRequired": 900,
+      "fameRequired": 1800,
       "baseYield100": 48.0,
       "maxYield150": 72.0,
       "returns": [
@@ -1088,20 +1270,13 @@
           "item": "T4_WOOD",
           "name": "Pine Logs",
           "icon": "T4_WOOD.png",
-          "weight": 0.75,
-          "amount": 36.0
-        },
-        {
-          "item": "T4_PLANKS",
-          "name": "Pine Planks",
-          "icon": "T4_PLANKS.png",
-          "weight": 0.25,
-          "amount": 12.0
+          "weight": 1.0,
+          "amount": 48.0
         }
       ],
       "fullIcon": "T4_JOURNAL_WOOD_FULL.png",
       "emptyIcon": "T4_JOURNAL_WOOD_EMPTY.png",
-      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes."
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes (returns 100% raw logs)."
     },
     {
       "id": "lumberjack_t5",
@@ -1114,28 +1289,21 @@
       "fullJournalName": "Expert Lumberjack's Journal (Full)",
       "emptyJournalId": "T5_JOURNAL_WOOD_EMPTY",
       "emptyJournalName": "Expert Lumberjack's Journal (Empty)",
-      "fameRequired": 1800,
-      "baseYield100": 64.0,
-      "maxYield150": 96.0,
+      "fameRequired": 3600,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
       "returns": [
         {
           "item": "T5_WOOD",
           "name": "Cedar Logs",
           "icon": "T5_WOOD.png",
-          "weight": 0.75,
-          "amount": 48.0
-        },
-        {
-          "item": "T5_PLANKS",
-          "name": "Cedar Planks",
-          "icon": "T5_PLANKS.png",
-          "weight": 0.25,
-          "amount": 16.0
+          "weight": 1.0,
+          "amount": 32.0
         }
       ],
       "fullIcon": "T5_JOURNAL_WOOD_FULL.png",
       "emptyIcon": "T5_JOURNAL_WOOD_EMPTY.png",
-      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes."
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes (returns 100% raw logs)."
     },
     {
       "id": "lumberjack_t6",
@@ -1148,28 +1316,21 @@
       "fullJournalName": "Master Lumberjack's Journal (Full)",
       "emptyJournalId": "T6_JOURNAL_WOOD_EMPTY",
       "emptyJournalName": "Master Lumberjack's Journal (Empty)",
-      "fameRequired": 3600,
-      "baseYield100": 80.0,
-      "maxYield150": 120.0,
+      "fameRequired": 7200,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
       "returns": [
         {
           "item": "T6_WOOD",
           "name": "Bloodoak Logs",
           "icon": "T6_WOOD.png",
-          "weight": 0.75,
-          "amount": 60.0
-        },
-        {
-          "item": "T6_PLANKS",
-          "name": "Bloodoak Planks",
-          "icon": "T6_PLANKS.png",
-          "weight": 0.25,
-          "amount": 20.0
+          "weight": 1.0,
+          "amount": 32.0
         }
       ],
       "fullIcon": "T6_JOURNAL_WOOD_FULL.png",
       "emptyIcon": "T6_JOURNAL_WOOD_EMPTY.png",
-      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes."
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes (returns 100% raw logs)."
     },
     {
       "id": "lumberjack_t7",
@@ -1182,28 +1343,21 @@
       "fullJournalName": "Grandmaster Lumberjack's Journal (Full)",
       "emptyJournalId": "T7_JOURNAL_WOOD_EMPTY",
       "emptyJournalName": "Grandmaster Lumberjack's Journal (Empty)",
-      "fameRequired": 7200,
-      "baseYield100": 96.0,
-      "maxYield150": 144.0,
+      "fameRequired": 14400,
+      "baseYield100": 38.4,
+      "maxYield150": 57.6,
       "returns": [
         {
           "item": "T7_WOOD",
           "name": "Ashenbark Logs",
           "icon": "T7_WOOD.png",
-          "weight": 0.75,
-          "amount": 72.0
-        },
-        {
-          "item": "T7_PLANKS",
-          "name": "Ashenbark Planks",
-          "icon": "T7_PLANKS.png",
-          "weight": 0.25,
-          "amount": 24.0
+          "weight": 1.0,
+          "amount": 38.4
         }
       ],
       "fullIcon": "T7_JOURNAL_WOOD_FULL.png",
       "emptyIcon": "T7_JOURNAL_WOOD_EMPTY.png",
-      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes."
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes (returns 100% raw logs)."
     },
     {
       "id": "lumberjack_t8",
@@ -1216,28 +1370,21 @@
       "fullJournalName": "Elder Lumberjack's Journal (Full)",
       "emptyJournalId": "T8_JOURNAL_WOOD_EMPTY",
       "emptyJournalName": "Elder Lumberjack's Journal (Empty)",
-      "fameRequired": 14400,
-      "baseYield100": 112.0,
-      "maxYield150": 168.0,
+      "fameRequired": 28800,
+      "baseYield100": 38.4,
+      "maxYield150": 57.6,
       "returns": [
         {
           "item": "T8_WOOD",
           "name": "Whitewood Logs",
           "icon": "T8_WOOD.png",
-          "weight": 0.75,
-          "amount": 84.0
-        },
-        {
-          "item": "T8_PLANKS",
-          "name": "Whitewood Planks",
-          "icon": "T8_PLANKS.png",
-          "weight": 0.25,
-          "amount": 28.0
+          "weight": 1.0,
+          "amount": 38.4
         }
       ],
       "fullIcon": "T8_JOURNAL_WOOD_FULL.png",
       "emptyIcon": "T8_JOURNAL_WOOD_EMPTY.png",
-      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes."
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes (returns 100% raw logs)."
     },
     {
       "id": "stonecutter_t2",
@@ -1250,28 +1397,21 @@
       "fullJournalName": "Novice Stonecutter's Journal (Full)",
       "emptyJournalId": "T2_JOURNAL_STONE_EMPTY",
       "emptyJournalName": "Novice Stonecutter's Journal (Empty)",
-      "fameRequired": 200,
-      "baseYield100": 24.0,
-      "maxYield150": 36.0,
+      "fameRequired": 450,
+      "baseYield100": 38.0,
+      "maxYield150": 57.0,
       "returns": [
         {
           "item": "T2_ROCK",
           "name": "Limestone",
           "icon": "T2_ROCK.png",
-          "weight": 0.75,
-          "amount": 18.0
-        },
-        {
-          "item": "T2_STONEBLOCK",
-          "name": "Limestone Block",
-          "icon": "T2_STONEBLOCK.png",
-          "weight": 0.25,
-          "amount": 6.0
+          "weight": 1.0,
+          "amount": 38.0
         }
       ],
       "fullIcon": "T2_JOURNAL_STONE_FULL.png",
       "emptyIcon": "T2_JOURNAL_STONE_EMPTY.png",
-      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes."
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes (returns 100% raw stone)."
     },
     {
       "id": "stonecutter_t3",
@@ -1284,28 +1424,21 @@
       "fullJournalName": "Journeyman Stonecutter's Journal (Full)",
       "emptyJournalId": "T3_JOURNAL_STONE_EMPTY",
       "emptyJournalName": "Journeyman Stonecutter's Journal (Empty)",
-      "fameRequired": 450,
-      "baseYield100": 32.0,
-      "maxYield150": 48.0,
+      "fameRequired": 900,
+      "baseYield100": 60.0,
+      "maxYield150": 90.0,
       "returns": [
         {
           "item": "T3_ROCK",
           "name": "Sandstone",
           "icon": "T3_ROCK.png",
-          "weight": 0.75,
-          "amount": 24.0
-        },
-        {
-          "item": "T3_STONEBLOCK",
-          "name": "Sandstone Block",
-          "icon": "T3_STONEBLOCK.png",
-          "weight": 0.25,
-          "amount": 8.0
+          "weight": 1.0,
+          "amount": 60.0
         }
       ],
       "fullIcon": "T3_JOURNAL_STONE_FULL.png",
       "emptyIcon": "T3_JOURNAL_STONE_EMPTY.png",
-      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes."
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes (returns 100% raw stone)."
     },
     {
       "id": "stonecutter_t4",
@@ -1318,7 +1451,7 @@
       "fullJournalName": "Adept Stonecutter's Journal (Full)",
       "emptyJournalId": "T4_JOURNAL_STONE_EMPTY",
       "emptyJournalName": "Adept Stonecutter's Journal (Empty)",
-      "fameRequired": 900,
+      "fameRequired": 1800,
       "baseYield100": 48.0,
       "maxYield150": 72.0,
       "returns": [
@@ -1326,20 +1459,13 @@
           "item": "T4_ROCK",
           "name": "Travertine",
           "icon": "T4_ROCK.png",
-          "weight": 0.75,
-          "amount": 36.0
-        },
-        {
-          "item": "T4_STONEBLOCK",
-          "name": "Travertine Block",
-          "icon": "T4_STONEBLOCK.png",
-          "weight": 0.25,
-          "amount": 12.0
+          "weight": 1.0,
+          "amount": 48.0
         }
       ],
       "fullIcon": "T4_JOURNAL_STONE_FULL.png",
       "emptyIcon": "T4_JOURNAL_STONE_EMPTY.png",
-      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes."
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes (returns 100% raw stone)."
     },
     {
       "id": "stonecutter_t5",
@@ -1352,28 +1478,21 @@
       "fullJournalName": "Expert Stonecutter's Journal (Full)",
       "emptyJournalId": "T5_JOURNAL_STONE_EMPTY",
       "emptyJournalName": "Expert Stonecutter's Journal (Empty)",
-      "fameRequired": 1800,
-      "baseYield100": 64.0,
-      "maxYield150": 96.0,
+      "fameRequired": 3600,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
       "returns": [
         {
           "item": "T5_ROCK",
           "name": "Granite",
           "icon": "T5_ROCK.png",
-          "weight": 0.75,
-          "amount": 48.0
-        },
-        {
-          "item": "T5_STONEBLOCK",
-          "name": "Granite Block",
-          "icon": "T5_STONEBLOCK.png",
-          "weight": 0.25,
-          "amount": 16.0
+          "weight": 1.0,
+          "amount": 32.0
         }
       ],
       "fullIcon": "T5_JOURNAL_STONE_FULL.png",
       "emptyIcon": "T5_JOURNAL_STONE_EMPTY.png",
-      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes."
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes (returns 100% raw stone)."
     },
     {
       "id": "stonecutter_t6",
@@ -1386,28 +1505,21 @@
       "fullJournalName": "Master Stonecutter's Journal (Full)",
       "emptyJournalId": "T6_JOURNAL_STONE_EMPTY",
       "emptyJournalName": "Master Stonecutter's Journal (Empty)",
-      "fameRequired": 3600,
-      "baseYield100": 80.0,
-      "maxYield150": 120.0,
+      "fameRequired": 7200,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
       "returns": [
         {
           "item": "T6_ROCK",
           "name": "Slate",
           "icon": "T6_ROCK.png",
-          "weight": 0.75,
-          "amount": 60.0
-        },
-        {
-          "item": "T6_STONEBLOCK",
-          "name": "Slate Block",
-          "icon": "T6_STONEBLOCK.png",
-          "weight": 0.25,
-          "amount": 20.0
+          "weight": 1.0,
+          "amount": 32.0
         }
       ],
       "fullIcon": "T6_JOURNAL_STONE_FULL.png",
       "emptyIcon": "T6_JOURNAL_STONE_EMPTY.png",
-      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes."
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes (returns 100% raw stone)."
     },
     {
       "id": "stonecutter_t7",
@@ -1420,28 +1532,21 @@
       "fullJournalName": "Grandmaster Stonecutter's Journal (Full)",
       "emptyJournalId": "T7_JOURNAL_STONE_EMPTY",
       "emptyJournalName": "Grandmaster Stonecutter's Journal (Empty)",
-      "fameRequired": 7200,
-      "baseYield100": 96.0,
-      "maxYield150": 144.0,
+      "fameRequired": 14400,
+      "baseYield100": 38.4,
+      "maxYield150": 57.6,
       "returns": [
         {
           "item": "T7_ROCK",
           "name": "Basalt",
           "icon": "T7_ROCK.png",
-          "weight": 0.75,
-          "amount": 72.0
-        },
-        {
-          "item": "T7_STONEBLOCK",
-          "name": "Basalt Block",
-          "icon": "T7_STONEBLOCK.png",
-          "weight": 0.25,
-          "amount": 24.0
+          "weight": 1.0,
+          "amount": 38.4
         }
       ],
       "fullIcon": "T7_JOURNAL_STONE_FULL.png",
       "emptyIcon": "T7_JOURNAL_STONE_EMPTY.png",
-      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes."
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes (returns 100% raw stone)."
     },
     {
       "id": "stonecutter_t8",
@@ -1454,28 +1559,21 @@
       "fullJournalName": "Elder Stonecutter's Journal (Full)",
       "emptyJournalId": "T8_JOURNAL_STONE_EMPTY",
       "emptyJournalName": "Elder Stonecutter's Journal (Empty)",
-      "fameRequired": 14400,
-      "baseYield100": 112.0,
-      "maxYield150": 168.0,
+      "fameRequired": 28800,
+      "baseYield100": 38.4,
+      "maxYield150": 57.6,
       "returns": [
         {
           "item": "T8_ROCK",
           "name": "Marble",
           "icon": "T8_ROCK.png",
-          "weight": 0.75,
-          "amount": 84.0
-        },
-        {
-          "item": "T8_STONEBLOCK",
-          "name": "Marble Block",
-          "icon": "T8_STONEBLOCK.png",
-          "weight": 0.25,
-          "amount": 28.0
+          "weight": 1.0,
+          "amount": 38.4
         }
       ],
       "fullIcon": "T8_JOURNAL_STONE_FULL.png",
       "emptyIcon": "T8_JOURNAL_STONE_EMPTY.png",
-      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes."
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes (returns 100% raw stone)."
     },
     {
       "id": "prospector_t2",
@@ -1488,28 +1586,21 @@
       "fullJournalName": "Novice Prospector's Journal (Full)",
       "emptyJournalId": "T2_JOURNAL_ORE_EMPTY",
       "emptyJournalName": "Novice Prospector's Journal (Empty)",
-      "fameRequired": 200,
-      "baseYield100": 24.0,
-      "maxYield150": 36.0,
+      "fameRequired": 450,
+      "baseYield100": 38.0,
+      "maxYield150": 57.0,
       "returns": [
         {
           "item": "T2_ORE",
           "name": "Copper Ore",
           "icon": "T2_ORE.png",
-          "weight": 0.75,
-          "amount": 18.0
-        },
-        {
-          "item": "T2_METALBAR",
-          "name": "Copper Bar",
-          "icon": "T2_METALBAR.png",
-          "weight": 0.25,
-          "amount": 6.0
+          "weight": 1.0,
+          "amount": 38.0
         }
       ],
       "fullIcon": "T2_JOURNAL_ORE_FULL.png",
       "emptyIcon": "T2_JOURNAL_ORE_EMPTY.png",
-      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes."
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes (returns 100% raw ore)."
     },
     {
       "id": "prospector_t3",
@@ -1522,28 +1613,21 @@
       "fullJournalName": "Journeyman Prospector's Journal (Full)",
       "emptyJournalId": "T3_JOURNAL_ORE_EMPTY",
       "emptyJournalName": "Journeyman Prospector's Journal (Empty)",
-      "fameRequired": 450,
-      "baseYield100": 32.0,
-      "maxYield150": 48.0,
+      "fameRequired": 900,
+      "baseYield100": 60.0,
+      "maxYield150": 90.0,
       "returns": [
         {
           "item": "T3_ORE",
           "name": "Tin Ore",
           "icon": "T3_ORE.png",
-          "weight": 0.75,
-          "amount": 24.0
-        },
-        {
-          "item": "T3_METALBAR",
-          "name": "Bronze Bar",
-          "icon": "T3_METALBAR.png",
-          "weight": 0.25,
-          "amount": 8.0
+          "weight": 1.0,
+          "amount": 60.0
         }
       ],
       "fullIcon": "T3_JOURNAL_ORE_FULL.png",
       "emptyIcon": "T3_JOURNAL_ORE_EMPTY.png",
-      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes."
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes (returns 100% raw ore)."
     },
     {
       "id": "prospector_t4",
@@ -1556,7 +1640,7 @@
       "fullJournalName": "Adept Prospector's Journal (Full)",
       "emptyJournalId": "T4_JOURNAL_ORE_EMPTY",
       "emptyJournalName": "Adept Prospector's Journal (Empty)",
-      "fameRequired": 900,
+      "fameRequired": 1800,
       "baseYield100": 48.0,
       "maxYield150": 72.0,
       "returns": [
@@ -1564,20 +1648,13 @@
           "item": "T4_ORE",
           "name": "Iron Ore",
           "icon": "T4_ORE.png",
-          "weight": 0.75,
-          "amount": 36.0
-        },
-        {
-          "item": "T4_METALBAR",
-          "name": "Steel Bar",
-          "icon": "T4_METALBAR.png",
-          "weight": 0.25,
-          "amount": 12.0
+          "weight": 1.0,
+          "amount": 48.0
         }
       ],
       "fullIcon": "T4_JOURNAL_ORE_FULL.png",
       "emptyIcon": "T4_JOURNAL_ORE_EMPTY.png",
-      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes."
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes (returns 100% raw ore)."
     },
     {
       "id": "prospector_t5",
@@ -1590,28 +1667,21 @@
       "fullJournalName": "Expert Prospector's Journal (Full)",
       "emptyJournalId": "T5_JOURNAL_ORE_EMPTY",
       "emptyJournalName": "Expert Prospector's Journal (Empty)",
-      "fameRequired": 1800,
-      "baseYield100": 64.0,
-      "maxYield150": 96.0,
+      "fameRequired": 3600,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
       "returns": [
         {
           "item": "T5_ORE",
           "name": "Titanium Ore",
           "icon": "T5_ORE.png",
-          "weight": 0.75,
-          "amount": 48.0
-        },
-        {
-          "item": "T5_METALBAR",
-          "name": "Titanium Steel Bar",
-          "icon": "T5_METALBAR.png",
-          "weight": 0.25,
-          "amount": 16.0
+          "weight": 1.0,
+          "amount": 32.0
         }
       ],
       "fullIcon": "T5_JOURNAL_ORE_FULL.png",
       "emptyIcon": "T5_JOURNAL_ORE_EMPTY.png",
-      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes."
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes (returns 100% raw ore)."
     },
     {
       "id": "prospector_t6",
@@ -1624,28 +1694,21 @@
       "fullJournalName": "Master Prospector's Journal (Full)",
       "emptyJournalId": "T6_JOURNAL_ORE_EMPTY",
       "emptyJournalName": "Master Prospector's Journal (Empty)",
-      "fameRequired": 3600,
-      "baseYield100": 80.0,
-      "maxYield150": 120.0,
+      "fameRequired": 7200,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
       "returns": [
         {
           "item": "T6_ORE",
           "name": "Runite Ore",
           "icon": "T6_ORE.png",
-          "weight": 0.75,
-          "amount": 60.0
-        },
-        {
-          "item": "T6_METALBAR",
-          "name": "Runite Steel Bar",
-          "icon": "T6_METALBAR.png",
-          "weight": 0.25,
-          "amount": 20.0
+          "weight": 1.0,
+          "amount": 32.0
         }
       ],
       "fullIcon": "T6_JOURNAL_ORE_FULL.png",
       "emptyIcon": "T6_JOURNAL_ORE_EMPTY.png",
-      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes."
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes (returns 100% raw ore)."
     },
     {
       "id": "prospector_t7",
@@ -1658,28 +1721,21 @@
       "fullJournalName": "Grandmaster Prospector's Journal (Full)",
       "emptyJournalId": "T7_JOURNAL_ORE_EMPTY",
       "emptyJournalName": "Grandmaster Prospector's Journal (Empty)",
-      "fameRequired": 7200,
-      "baseYield100": 96.0,
-      "maxYield150": 144.0,
+      "fameRequired": 14400,
+      "baseYield100": 38.4,
+      "maxYield150": 57.6,
       "returns": [
         {
           "item": "T7_ORE",
           "name": "Meteorite Ore",
           "icon": "T7_ORE.png",
-          "weight": 0.75,
-          "amount": 72.0
-        },
-        {
-          "item": "T7_METALBAR",
-          "name": "Meteorite Steel Bar",
-          "icon": "T7_METALBAR.png",
-          "weight": 0.25,
-          "amount": 24.0
+          "weight": 1.0,
+          "amount": 38.4
         }
       ],
       "fullIcon": "T7_JOURNAL_ORE_FULL.png",
       "emptyIcon": "T7_JOURNAL_ORE_EMPTY.png",
-      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes."
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes (returns 100% raw ore)."
     },
     {
       "id": "prospector_t8",
@@ -1692,28 +1748,21 @@
       "fullJournalName": "Elder Prospector's Journal (Full)",
       "emptyJournalId": "T8_JOURNAL_ORE_EMPTY",
       "emptyJournalName": "Elder Prospector's Journal (Empty)",
-      "fameRequired": 14400,
-      "baseYield100": 112.0,
-      "maxYield150": 168.0,
+      "fameRequired": 28800,
+      "baseYield100": 38.4,
+      "maxYield150": 57.6,
       "returns": [
         {
           "item": "T8_ORE",
           "name": "Adamantium Ore",
           "icon": "T8_ORE.png",
-          "weight": 0.75,
-          "amount": 84.0
-        },
-        {
-          "item": "T8_METALBAR",
-          "name": "Adamantium Steel Bar",
-          "icon": "T8_METALBAR.png",
-          "weight": 0.25,
-          "amount": 28.0
+          "weight": 1.0,
+          "amount": 38.4
         }
       ],
       "fullIcon": "T8_JOURNAL_ORE_FULL.png",
       "emptyIcon": "T8_JOURNAL_ORE_EMPTY.png",
-      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes."
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes (returns 100% raw ore)."
     },
     {
       "id": "cropper_t2",
@@ -1726,28 +1775,21 @@
       "fullJournalName": "Novice Cropper's Journal (Full)",
       "emptyJournalId": "T2_JOURNAL_FIBER_EMPTY",
       "emptyJournalName": "Novice Cropper's Journal (Empty)",
-      "fameRequired": 200,
-      "baseYield100": 24.0,
-      "maxYield150": 36.0,
+      "fameRequired": 450,
+      "baseYield100": 38.0,
+      "maxYield150": 57.0,
       "returns": [
         {
           "item": "T2_FIBER",
           "name": "Cotton",
           "icon": "T2_FIBER.png",
-          "weight": 0.75,
-          "amount": 18.0
-        },
-        {
-          "item": "T2_CLOTH",
-          "name": "Simple Cloth",
-          "icon": "T2_CLOTH.png",
-          "weight": 0.25,
-          "amount": 6.0
+          "weight": 1.0,
+          "amount": 38.0
         }
       ],
       "fullIcon": "T2_JOURNAL_FIBER_FULL.png",
       "emptyIcon": "T2_JOURNAL_FIBER_EMPTY.png",
-      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes."
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes (returns 100% raw fiber)."
     },
     {
       "id": "cropper_t3",
@@ -1760,28 +1802,21 @@
       "fullJournalName": "Journeyman Cropper's Journal (Full)",
       "emptyJournalId": "T3_JOURNAL_FIBER_EMPTY",
       "emptyJournalName": "Journeyman Cropper's Journal (Empty)",
-      "fameRequired": 450,
-      "baseYield100": 32.0,
-      "maxYield150": 48.0,
+      "fameRequired": 900,
+      "baseYield100": 60.0,
+      "maxYield150": 90.0,
       "returns": [
         {
           "item": "T3_FIBER",
           "name": "Flax",
           "icon": "T3_FIBER.png",
-          "weight": 0.75,
-          "amount": 24.0
-        },
-        {
-          "item": "T3_CLOTH",
-          "name": "Neat Cloth",
-          "icon": "T3_CLOTH.png",
-          "weight": 0.25,
-          "amount": 8.0
+          "weight": 1.0,
+          "amount": 60.0
         }
       ],
       "fullIcon": "T3_JOURNAL_FIBER_FULL.png",
       "emptyIcon": "T3_JOURNAL_FIBER_EMPTY.png",
-      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes."
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes (returns 100% raw fiber)."
     },
     {
       "id": "cropper_t4",
@@ -1794,7 +1829,7 @@
       "fullJournalName": "Adept Cropper's Journal (Full)",
       "emptyJournalId": "T4_JOURNAL_FIBER_EMPTY",
       "emptyJournalName": "Adept Cropper's Journal (Empty)",
-      "fameRequired": 900,
+      "fameRequired": 1800,
       "baseYield100": 48.0,
       "maxYield150": 72.0,
       "returns": [
@@ -1802,20 +1837,13 @@
           "item": "T4_FIBER",
           "name": "Hemp",
           "icon": "T4_FIBER.png",
-          "weight": 0.75,
-          "amount": 36.0
-        },
-        {
-          "item": "T4_CLOTH",
-          "name": "Fine Cloth",
-          "icon": "T4_CLOTH.png",
-          "weight": 0.25,
-          "amount": 12.0
+          "weight": 1.0,
+          "amount": 48.0
         }
       ],
       "fullIcon": "T4_JOURNAL_FIBER_FULL.png",
       "emptyIcon": "T4_JOURNAL_FIBER_EMPTY.png",
-      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes."
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes (returns 100% raw fiber)."
     },
     {
       "id": "cropper_t5",
@@ -1828,28 +1856,21 @@
       "fullJournalName": "Expert Cropper's Journal (Full)",
       "emptyJournalId": "T5_JOURNAL_FIBER_EMPTY",
       "emptyJournalName": "Expert Cropper's Journal (Empty)",
-      "fameRequired": 1800,
-      "baseYield100": 64.0,
-      "maxYield150": 96.0,
+      "fameRequired": 3600,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
       "returns": [
         {
           "item": "T5_FIBER",
           "name": "Skyflower",
           "icon": "T5_FIBER.png",
-          "weight": 0.75,
-          "amount": 48.0
-        },
-        {
-          "item": "T5_CLOTH",
-          "name": "Ornate Cloth",
-          "icon": "T5_CLOTH.png",
-          "weight": 0.25,
-          "amount": 16.0
+          "weight": 1.0,
+          "amount": 32.0
         }
       ],
       "fullIcon": "T5_JOURNAL_FIBER_FULL.png",
       "emptyIcon": "T5_JOURNAL_FIBER_EMPTY.png",
-      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes."
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes (returns 100% raw fiber)."
     },
     {
       "id": "cropper_t6",
@@ -1862,28 +1883,21 @@
       "fullJournalName": "Master Cropper's Journal (Full)",
       "emptyJournalId": "T6_JOURNAL_FIBER_EMPTY",
       "emptyJournalName": "Master Cropper's Journal (Empty)",
-      "fameRequired": 3600,
-      "baseYield100": 80.0,
-      "maxYield150": 120.0,
+      "fameRequired": 7200,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
       "returns": [
         {
           "item": "T6_FIBER",
           "name": "Amberleaf Cotton",
           "icon": "T6_FIBER.png",
-          "weight": 0.75,
-          "amount": 60.0
-        },
-        {
-          "item": "T6_CLOTH",
-          "name": "Lavish Cloth",
-          "icon": "T6_CLOTH.png",
-          "weight": 0.25,
-          "amount": 20.0
+          "weight": 1.0,
+          "amount": 32.0
         }
       ],
       "fullIcon": "T6_JOURNAL_FIBER_FULL.png",
       "emptyIcon": "T6_JOURNAL_FIBER_EMPTY.png",
-      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes."
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes (returns 100% raw fiber)."
     },
     {
       "id": "cropper_t7",
@@ -1896,28 +1910,21 @@
       "fullJournalName": "Grandmaster Cropper's Journal (Full)",
       "emptyJournalId": "T7_JOURNAL_FIBER_EMPTY",
       "emptyJournalName": "Grandmaster Cropper's Journal (Empty)",
-      "fameRequired": 7200,
-      "baseYield100": 96.0,
-      "maxYield150": 144.0,
+      "fameRequired": 14400,
+      "baseYield100": 38.4,
+      "maxYield150": 57.6,
       "returns": [
         {
           "item": "T7_FIBER",
           "name": "Sunflax",
           "icon": "T7_FIBER.png",
-          "weight": 0.75,
-          "amount": 72.0
-        },
-        {
-          "item": "T7_CLOTH",
-          "name": "Opulent Cloth",
-          "icon": "T7_CLOTH.png",
-          "weight": 0.25,
-          "amount": 24.0
+          "weight": 1.0,
+          "amount": 38.4
         }
       ],
       "fullIcon": "T7_JOURNAL_FIBER_FULL.png",
       "emptyIcon": "T7_JOURNAL_FIBER_EMPTY.png",
-      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes."
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes (returns 100% raw fiber)."
     },
     {
       "id": "cropper_t8",
@@ -1930,28 +1937,21 @@
       "fullJournalName": "Elder Cropper's Journal (Full)",
       "emptyJournalId": "T8_JOURNAL_FIBER_EMPTY",
       "emptyJournalName": "Elder Cropper's Journal (Empty)",
-      "fameRequired": 14400,
-      "baseYield100": 112.0,
-      "maxYield150": 168.0,
+      "fameRequired": 28800,
+      "baseYield100": 38.4,
+      "maxYield150": 57.6,
       "returns": [
         {
           "item": "T8_FIBER",
           "name": "Ghost Hemp",
           "icon": "T8_FIBER.png",
-          "weight": 0.75,
-          "amount": 84.0
-        },
-        {
-          "item": "T8_CLOTH",
-          "name": "Baroque Cloth",
-          "icon": "T8_CLOTH.png",
-          "weight": 0.25,
-          "amount": 28.0
+          "weight": 1.0,
+          "amount": 38.4
         }
       ],
       "fullIcon": "T8_JOURNAL_FIBER_FULL.png",
       "emptyIcon": "T8_JOURNAL_FIBER_EMPTY.png",
-      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes."
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes (returns 100% raw fiber)."
     },
     {
       "id": "gamekeeper_t2",
@@ -1964,28 +1964,21 @@
       "fullJournalName": "Novice Gamekeeper's Journal (Full)",
       "emptyJournalId": "T2_JOURNAL_HIDE_EMPTY",
       "emptyJournalName": "Novice Gamekeeper's Journal (Empty)",
-      "fameRequired": 200,
-      "baseYield100": 24.0,
-      "maxYield150": 36.0,
+      "fameRequired": 450,
+      "baseYield100": 38.0,
+      "maxYield150": 57.0,
       "returns": [
         {
           "item": "T2_HIDE",
           "name": "Rugged Hide",
           "icon": "T2_HIDE.png",
-          "weight": 0.75,
-          "amount": 18.0
-        },
-        {
-          "item": "T2_LEATHER",
-          "name": "Stiff Leather",
-          "icon": "T2_LEATHER.png",
-          "weight": 0.25,
-          "amount": 6.0
+          "weight": 1.0,
+          "amount": 38.0
         }
       ],
       "fullIcon": "T2_JOURNAL_HIDE_FULL.png",
       "emptyIcon": "T2_JOURNAL_HIDE_EMPTY.png",
-      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes."
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes (returns 100% raw hide)."
     },
     {
       "id": "gamekeeper_t3",
@@ -1998,28 +1991,21 @@
       "fullJournalName": "Journeyman Gamekeeper's Journal (Full)",
       "emptyJournalId": "T3_JOURNAL_HIDE_EMPTY",
       "emptyJournalName": "Journeyman Gamekeeper's Journal (Empty)",
-      "fameRequired": 450,
-      "baseYield100": 32.0,
-      "maxYield150": 48.0,
+      "fameRequired": 900,
+      "baseYield100": 60.0,
+      "maxYield150": 90.0,
       "returns": [
         {
           "item": "T3_HIDE",
           "name": "Thin Hide",
           "icon": "T3_HIDE.png",
-          "weight": 0.75,
-          "amount": 24.0
-        },
-        {
-          "item": "T3_LEATHER",
-          "name": "Thick Leather",
-          "icon": "T3_LEATHER.png",
-          "weight": 0.25,
-          "amount": 8.0
+          "weight": 1.0,
+          "amount": 60.0
         }
       ],
       "fullIcon": "T3_JOURNAL_HIDE_FULL.png",
       "emptyIcon": "T3_JOURNAL_HIDE_EMPTY.png",
-      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes."
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes (returns 100% raw hide)."
     },
     {
       "id": "gamekeeper_t4",
@@ -2032,7 +2018,7 @@
       "fullJournalName": "Adept Gamekeeper's Journal (Full)",
       "emptyJournalId": "T4_JOURNAL_HIDE_EMPTY",
       "emptyJournalName": "Adept Gamekeeper's Journal (Empty)",
-      "fameRequired": 900,
+      "fameRequired": 1800,
       "baseYield100": 48.0,
       "maxYield150": 72.0,
       "returns": [
@@ -2040,20 +2026,13 @@
           "item": "T4_HIDE",
           "name": "Medium Hide",
           "icon": "T4_HIDE.png",
-          "weight": 0.75,
-          "amount": 36.0
-        },
-        {
-          "item": "T4_LEATHER",
-          "name": "Worked Leather",
-          "icon": "T4_LEATHER.png",
-          "weight": 0.25,
-          "amount": 12.0
+          "weight": 1.0,
+          "amount": 48.0
         }
       ],
       "fullIcon": "T4_JOURNAL_HIDE_FULL.png",
       "emptyIcon": "T4_JOURNAL_HIDE_EMPTY.png",
-      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes."
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes (returns 100% raw hide)."
     },
     {
       "id": "gamekeeper_t5",
@@ -2066,28 +2045,21 @@
       "fullJournalName": "Expert Gamekeeper's Journal (Full)",
       "emptyJournalId": "T5_JOURNAL_HIDE_EMPTY",
       "emptyJournalName": "Expert Gamekeeper's Journal (Empty)",
-      "fameRequired": 1800,
-      "baseYield100": 64.0,
-      "maxYield150": 96.0,
+      "fameRequired": 3600,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
       "returns": [
         {
           "item": "T5_HIDE",
           "name": "Heavy Hide",
           "icon": "T5_HIDE.png",
-          "weight": 0.75,
-          "amount": 48.0
-        },
-        {
-          "item": "T5_LEATHER",
-          "name": "Cured Leather",
-          "icon": "T5_LEATHER.png",
-          "weight": 0.25,
-          "amount": 16.0
+          "weight": 1.0,
+          "amount": 32.0
         }
       ],
       "fullIcon": "T5_JOURNAL_HIDE_FULL.png",
       "emptyIcon": "T5_JOURNAL_HIDE_EMPTY.png",
-      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes."
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes (returns 100% raw hide)."
     },
     {
       "id": "gamekeeper_t6",
@@ -2100,28 +2072,21 @@
       "fullJournalName": "Master Gamekeeper's Journal (Full)",
       "emptyJournalId": "T6_JOURNAL_HIDE_EMPTY",
       "emptyJournalName": "Master Gamekeeper's Journal (Empty)",
-      "fameRequired": 3600,
-      "baseYield100": 80.0,
-      "maxYield150": 120.0,
+      "fameRequired": 7200,
+      "baseYield100": 32.0,
+      "maxYield150": 48.0,
       "returns": [
         {
           "item": "T6_HIDE",
           "name": "Robust Hide",
           "icon": "T6_HIDE.png",
-          "weight": 0.75,
-          "amount": 60.0
-        },
-        {
-          "item": "T6_LEATHER",
-          "name": "Hardened Leather",
-          "icon": "T6_LEATHER.png",
-          "weight": 0.25,
-          "amount": 20.0
+          "weight": 1.0,
+          "amount": 32.0
         }
       ],
       "fullIcon": "T6_JOURNAL_HIDE_FULL.png",
       "emptyIcon": "T6_JOURNAL_HIDE_EMPTY.png",
-      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes."
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes (returns 100% raw hide)."
     },
     {
       "id": "gamekeeper_t7",
@@ -2134,28 +2099,21 @@
       "fullJournalName": "Grandmaster Gamekeeper's Journal (Full)",
       "emptyJournalId": "T7_JOURNAL_HIDE_EMPTY",
       "emptyJournalName": "Grandmaster Gamekeeper's Journal (Empty)",
-      "fameRequired": 7200,
-      "baseYield100": 96.0,
-      "maxYield150": 144.0,
+      "fameRequired": 14400,
+      "baseYield100": 38.4,
+      "maxYield150": 57.6,
       "returns": [
         {
           "item": "T7_HIDE",
           "name": "Thick Hide",
           "icon": "T7_HIDE.png",
-          "weight": 0.75,
-          "amount": 72.0
-        },
-        {
-          "item": "T7_LEATHER",
-          "name": "Reinforced Leather",
-          "icon": "T7_LEATHER.png",
-          "weight": 0.25,
-          "amount": 24.0
+          "weight": 1.0,
+          "amount": 38.4
         }
       ],
       "fullIcon": "T7_JOURNAL_HIDE_FULL.png",
       "emptyIcon": "T7_JOURNAL_HIDE_EMPTY.png",
-      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes."
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes (returns 100% raw hide)."
     },
     {
       "id": "gamekeeper_t8",
@@ -2168,28 +2126,21 @@
       "fullJournalName": "Elder Gamekeeper's Journal (Full)",
       "emptyJournalId": "T8_JOURNAL_HIDE_EMPTY",
       "emptyJournalName": "Elder Gamekeeper's Journal (Empty)",
-      "fameRequired": 14400,
-      "baseYield100": 112.0,
-      "maxYield150": 168.0,
+      "fameRequired": 28800,
+      "baseYield100": 38.4,
+      "maxYield150": 57.6,
       "returns": [
         {
           "item": "T8_HIDE",
           "name": "Resilient Hide",
           "icon": "T8_HIDE.png",
-          "weight": 0.75,
-          "amount": 84.0
-        },
-        {
-          "item": "T8_LEATHER",
-          "name": "Fortified Leather",
-          "icon": "T8_LEATHER.png",
-          "weight": 0.25,
-          "amount": 28.0
+          "weight": 1.0,
+          "amount": 38.4
         }
       ],
       "fullIcon": "T8_JOURNAL_HIDE_FULL.png",
       "emptyIcon": "T8_JOURNAL_HIDE_EMPTY.png",
-      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes."
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes (returns 100% raw hide)."
     },
     {
       "id": "fisherman_t2",
@@ -2202,23 +2153,23 @@
       "fullJournalName": "Novice Fisherman's Journal (Full)",
       "emptyJournalId": "T2_JOURNAL_FISHING_EMPTY",
       "emptyJournalName": "Novice Fisherman's Journal (Empty)",
-      "fameRequired": 200,
-      "baseYield100": 24.0,
-      "maxYield150": 36.0,
+      "fameRequired": 720,
+      "baseYield100": 10.6,
+      "maxYield150": 15.9,
       "returns": [
         {
-          "item": "T2_FISH_FRESHWATER",
-          "name": "T2_FISH_FRESHWATER",
-          "icon": "T2_FISH_FRESHWATER.png",
+          "item": "T2_FISH_FRESHWATER_ALL_COMMON",
+          "name": "Striped Carp",
+          "icon": "T2_FISH_FRESHWATER_ALL_COMMON.png",
           "weight": 0.5,
-          "amount": 12.0
+          "amount": 5.3
         },
         {
-          "item": "T2_FISH_SALTWATER",
-          "name": "T2_FISH_SALTWATER",
-          "icon": "T2_FISH_SALTWATER.png",
+          "item": "T2_FISH_SALTWATER_ALL_COMMON",
+          "name": "Striped Mackerel",
+          "icon": "T2_FISH_SALTWATER_ALL_COMMON.png",
           "weight": 0.5,
-          "amount": 12.0
+          "amount": 5.3
         }
       ],
       "fullIcon": "T2_JOURNAL_FISHING_FULL.png",
@@ -2236,23 +2187,23 @@
       "fullJournalName": "Journeyman Fisherman's Journal (Full)",
       "emptyJournalId": "T3_JOURNAL_FISHING_EMPTY",
       "emptyJournalName": "Journeyman Fisherman's Journal (Empty)",
-      "fameRequired": 450,
-      "baseYield100": 32.0,
-      "maxYield150": 48.0,
+      "fameRequired": 1360,
+      "baseYield100": 9.976,
+      "maxYield150": 15.0,
       "returns": [
         {
-          "item": "T3_FISH_FRESHWATER",
-          "name": "T3_FISH_FRESHWATER",
-          "icon": "T3_FISH_FRESHWATER.png",
+          "item": "T3_FISH_FRESHWATER_ALL_COMMON",
+          "name": "Albion Perch",
+          "icon": "T3_FISH_FRESHWATER_ALL_COMMON.png",
           "weight": 0.5,
-          "amount": 16.0
+          "amount": 4.99
         },
         {
-          "item": "T3_FISH_SALTWATER",
-          "name": "T3_FISH_SALTWATER",
-          "icon": "T3_FISH_SALTWATER.png",
+          "item": "T3_FISH_SALTWATER_ALL_COMMON",
+          "name": "Flatshore Plaice",
+          "icon": "T3_FISH_SALTWATER_ALL_COMMON.png",
           "weight": 0.5,
-          "amount": 16.0
+          "amount": 4.99
         }
       ],
       "fullIcon": "T3_JOURNAL_FISHING_FULL.png",
@@ -2270,23 +2221,23 @@
       "fullJournalName": "Adept Fisherman's Journal (Full)",
       "emptyJournalId": "T4_JOURNAL_FISHING_EMPTY",
       "emptyJournalName": "Adept Fisherman's Journal (Empty)",
-      "fameRequired": 900,
-      "baseYield100": 48.0,
-      "maxYield150": 72.0,
+      "fameRequired": 2223,
+      "baseYield100": 13.9112,
+      "maxYield150": 20.9,
       "returns": [
         {
-          "item": "T4_FISH_FRESHWATER",
-          "name": "T4_FISH_FRESHWATER",
-          "icon": "T4_FISH_FRESHWATER.png",
+          "item": "T4_FISH_FRESHWATER_ALL_COMMON",
+          "name": "Bluescale Pike",
+          "icon": "T4_FISH_FRESHWATER_ALL_COMMON.png",
           "weight": 0.5,
-          "amount": 24.0
+          "amount": 6.96
         },
         {
-          "item": "T4_FISH_SALTWATER",
-          "name": "T4_FISH_SALTWATER",
-          "icon": "T4_FISH_SALTWATER.png",
+          "item": "T4_FISH_SALTWATER_ALL_COMMON",
+          "name": "Bluescale Cod",
+          "icon": "T4_FISH_SALTWATER_ALL_COMMON.png",
           "weight": 0.5,
-          "amount": 24.0
+          "amount": 6.96
         }
       ],
       "fullIcon": "T4_JOURNAL_FISHING_FULL.png",
@@ -2304,23 +2255,23 @@
       "fullJournalName": "Expert Fisherman's Journal (Full)",
       "emptyJournalId": "T5_JOURNAL_FISHING_EMPTY",
       "emptyJournalName": "Expert Fisherman's Journal (Empty)",
-      "fameRequired": 1800,
-      "baseYield100": 64.0,
-      "maxYield150": 96.0,
+      "fameRequired": 3680,
+      "baseYield100": 17.0301,
+      "maxYield150": 25.5,
       "returns": [
         {
-          "item": "T5_FISH_FRESHWATER",
-          "name": "T5_FISH_FRESHWATER",
-          "icon": "T5_FISH_FRESHWATER.png",
+          "item": "T5_FISH_FRESHWATER_ALL_COMMON",
+          "name": "Spotted Trout",
+          "icon": "T5_FISH_FRESHWATER_ALL_COMMON.png",
           "weight": 0.5,
-          "amount": 32.0
+          "amount": 8.52
         },
         {
-          "item": "T5_FISH_SALTWATER",
-          "name": "T5_FISH_SALTWATER",
-          "icon": "T5_FISH_SALTWATER.png",
+          "item": "T5_FISH_SALTWATER_ALL_COMMON",
+          "name": "Spotted Wolffish",
+          "icon": "T5_FISH_SALTWATER_ALL_COMMON.png",
           "weight": 0.5,
-          "amount": 32.0
+          "amount": 8.52
         }
       ],
       "fullIcon": "T5_JOURNAL_FISHING_FULL.png",
@@ -2338,23 +2289,23 @@
       "fullJournalName": "Master Fisherman's Journal (Full)",
       "emptyJournalId": "T6_JOURNAL_FISHING_EMPTY",
       "emptyJournalName": "Master Fisherman's Journal (Empty)",
-      "fameRequired": 3600,
-      "baseYield100": 80.0,
-      "maxYield150": 120.0,
+      "fameRequired": 4880,
+      "baseYield100": 20.0528,
+      "maxYield150": 30.1,
       "returns": [
         {
-          "item": "T6_FISH_FRESHWATER",
-          "name": "T6_FISH_FRESHWATER",
-          "icon": "T6_FISH_FRESHWATER.png",
+          "item": "T6_FISH_FRESHWATER_ALL_COMMON",
+          "name": "Brightscale Zander",
+          "icon": "T6_FISH_FRESHWATER_ALL_COMMON.png",
           "weight": 0.5,
-          "amount": 40.0
+          "amount": 10.03
         },
         {
-          "item": "T6_FISH_SALTWATER",
-          "name": "T6_FISH_SALTWATER",
-          "icon": "T6_FISH_SALTWATER.png",
+          "item": "T6_FISH_SALTWATER_ALL_COMMON",
+          "name": "Strongfin Salmon",
+          "icon": "T6_FISH_SALTWATER_ALL_COMMON.png",
           "weight": 0.5,
-          "amount": 40.0
+          "amount": 10.03
         }
       ],
       "fullIcon": "T6_JOURNAL_FISHING_FULL.png",
@@ -2372,23 +2323,23 @@
       "fullJournalName": "Grandmaster Fisherman's Journal (Full)",
       "emptyJournalId": "T7_JOURNAL_FISHING_EMPTY",
       "emptyJournalName": "Grandmaster Fisherman's Journal (Empty)",
-      "fameRequired": 7200,
-      "baseYield100": 96.0,
-      "maxYield150": 144.0,
+      "fameRequired": 6640,
+      "baseYield100": 22.3876,
+      "maxYield150": 33.6,
       "returns": [
         {
-          "item": "T7_FISH_FRESHWATER",
-          "name": "T7_FISH_FRESHWATER",
-          "icon": "T7_FISH_FRESHWATER.png",
+          "item": "T7_FISH_FRESHWATER_ALL_COMMON",
+          "name": "Danglemouth Catfish",
+          "icon": "T7_FISH_FRESHWATER_ALL_COMMON.png",
           "weight": 0.5,
-          "amount": 48.0
+          "amount": 11.19
         },
         {
-          "item": "T7_FISH_SALTWATER",
-          "name": "T7_FISH_SALTWATER",
-          "icon": "T7_FISH_SALTWATER.png",
+          "item": "T7_FISH_SALTWATER_ALL_COMMON",
+          "name": "Bluefin Tuna",
+          "icon": "T7_FISH_SALTWATER_ALL_COMMON.png",
           "weight": 0.5,
-          "amount": 48.0
+          "amount": 11.19
         }
       ],
       "fullIcon": "T7_JOURNAL_FISHING_FULL.png",
@@ -2406,23 +2357,23 @@
       "fullJournalName": "Elder Fisherman's Journal (Full)",
       "emptyJournalId": "T8_JOURNAL_FISHING_EMPTY",
       "emptyJournalName": "Elder Fisherman's Journal (Empty)",
-      "fameRequired": 14400,
-      "baseYield100": 112.0,
-      "maxYield150": 168.0,
+      "fameRequired": 8320,
+      "baseYield100": 25.119,
+      "maxYield150": 37.7,
       "returns": [
         {
-          "item": "T8_FISH_FRESHWATER",
-          "name": "T8_FISH_FRESHWATER",
-          "icon": "T8_FISH_FRESHWATER.png",
+          "item": "T8_FISH_FRESHWATER_ALL_COMMON",
+          "name": "River Sturgeon",
+          "icon": "T8_FISH_FRESHWATER_ALL_COMMON.png",
           "weight": 0.5,
-          "amount": 56.0
+          "amount": 12.56
         },
         {
-          "item": "T8_FISH_SALTWATER",
-          "name": "T8_FISH_SALTWATER",
-          "icon": "T8_FISH_SALTWATER.png",
+          "item": "T8_FISH_SALTWATER_ALL_COMMON",
+          "name": "Steelscale Swordfish",
+          "icon": "T8_FISH_SALTWATER_ALL_COMMON.png",
           "weight": 0.5,
-          "amount": 56.0
+          "amount": 12.56
         }
       ],
       "fullIcon": "T8_JOURNAL_FISHING_FULL.png",
@@ -2440,21 +2391,21 @@
       "fullJournalName": "Novice Mercenary's Journal (Full)",
       "emptyJournalId": "T2_JOURNAL_MERCENARY_EMPTY",
       "emptyJournalName": "Novice Mercenary's Journal (Empty)",
-      "fameRequired": 500,
-      "baseYield100": 1000,
-      "maxYield150": 1500.0,
+      "fameRequired": 1412,
+      "baseYield100": 371,
+      "maxYield150": 556.5,
       "returns": [
         {
           "item": "SILVER",
           "name": "Silver",
           "icon": "silver.png",
           "weight": 1.0,
-          "amount": 1000
+          "amount": 371
         }
       ],
       "fullIcon": "T2_JOURNAL_MERCENARY_FULL.png",
       "emptyIcon": "T2_JOURNAL_MERCENARY_EMPTY.png",
-      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses."
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses (returns raw untaxed Silver)."
     },
     {
       "id": "mercenary_t3",
@@ -2467,21 +2418,21 @@
       "fullJournalName": "Journeyman Mercenary's Journal (Full)",
       "emptyJournalId": "T3_JOURNAL_MERCENARY_EMPTY",
       "emptyJournalName": "Journeyman Mercenary's Journal (Empty)",
-      "fameRequired": 1200,
-      "baseYield100": 2500,
-      "maxYield150": 3750.0,
+      "fameRequired": 2171,
+      "baseYield100": 660,
+      "maxYield150": 990.0,
       "returns": [
         {
           "item": "SILVER",
           "name": "Silver",
           "icon": "silver.png",
           "weight": 1.0,
-          "amount": 2500
+          "amount": 660
         }
       ],
       "fullIcon": "T3_JOURNAL_MERCENARY_FULL.png",
       "emptyIcon": "T3_JOURNAL_MERCENARY_EMPTY.png",
-      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses."
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses (returns raw untaxed Silver)."
     },
     {
       "id": "mercenary_t4",
@@ -2494,21 +2445,21 @@
       "fullJournalName": "Adept Mercenary's Journal (Full)",
       "emptyJournalId": "T4_JOURNAL_MERCENARY_EMPTY",
       "emptyJournalName": "Adept Mercenary's Journal (Empty)",
-      "fameRequired": 2500,
-      "baseYield100": 5500,
-      "maxYield150": 8250.0,
+      "fameRequired": 3264,
+      "baseYield100": 1123,
+      "maxYield150": 1684.5,
       "returns": [
         {
           "item": "SILVER",
           "name": "Silver",
           "icon": "silver.png",
           "weight": 1.0,
-          "amount": 5500
+          "amount": 1123
         }
       ],
       "fullIcon": "T4_JOURNAL_MERCENARY_FULL.png",
       "emptyIcon": "T4_JOURNAL_MERCENARY_EMPTY.png",
-      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses."
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses (returns raw untaxed Silver)."
     },
     {
       "id": "mercenary_t5",
@@ -2521,21 +2472,21 @@
       "fullJournalName": "Expert Mercenary's Journal (Full)",
       "emptyJournalId": "T5_JOURNAL_MERCENARY_EMPTY",
       "emptyJournalName": "Expert Mercenary's Journal (Empty)",
-      "fameRequired": 5000,
-      "baseYield100": 10800,
-      "maxYield150": 16200.0,
+      "fameRequired": 4368,
+      "baseYield100": 1746,
+      "maxYield150": 2619.0,
       "returns": [
         {
           "item": "SILVER",
           "name": "Silver",
           "icon": "silver.png",
           "weight": 1.0,
-          "amount": 10800
+          "amount": 1746
         }
       ],
       "fullIcon": "T5_JOURNAL_MERCENARY_FULL.png",
       "emptyIcon": "T5_JOURNAL_MERCENARY_EMPTY.png",
-      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses."
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses (returns raw untaxed Silver)."
     },
     {
       "id": "mercenary_t6",
@@ -2548,21 +2499,21 @@
       "fullJournalName": "Master Mercenary's Journal (Full)",
       "emptyJournalId": "T6_JOURNAL_MERCENARY_EMPTY",
       "emptyJournalName": "Master Mercenary's Journal (Empty)",
-      "fameRequired": 10000,
-      "baseYield100": 20000,
-      "maxYield150": 30000.0,
+      "fameRequired": 5856,
+      "baseYield100": 2690,
+      "maxYield150": 4035.0,
       "returns": [
         {
           "item": "SILVER",
           "name": "Silver",
           "icon": "silver.png",
           "weight": 1.0,
-          "amount": 20000
+          "amount": 2690
         }
       ],
       "fullIcon": "T6_JOURNAL_MERCENARY_FULL.png",
       "emptyIcon": "T6_JOURNAL_MERCENARY_EMPTY.png",
-      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses."
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses (returns raw untaxed Silver)."
     },
     {
       "id": "mercenary_t7",
@@ -2575,21 +2526,21 @@
       "fullJournalName": "Grandmaster Mercenary's Journal (Full)",
       "emptyJournalId": "T7_JOURNAL_MERCENARY_EMPTY",
       "emptyJournalName": "Grandmaster Mercenary's Journal (Empty)",
-      "fameRequired": 20000,
-      "baseYield100": 36000,
-      "maxYield150": 54000.0,
+      "fameRequired": 7968,
+      "baseYield100": 4202,
+      "maxYield150": 6303.0,
       "returns": [
         {
           "item": "SILVER",
           "name": "Silver",
           "icon": "silver.png",
           "weight": 1.0,
-          "amount": 36000
+          "amount": 4202
         }
       ],
       "fullIcon": "T7_JOURNAL_MERCENARY_FULL.png",
       "emptyIcon": "T7_JOURNAL_MERCENARY_EMPTY.png",
-      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses."
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses (returns raw untaxed Silver)."
     },
     {
       "id": "mercenary_t8",
@@ -2602,21 +2553,21 @@
       "fullJournalName": "Elder Mercenary's Journal (Full)",
       "emptyJournalId": "T8_JOURNAL_MERCENARY_EMPTY",
       "emptyJournalName": "Elder Mercenary's Journal (Empty)",
-      "fameRequired": 40000,
-      "baseYield100": 65000,
-      "maxYield150": 97500.0,
+      "fameRequired": 10800,
+      "baseYield100": 6584,
+      "maxYield150": 9876.0,
       "returns": [
         {
           "item": "SILVER",
           "name": "Silver",
           "icon": "silver.png",
           "weight": 1.0,
-          "amount": 65000
+          "amount": 6584
         }
       ],
       "fullIcon": "T8_JOURNAL_MERCENARY_FULL.png",
       "emptyIcon": "T8_JOURNAL_MERCENARY_EMPTY.png",
-      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses."
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses (returns raw untaxed Silver)."
     }
   ],
   "professions": [
@@ -2629,11 +2580,15 @@
       "returns": [
         [
           "T{tier}_METALBAR",
-          0.6
+          0.7
         ],
         [
           "T{tier}_PLANKS",
-          0.4
+          0.2
+        ],
+        [
+          "T{tier}_CLOTH",
+          0.1
         ]
       ],
       "icon": "T4_JOURNAL_WARRIOR_FULL.png"
@@ -2647,11 +2602,15 @@
       "returns": [
         [
           "T{tier}_LEATHER",
-          0.6
+          0.4545
         ],
         [
           "T{tier}_PLANKS",
-          0.4
+          0.2727
+        ],
+        [
+          "T{tier}_METALBAR",
+          0.2727
         ]
       ],
       "icon": "T4_JOURNAL_HUNTER_FULL.png"
@@ -2665,11 +2624,15 @@
       "returns": [
         [
           "T{tier}_CLOTH",
-          0.6
+          0.5
+        ],
+        [
+          "T{tier}_PLANKS",
+          0.4
         ],
         [
           "T{tier}_METALBAR",
-          0.4
+          0.1
         ]
       ],
       "icon": "T4_JOURNAL_MAGE_FULL.png"
@@ -2683,15 +2646,19 @@
       "returns": [
         [
           "T{tier}_PLANKS",
-          0.35
+          0.4444
         ],
         [
           "T{tier}_METALBAR",
-          0.35
+          0.2222
         ],
         [
           "T{tier}_CLOTH",
-          0.3
+          0.2222
+        ],
+        [
+          "T{tier}_LEATHER",
+          0.1111
         ]
       ],
       "icon": "T4_JOURNAL_TOOLMAKER_FULL.png"
@@ -2701,15 +2668,11 @@
       "name": "Lumberjack (Woodcutter)",
       "type": "gathering",
       "code": "WOOD",
-      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes.",
+      "desc": "Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes (returns 100% raw logs).",
       "returns": [
         [
           "T{tier}_WOOD",
-          0.75
-        ],
-        [
-          "T{tier}_PLANKS",
-          0.25
+          1.0
         ]
       ],
       "icon": "T4_JOURNAL_WOOD_FULL.png"
@@ -2719,15 +2682,11 @@
       "name": "Stonecutter",
       "type": "gathering",
       "code": "STONE",
-      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes.",
+      "desc": "Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes (returns 100% raw stone).",
       "returns": [
         [
           "T{tier}_ROCK",
-          0.75
-        ],
-        [
-          "T{tier}_STONEBLOCK",
-          0.25
+          1.0
         ]
       ],
       "icon": "T4_JOURNAL_STONE_FULL.png"
@@ -2737,15 +2696,11 @@
       "name": "Prospector (Miner)",
       "type": "gathering",
       "code": "ORE",
-      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes.",
+      "desc": "Consumes Prospector journals from mining ore veins in Mountain and Highland biomes (returns 100% raw ore).",
       "returns": [
         [
           "T{tier}_ORE",
-          0.75
-        ],
-        [
-          "T{tier}_METALBAR",
-          0.25
+          1.0
         ]
       ],
       "icon": "T4_JOURNAL_ORE_FULL.png"
@@ -2755,15 +2710,11 @@
       "name": "Cropper (Harvester)",
       "type": "gathering",
       "code": "FIBER",
-      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes.",
+      "desc": "Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes (returns 100% raw fiber).",
       "returns": [
         [
           "T{tier}_FIBER",
-          0.75
-        ],
-        [
-          "T{tier}_CLOTH",
-          0.25
+          1.0
         ]
       ],
       "icon": "T4_JOURNAL_FIBER_FULL.png"
@@ -2773,15 +2724,11 @@
       "name": "Gamekeeper (Skinner)",
       "type": "gathering",
       "code": "HIDE",
-      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes.",
+      "desc": "Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes (returns 100% raw hide).",
       "returns": [
         [
           "T{tier}_HIDE",
-          0.75
-        ],
-        [
-          "T{tier}_LEATHER",
-          0.25
+          1.0
         ]
       ],
       "icon": "T4_JOURNAL_HIDE_FULL.png"
@@ -2794,11 +2741,11 @@
       "desc": "Consumes Fisherman journals from catching fish in rivers, lakes, and oceans.",
       "returns": [
         [
-          "T{tier}_FISH_FRESHWATER",
+          "T{tier}_FISH_FRESHWATER_ALL_COMMON",
           0.5
         ],
         [
-          "T{tier}_FISH_SALTWATER",
+          "T{tier}_FISH_SALTWATER_ALL_COMMON",
           0.5
         ]
       ],
@@ -2809,7 +2756,7 @@
       "name": "Mercenary",
       "type": "mercenary",
       "code": "MERCENARY",
-      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses.",
+      "desc": "Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses (returns raw untaxed Silver).",
       "returns": [
         [
           "SILVER",
@@ -2826,6 +2773,7 @@
       "laborers": 1,
       "beds": 1,
       "tables": 1,
+      "furnitureSlots": 3,
       "blocks": 30,
       "planks": 30
     },
@@ -2835,15 +2783,17 @@
       "laborers": 2,
       "beds": 2,
       "tables": 1,
+      "furnitureSlots": 6,
       "blocks": 60,
       "planks": 60
     },
     {
       "tier": 4,
       "name": "Adept's House",
-      "laborers": 3,
-      "beds": 3,
+      "laborers": 2,
+      "beds": 2,
       "tables": 1,
+      "furnitureSlots": 10,
       "blocks": 180,
       "planks": 180
     },
@@ -2853,6 +2803,7 @@
       "laborers": 3,
       "beds": 3,
       "tables": 1,
+      "furnitureSlots": 14,
       "blocks": 360,
       "planks": 360
     },
@@ -2862,6 +2813,7 @@
       "laborers": 3,
       "beds": 3,
       "tables": 1,
+      "furnitureSlots": 14,
       "blocks": 720,
       "planks": 720
     },
@@ -2871,6 +2823,7 @@
       "laborers": 3,
       "beds": 3,
       "tables": 1,
+      "furnitureSlots": 14,
       "blocks": 1440,
       "planks": 1440
     },
@@ -2880,6 +2833,7 @@
       "laborers": 3,
       "beds": 3,
       "tables": 1,
+      "furnitureSlots": 14,
       "blocks": 2880,
       "planks": 2880
     }

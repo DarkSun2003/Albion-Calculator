@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Radio, Download, Database, Zap, ShieldCheck, Smartphone, Monitor } from 'lucide-react';
+import { X, Radio, Download, Database, Zap, ShieldCheck, Monitor } from 'lucide-react';
 
 const ADC_DIRECT_DOWNLOAD_URL =
   'https://github.com/ao-data/albiondata-client/releases/latest/download/albiondata-client-amd64-installer.exe';

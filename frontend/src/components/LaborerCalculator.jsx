@@ -48,6 +48,7 @@ export default function LaborerCalculator({ server, hasPremium, onOpenGuide, onS
   const [hasBed, setHasBed] = useState(true);
   const [hasTable, setHasTable] = useState(true);
   const [trophiesCount, setTrophiesCount] = useState(3);
+  const [generalistTrophies, setGeneralistTrophies] = useState(0);
 
   // Market & Economics
   const [marketPrices, setMarketPrices] = useState({
@@ -111,7 +112,8 @@ export default function LaborerCalculator({ server, hasPremium, onOpenGuide, onS
       laborerCount,
       hasBed,
       hasTable,
-      trophiesCount,
+      trophiesCount, generalistTrophies,
+      generalistTrophies,
       hasPremium,
       isSellOrder,
       marketPrices,
@@ -122,7 +124,7 @@ export default function LaborerCalculator({ server, hasPremium, onOpenGuide, onS
     laborerCount,
     hasBed,
     hasTable,
-    trophiesCount,
+    trophiesCount, generalistTrophies,
     hasPremium,
     isSellOrder,
     marketPrices,
@@ -139,7 +141,8 @@ export default function LaborerCalculator({ server, hasPremium, onOpenGuide, onS
       laborer_count: laborerCount,
       has_bed: hasBed,
       has_table: hasTable,
-      trophies_count: trophiesCount,
+      trophies_count: trophiesCount, generalistTrophies,
+      generalist_trophies: generalistTrophies,
       has_premium: hasPremium,
       is_sell_order: isSellOrder,
       market_prices: marketPrices,
@@ -172,7 +175,7 @@ export default function LaborerCalculator({ server, hasPremium, onOpenGuide, onS
     laborerCount,
     hasBed,
     hasTable,
-    trophiesCount,
+    trophiesCount, generalistTrophies,
     hasPremium,
     isSellOrder,
     marketPrices,
@@ -498,7 +501,7 @@ export default function LaborerCalculator({ server, hasPremium, onOpenGuide, onS
                 >
                   {[2, 3, 4, 5, 6, 7, 8].map((t) => (
                     <option key={t} value={t}>
-                      Tier {t} House {t >= 4 ? '(3 laborers/house)' : t === 3 ? '(2 laborers/house)' : '(1 laborer)'}
+                      Tier {t} House {t >= 5 ? '(3 laborers/house)' : t >= 3 ? '(2 laborers/house)' : '(1 laborer)'}
                     </option>
                   ))}
                 </select>
@@ -572,22 +575,46 @@ export default function LaborerCalculator({ server, hasPremium, onOpenGuide, onS
                   />
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#05080e] border border-[#1a2436] shadow-inner">
-                  <div className="flex items-center justify-between text-xs font-serif font-bold text-slate-200 mb-1">
-                    <span className="flex items-center gap-1.5">
-                      <Trophy className="w-3.5 h-3.5 text-amber-400" />
-                      Trophies ({trophiesCount})
-                    </span>
-                    <span className="text-[10px] font-mono text-amber-300">+{trophiesCount * 5}% Happy</span>
+                <div className="p-3 rounded-xl bg-[#05080e] border border-[#1a2436] shadow-inner space-y-2.5">
+                  <div>
+                    <div className="flex items-center justify-between text-xs font-serif font-bold text-slate-200 mb-1">
+                      <span className="flex items-center gap-1.5">
+                        <Trophy className="w-3.5 h-3.5 text-amber-400" />
+                        Profession Trophies ({trophiesCount})
+                      </span>
+                      <span className="text-[10px] font-mono text-amber-300">+{trophiesCount * 5}% Happy</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="7"
+                      value={trophiesCount}
+                      onChange={(e) => setTrophiesCount(parseInt(e.target.value) || 0)}
+                      className="w-full accent-amber-500"
+                    />
                   </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="7"
-                    value={trophiesCount}
-                    onChange={(e) => setTrophiesCount(parseInt(e.target.value) || 0)}
-                    className="w-full accent-amber-500"
-                  />
+                  <div className="pt-2 border-t border-[#141e2e]">
+                    <div className="flex items-center justify-between text-xs font-serif font-bold text-slate-200 mb-1">
+                      <span className="flex items-center gap-1.5 text-[11px]">
+                        <Trophy className="w-3 h-3 text-sky-400" />
+                        Generalist Trophies ({generalistTrophies})
+                      </span>
+                      <span className="text-[10px] font-mono text-sky-300">+{(generalistTrophies * 2.5).toFixed(1)}% Happy</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="5"
+                      value={generalistTrophies}
+                      onChange={(e) => setGeneralistTrophies(parseInt(e.target.value) || 0)}
+                      className="w-full accent-sky-500"
+                    />
+                    {houseTier <= currentItem.tier && currentItem.tier === 8 && (
+                      <div className="text-[10px] font-mono text-amber-400/90 mt-1">
+                        T8 House + T8 Laborer caps at 142.5% Max Yield (need T9+ house for 150%).
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -778,7 +805,14 @@ export default function LaborerCalculator({ server, hasPremium, onOpenGuide, onS
                       <ItemIcon src={`/items/${mat.icon}`} alt={mat.name} className="w-full h-full object-contain" />
                     </div>
                     <div>
-                      <div className="font-serif font-bold text-slate-200">{mat.name}</div>
+                      <div className="font-serif font-bold text-slate-200 flex items-center gap-1.5 flex-wrap">
+                        <span>{mat.name}</span>
+                        {mat.hasEnchantedSplit && (
+                          <span className="text-[9px] font-mono font-normal px-1.5 py-0.5 rounded bg-emerald-950/60 text-emerald-300 border border-emerald-700/40">
+                            94.45% .0 / 5% .1 / 0.5% .2 / 0.05% .3
+                          </span>
+                        )}
+                      </div>
                       <div className="font-mono text-[10px] text-slate-400">
                         {mat.unitsPerLaborer} / laborer &bull; @ {mat.unitPrice.toLocaleString()} silver
                       </div>

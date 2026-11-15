@@ -23,7 +23,7 @@ PROFESSIONS = [
         'type': 'crafting',
         'code': 'WARRIOR',
         'desc': 'Consumes Blacksmith journals from crafting Swords, Axes, Maces, Shields, and Plate Armor.',
-        'returns': [('T{tier}_METALBAR', 0.6), ('T{tier}_PLANKS', 0.4)],
+        'returns': [('T{tier}_METALBAR', 0.70), ('T{tier}_PLANKS', 0.20), ('T{tier}_CLOTH', 0.10)],
         'icon': 'T4_JOURNAL_WARRIOR_FULL.png',
     },
     {
@@ -32,7 +32,7 @@ PROFESSIONS = [
         'type': 'crafting',
         'code': 'HUNTER',
         'desc': 'Consumes Fletcher journals from crafting Bows, Spears, Daggers, Torches, and Leather Armor.',
-        'returns': [('T{tier}_LEATHER', 0.6), ('T{tier}_PLANKS', 0.4)],
+        'returns': [('T{tier}_LEATHER', 0.4545), ('T{tier}_PLANKS', 0.2727), ('T{tier}_METALBAR', 0.2727)],
         'icon': 'T4_JOURNAL_HUNTER_FULL.png',
     },
     {
@@ -41,7 +41,7 @@ PROFESSIONS = [
         'type': 'crafting',
         'code': 'MAGE',
         'desc': 'Consumes Imbuer journals from crafting Fire, Holy, Frost, Arcane staffs, Tomes, and Cloth Armor.',
-        'returns': [('T{tier}_CLOTH', 0.6), ('T{tier}_METALBAR', 0.4)],
+        'returns': [('T{tier}_CLOTH', 0.50), ('T{tier}_PLANKS', 0.40), ('T{tier}_METALBAR', 0.10)],
         'icon': 'T4_JOURNAL_MAGE_FULL.png',
     },
     {
@@ -50,7 +50,7 @@ PROFESSIONS = [
         'type': 'crafting',
         'code': 'TOOLMAKER',
         'desc': 'Consumes Tinker journals from crafting Tools, Capes, Bags, and Furniture.',
-        'returns': [('T{tier}_PLANKS', 0.35), ('T{tier}_METALBAR', 0.35), ('T{tier}_CLOTH', 0.3)],
+        'returns': [('T{tier}_PLANKS', 0.4444), ('T{tier}_METALBAR', 0.2222), ('T{tier}_CLOTH', 0.2222), ('T{tier}_LEATHER', 0.1111)],
         'icon': 'T4_JOURNAL_TOOLMAKER_FULL.png',
     },
     {
@@ -58,8 +58,8 @@ PROFESSIONS = [
         'name': 'Lumberjack (Woodcutter)',
         'type': 'gathering',
         'code': 'WOOD',
-        'desc': 'Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes.',
-        'returns': [('T{tier}_WOOD', 0.75), ('T{tier}_PLANKS', 0.25)],
+        'desc': 'Consumes Lumberjack journals from chopping trees in Forest and Steppe biomes (returns 100% raw logs).',
+        'returns': [('T{tier}_WOOD', 1.0)],
         'icon': 'T4_JOURNAL_WOOD_FULL.png',
     },
     {
@@ -67,8 +67,8 @@ PROFESSIONS = [
         'name': 'Stonecutter',
         'type': 'gathering',
         'code': 'STONE',
-        'desc': 'Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes.',
-        'returns': [('T{tier}_ROCK', 0.75), ('T{tier}_STONEBLOCK', 0.25)],
+        'desc': 'Consumes Stonecutter journals from quarrying rocks in Highland and Swamp biomes (returns 100% raw stone).',
+        'returns': [('T{tier}_ROCK', 1.0)],
         'icon': 'T4_JOURNAL_STONE_FULL.png',
     },
     {
@@ -76,8 +76,8 @@ PROFESSIONS = [
         'name': 'Prospector (Miner)',
         'type': 'gathering',
         'code': 'ORE',
-        'desc': 'Consumes Prospector journals from mining ore veins in Mountain and Highland biomes.',
-        'returns': [('T{tier}_ORE', 0.75), ('T{tier}_METALBAR', 0.25)],
+        'desc': 'Consumes Prospector journals from mining ore veins in Mountain and Highland biomes (returns 100% raw ore).',
+        'returns': [('T{tier}_ORE', 1.0)],
         'icon': 'T4_JOURNAL_ORE_FULL.png',
     },
     {
@@ -85,8 +85,8 @@ PROFESSIONS = [
         'name': 'Cropper (Harvester)',
         'type': 'gathering',
         'code': 'FIBER',
-        'desc': 'Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes.',
-        'returns': [('T{tier}_FIBER', 0.75), ('T{tier}_CLOTH', 0.25)],
+        'desc': 'Consumes Cropper journals from gathering fiber plants in Swamp and Forest biomes (returns 100% raw fiber).',
+        'returns': [('T{tier}_FIBER', 1.0)],
         'icon': 'T4_JOURNAL_FIBER_FULL.png',
     },
     {
@@ -94,8 +94,8 @@ PROFESSIONS = [
         'name': 'Gamekeeper (Skinner)',
         'type': 'gathering',
         'code': 'HIDE',
-        'desc': 'Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes.',
-        'returns': [('T{tier}_HIDE', 0.75), ('T{tier}_LEATHER', 0.25)],
+        'desc': 'Consumes Gamekeeper journals from skinning beasts in Steppe and Swamp biomes (returns 100% raw hide).',
+        'returns': [('T{tier}_HIDE', 1.0)],
         'icon': 'T4_JOURNAL_HIDE_FULL.png',
     },
     {
@@ -104,7 +104,7 @@ PROFESSIONS = [
         'type': 'gathering',
         'code': 'FISHING',
         'desc': 'Consumes Fisherman journals from catching fish in rivers, lakes, and oceans.',
-        'returns': [('T{tier}_FISH_FRESHWATER', 0.5), ('T{tier}_FISH_SALTWATER', 0.5)],
+        'returns': [('T{tier}_FISH_FRESHWATER_ALL_COMMON', 0.5), ('T{tier}_FISH_SALTWATER_ALL_COMMON', 0.5)],
         'icon': 'T4_JOURNAL_FISHING_FULL.png',
     },
     {
@@ -112,33 +112,35 @@ PROFESSIONS = [
         'name': 'Mercenary',
         'type': 'mercenary',
         'code': 'MERCENARY',
-        'desc': 'Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses.',
+        'desc': 'Consumes Mercenary journals filled by slaying open-world mobs and dungeon bosses (returns raw untaxed Silver).',
         'returns': [('SILVER', 1.0)],
         'icon': 'T4_JOURNAL_MERCENARY_FULL.png',
     },
 ]
 
-# Base returns at 100% Happiness per tier
+# Exact base returns at 100% Happiness per tier (from live items.json)
 BASE_YIELDS = {
-    'crafting': {2: 7.2, 3: 8.0, 4: 11.5, 5: 14.4, 6: 17.6, 7: 20.8, 8: 24.0},
-    'gathering': {2: 24.0, 3: 32.0, 4: 48.0, 5: 64.0, 6: 80.0, 7: 96.0, 8: 112.0},
-    'mercenary': {2: 1000, 3: 2500, 4: 5500, 5: 10800, 6: 20000, 7: 36000, 8: 65000},
+    'crafting': {2: 38.0, 3: 24.0, 4: 16.0, 5: 8.0, 6: 5.3333, 7: 4.4, 8: 4.2},
+    'gathering': {2: 38.0, 3: 60.0, 4: 48.0, 5: 32.0, 6: 32.0, 7: 38.4, 8: 38.4},
+    'fishing': {2: 10.6, 3: 9.976, 4: 13.9112, 5: 17.0301, 6: 20.0528, 7: 22.3876, 8: 25.119},
+    'mercenary': {2: 371, 3: 660, 4: 1123, 5: 1746, 6: 2690, 7: 4202, 8: 6584},
 }
 
 FAME_REQUIREMENTS = {
-    'crafting': {2: 300, 3: 600, 4: 1200, 5: 2400, 6: 4800, 7: 9600, 8: 19200},
-    'gathering': {2: 200, 3: 450, 4: 900, 5: 1800, 6: 3600, 7: 7200, 8: 14400},
-    'mercenary': {2: 500, 3: 1200, 4: 2500, 5: 5000, 6: 10000, 7: 20000, 8: 40000},
+    'crafting': {2: 900, 3: 1800, 4: 3600, 5: 7200, 6: 14400, 7: 28380, 8: 58590},
+    'gathering': {2: 450, 3: 900, 4: 1800, 5: 3600, 6: 7200, 7: 14400, 8: 28800},
+    'fishing': {2: 720, 3: 1360, 4: 2223, 5: 3680, 6: 4880, 7: 6640, 8: 8320},
+    'mercenary': {2: 1412, 3: 2171, 4: 3264, 5: 4368, 6: 5856, 7: 7968, 8: 10800},
 }
 
 HOUSE_TIERS = [
-    {'tier': 2, 'name': "Novice's House", 'laborers': 1, 'beds': 1, 'tables': 1, 'blocks': 30, 'planks': 30},
-    {'tier': 3, 'name': "Journeyman's House", 'laborers': 2, 'beds': 2, 'tables': 1, 'blocks': 60, 'planks': 60},
-    {'tier': 4, 'name': "Adept's House", 'laborers': 3, 'beds': 3, 'tables': 1, 'blocks': 180, 'planks': 180},
-    {'tier': 5, 'name': "Expert's House", 'laborers': 3, 'beds': 3, 'tables': 1, 'blocks': 360, 'planks': 360},
-    {'tier': 6, 'name': "Master's House", 'laborers': 3, 'beds': 3, 'tables': 1, 'blocks': 720, 'planks': 720},
-    {'tier': 7, 'name': "Grandmaster's House", 'laborers': 3, 'beds': 3, 'tables': 1, 'blocks': 1440, 'planks': 1440},
-    {'tier': 8, 'name': "Elder's House", 'laborers': 3, 'beds': 3, 'tables': 1, 'blocks': 2880, 'planks': 2880},
+    {'tier': 2, 'name': "Novice's House", 'laborers': 1, 'beds': 1, 'tables': 1, 'furnitureSlots': 3, 'blocks': 30, 'planks': 30},
+    {'tier': 3, 'name': "Journeyman's House", 'laborers': 2, 'beds': 2, 'tables': 1, 'furnitureSlots': 6, 'blocks': 60, 'planks': 60},
+    {'tier': 4, 'name': "Adept's House", 'laborers': 2, 'beds': 2, 'tables': 1, 'furnitureSlots': 10, 'blocks': 180, 'planks': 180},
+    {'tier': 5, 'name': "Expert's House", 'laborers': 3, 'beds': 3, 'tables': 1, 'furnitureSlots': 14, 'blocks': 360, 'planks': 360},
+    {'tier': 6, 'name': "Master's House", 'laborers': 3, 'beds': 3, 'tables': 1, 'furnitureSlots': 14, 'blocks': 720, 'planks': 720},
+    {'tier': 7, 'name': "Grandmaster's House", 'laborers': 3, 'beds': 3, 'tables': 1, 'furnitureSlots': 14, 'blocks': 1440, 'planks': 1440},
+    {'tier': 8, 'name': "Elder's House", 'laborers': 3, 'beds': 3, 'tables': 1, 'furnitureSlots': 14, 'blocks': 2880, 'planks': 2880},
 ]
 
 catalog = []
@@ -147,6 +149,7 @@ for prof in PROFESSIONS:
     p_id = prof['id']
     p_type = prof['type']
     p_code = prof['code']
+    yield_key = 'fishing' if p_id == 'fisherman' else p_type
     
     for tier in range(2, 9):
         full_id = f"T{tier}_JOURNAL_{p_code}_FULL"
@@ -155,8 +158,8 @@ for prof in PROFESSIONS:
         full_name = uname_to_name.get(full_id, f"T{tier} {prof['name']} Journal (Full)")
         empty_name = uname_to_name.get(empty_id, f"T{tier} {prof['name']} Journal (Empty)")
         
-        base_yield = BASE_YIELDS[p_type][tier]
-        fame_req = FAME_REQUIREMENTS[p_type][tier]
+        base_yield = BASE_YIELDS[yield_key][tier]
+        fame_req = FAME_REQUIREMENTS[yield_key][tier]
         
         returns_list = []
         for template, weight in prof['returns']:
@@ -170,13 +173,12 @@ for prof in PROFESSIONS:
                 })
             else:
                 mat_id = template.replace('{tier}', str(tier))
-                # For stone blocks, always flat T{tier}_STONEBLOCK
                 returns_list.append({
                     'item': mat_id,
                     'name': uname_to_name.get(mat_id, mat_id),
                     'icon': f"{mat_id}.png",
                     'weight': weight,
-                    'amount': round(base_yield * weight, 1)
+                    'amount': round(base_yield * weight, 2)
                 })
                 
         catalog.append({

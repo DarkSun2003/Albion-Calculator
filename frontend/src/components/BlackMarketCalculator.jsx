@@ -224,6 +224,7 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
         tier,
         enchantment,
         category,
+        has_premium: hasPremium,
         quality: qualityFilter !== 'all' ? parseInt(qualityFilter) : 'all',
         min_profit: minProfit,
         min_margin: minMargin,
@@ -249,14 +250,14 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
     }
   };
 
-  // Debounced Auto-Fetch whenever tier, enchantment, server, category, quality, sort, or profit/margin sliders change
+  // Debounced Auto-Fetch whenever tier, enchantment, server, category, premium, quality, sort, or profit/margin sliders change
   useEffect(() => {
     if (!autoFetchEnabled) return;
     const timer = setTimeout(() => {
       handleScan();
     }, 220);
     return () => clearTimeout(timer);
-  }, [server, tier, enchantment, category, qualityFilter, sortBy, minProfit, minMargin, autoFetchEnabled]);
+  }, [server, tier, enchantment, category, hasPremium, qualityFilter, sortBy, minProfit, minMargin, autoFetchEnabled]);
 
   // Periodic background auto-refresh every 60 seconds when Auto-Fetch is ON
   useEffect(() => {
@@ -265,7 +266,7 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
       handleScan();
     }, 60000);
     return () => clearInterval(interval);
-  }, [server, tier, enchantment, category, qualityFilter, sortBy, minProfit, minMargin, autoFetchEnabled]);
+  }, [server, tier, enchantment, category, hasPremium, qualityFilter, sortBy, minProfit, minMargin, autoFetchEnabled]);
 
   // Fallback simulator for offline mode
   const performClientFallbackScan = () => {
@@ -275,16 +276,27 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
       return true;
     });
 
+    const salesTax = hasPremium ? 0.04 : 0.08;
+    const instantMult = 1.0 - salesTax;
+    const listedMult = 1.0 - (salesTax + 0.025);
+
     const fallbackResults = filtered.slice(0, 30).map(it => {
       const aodpId = `${it.template.replace('{tier}', tier)}${enchantment > 0 ? `@${enchantment}` : ''}`;
       const mult = (2 ** (tier - 4)) * (2 ** enchantment);
       const estCost = Math.round((it.baseItemValue || 100) * 12 * mult);
       const bmDemand = Math.round(estCost * 1.55);
-      const instantPayout = Math.round(bmDemand * 0.935);
-      const profit = instantPayout - estCost;
-      const margin = Math.round((profit / estCost) * 1000) / 10;
+      const bmListed = Math.round(bmDemand * 1.15);
+      const instantPayout = Math.round(bmDemand * instantMult);
+      const listedPayout = Math.round(bmListed * listedMult);
+      const instantProfit = instantPayout - estCost;
+      const instantMargin = Math.round((instantProfit / estCost) * 1000) / 10;
+      const listedProfit = listedPayout - estCost;
+      const listedMargin = Math.round((listedProfit / estCost) * 1000) / 10;
+      const bestProfit = Math.max(instantProfit, listedProfit);
+      const bestMargin = instantProfit >= listedProfit ? instantMargin : listedMargin;
+      const bestMode = instantProfit >= listedProfit ? 'Instant Buy Order' : 'Listed Order';
       const weight = Math.round(((it.primaryQty || 16) + (it.secondaryQty || 8)) * 0.15 * 10) / 10;
-      const density = weight > 0 ? Math.round(profit / weight) : 0;
+      const density = weight > 0 ? Math.round(bestProfit / weight) : 0;
 
       return {
         id: it.id,
@@ -307,21 +319,21 @@ export default function BlackMarketCalculator({ server = 'europe', hasPremium = 
         },
         blackMarket: {
           buyOrderMax: bmDemand,
-          sellOrderMin: Math.round(bmDemand * 1.15),
+          sellOrderMin: bmListed,
           instantPayout,
-          listedPayout: Math.round(bmDemand * 1.15 * 0.935),
+          listedPayout,
           buyOrderAgeHours: null,
           sellOrderAgeHours: null,
           activeAgeHours: null,
         },
         spread: {
-          instantProfit: profit,
-          instantMarginPct: margin,
-          listedProfit: Math.round(bmDemand * 1.15 * 0.935) - estCost,
-          listedMarginPct: Math.round(((Math.round(bmDemand * 1.15 * 0.935) - estCost) / estCost) * 1000) / 10,
-          bestProfit: profit,
-          bestMarginPct: margin,
-          bestMode: 'Instant Buy Order',
+          instantProfit,
+          instantMarginPct: instantMargin,
+          listedProfit,
+          listedMarginPct: listedMargin,
+          bestProfit,
+          bestMarginPct: bestMargin,
+          bestMode,
           silverPerKg: density,
         }
       };

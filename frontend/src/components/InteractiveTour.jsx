@@ -36,7 +36,7 @@ export const MODULE_TOURS = {
       {
         targetId: '#tour-header-controls',
         title: 'Quick Finder (Ctrl+K), Server, Focus & Live Scanner',
-        badge: 'Step 1 of 7',
+        badge: 'Step 1 of 8',
         icon: Server,
         description: 'Use "Find Tool (Ctrl+K)" anytime to jump straight to any setting! Switch servers (Europe, Americas, Asia), toggle Premium (4% vs 8% tax), toggle Focus (+53.9% RRR), or click "Live Scanner" to download the PC market scanner.',
         placement: 'bottom',
@@ -44,7 +44,7 @@ export const MODULE_TOURS = {
       {
         targetId: '#tour-module-tabs',
         title: '7 Economic Command Modules',
-        badge: 'Step 2 of 7',
+        badge: 'Step 2 of 8',
         icon: Layers,
         description: 'Easily switch between all Albion economic disciplines: Refining Workshop, Gear & Item Crafting, Chef\'s Hearth (Food), Alchemist Lab (Potions), Farming, Laborers, and Caerleon Black Market arbitrage.',
         placement: 'bottom',
@@ -67,10 +67,10 @@ export const MODULE_TOURS = {
       },
       {
         targetId: '#tour-city-controls',
-        title: 'Royal City Bonuses & Station Tax',
+        title: 'Royal City & Hideout Refining Bonuses',
         badge: 'Step 5 of 8',
         icon: MapPin,
-        description: 'Refining in the native bonus city (e.g., Martlock for Hide, Fort Sterling for Wood) raises your Resource Return Rate from 15.2% up to 36.7% (or 53.9% with Focus)! Enter the station owner\'s nutrition tax and your batch size.',
+        description: 'Refining in a native bonus city (e.g., Martlock for Hide, Fort Sterling for Wood) raises Resource Return Rate from 15.2% up to 36.7% (or 53.9% with Focus)! Or switch to Hideout mode for Outlands (+15%) and Roads (+10% / +20% Specialty) stations.',
         placement: 'right',
       },
       {
@@ -109,7 +109,7 @@ export const MODULE_TOURS = {
         title: 'Equipment Categories & Subcategories',
         badge: 'Step 1 of 7',
         icon: Hammer,
-        description: 'Select your equipment discipline: Warrior (Swords, Axes, Maces, Plate Armor), Mage (Fire, Holy, Frost, Arcane, Cloth), Hunter (Bows, Daggers, Leather), Off-hands, or Gathering Gear.',
+        description: 'Select your crafting station: Toolmaker (Tools, Gathering Gear, Bags, Capes), Warrior (Swords, Axes, War Gloves, Plate Armor), Hunter (Bows, Daggers, Shapeshifter Staves, Leather), Mage (Staves, Cloth), or Saddler & War Mounts.',
         placement: 'bottom',
       },
       {
@@ -117,7 +117,7 @@ export const MODULE_TOURS = {
         title: 'Item Catalog & Instant Search',
         badge: 'Step 2 of 7',
         icon: Compass,
-        description: 'Choose the exact piece of equipment you want to craft. Type in the search box to quickly filter across 3,400+ weapons, armors, and artifact gear.',
+        description: 'Choose the exact equipment, bag, cape, tool, or mount to craft. Search across all 328 base catalog items (weapons, armors, Shapeshifter Staves with Animal Remains, Royal Sigil gear, and Battle Mounts).',
         placement: 'bottom',
       },
       {
@@ -125,7 +125,7 @@ export const MODULE_TOURS = {
         title: 'Tier & Enchantment Configuration',
         badge: 'Step 3 of 7',
         icon: Sparkles,
-        description: 'Switch between Tier 4 through Tier 8, and choose your enchantment level (.0 Flat, .1 Uncommon, .2 Rare, .3 Exceptional, .4 Pristine).',
+        description: 'Switch across eligible Tiers (T2–T8 depending on the item) and enchantments (.0 Flat through .4 Pristine). Next below, Stage 02 lets you set your 1-branch Mastery, Target Spec, and individual sibling specs.',
         placement: 'bottom',
       },
       {
@@ -146,10 +146,10 @@ export const MODULE_TOURS = {
       },
       {
         targetId: '#tour-craft-salad-journals',
-        title: 'Crafter\'s Salad Buff & Filled Journals',
+        title: 'Crafter\'s Salad (+150 QR) & Crafting Journals',
         badge: 'Step 6 of 7',
         icon: Zap,
-        description: 'Toggle Crafter\'s Salad (+150 Quality Power to multiply Masterpiece and Outstanding chances), and toggle empty craft journals to capture fame for 100% free resale profit silver!',
+        description: 'Pair Crafter\'s Salad (+150 Quality Rating) with Stage 05 Craft Journals (T4–T8) to fill books from refined material fame for extra resale silver. Artifacts, Royal Sigils, Grown Mounts, and Animal Remains remain 0% RRR (non-returnable) and grant zero fame!',
         placement: 'top',
       },
       {
@@ -185,10 +185,10 @@ export const MODULE_TOURS = {
       },
       {
         targetId: '#tour-food-city-controls',
-        title: 'Caerleon Cooking Bonus & Batch Size',
+        title: 'Caerleon, Cities, Islands & Hideout Bonuses',
         badge: 'Step 3 of 6',
         icon: MapPin,
-        description: 'Caerleon has a massive native +15% local cooking bonus (yielding 43.5% RRR without focus, or 53.9% with focus)! Enter station nutrition tax and your batch quantity.',
+        description: 'Caerleon grants a +15% local cooking bonus (24.8% base RRR, or 47.9% with Focus), vs 15.25% (43.5% Focus) in other Royal Cities, or 0% base (37.1% Focus) on Islands. Hideout mode scales with General Power Level (+0% to +26%).',
         placement: 'right',
       },
       {
@@ -240,10 +240,10 @@ export const MODULE_TOURS = {
       },
       {
         targetId: '#tour-potion-city-controls',
-        title: 'Caerleon / Brecilien Bonus & Batch Size',
+        title: 'Brecilien Bonus, Royal Cities & Hideouts',
         badge: 'Step 3 of 6',
         icon: MapPin,
-        description: 'Brew in Caerleon (+15% local bonus) or Brecilien for boosted return rates. Enter the Alchemist Lab station owner fee and your batch quantity.',
+        description: 'Brecilien awards the +15% Alchemist Potion bonus (24.8% base RRR, or 47.9% with Focus). Standard Royal Cities (including Caerleon) return 15.25% (43.5% Focus), Islands 0% (37.1% Focus), and Hideouts scale with General Power Level (+0% to +26%).',
         placement: 'right',
       },
       {
@@ -350,10 +350,10 @@ export const MODULE_TOURS = {
       },
       {
         targetId: '#tour-laborer-furniture-config',
-        title: 'The 150% Happiness Formula',
+        title: 'Happiness Formula & 142.5% / 150% Yield',
         badge: 'Step 3 of 6',
         icon: Bed,
-        description: 'To achieve the maximum 150% resource yield, every laborer requires: 1 Bed of equal tier, shared Table of equal tier, and Generalist Trophies.',
+        description: 'Maximize return yield using equal-tier Beds + shared Tables, Profession Trophies (+5% each), and Generalist Trophies (+2.5% each). Note: a T8 House caps T8 Laborers at 142.5% Max Yield (higher-tier house needed for 150%).',
         placement: 'right',
       },
       {

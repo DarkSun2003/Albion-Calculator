@@ -2,6 +2,7 @@ import json
 import math
 import os
 from typing import Dict, Any, Optional
+from .constants import compute_total_rrr
 
 BASE_DIR = os.path.dirname(__file__)
 CATALOG_PATH = os.path.join(BASE_DIR, 'data', 'generated_food_catalog.json')
@@ -28,41 +29,47 @@ def calculate_cooking_rrr(
     item_def: Dict[str, Any],
     city: str = 'Caerleon',
     use_focus: bool = False,
-    daily_bonus_pct: float = 0.0
+    daily_bonus_pct: float = 0.0,
+    location_mode: str = 'city',
+    ho_power_level: int = 1,
+    ho_zone_quality: int = 1,
+    ho_has_specialty: bool = False,
+    ho_custom_bonus_pct: float = None,
 ) -> float:
     """
-    Calculates the Resource Return Rate (RRR) for food crafting.
-    - Base island return: 0.0%
-    - Base royal city return: 18.0%
-    - Caerleon specialty bonus for Cooking: +15.0%
-    - Daily bonus: +daily_bonus_pct%
-    - Focus bonus: +59.0%
-    Formula: total_bonus / (1.0 + total_bonus)
+    Calculates the Resource Return Rate (RRR) for food crafting (City, Island, or Hideout).
     """
     if not city:
         city = 'Caerleon'
-        
+
     is_island = city.lower() == 'island'
     base_bonus = 0.0 if is_island else 0.18
 
-    # Caerleon is the dedicated royal city for food crafting & butchery
     bonus_city = item_def.get('bonusCity', 'Caerleon')
     has_specialty = bool(bonus_city and city.lower() == str(bonus_city).lower() and not is_island)
     specialty_bonus = 0.15 if has_specialty else 0.0
 
-    daily_bonus = (daily_bonus_pct or 0.0) / 100.0
-    focus_bonus = 0.59 if use_focus else 0.0
-
-    total_bonus = base_bonus + specialty_bonus + daily_bonus + focus_bonus
-    return round(total_bonus / (1.0 + total_bonus), 6) if total_bonus > 0 else 0.0
+    return compute_total_rrr(
+        base_city_bonus=base_bonus,
+        city_specialty_bonus=specialty_bonus,
+        daily_bonus_pct=daily_bonus_pct,
+        use_focus=use_focus,
+        location_mode=location_mode,
+        ho_power_level=ho_power_level,
+        ho_zone_quality=ho_zone_quality,
+        ho_has_specialty=ho_has_specialty,
+        ho_custom_bonus_pct=ho_custom_bonus_pct,
+        specialty_mode='food',
+    )
 
 
 def calculate_cooking_focus(base_focus: int, mastery: int = 0, spec: int = 0, other_spec_avg: int = 0) -> int:
     """
     Calculates focus cost per craft batch.
-    Chef Mastery (1-100): +30 efficiency/level
-    Chef Target Specialization (1-100): +280 efficiency/level (+250 specific + 30 shared)
-    Other 6 Food Specializations (1-100): +30 efficiency/level each (up to 6 * 100 * 30 = 18,000)
+    Chef Mastery (1-100): +30 efficiency/level (3,000 max)
+    Chef Target Specialization (1-100): +280 efficiency/level (+250 specific + 30 shared, 28,000 max)
+    Other 8 Chef Specializations (1-100): +30 efficiency/level each (8 * 100 * 30 = 24,000 max)
+    Total max efficiency (900/900) = 55,000 (~2.21% of base focus).
     Formula: base_focus * (0.5 ** (efficiency / 10000.0))
     """
     if not base_focus or base_focus <= 0:
@@ -70,7 +77,7 @@ def calculate_cooking_focus(base_focus: int, mastery: int = 0, spec: int = 0, ot
     m = max(0, min(100, int(mastery or 0)))
     s = max(0, min(100, int(spec or 0)))
     oth = max(0, min(100, int(other_spec_avg or 0)))
-    efficiency = (m * 30) + (s * 280) + (6 * oth * 30)
+    efficiency = (m * 30) + (s * 280) + (8 * oth * 30)
     actual_focus = base_focus * (0.5 ** (efficiency / 10000.0))
     return max(1, math.floor(actual_focus + 0.5))
 
@@ -90,6 +97,11 @@ def calculate_cooking(
     mastery_level: int = 0,
     spec_level: int = 0,
     other_spec_avg: int = 0,
+    location_mode: str = 'city',
+    ho_power_level: int = 1,
+    ho_zone_quality: int = 1,
+    ho_has_specialty: bool = False,
+    ho_custom_bonus_pct: float = None,
 ) -> Dict[str, Any]:
     """
     Calculates complete cooking financials, batch yields, ingredient refunds, and focus costs.
@@ -100,8 +112,14 @@ def calculate_cooking(
     prices = ingredient_prices or {}
 
     # 1. Resource Return Rate (RRR)
-    rrr_current = calculate_cooking_rrr(item_def, city, use_focus, daily_bonus_pct)
-    rrr_no_focus = calculate_cooking_rrr(item_def, city, False, daily_bonus_pct)
+    rrr_current = calculate_cooking_rrr(
+        item_def, city, use_focus, daily_bonus_pct,
+        location_mode, ho_power_level, ho_zone_quality, ho_has_specialty, ho_custom_bonus_pct,
+    )
+    rrr_no_focus = calculate_cooking_rrr(
+        item_def, city, False, daily_bonus_pct,
+        location_mode, ho_power_level, ho_zone_quality, ho_has_specialty, ho_custom_bonus_pct,
+    )
 
     # 2. Build active ingredients list (Base ingredients + Fish Sauce if enchanted)
     active_ingredients = []
@@ -132,6 +150,7 @@ def calculate_cooking(
     breakdown = []
     upfront_materials_cost = 0.0
     net_materials_cost = 0.0
+    net_materials_cost_no_focus = 0.0
 
     for ing in active_ingredients:
         uname = ing['uniqueName']
@@ -141,15 +160,18 @@ def calculate_cooking(
         # In cooking, Avalonian energy is not refunded (noRefund = True)
         is_refundable = not ing['noRefund']
         ing_rrr = rrr_current if is_refundable else 0.0
+        ing_rrr_no_focus = rrr_no_focus if is_refundable else 0.0
         
         returned = gross_needed * ing_rrr
         net_consumed = gross_needed - returned
         
         gross_cost = gross_needed * unit_price
         net_cost = net_consumed * unit_price
+        net_cost_no_focus = (gross_needed - (gross_needed * ing_rrr_no_focus)) * unit_price
         
         upfront_materials_cost += gross_cost
         net_materials_cost += net_cost
+        net_materials_cost_no_focus += net_cost_no_focus
 
         breakdown.append({
             'uniqueName': uname,
@@ -166,12 +188,16 @@ def calculate_cooking(
         })
 
     # 4. Station fee (Nutrition tax)
-    # Albion cook stations charge: nutrition * (station_tax_per_100 / 100.0) per craft batch
+    # Tier <= 2 crafts are exempt from Silver station usage fees in Albion Online.
+    item_tier = int(item_def.get('tier', 1) or 1)
     nutrition_per_batch = float(item_def.get('nutrition', 0.0) or 0.0)
     station_tax_rate = float(station_tax_per_100 or 0.0) / 100.0
-    station_fee = nutrition_per_batch * station_tax_rate * batch_count
+    station_fee = 0.0 if item_tier <= 2 else (nutrition_per_batch * station_tax_rate * batch_count)
 
-    # 5. Focus Cost
+    # 5. Production & Focus Cost
+    amount_per_batch = item_def.get('amountCrafted', 1)
+    total_units_produced = amount_per_batch * batch_count
+
     base_focus = item_def.get('baseFocus', 0)
     if ench > 0:
         ench_data = item_def.get('enchantments', {}).get(str(ench))
@@ -182,9 +208,7 @@ def calculate_cooking(
     total_focus_used = focus_per_batch * batch_count if use_focus else 0
     focus_per_unit = round(focus_per_batch / max(1, amount_per_batch), 2) if amount_per_batch > 0 else focus_per_batch
 
-    # 6. Production & Financials
-    amount_per_batch = item_def.get('amountCrafted', 1)
-    total_units_produced = amount_per_batch * batch_count
+    # 6. Financials
 
     gross_revenue = total_units_produced * float(item_sell_price or 0.0)
     market_tax_rate = 0.04 if has_premium else 0.08
@@ -202,24 +226,10 @@ def calculate_cooking(
     # Silver Per Focus (SPF) calculation
     silver_per_focus = 0.0
     if use_focus and total_focus_used > 0:
-        # Calculate profit without focus to find pure focus value delta
-        profit_no_focus = calculate_cooking(
-            item_id=item_id,
-            enchantment=ench,
-            batches=batch_count,
-            ingredient_prices=prices,
-            item_sell_price=item_sell_price,
-            city=city,
-            use_focus=False,
-            daily_bonus_pct=daily_bonus_pct,
-            station_tax_per_100=station_tax_per_100,
-            has_premium=has_premium,
-            is_sell_order=is_sell_order,
-            mastery_level=mastery_level,
-            spec_level=spec_level
-        )['financials']['netProfit']
-        focus_profit_delta = net_profit - profit_no_focus
+        focus_profit_delta = net_materials_cost_no_focus - net_materials_cost
         silver_per_focus = round(focus_profit_delta / total_focus_used, 2)
+
+    is_hideout = str(location_mode or 'city').lower() == 'hideout'
 
     return {
         'item': {
@@ -246,9 +256,10 @@ def calculate_cooking(
             'rrrCurrentPct': round(rrr_current * 100, 2),
             'rrrNoFocus': rrr_no_focus,
             'rrrNoFocusPct': round(rrr_no_focus * 100, 2),
-            'hasCitySpecialty': bool(item_def.get('bonusCity', 'Caerleon').lower() == city.lower() and city.lower() != 'island'),
+            'hasCitySpecialty': bool(item_def.get('bonusCity', 'Caerleon').lower() == city.lower() and city.lower() != 'island' and not is_hideout),
             'city': city,
             'bonusCity': item_def.get('bonusCity', 'Caerleon'),
+            'locationMode': 'hideout' if is_hideout else 'city',
         },
         'focus': {
             'useFocus': use_focus,

@@ -10,7 +10,7 @@ export function getAlbionCdnUrl(itemIdentifier) {
   if (!itemIdentifier) return 'https://render.albiononline.com/v1/item/T4_MAIN_SWORD.png';
   let clean = String(itemIdentifier).trim();
   // Strip leading directory paths (e.g. /items/ or items\)
-  clean = clean.replace(/^.*[\\\/]/, '').replace(/\.png$/i, '');
+  clean = clean.replace(/^.*[\\/]/, '').replace(/\.png$/i, '');
   // Map local filesystem names like T5_ORE_LEVEL1_1 to CDN format T5_ORE_LEVEL1@1
   clean = clean.replace(/_LEVEL([1-4])_([1-4])$/i, '_LEVEL$1@$2');
   return `https://render.albiononline.com/v1/item/${clean}.png`;
@@ -22,7 +22,7 @@ export function getAlbionCdnUrl(itemIdentifier) {
 export function getLocalItemUrl(itemIdentifier) {
   if (!itemIdentifier) return '/items/T4_MAIN_SWORD.png';
   let clean = String(itemIdentifier).trim();
-  clean = clean.replace(/^.*[\\\/]/, '').replace(/\.png$/i, '');
+  clean = clean.replace(/^.*[\\/]/, '').replace(/\.png$/i, '');
   return `/items/${clean}.png`;
 }
 

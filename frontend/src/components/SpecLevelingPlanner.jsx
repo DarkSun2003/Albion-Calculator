@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Award, Zap, BookOpen, TrendingUp, Sparkles, ChevronDown, ChevronUp, CheckCircle2, Flame, Wheat, Shield } from 'lucide-react';
+import { Award, ChevronDown, ChevronUp, Wheat, Shield } from 'lucide-react';
 import { calculateCookingSpecRoadmap, calculateGearSpecRoadmap } from '../utils/destinyBoardMath';
 
 export default function SpecLevelingPlanner({
@@ -9,25 +9,33 @@ export default function SpecLevelingPlanner({
   currentSpec = 0,
   rrr = 0.15,
   sellPrice = 0,
+  hasPremium = true,
   // For Food
   ingredientCosts = {},
   // For Gear
   primaryMatPrice = 0,
   secondaryMatPrice = 0,
   artifactPrice = 0,
+  extraMatPrices = {},
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [targetSpec, setTargetSpec] = useState(100);
   const [userStartSpec, setUserStartSpec] = useState(currentSpec || 0);
   const [strategy, setStrategy] = useState('sell'); // 'sell' or 'study'
   const [useLP, setUseLP] = useState(false);
+  const [studyPremium, setStudyPremium] = useState(hasPremium);
+  const [studyFocus, setStudyFocus] = useState(false);
 
-  // Sync with prop if user hasn't touched it
+  // Sync with parent props
   React.useEffect(() => {
     if (currentSpec !== undefined && currentSpec !== null) {
-      setUserStartSpec(currentSpec);
+      setUserStartSpec(Math.min(99, currentSpec));
     }
   }, [currentSpec]);
+
+  React.useEffect(() => {
+    setStudyPremium(Boolean(hasPremium));
+  }, [hasPremium]);
 
   const roadmap = useMemo(() => {
     if (mode === 'food') {
@@ -37,6 +45,8 @@ export default function SpecLevelingPlanner({
         targetSpec,
         strategy,
         useLearningPoints: useLP,
+        hasPremium: studyPremium,
+        useFocus: strategy === 'study' ? studyFocus : false,
         rrr,
         sellPricePerUnit: sellPrice,
         ingredientCosts,
@@ -49,11 +59,14 @@ export default function SpecLevelingPlanner({
         targetSpec,
         strategy,
         useLearningPoints: useLP,
+        hasPremium: studyPremium,
+        useFocus: strategy === 'study' ? studyFocus : false,
         rrr,
         itemSellPrice: sellPrice,
         primaryMatPrice,
         secondaryMatPrice,
         artifactPrice,
+        extraMatPrices,
       });
     }
   }, [
@@ -64,12 +77,15 @@ export default function SpecLevelingPlanner({
     targetSpec,
     strategy,
     useLP,
+    studyPremium,
+    studyFocus,
     rrr,
     sellPrice,
     ingredientCosts,
     primaryMatPrice,
     secondaryMatPrice,
     artifactPrice,
+    extraMatPrices,
   ]);
 
   if (!item || !roadmap) return null;
@@ -183,11 +199,33 @@ export default function SpecLevelingPlanner({
                       ? 'bg-purple-500/25 text-purple-300 border border-purple-500/40 font-bold'
                       : 'text-slate-400 hover:text-slate-200'
                   }`}
-                  title="Study crafted items for 275% fame (2.75x speedup, destroys item)"
+                  title="Study items for 275% base fame (+Premium/Focus multipliers, destroys item)"
                 >
-                  Study (2.75x)
+                  Study ({strategy === 'study' ? `${roadmap.fameMultiplier}x` : '2.75x'})
                 </button>
               </div>
+              {strategy === 'study' && (
+                <div className="flex flex-wrap gap-2 mt-1.5 text-[10px] font-mono">
+                  <label className="flex items-center gap-1 cursor-pointer text-slate-300">
+                    <input
+                      type="checkbox"
+                      checked={studyPremium}
+                      onChange={(e) => setStudyPremium(e.target.checked)}
+                      className="accent-purple-400 rounded"
+                    />
+                    <span>Premium (1.5x)</span>
+                  </label>
+                  <label className="flex items-center gap-1 cursor-pointer text-slate-300">
+                    <input
+                      type="checkbox"
+                      checked={studyFocus}
+                      onChange={(e) => setStudyFocus(e.target.checked)}
+                      className="accent-sky-400 rounded"
+                    />
+                    <span>Study Focus (1.59x)</span>
+                  </label>
+                </div>
+              )}
             </div>
           </div>
 
@@ -234,7 +272,9 @@ export default function SpecLevelingPlanner({
                 {roadmap.journalsFilled.toLocaleString()}
               </span>
               <span className="text-[10px] text-slate-500 block truncate">
-                T{tier} {mode === 'food' ? 'Chef' : 'Crafting'} Journals
+                {strategy === 'study'
+                  ? 'Studying gives 0 journal fame'
+                  : `T${tier} ${mode === 'food' ? 'Chef' : 'Crafting'} Journals`}
               </span>
             </div>
 
@@ -335,6 +375,17 @@ export default function SpecLevelingPlanner({
                     </span>
                   </div>
                 )}
+                {roadmap.extraBreakdown?.map((ex) => (
+                  <div key={ex.id} className="bg-[#06090f] p-2 rounded-lg border border-amber-500/30">
+                    <span className="text-amber-300 text-[10px] block">{ex.name}</span>
+                    <span className="font-bold text-amber-200 block text-xs mt-0.5">
+                      {ex.net.toLocaleString()} net
+                    </span>
+                    <span className="text-[9px] text-slate-500 block">
+                      ({ex.gross.toLocaleString()} upfront)
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           )}

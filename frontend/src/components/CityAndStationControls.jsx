@@ -1,7 +1,8 @@
 import React from 'react';
 import NumberInput from './NumberInput';
 import { CITIES, RESOURCES } from '../utils/albionMath';
-import { MapPin, Building, Flame, CheckCircle2, AlertTriangle, PackageCheck, Target } from 'lucide-react';
+import { MapPin, Building, Flame, CheckCircle2, AlertTriangle, PackageCheck, Target, Shield } from 'lucide-react';
+import HideoutStationPanel from './HideoutStationPanel';
 
 export default function CityAndStationControls({
   selectedCity,
@@ -19,15 +20,27 @@ export default function CityAndStationControls({
   setRawMaterialsHave,
   compoundRrrPasses = true,
   materialSim = null,
+  locationMode = 'city',
+  setLocationMode,
+  hoPowerLevel = 1,
+  setHoPowerLevel,
+  hoZoneQuality = 1,
+  setHoZoneQuality,
+  hoHasSpecialty = false,
+  setHoHasSpecialty,
+  hoCustomBonusPct = '',
+  setHoCustomBonusPct,
+  useFocus = false,
 }) {
   const resourceInfo = RESOURCES[selectedResource];
-  const isBonusCity = selectedCity.toLowerCase() === resourceInfo?.bonusCity?.toLowerCase();
-  const isIsland = selectedCity.toLowerCase() === 'island';
+  const isHideout = locationMode === 'hideout';
+  const isBonusCity = !isHideout && selectedCity.toLowerCase() === resourceInfo?.bonusCity?.toLowerCase();
+  const isIsland = !isHideout && selectedCity.toLowerCase() === 'island';
   const isMaterialsMode = refiningInputMode === 'materials';
 
   return (
     <div className="forged-tablet rounded-2xl p-4 sm:p-5 shadow-xl space-y-4 relative overflow-hidden">
-      {/* Header & Specialty Badge */}
+      {/* Header, Location Mode & Specialty Badge */}
       <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-800/80">
         <div className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-amber-400" />
@@ -36,75 +49,163 @@ export default function CityAndStationControls({
           </h3>
         </div>
 
-        <div className="text-[11px] font-mono">
-          {isBonusCity ? (
-            <span className="text-emerald-300 bg-emerald-950/70 border border-emerald-500/40 px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-bold shadow-sm">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-              <span>{selectedCity} Specialty (+40% RRR Bonus)</span>
-            </span>
-          ) : isIsland ? (
-            <span className="text-rose-400 bg-rose-950/60 border border-rose-500/40 px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-bold">
-              <AlertTriangle className="w-3.5 h-3.5" />
-              <span>Island (0% Base Bonus)</span>
-            </span>
-          ) : (
-            <span className="text-amber-300 bg-amber-950/60 border border-amber-500/40 px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-medium">
-              <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
-              <span>Standard Royal (18% Base Bonus)</span>
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Compact City Selector: 4 columns on mobile, 4 on tablet/desktop */}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
-            Select Refining City
-          </span>
-          <span className="text-[10px] font-mono text-slate-400">
-            +40% Bonus City: <strong className="text-amber-300">{resourceInfo?.bonusCity}</strong>
-          </span>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {CITIES.map((c) => {
-            const isSelected = selectedCity === c.name;
-            const isSpecialty = c.bonusRes === selectedResource;
-
-            return (
+        <div className="flex flex-wrap items-center gap-2">
+          {setLocationMode && (
+            <div className="flex items-center bg-[#06090f] p-0.5 rounded-lg border border-slate-800 text-[10px] font-mono">
               <button
-                key={c.name}
                 type="button"
-                onClick={() => setSelectedCity(c.name)}
-                className={`min-h-[44px] px-3 py-2 rounded-xl border text-left transition-all relative flex flex-col justify-center cursor-pointer ${
-                  isSelected
-                    ? 'bg-gradient-to-b from-amber-950/50 via-[#101522] to-[#080d16] border-amber-400/80 shadow-[0_0_12px_rgba(245,158,11,0.2)]'
-                    : isSpecialty
-                    ? 'bg-[#080d16] border-emerald-500/40 text-slate-300 hover:border-emerald-400 hover:bg-[#0c1424]'
-                    : 'bg-[#080d16] border-slate-800 text-slate-400 hover:border-slate-700 hover:bg-[#0c1320]'
+                onClick={() => setLocationMode('city')}
+                className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                  !isHideout
+                    ? 'bg-amber-500/20 text-amber-200 border border-amber-500/50 font-bold'
+                    : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                <div className="flex items-center justify-between gap-1 w-full">
-                  <span className={`font-serif font-bold text-xs truncate ${isSelected ? 'text-amber-200' : 'text-slate-200'}`}>
-                    {c.name}
-                  </span>
-                  {isSpecialty && (
-                    <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shrink-0">
-                      +40%
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center justify-between text-[9px] font-mono mt-0.5">
-                  <span className={isSelected ? 'text-amber-400 font-semibold' : 'text-slate-500'}>
-                    {isSelected ? '◆ Selected' : (isSpecialty ? 'Specialty' : (c.name === 'Island' ? '0% RRR' : '18% Base'))}
-                  </span>
-                </div>
+                Royal / City
               </button>
-            );
-          })}
+              <button
+                type="button"
+                onClick={() => {
+                  if (selectedCity.toLowerCase() === 'island') {
+                    setSelectedCity(resourceInfo?.bonusCity || 'Martlock');
+                  }
+                  setLocationMode('hideout');
+                }}
+                className={`px-2.5 py-1 rounded-md flex items-center gap-1 transition-all cursor-pointer ${
+                  isHideout
+                    ? 'bg-amber-500/20 text-amber-200 border border-amber-500/50 font-bold'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <Shield className="w-3 h-3" />
+                <span>Hideout (HO)</span>
+              </button>
+            </div>
+          )}
+
+          <div className="text-[11px] font-mono">
+            {isHideout ? (
+              <span className="text-amber-200 bg-amber-950/70 border border-amber-500/40 px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-bold shadow-sm">
+                <Shield className="w-3.5 h-3.5 text-amber-400" />
+                <span>
+                  {hoCustomBonusPct !== '' && hoCustomBonusPct !== null
+                    ? (Number(hoCustomBonusPct) === 10 && !hoHasSpecialty
+                        ? 'Roads HO (+10% Base)'
+                        : `Hideout Override (+${hoCustomBonusPct}%)`)
+                    : (hoHasSpecialty ? 'Roads HO + Zone Bonus (+20%)' : 'Outlands BZ HO (+15%)')}
+                </span>
+              </span>
+            ) : isBonusCity ? (
+              <span className="text-emerald-300 bg-emerald-950/70 border border-emerald-500/40 px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-bold shadow-sm">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{selectedCity} Specialty (+40% RRR Bonus)</span>
+              </span>
+            ) : isIsland ? (
+              <span className="text-rose-400 bg-rose-950/60 border border-rose-500/40 px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-bold">
+                <AlertTriangle className="w-3.5 h-3.5" />
+                <span>Island (0% Base Bonus)</span>
+              </span>
+            ) : (
+              <span className="text-amber-300 bg-amber-950/60 border border-amber-500/40 px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-medium">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+                <span>Standard Royal (18% Base Bonus)</span>
+              </span>
+            )}
+          </div>
         </div>
       </div>
+
+      {/* City Selector in Royal/City Mode vs Clean Market Price City in Hideout Mode */}
+      {isHideout ? (
+        <div className="bg-[#080d16] border border-slate-800/80 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div>
+            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-300 font-bold">
+              Market Price City (AODP Prices Only)
+            </div>
+            <div className="text-[10px] font-mono text-slate-500">
+              Only used for buy/sell market prices — refining station RRR comes solely from the Hideout below.
+            </div>
+          </div>
+          <select
+            value={selectedCity.toLowerCase() === 'island' ? (resourceInfo?.bonusCity || 'Martlock') : selectedCity}
+            onChange={(e) => setSelectedCity(e.target.value)}
+            className="sm:w-52 px-3 py-2 rounded-lg bg-[#05080e] border border-slate-700 text-xs text-slate-100 font-serif focus:outline-none focus:border-amber-400 cursor-pointer"
+          >
+            {CITIES.filter((c) => c.name !== 'Island').map((c) => (
+              <option key={c.name} value={c.name}>
+                {c.name} Market
+              </option>
+            ))}
+          </select>
+        </div>
+      ) : (
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+              Select Refining City
+            </span>
+            <span className="text-[10px] font-mono text-slate-400">
+              +40% Bonus City: <strong className="text-amber-300">{resourceInfo?.bonusCity}</strong>
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {CITIES.map((c) => {
+              const isSelected = selectedCity === c.name;
+              const isSpecialty = c.bonusRes === selectedResource;
+
+              return (
+                <button
+                  key={c.name}
+                  type="button"
+                  onClick={() => setSelectedCity(c.name)}
+                  className={`min-h-[44px] px-3 py-2 rounded-xl border text-left transition-all relative flex flex-col justify-center cursor-pointer ${
+                    isSelected
+                      ? 'bg-gradient-to-b from-amber-950/50 via-[#101522] to-[#080d16] border-amber-400/80 shadow-[0_0_12px_rgba(245,158,11,0.2)]'
+                      : isSpecialty
+                      ? 'bg-[#080d16] border-emerald-500/40 text-slate-300 hover:border-emerald-400 hover:bg-[#0c1424]'
+                      : 'bg-[#080d16] border-slate-800 text-slate-400 hover:border-slate-700 hover:bg-[#0c1320]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-1 w-full">
+                    <span className={`font-serif font-bold text-xs truncate ${isSelected ? 'text-amber-200' : 'text-slate-200'}`}>
+                      {c.name}
+                    </span>
+                    {isSpecialty && (
+                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shrink-0">
+                        +40%
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between text-[9px] font-mono mt-0.5">
+                    <span className={isSelected ? 'text-amber-400 font-semibold' : 'text-slate-500'}>
+                      {isSelected ? '◆ Selected' : (isSpecialty ? 'Specialty' : (c.name === 'Island' ? '0% RRR' : '18% Base'))}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {isHideout && (
+        <HideoutStationPanel
+          hoPowerLevel={hoPowerLevel}
+          setHoPowerLevel={setHoPowerLevel}
+          hoZoneQuality={hoZoneQuality}
+          setHoZoneQuality={setHoZoneQuality}
+          hoHasSpecialty={hoHasSpecialty}
+          setHoHasSpecialty={setHoHasSpecialty}
+          hoCustomBonusPct={hoCustomBonusPct}
+          setHoCustomBonusPct={setHoCustomBonusPct}
+          dailyBonus={dailyBonus}
+          useFocus={useFocus}
+          specialtyMode="refining"
+          specialtyLabel="Roads Resource Bonus (+20%)"
+          accent="amber"
+        />
+      )}
 
       {/* Station Tax, Batch Quantity & Daily Bonus Controls */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">

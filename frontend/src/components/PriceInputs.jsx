@@ -1,6 +1,6 @@
 import React from 'react';
 import NumberInput from './NumberInput';
-import { RefreshCw, Coins, Tag, RotateCcw, Zap } from 'lucide-react';
+import { RefreshCw, Coins, Tag, RotateCcw } from 'lucide-react';
 import { RESOURCES, getItemIdentifier, getItemIconPath } from '../utils/albionMath';
 import { getCalibratedNowMs } from '../services/api';
 import ItemIcon from './ItemIcon';

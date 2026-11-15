@@ -133,12 +133,12 @@ for p in sorted(potions, key=lambda x: (int(x.get('@tier', '1')), x.get('@unique
 
 # Add Distillery & Arcane Extracts
 distillery_specs = [
-    {'id': 'T6_ALCOHOL', 'tier': 6, 'name': 'Potato Schnapps', 'subcat': 'distillery', 'ing': 'T6_POTATO', 'count': 1, 'yield': 1, 'focus': 38},
-    {'id': 'T7_ALCOHOL', 'tier': 7, 'name': 'Corn Hooch', 'subcat': 'distillery', 'ing': 'T7_CORN', 'count': 1, 'yield': 1, 'focus': 38},
-    {'id': 'T8_ALCOHOL', 'tier': 8, 'name': 'Pumpkin Moonshine', 'subcat': 'distillery', 'ing': 'T8_PUMPKIN', 'count': 1, 'yield': 1, 'focus': 38},
-    {'id': 'T1_ALCHEMY_EXTRACT_LEVEL1', 'tier': 1, 'name': 'Basic Arcane Extract', 'subcat': 'distillery', 'ing': 'T1_ALCHEMY_COMMON', 'count': 1, 'yield': 1, 'focus': 0},
-    {'id': 'T1_ALCHEMY_EXTRACT_LEVEL2', 'tier': 1, 'name': 'Refined Arcane Extract', 'subcat': 'distillery', 'ing': 'T1_ALCHEMY_COMMON', 'count': 3, 'yield': 1, 'focus': 0},
-    {'id': 'T1_ALCHEMY_EXTRACT_LEVEL3', 'tier': 1, 'name': 'Pure Arcane Extract', 'subcat': 'distillery', 'ing': 'T1_ALCHEMY_COMMON', 'count': 9, 'yield': 1, 'focus': 0},
+    {'id': 'T6_ALCOHOL', 'tier': 6, 'name': 'Potato Schnapps', 'subcat': 'distillery', 'ing': 'T6_POTATO', 'count': 1, 'yield': 1, 'focus': 38, 'nutrition': 52.0},
+    {'id': 'T7_ALCOHOL', 'tier': 7, 'name': 'Corn Hooch', 'subcat': 'distillery', 'ing': 'T7_CORN', 'count': 1, 'yield': 1, 'focus': 38, 'nutrition': 52.0},
+    {'id': 'T8_ALCOHOL', 'tier': 8, 'name': 'Pumpkin Moonshine', 'subcat': 'distillery', 'ing': 'T8_PUMPKIN', 'count': 1, 'yield': 1, 'focus': 38, 'nutrition': 52.0},
+    {'id': 'T1_ALCHEMY_EXTRACT_LEVEL1', 'tier': 1, 'name': 'Basic Arcane Extract', 'subcat': 'distillery', 'ing': 'T1_ALCHEMY_COMMON', 'count': 1, 'yield': 1, 'focus': 0, 'nutrition': 0.0},
+    {'id': 'T1_ALCHEMY_EXTRACT_LEVEL2', 'tier': 1, 'name': 'Refined Arcane Extract', 'subcat': 'distillery', 'ing': 'T1_ALCHEMY_COMMON', 'count': 3, 'yield': 1, 'focus': 0, 'nutrition': 0.0},
+    {'id': 'T1_ALCHEMY_EXTRACT_LEVEL3', 'tier': 1, 'name': 'Pure Arcane Extract', 'subcat': 'distillery', 'ing': 'T1_ALCHEMY_COMMON', 'count': 9, 'yield': 1, 'focus': 0, 'nutrition': 0.0},
 ]
 
 for d in distillery_specs:
@@ -153,7 +153,7 @@ for d in distillery_specs:
         'isRare': False,
         'isIntermediate': True,
         'amountCrafted': d['yield'],
-        'nutrition': 18 * (2 ** max(0, d['tier'] - 2)),
+        'nutrition': d['nutrition'],
         'baseFocus': d['focus'],
         'ingredients': [{
             'uniqueName': d['ing'],

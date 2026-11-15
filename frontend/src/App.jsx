@@ -9,9 +9,9 @@ import LedgerResults from './components/LedgerResults';
 import CityArbitrageDrawer from './components/CityArbitrageDrawer';
 import InteractiveTour from './components/InteractiveTour';
 import CommandNavigator, { spotlightElement } from './components/CommandNavigator';
-import { computeRefining, RESOURCES, calculateFocusCost, simulateRefiningFromMaterials } from './utils/albionMath';
+import { computeRefining, calculateFocusCost, simulateRefiningFromMaterials } from './utils/albionMath';
 import { fetchLivePricesApi, calculateRefiningApi } from './services/api';
-import { Layers, Hammer, Flame, FlaskConical, Wheat, Users, Skull, Compass, BookOpen, Sparkles, X, Search, RefreshCw, ArrowUpRight } from 'lucide-react';
+import { Layers, Hammer, Flame, FlaskConical, Wheat, Users, Skull, Sparkles, RefreshCw } from 'lucide-react';
 
 // Lazy-loaded heavy modules for lightning-fast initial load & mobile performance
 const CraftingCalculator = lazy(() => import('./components/CraftingCalculator'));
@@ -203,6 +203,11 @@ export default function App() {
   const [stationTax, setStationTax] = useState(500);
   const [quantity, setQuantity] = useState(100);
   const [dailyBonus, setDailyBonus] = useState(0);
+  const [locationMode, setLocationMode] = useState('city');
+  const [hoPowerLevel, setHoPowerLevel] = useState(1);
+  const [hoZoneQuality, setHoZoneQuality] = useState(1);
+  const [hoHasSpecialty, setHoHasSpecialty] = useState(false);
+  const [hoCustomBonusPct, setHoCustomBonusPct] = useState('');
 
   // "I Have Materials" mode states for Refining
   const [refiningInputMode, setRefiningInputMode] = useState('target'); // 'target' | 'materials'
@@ -242,6 +247,11 @@ export default function App() {
       city: selectedCity,
       useFocus,
       dailyBonusPct: dailyBonus,
+      locationMode,
+      hoPowerLevel,
+      hoZoneQuality,
+      hoHasSpecialty,
+      hoCustomBonusPct,
     });
   }, [
     selectedResource,
@@ -252,6 +262,11 @@ export default function App() {
     selectedCity,
     useFocus,
     dailyBonus,
+    locationMode,
+    hoPowerLevel,
+    hoZoneQuality,
+    hoHasSpecialty,
+    hoCustomBonusPct,
   ]);
 
   const effectiveRefiningQuantity = useMemo(() => {
@@ -294,6 +309,11 @@ export default function App() {
       isSellOrder,
       masteryLevel,
       specLevels,
+      locationMode,
+      hoPowerLevel,
+      hoZoneQuality,
+      hoHasSpecialty,
+      hoCustomBonusPct,
     });
   }, [
     selectedResource,
@@ -311,6 +331,11 @@ export default function App() {
     isSellOrder,
     masteryLevel,
     specLevels,
+    locationMode,
+    hoPowerLevel,
+    hoZoneQuality,
+    hoHasSpecialty,
+    hoCustomBonusPct,
   ]);
 
   // Query Authoritative Django Backend Refining Engine
@@ -336,6 +361,11 @@ export default function App() {
           is_sell_order: isSellOrder,
           mastery_level: masteryLevel,
           spec_levels: specLevels,
+          location_mode: locationMode,
+          ho_power_level: hoPowerLevel,
+          ho_zone_quality: hoZoneQuality,
+          ho_has_specialty: hoHasSpecialty,
+          ho_custom_bonus_pct: hoCustomBonusPct === '' ? null : hoCustomBonusPct,
         };
 
         const backendResult = await calculateRefiningApi(payload);
@@ -374,6 +404,11 @@ export default function App() {
     isSellOrder,
     masteryLevel,
     specLevels,
+    locationMode,
+    hoPowerLevel,
+    hoZoneQuality,
+    hoHasSpecialty,
+    hoCustomBonusPct,
   ]);
 
   const calculation = backendCalculation || localCalculation;
@@ -660,6 +695,17 @@ export default function App() {
                     setRawMaterialsHave={setRawMaterialsHave}
                     compoundRrrPasses={compoundRrrPasses}
                     materialSim={refiningMaterialSim}
+                    locationMode={locationMode}
+                    setLocationMode={setLocationMode}
+                    hoPowerLevel={hoPowerLevel}
+                    setHoPowerLevel={setHoPowerLevel}
+                    hoZoneQuality={hoZoneQuality}
+                    setHoZoneQuality={setHoZoneQuality}
+                    hoHasSpecialty={hoHasSpecialty}
+                    setHoHasSpecialty={setHoHasSpecialty}
+                    hoCustomBonusPct={hoCustomBonusPct}
+                    setHoCustomBonusPct={setHoCustomBonusPct}
+                    useFocus={useFocus}
                   />
                 </div>
 

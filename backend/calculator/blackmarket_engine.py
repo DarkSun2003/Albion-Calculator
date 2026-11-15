@@ -2,6 +2,7 @@ import json
 import os
 import requests
 from math import ceil
+from .crafting_constants import get_primary_qty, get_secondary_qty
 
 BASE_DIR = os.path.dirname(__file__)
 CATALOG_PATH = os.path.join(BASE_DIR, 'data', 'generated_catalog.json')
@@ -44,7 +45,7 @@ def format_aodp_id(template, tier, enchantment=0):
         return f"{base_id}@{enchantment}"
     return base_id
 
-from .constants import AODP_SERVERS, ITEM_QUALITIES
+from .constants import AODP_SERVERS, ITEM_QUALITIES, TAX_PREMIUM, TAX_NON_PREMIUM, ORDER_SETUP_FEE
 
 def scan_blackmarket(params):
     """
@@ -54,6 +55,7 @@ def scan_blackmarket(params):
     tier = int(params.get('tier', 5))
     enchantment = int(params.get('enchantment', 0))
     category = params.get('category', 'all')
+    has_premium = bool(params.get('has_premium', True))
     min_profit = float(params.get('min_profit', 0))
     min_margin = float(params.get('min_margin', 0))
     sort_by = params.get('sort_by', 'profit') # 'profit', 'margin', 'density', 'cost'
@@ -171,8 +173,8 @@ def scan_blackmarket(params):
         
         # Base item craft costs
         base_item_val = it.get('baseItemValue', 100)
-        primary_qty = it.get('primaryQty', 16)
-        secondary_qty = it.get('secondaryQty', 8)
+        primary_qty = get_primary_qty(it, tier) or 16
+        secondary_qty = get_secondary_qty(it, tier)
         mat_tier_mult = (2 ** (tier - 4)) * (2 ** enchantment)
         est_primary_cost = primary_qty * 350 * mat_tier_mult * 0.75 # 24.8% RRR
         est_secondary_cost = secondary_qty * 350 * mat_tier_mult * 0.75
@@ -221,16 +223,20 @@ def scan_blackmarket(params):
             effective_cost = royal_best_price if royal_best_price > 0 else craft_cost_est
             acquisition_method = f"Buy in {royal_best_city}" if royal_best_price > 0 else f"Craft in {it.get('bonusCity', 'Royal City')}"
 
-            # Standard market tax (4% premium + 2.5% sell order or direct sell)
-            tax_multiplier = 0.935
+            # Albion Online tax rules:
+            # - Instant Sell to existing Buy Order: sales tax only (4% Premium / 8% non-Premium, 0% setup fee)
+            # - Listed Sell Order: sales tax + 2.5% setup fee (6.5% Premium / 10.5% non-Premium)
+            sales_tax = TAX_PREMIUM if has_premium else TAX_NON_PREMIUM
+            instant_multiplier = 1.0 - sales_tax
+            listed_multiplier = 1.0 - (sales_tax + ORDER_SETUP_FEE)
 
             # Instant Sell to Black Market Buy Order
-            instant_payout = round(bm_buy_max * tax_multiplier) if bm_buy_max > 0 else 0
+            instant_payout = round(bm_buy_max * instant_multiplier) if bm_buy_max > 0 else 0
             instant_profit = round(instant_payout - effective_cost) if instant_payout > 0 else 0
             instant_margin = round((instant_profit / effective_cost) * 100, 1) if (instant_payout > 0 and effective_cost > 0) else 0
 
             # Listed Sell Order on Black Market
-            listed_payout = round(bm_sell_min * tax_multiplier) if bm_sell_min > 0 else 0
+            listed_payout = round(bm_sell_min * listed_multiplier) if bm_sell_min > 0 else 0
             listed_profit = round(listed_payout - effective_cost) if listed_payout > 0 else 0
             listed_margin = round((listed_profit / effective_cost) * 100, 1) if (listed_payout > 0 and effective_cost > 0) else 0
 

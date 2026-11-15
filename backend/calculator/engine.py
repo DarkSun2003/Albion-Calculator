@@ -10,31 +10,39 @@ from .constants import (
     TAX_NON_PREMIUM,
     ORDER_SETUP_FEE,
     STONE_ENCHANTMENT_YIELD,
+    compute_total_rrr,
 )
 
-def calculate_return_rate(resource_type: str, city: str, use_focus: bool = False, daily_bonus_pct: float = 0.0) -> float:
+def calculate_return_rate(
+    resource_type: str,
+    city: str,
+    use_focus: bool = False,
+    daily_bonus_pct: float = 0.0,
+    location_mode: str = 'city',
+    ho_power_level: int = 1,
+    ho_zone_quality: int = 1,
+    ho_has_specialty: bool = False,
+    ho_custom_bonus_pct: float = None,
+) -> float:
     """
-    Calculates Resource Return Rate (RRR) based on production bonuses.
+    Calculates Resource Return Rate (RRR) based on production bonuses (City, Island, or Hideout).
     Formula: RRR = Bonus / (1.0 + Bonus)
     """
     is_island = city.lower() == 'island' or CITY_PRODUCTION_BONUSES.get(city, {}).get('is_island', False)
-    
-    # Base production bonus: 0 on island, 18% (0.18) in Royal cities
     base_bonus = 0.0 if is_island else 0.18
-    
-    # City specialty bonus (+40% if city matches resource)
     city_bonus = CITY_PRODUCTION_BONUSES.get(city, {}).get(resource_type.lower(), 0.0)
-    
-    # Daily event bonus (e.g. 10% or 20%)
-    daily_bonus = (daily_bonus_pct or 0.0) / 100.0
-    
-    # Focus bonus (+59%)
-    focus_bonus = 0.59 if use_focus else 0.0
-    
-    total_bonus = base_bonus + city_bonus + daily_bonus + focus_bonus
-    
-    rrr = total_bonus / (1.0 + total_bonus) if total_bonus > 0 else 0.0
-    return round(rrr, 6)
+    return compute_total_rrr(
+        base_city_bonus=base_bonus,
+        city_specialty_bonus=city_bonus,
+        daily_bonus_pct=daily_bonus_pct,
+        use_focus=use_focus,
+        location_mode=location_mode,
+        ho_power_level=ho_power_level,
+        ho_zone_quality=ho_zone_quality,
+        ho_has_specialty=ho_has_specialty,
+        ho_custom_bonus_pct=ho_custom_bonus_pct,
+        specialty_mode='refining',
+    )
 
 
 def calculate_focus_efficiency(spec_levels: dict, current_tier: int, mastery: int = 0) -> int:
@@ -65,13 +73,14 @@ def calculate_focus_cost(resource_type: str, tier: int, enchantment: int, master
     Calculates focus cost per single refined item unit based on Albion Online's 500/500 spec.
     Formula: Actual Focus = Base Focus * (0.5 ^ (Efficiency / 10000))
     """
-    if tier < 3:
+    if tier < 2:
         return 0
     if spec_levels is None:
         spec_levels = {}
         
     base_cost = BASE_FOCUS_COST.get(tier, 54)
-    multiplier = ENCHANTMENT_FOCUS_MULTIPLIER.get(enchantment, 1.0)
+    is_stone = str(resource_type or '').lower() == 'stone'
+    multiplier = 1.0 if is_stone else ENCHANTMENT_FOCUS_MULTIPLIER.get(enchantment, 1.0)
     base_focus = base_cost * multiplier
     
     efficiency = calculate_focus_efficiency(spec_levels, tier, mastery=0)
@@ -112,6 +121,11 @@ def calculate_refining(
     is_sell_order: bool = True,
     mastery_level: int = 0,
     spec_levels: dict = None,
+    location_mode: str = 'city',
+    ho_power_level: int = 1,
+    ho_zone_quality: int = 1,
+    ho_has_specialty: bool = False,
+    ho_custom_bonus_pct: float = None,
 ) -> dict:
     """
     Comprehensive Albion Online refining calculation.
@@ -124,12 +138,20 @@ def calculate_refining(
     enchantment = int(enchantment)
     
     # 1. Return rates
-    rrr_current = calculate_return_rate(resource_type, city, use_focus, daily_bonus_pct)
-    rrr_without_focus = calculate_return_rate(resource_type, city, False, daily_bonus_pct)
+    rrr_current = calculate_return_rate(
+        resource_type, city, use_focus, daily_bonus_pct,
+        location_mode, ho_power_level, ho_zone_quality, ho_has_specialty, ho_custom_bonus_pct,
+    )
+    rrr_without_focus = calculate_return_rate(
+        resource_type, city, False, daily_bonus_pct,
+        location_mode, ho_power_level, ho_zone_quality, ho_has_specialty, ho_custom_bonus_pct,
+    )
     
     # 2. Raw & previous tier inputs required
+    is_stone = str(resource_type or '').lower() == 'stone'
+    output_yield_multiplier = STONE_ENCHANTMENT_YIELD.get(enchantment, 1) if is_stone else 1
     raw_per_craft = RAW_PER_TIER.get(tier, 2)
-    prev_refined_per_craft = 1 if tier > 2 else 0
+    prev_refined_per_craft = output_yield_multiplier if tier > 2 else 0
     
     # Gross materials needed upfront
     total_raw_gross = quantity * raw_per_craft
@@ -150,7 +172,6 @@ def calculate_refining(
     station_fee = calculate_station_fee(tier, enchantment, station_tax_per_100, quantity)
     
     # 4. Output yield & Market Revenue
-    output_yield_multiplier = STONE_ENCHANTMENT_YIELD.get(enchantment, 1) if resource_type.lower() == 'stone' else 1
     output_quantity = quantity * output_yield_multiplier
 
     # Total actual cost of the batch
@@ -189,7 +210,8 @@ def calculate_refining(
         
     # Opportunity cost / bonus city comparison
     bonus_city = RESOURCES.get(resource_type.lower(), {}).get('bonus_city', 'Martlock')
-    is_bonus_city = city.lower() == bonus_city.lower()
+    is_hideout = str(location_mode or 'city').lower() == 'hideout'
+    is_bonus_city = (city.lower() == bonus_city.lower()) and not is_hideout
     opportunity_cost = None
     if not is_bonus_city:
         rrr_bonus_city = calculate_return_rate(resource_type, bonus_city, use_focus, daily_bonus_pct)

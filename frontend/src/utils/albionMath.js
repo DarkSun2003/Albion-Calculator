@@ -76,7 +76,7 @@ export function getItemIdentifier(resourceType, tier, enchantment = 0, isRefined
 
 export function getItemCdnUrl(itemId) {
   if (!itemId) return 'https://render.albiononline.com/v1/item/T4_MAIN_SWORD.png';
-  let clean = String(itemId).trim().replace(/^.*[\\\/]/, '').replace(/\.png$/i, '');
+  let clean = String(itemId).trim().replace(/^.*[\\/]/, '').replace(/\.png$/i, '');
   clean = clean.replace(/_LEVEL([1-4])_([1-4])$/i, '_LEVEL$1@$2');
   return `https://render.albiononline.com/v1/item/${clean}.png`;
 }
@@ -109,7 +109,7 @@ export const RAW_PER_TIER = {
 };
 
 export const BASE_FOCUS_COST = {
-  2: 0,
+  2: 18,
   3: 31,
   4: 54,
   5: 94,
@@ -134,35 +134,115 @@ export const STONE_ENCHANTMENT_YIELD = {
 };
 
 export const BASE_ITEM_VALUES = {
-  2: { 0: 2 },
-  3: { 0: 6 },
-  4: { 0: 14, 1: 30, 2: 62, 3: 126, 4: 254 },
-  5: { 0: 30, 1: 62, 2: 126, 3: 254, 4: 510 },
-  6: { 0: 62, 1: 126, 2: 254, 3: 510, 4: 1022 },
-  7: { 0: 126, 1: 254, 2: 510, 3: 1022, 4: 2046 },
-  8: { 0: 254, 1: 510, 2: 1022, 3: 2046, 4: 4094 },
+  2: { 0: 4 },
+  3: { 0: 8 },
+  4: { 0: 16, 1: 32, 2: 64, 3: 128, 4: 256 },
+  5: { 0: 32, 1: 64, 2: 128, 3: 256, 4: 512 },
+  6: { 0: 64, 1: 128, 2: 256, 3: 512, 4: 1024 },
+  7: { 0: 128, 1: 256, 2: 512, 3: 1024, 4: 2048 },
+  8: { 0: 256, 1: 512, 2: 1024, 3: 2048, 4: 4096 },
 };
 
-export function calculateReturnRate(resourceType, city, useFocus = false, dailyBonusPct = 0) {
-  const isIsland = city.toLowerCase() === 'island';
-  const baseBonus = isIsland ? 0.0 : 0.18;
-  
-  const cityObj = CITIES.find(c => c.name.toLowerCase() === city.toLowerCase());
-  const hasCitySpecialty = cityObj?.bonusRes === resourceType;
-  const specialtyBonus = hasCitySpecialty ? 0.40 : 0.0;
-  
-  const dailyBonus = (dailyBonusPct || 0) / 100.0;
+export const HO_POWER_GENERAL_BONUS = {
+  1: 0.0,
+  2: 6.0,
+  3: 11.0,
+  4: 15.0,
+  5: 18.0,
+  6: 20.0,
+  7: 22.0,
+  8: 24.0,
+  9: 26.0,
+};
+
+export const HO_ZONE_QUALITY_BONUS = {
+  1: 1.0,
+  2: 6.0,
+  3: 11.0,
+  4: 16.0,
+  5: 21.0,
+  6: 26.0,
+};
+
+export function calculateHideoutBonusPct({
+  powerLevel = 1,
+  zoneQuality = 1,
+  hasSpecialty = false,
+  customBonusPct = null,
+  specialtyMode = 'crafting',
+} = {}) {
+  if (customBonusPct !== null && customBonusPct !== undefined && customBonusPct !== '') {
+    const parsed = Number(customBonusPct);
+    if (Number.isFinite(parsed)) {
+      return Math.max(0.0, parsed);
+    }
+  }
+  if (specialtyMode === 'refining') {
+    return hasSpecialty ? 20.0 : 15.0;
+  }
+  const lvl = Math.max(1, Math.min(9, parseInt(powerLevel || 1, 10) || 1));
+  const general = HO_POWER_GENERAL_BONUS[lvl] ?? 0.0;
+  if (specialtyMode === 'food' || specialtyMode === 'potion' || !hasSpecialty) {
+    return Math.round(general * 10000) / 10000;
+  }
+  const qual = Math.max(1, Math.min(6, parseInt(zoneQuality || 1, 10) || 1));
+  const zoneBonus = HO_ZONE_QUALITY_BONUS[qual] ?? 1.0;
+  const specBonus = (lvl - 1) * 3.75;
+  return Math.round((general + zoneBonus + specBonus) * 10000) / 10000;
+}
+
+export function computeTotalRrr({
+  baseCityBonus = 0.18,
+  citySpecialtyBonus = 0.0,
+  dailyBonusPct = 0,
+  useFocus = false,
+  locationMode = 'city',
+  hoPowerLevel = 1,
+  hoZoneQuality = 1,
+  hoHasSpecialty = false,
+  hoCustomBonusPct = null,
+  specialtyMode = 'crafting',
+} = {}) {
+  const isHideout = String(locationMode || 'city').toLowerCase() === 'hideout';
+  const stationBonus = isHideout
+    ? calculateHideoutBonusPct({
+        powerLevel: hoPowerLevel,
+        zoneQuality: hoZoneQuality,
+        hasSpecialty: hoHasSpecialty,
+        customBonusPct: hoCustomBonusPct,
+        specialtyMode,
+      }) / 100.0
+    : baseCityBonus + citySpecialtyBonus;
+  const dailyBonus = (parseFloat(dailyBonusPct) || 0) / 100.0;
   const focusBonus = useFocus ? 0.59 : 0.0;
-  
-  const totalBonus = baseBonus + specialtyBonus + dailyBonus + focusBonus;
+  const totalBonus = stationBonus + dailyBonus + focusBonus;
   return totalBonus > 0 ? totalBonus / (1.0 + totalBonus) : 0.0;
 }
 
+export function calculateReturnRate(resourceType, city, useFocus = false, dailyBonusPct = 0, hoOptions = {}) {
+  const isIsland = city.toLowerCase() === 'island';
+  const baseBonus = isIsland ? 0.0 : 0.18;
+
+  const cityObj = CITIES.find(c => c.name.toLowerCase() === city.toLowerCase());
+  const hasCitySpecialty = cityObj?.bonusRes === resourceType;
+  const specialtyBonus = hasCitySpecialty ? 0.40 : 0.0;
+
+  return computeTotalRrr({
+    baseCityBonus: baseBonus,
+    citySpecialtyBonus: specialtyBonus,
+    dailyBonusPct,
+    useFocus,
+    specialtyMode: 'refining',
+    ...hoOptions,
+  });
+}
+
 export function calculateFocusCost(resourceType, tier, enchantment, masteryOrSpec = 0, specLevelsArg = {}) {
-  if (tier < 3) return 0;
+  if (tier < 2) return 0;
   
   const baseCost = BASE_FOCUS_COST[tier] || 54;
-  const multiplier = ENCHANTMENT_FOCUS_MULTIPLIER[enchantment] || 1.0;
+  const isStone = String(resourceType || '').toLowerCase() === 'stone';
+  const multiplier = isStone ? 1.0 : (ENCHANTMENT_FOCUS_MULTIPLIER[enchantment] || 1.0);
   const baseFocus = baseCost * multiplier;
   
   // In Albion Online, refining has NO central mastery tree (no 'Mastery Level 1-100').
@@ -209,14 +289,25 @@ export function simulateRefiningFromMaterials({
   city = 'Martlock',
   useFocus = false,
   dailyBonusPct = 0,
+  locationMode = 'city',
+  hoPowerLevel = 1,
+  hoZoneQuality = 1,
+  hoHasSpecialty = false,
+  hoCustomBonusPct = null,
 }) {
   const t = Number(tier);
   const ench = Math.min(resourceType === 'stone' ? 3 : 4, Number(enchantment));
-  const rawPerCraft = RAW_PER_TIER[t] || 2;
-  const prevPerCraft = t > 2 ? 1 : 0;
-  const rrr = calculateReturnRate(resourceType, city, useFocus, dailyBonusPct);
   const isStone = resourceType === 'stone';
   const stoneMultiplier = isStone ? (STONE_ENCHANTMENT_YIELD[ench] || 1) : 1;
+  const rawPerCraft = RAW_PER_TIER[t] || 2;
+  const prevPerCraft = t > 2 ? stoneMultiplier : 0;
+  const rrr = calculateReturnRate(resourceType, city, useFocus, dailyBonusPct, {
+    locationMode,
+    hoPowerLevel,
+    hoZoneQuality,
+    hoHasSpecialty,
+    hoCustomBonusPct,
+  });
 
   let remRaw = Math.max(0, Math.floor(Number(rawHave) || 0));
   let remPrev = Math.max(0, Math.floor(Number(prevRefinedHave) || 0));
@@ -385,18 +476,35 @@ export function computeRefining({
   isSellOrder = true,
   masteryLevel = 0,
   specLevels = {},
+  locationMode = 'city',
+  hoPowerLevel = 1,
+  hoZoneQuality = 1,
+  hoHasSpecialty = false,
+  hoCustomBonusPct = null,
 }) {
   const qty = Math.max(1, Number(quantity) || 1);
   const t = Number(tier);
   const ench = Math.min(resourceType === 'stone' ? 3 : 4, Number(enchantment));
-  
+
+  const hoOptions = {
+    locationMode,
+    hoPowerLevel,
+    hoZoneQuality,
+    hoHasSpecialty,
+    hoCustomBonusPct,
+  };
+
   // Return rates
-  const rrrCurrent = calculateReturnRate(resourceType, city, useFocus, dailyBonusPct);
-  const rrrNoFocus = calculateReturnRate(resourceType, city, false, dailyBonusPct);
+  const rrrCurrent = calculateReturnRate(resourceType, city, useFocus, dailyBonusPct, hoOptions);
+  const rrrNoFocus = calculateReturnRate(resourceType, city, false, dailyBonusPct, hoOptions);
   
+  // Stone yield multiplier
+  const isStone = resourceType === 'stone';
+  const stoneMultiplier = isStone ? (STONE_ENCHANTMENT_YIELD[ench] || 1) : 1;
+
   // Raw and previous tier inputs
   const rawPerCraft = RAW_PER_TIER[t] || 2;
-  const prevRefinedPerCraft = t > 2 ? 1 : 0;
+  const prevRefinedPerCraft = t > 2 ? stoneMultiplier : 0;
   
   const rawGross = qty * rawPerCraft;
   const prevRefinedGross = qty * prevRefinedPerCraft;
@@ -413,9 +521,6 @@ export function computeRefining({
   const stationFee = calculateStationFee(t, ench, stationTaxPer100, qty);
   const totalCost = netMaterialCost + stationFee;
   
-  // Stone yield multiplier
-  const isStone = resourceType === 'stone';
-  const stoneMultiplier = isStone ? (STONE_ENCHANTMENT_YIELD[ench] || 1) : 1;
   const outputQuantity = qty * stoneMultiplier;
   
   // Market Revenue
@@ -444,8 +549,9 @@ export function computeRefining({
   const silverPerFocus = (useFocus && totalFocus > 0) ? (netProfit - profitNoFocus) / totalFocus : 0;
   
   // Bonus city comparison (Opportunity Cost)
+  const isHideout = String(locationMode || 'city').toLowerCase() === 'hideout';
   const bonusCity = RESOURCES[resourceType]?.bonusCity || 'Martlock';
-  const isBonusCity = city.toLowerCase() === bonusCity.toLowerCase();
+  const isBonusCity = !isHideout && city.toLowerCase() === bonusCity.toLowerCase();
   let opportunityCost = null;
   if (!isBonusCity) {
     const rrrBonusCity = calculateReturnRate(resourceType, bonusCity, useFocus, dailyBonusPct);

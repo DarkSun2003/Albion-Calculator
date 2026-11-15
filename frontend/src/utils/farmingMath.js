@@ -323,6 +323,10 @@ export function computeFarming({
   isSellOrder = true,
   masteryLevel = 0,
   specLevel = 0,
+  useButcherFocus = false,
+  butcherMastery = 0,
+  butcherSpec = 0,
+  otherChefSpecAvg = 0,
   animalAction = 'produce', // 'produce' (milk/eggs), 'slaughter' (meat), or 'sell_grown' (adult animal)
   mountAction = 'grown', // 'grown' (sell grown animal) or 'saddled' (saddled riding mount)
   useFavoriteFood = true,
@@ -515,10 +519,19 @@ export function computeFarming({
     const babyExpense = Math.round(babiesToBuy * babyPrice);
     const surplusBabyRevenue = Math.round(surplusBabies * babyPrice);
 
+    const butcherActive = activeAction === 'slaughter';
+    const bM = Math.min(100, Math.max(0, parseInt(butcherMastery) || 0));
+    const bS = Math.min(100, Math.max(0, parseInt(butcherSpec) || 0));
+    const bO = Math.min(100, Math.max(0, parseInt(otherChefSpecAvg) || 0));
+    const butcherEff = (bM * 30) + (bS * 280) + (bO * 240);
+    const butcherFocusPerAnimal = butcherActive ? Math.max(1, Math.floor((38.0 * Math.pow(0.5, butcherEff / 10000.0)) + 0.5)) : 0;
+    const totalButcherFocus = (butcherActive && useButcherFocus) ? butcherFocusPerAnimal * totalSpots : 0;
+
     let totalOutput = 0;
     let outputRevenue = 0;
     let outputName = '';
     let outputIcon = '';
+    let butcherExtraMeat = 0;
 
     if (activeAction === 'sell_grown') {
       totalOutput = totalSpots;
@@ -526,9 +539,12 @@ export function computeFarming({
       outputName = itemDef.name;
       outputIcon = itemDef.icon;
     } else {
-      // Slaughter
+      // Slaughter (optional Butcher Focus grants +59% meat yield)
       const meatYieldPerSpot = itemDef.meatYield || 18;
-      totalOutput = Math.round(totalSpots * meatYieldPerSpot * yieldMultiplier * 10) / 10;
+      const baseMeat = totalSpots * meatYieldPerSpot * yieldMultiplier;
+      const meatBonusMult = useButcherFocus ? 1.59 : 1.0;
+      totalOutput = Math.round(baseMeat * meatBonusMult * 10) / 10;
+      butcherExtraMeat = Math.round(Math.max(0, totalOutput - (Math.round(baseMeat * 10) / 10)) * 10) / 10;
       outputRevenue = Math.round(totalOutput * meatPrice);
       outputName = itemDef.meatName || 'Raw Meat';
       outputIcon = itemDef.meatIcon;
@@ -544,7 +560,11 @@ export function computeFarming({
     const cycleDays = Math.round((growthHours / 24) * 10) / 10;
     const dailyProfit = Math.round((netProfit / growthHours) * 24 * 100) / 100;
 
-    const silverPerFocus = totalFocusNeeded > 0 ? Math.round(((bonusOffspring * totalSpots * babyPrice) / totalFocusNeeded) * 100) / 100 : 0;
+    const pastureFocusValue = useFocus ? (bonusOffspring * totalSpots * babyPrice) : 0;
+    const butcherFocusValue = (butcherActive && useButcherFocus) ? (butcherExtraMeat * meatPrice * (1.0 - taxRate)) : 0;
+    const combinedFocusNeeded = totalFocusNeeded + totalButcherFocus;
+    const silverPerFocus = combinedFocusNeeded > 0 ? Math.round(((pastureFocusValue + butcherFocusValue) / combinedFocusNeeded) * 100) / 100 : 0;
+    const butcherSilverPerFocus = totalButcherFocus > 0 ? Math.round((butcherFocusValue / totalButcherFocus) * 100) / 100 : 0;
 
     return {
       item: itemDef,
@@ -555,12 +575,17 @@ export function computeFarming({
       bonusCity,
       hasPremium,
       useFocus,
+      useButcherFocus: butcherActive && useButcherFocus,
       animalAction: activeAction,
       cycleDays,
       growthHours,
       focus: {
         focusPerSpot,
-        totalFocusNeeded,
+        pastureFocusNeeded: totalFocusNeeded,
+        butcherFocusPerAnimal,
+        totalButcherFocus,
+        butcherSilverPerFocus,
+        totalFocusNeeded: combinedFocusNeeded,
         silverPerFocus,
       },
       yield: {

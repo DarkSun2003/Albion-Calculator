@@ -103,15 +103,36 @@ MOUNT_ITEMS = [
         "primaryMatName": "Transport Ox (T6)",
         "primaryQty": 1,
         "primaryMatIcon": "T6_MOUNT_OX",
+        "primaryNoReturn": True,
         "secondaryMatName": "Runite Steel Bar",
         "secondaryQty": 20,
         "secondaryMatIcon": "T6_METALBAR",
+        "secondaryNoReturn": True,
         "bonusCity": None,
         "isArtifact": True,
         "artifactType": "Siphoned Energy",
         "artifactName": "Siphoned Energy",
         "artifactTemplate": "UNIQUE_GVGTOKEN_GENERIC",
         "artifactQty": 500,
+        "artifactNoReturn": True,
+        "extraMaterials": [
+            {
+                "id": "leather",
+                "name": "Hardened Leather",
+                "template": "T6_LEATHER",
+                "qty": 20,
+                "isRefinedResource": True,
+                "noReturn": True
+            },
+            {
+                "id": "planks",
+                "name": "Bloodoak Planks",
+                "template": "T6_PLANKS",
+                "qty": 20,
+                "isRefinedResource": True,
+                "noReturn": True
+            }
+        ],
         "isNoReturn": True,
         "journalName": None,
         "journalTemplate": None,
@@ -242,19 +263,27 @@ MOUNT_ITEMS = [
         "minTier": 5,
         "maxTier": 8,
         "allowEnchantment": False,
-        "primaryMatName": "Riding Horse",
+        "primaryMatName": "Grown Horse",
         "primaryQty": 1,
-        "primaryMatIcon": "T{tier}_MOUNT_HORSE",
+        "primaryMatIcon": "T{tier}_FARM_HORSE_GROWN",
+        "primaryNoReturn": True,
         "secondaryMatName": "Metal Bars",
         "secondaryQty": 20,
         "secondaryMatIcon": "T{tier}_METALBAR",
         "bonusCity": None,
-        "isArtifact": True,
-        "artifactType": "Cloth",
-        "artifactName": "Cloth",
-        "artifactTemplate": "T{tier}_CLOTH",
-        "artifactQty": 10,
-        "isNoReturn": True,
+        "isArtifact": False,
+        "artifactType": None,
+        "extraMaterials": [
+            {
+                "id": "cloth",
+                "name": "Cloth",
+                "template": "T{tier}_CLOTH",
+                "qty": 10,
+                "isRefinedResource": True,
+                "noReturn": False
+            }
+        ],
+        "isNoReturn": False,
         "journalName": None,
         "journalTemplate": None,
         "famePerUnit": 0,
@@ -853,13 +882,115 @@ MOUNT_ITEMS = [
     }
 ]
 
+def enrich_mounts_from_items_json(items):
+    items_path = os.path.join(SCRIPT_DIR, 'items.json')
+    if not os.path.exists(items_path):
+        return items
+
+    with open(items_path, 'r', encoding='utf-8') as f:
+        raw = json.load(f)
+
+    items_node = raw.get('items', {})
+    by_uid = {}
+    for lst in items_node.values():
+        if isinstance(lst, list):
+            for obj in lst:
+                if isinstance(obj, dict) and obj.get('@uniquename') and obj['@uniquename'] not in by_uid:
+                    by_uid[obj['@uniquename']] = obj
+        elif isinstance(lst, dict) and lst.get('@uniquename') and lst['@uniquename'] not in by_uid:
+            by_uid[lst['@uniquename']] = lst
+
+    for m in items:
+        tmpl = m.get('template', '')
+        lo = int(m.get('minTier', 3))
+        hi = int(m.get('maxTier', 8))
+        focus_by_tier = {}
+        max_fame_factor = 1.0
+        primary_no_return = False
+        secondary_no_return = False
+        artifact_no_return = False
+
+        sample_uid = tmpl.replace('{tier}', str(lo))
+        for t in range(lo, hi + 1):
+            uid = tmpl.replace('{tier}', str(t))
+            obj = by_uid.get(uid)
+            if not obj:
+                continue
+            ff = obj.get('@destinyandjournalcraftfamefactor')
+            if ff:
+                max_fame_factor = max(max_fame_factor, float(ff))
+            req = obj.get('craftingrequirements')
+            if isinstance(req, list):
+                req = req[0]
+            if isinstance(req, dict):
+                cf = req.get('@craftingfocus')
+                if cf is not None:
+                    focus_by_tier[str(t)] = round(float(cf))
+
+        # Check material returnability on the lowest tier recipe from items.json
+        sample_obj = by_uid.get(sample_uid, {})
+        sample_req = sample_obj.get('craftingrequirements')
+        if isinstance(sample_req, list):
+            sample_req = sample_req[0]
+        res_list = sample_req.get('craftresource', []) if isinstance(sample_req, dict) else []
+        if isinstance(res_list, dict):
+            res_list = [res_list]
+
+        res_map = {r.get('@uniquename', ''): (r.get('@maxreturnamount') == '0') for r in res_list}
+
+        def _is_noret(tmpl_str):
+            if not tmpl_str:
+                return False
+            resolved = tmpl_str.replace('{tier}', str(lo))
+            return res_map.get(resolved, False)
+
+        is_battle_mount = m.get('subcategory') == 'battle_mounts'
+        prim_noret = True if is_battle_mount else _is_noret(m.get('primaryMatIcon'))
+        sec_qty = int(m.get('secondaryQty') or 0)
+        sec_noret = True if is_battle_mount else (_is_noret(m.get('secondaryMatIcon')) if sec_qty > 0 else True)
+        art_qty = int(m.get('artifactQty') or 0)
+        art_noret = True if is_battle_mount else (_is_noret(m.get('artifactTemplate')) if (m.get('isArtifact') and art_qty > 0) else True)
+
+        extras = m.get('extraMaterials') or []
+        for ex in extras:
+            if is_battle_mount:
+                ex['noReturn'] = True
+            elif 'noReturn' not in ex:
+                ex['noReturn'] = _is_noret(ex.get('template'))
+
+        # Wait: In Albion Online, single animal upgrades (e.g. spectral bonehorse / rageclaw / morgana nightmare / avalon basilisk)
+        # have NO refundable refined leather/planks/bars/cloth; grown animals & faction tokens have @maxreturnamount="0".
+        # Battle mounts (Energy Manipulator NPC) likewise have 0% RRR and 0 station usage fee.
+        has_refundable_extra = any(not ex.get('noReturn', False) for ex in extras)
+        has_refundable_mat = (not is_battle_mount) and (
+            (not prim_noret)
+            or (sec_qty > 0 and not sec_noret)
+            or (m.get('isArtifact') and art_qty > 0 and not art_noret)
+            or has_refundable_extra
+        )
+        # For Avalon Basilisk, T7_MOUNT_SWAMPDRAGON is the primary animal mount (not refunded in game, treat primary mount as non-returnable if secondaryQty == 0)
+        if 'SWAMPDRAGON_AVALON_BASILISK' in tmpl:
+            prim_noret = True
+            has_refundable_mat = False
+
+        m['primaryNoReturn'] = prim_noret
+        m['secondaryNoReturn'] = sec_noret if sec_qty > 0 else False
+        m['artifactNoReturn'] = art_noret if (m.get('isArtifact') and art_qty > 0) else True
+        m['isNoReturn'] = not has_refundable_mat
+        m['focusByTier'] = focus_by_tier
+        m['baseFocus'] = focus_by_tier.get(str(lo), 0)
+        m['destinyFactor'] = round(max_fame_factor, 2)
+    return items
+
+
 def merge_catalog(path):
+    enriched_mounts = enrich_mounts_from_items_json(MOUNT_ITEMS)
     with open(path, 'r', encoding='utf-8') as f:
         existing = json.load(f)
     
     # Strip any previous mount category items if re-running
     cleaned = [i for i in existing if i.get('category') != 'mounts']
-    cleaned.extend(MOUNT_ITEMS)
+    cleaned.extend(enriched_mounts)
     
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(cleaned, f, indent=2)

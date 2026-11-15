@@ -94,9 +94,9 @@ RAW_PER_TIER = {
     8: 5,
 }
 
-# Base focus cost at 0 specialization for 1 refined item (.0 flat)
+# Base focus cost at 0 specialization for 1 craft operation
 BASE_FOCUS_COST = {
-    2: 0,
+    2: 18,
     3: 31,
     4: 54,
     5: 94,
@@ -105,7 +105,7 @@ BASE_FOCUS_COST = {
     8: 503,
 }
 
-# Enchantment focus multiplier
+# Enchantment focus multiplier (applies to non-stone refined goods; Stone .1/.2/.3 retain flat tier base focus per craft)
 ENCHANTMENT_FOCUS_MULTIPLIER = {
     0: 1.0,
     1: 1.75,
@@ -118,13 +118,13 @@ ENCHANTMENT_FOCUS_MULTIPLIER = {
 # Base nutrition formula: Nutrition = ItemValue * 0.1125
 # Station Fee = Nutrition * (Station Fee per 100 Nutrition / 100)
 BASE_ITEM_VALUES = {
-    2: {0: 2},
-    3: {0: 6},
-    4: {0: 14, 1: 30, 2: 62, 3: 126, 4: 254},
-    5: {0: 30, 1: 62, 2: 126, 3: 254, 4: 510},
-    6: {0: 62, 1: 126, 2: 254, 3: 510, 4: 1022},
-    7: {0: 126, 1: 254, 2: 510, 3: 1022, 4: 2046},
-    8: {0: 254, 1: 510, 2: 1022, 3: 2046, 4: 4094},
+    2: {0: 4},
+    3: {0: 8},
+    4: {0: 16, 1: 32, 2: 64, 3: 128, 4: 256},
+    5: {0: 32, 1: 64, 2: 128, 3: 256, 4: 512},
+    6: {0: 64, 1: 128, 2: 256, 3: 512, 4: 1024},
+    7: {0: 128, 1: 256, 2: 512, 3: 1024, 4: 2048},
+    8: {0: 256, 1: 512, 2: 1024, 3: 2048, 4: 4096},
 }
 
 # Market tax rates
@@ -148,4 +148,100 @@ ITEM_QUALITIES = {
     4: {'id': 4, 'name': 'Excellent', 'label': 'Excellent (Q4)', 'color': 'purple'},
     5: {'id': 5, 'name': 'Masterpiece', 'label': 'Masterpiece (Q5)', 'color': 'amber'},
 }
+
+# Black Zone Hideout (HO) & Roads Production Bonus Constants
+# General Hideout Power Level Bonus (Levels 1-9)
+HO_POWER_GENERAL_BONUS = {
+    1: 0.0,
+    2: 6.0,
+    3: 11.0,
+    4: 15.0,
+    5: 18.0,
+    6: 20.0,
+    7: 22.0,
+    8: 24.0,
+    9: 26.0,
+}
+
+# Outlands Zone Quality Bonus (Quality 1-6): 1% + 5% per step
+HO_ZONE_QUALITY_BONUS = {
+    1: 1.0,
+    2: 6.0,
+    3: 11.0,
+    4: 16.0,
+    5: 21.0,
+    6: 26.0,
+}
+
+
+def calculate_hideout_bonus_pct(
+    power_level: int = 1,
+    zone_quality: int = 1,
+    has_specialty: bool = False,
+    custom_bonus_pct: float = None,
+    specialty_mode: str = 'crafting',
+) -> float:
+    """
+    Computes exact official Albion Hideout Local Production Bonus (%):
+    - Refining: Outlands HO/Rest is flat +15%; Roads HO is +10% (use custom_bonus_pct=10)
+      or +20% with Roads resource specialty (has_specialty=True). Power/Quality don't apply.
+    - Food & Potions: General Power Level only (0-26%); Caerleon/Brecilien +15% & Zone Quality don't apply.
+    - Gear Crafting (non-specialized): General Power Level ONLY (0-26%), 0% Zone Quality.
+    - Gear Crafting (specialized): General (0-26%) + Zone Quality (1-26%, Roads=Q1) +
+      Specialist ((lvl - 1) * 3.75%, up to 30%), max 82% at Lvl 9 Q6.
+    """
+    if custom_bonus_pct is not None and custom_bonus_pct != '':
+        return max(0.0, float(custom_bonus_pct))
+    if specialty_mode == 'refining':
+        return 20.0 if has_specialty else 15.0
+    lvl = max(1, min(9, int(power_level or 1)))
+    general = HO_POWER_GENERAL_BONUS.get(lvl, 0.0)
+    if specialty_mode in ('food', 'potion') or not has_specialty:
+        return round(general, 4)
+    qual = max(1, min(6, int(zone_quality or 1)))
+    zone_bonus = HO_ZONE_QUALITY_BONUS.get(qual, 1.0)
+    spec_bonus = (lvl - 1) * 3.75
+    return round(general + zone_bonus + spec_bonus, 4)
+
+
+def compute_total_rrr(
+    base_city_bonus: float,
+    city_specialty_bonus: float,
+    daily_bonus_pct: float = 0.0,
+    use_focus: bool = False,
+    location_mode: str = 'city',
+    ho_power_level: int = 1,
+    ho_zone_quality: int = 1,
+    ho_has_specialty: bool = False,
+    ho_custom_bonus_pct: float = None,
+    specialty_mode: str = 'crafting',
+) -> float:
+    """Computes Resource Return Rate (RRR = total_bonus / (1 + total_bonus)) for City or Hideout."""
+    if str(location_mode or 'city').lower() == 'hideout':
+        station_bonus = calculate_hideout_bonus_pct(
+            power_level=ho_power_level,
+            zone_quality=ho_zone_quality,
+            has_specialty=ho_has_specialty,
+            custom_bonus_pct=ho_custom_bonus_pct,
+            specialty_mode=specialty_mode,
+        ) / 100.0
+    else:
+        station_bonus = base_city_bonus + city_specialty_bonus
+    daily_bonus = (daily_bonus_pct or 0.0) / 100.0
+    focus_bonus = 0.59 if use_focus else 0.0
+    total_bonus = station_bonus + daily_bonus + focus_bonus
+    return round(total_bonus / (1.0 + total_bonus), 6) if total_bonus > 0 else 0.0
+
+
+def parse_hideout_params(data: dict) -> dict:
+    """Extracts normalized Hideout location parameters from an API request body."""
+    raw_custom = data.get('ho_custom_bonus_pct', None)
+    custom_val = float(raw_custom) if raw_custom not in (None, '') else None
+    return {
+        'location_mode': str(data.get('location_mode', 'city') or 'city').lower(),
+        'ho_power_level': int(data.get('ho_power_level', 1) or 1),
+        'ho_zone_quality': int(data.get('ho_zone_quality', 1) or 1),
+        'ho_has_specialty': bool(data.get('ho_has_specialty', False)),
+        'ho_custom_bonus_pct': custom_val,
+    }
 

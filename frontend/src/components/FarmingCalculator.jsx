@@ -5,7 +5,6 @@ import {
   FARMING_CATEGORIES,
   ISLAND_BONUSES,
   DEFAULT_FARMING_PRICES,
-  getFarmingPrice,
   computeFarming,
 } from '../utils/farmingMath';
 import { CITIES, getFocusPoolAnalysis } from '../utils/albionMath';
@@ -22,17 +21,12 @@ import {
   Coins,
   TrendingUp,
   RefreshCw,
-  Sliders,
-  CheckCircle2,
   Droplets,
-  Heart,
   Layers,
-  Info,
   BookOpen,
   HelpCircle,
   Zap,
   Clock,
-  Hammer,
 } from 'lucide-react';
 
 const CATEGORY_ICONS = {
@@ -143,6 +137,12 @@ export default function FarmingCalculator({
   const [mountAction, setMountAction] = useState('grown');
   const [useFavoriteFood, setUseFavoriteFood] = useState(true);
 
+  // Butcher Focus & Chef/Butcher Specs (for Slaughter -> +59% Raw Meat)
+  const [useButcherFocus, setUseButcherFocus] = useState(false);
+  const [butcherMastery, setButcherMastery] = useState(0);
+  const [butcherSpec, setButcherSpec] = useState(0);
+  const [otherChefSpecAvg, setOtherChefSpecAvg] = useState(0);
+
   // Market & Prices initialized with authoritative Albion Online baseline
   const [marketPrices, setMarketPrices] = useState(() => ({ ...DEFAULT_FARMING_PRICES }));
   const [isSellOrder, setIsSellOrder] = useState(true);
@@ -231,6 +231,10 @@ export default function FarmingCalculator({
       isSellOrder,
       masteryLevel,
       specLevel,
+      useButcherFocus,
+      butcherMastery,
+      butcherSpec,
+      otherChefSpecAvg,
       animalAction,
       mountAction,
       useFavoriteFood,
@@ -245,6 +249,10 @@ export default function FarmingCalculator({
     isSellOrder,
     masteryLevel,
     specLevel,
+    useButcherFocus,
+    butcherMastery,
+    butcherSpec,
+    otherChefSpecAvg,
     animalAction,
     mountAction,
     useFavoriteFood,
@@ -265,6 +273,10 @@ export default function FarmingCalculator({
       is_sell_order: isSellOrder,
       mastery_level: masteryLevel,
       spec_level: specLevel,
+      use_butcher_focus: useButcherFocus,
+      butcher_mastery: butcherMastery,
+      butcher_spec: butcherSpec,
+      other_chef_spec_avg: otherChefSpecAvg,
       animal_action: animalAction,
       mount_action: mountAction,
       use_favorite_food: useFavoriteFood,
@@ -301,6 +313,10 @@ export default function FarmingCalculator({
     isSellOrder,
     masteryLevel,
     specLevel,
+    useButcherFocus,
+    butcherMastery,
+    butcherSpec,
+    otherChefSpecAvg,
     animalAction,
     mountAction,
     useFavoriteFood,
@@ -912,6 +928,76 @@ export default function FarmingCalculator({
                     className="w-4 h-4 accent-amber-500 rounded cursor-pointer"
                   />
                 </div>
+
+                {(animalAction === 'slaughter' || (!currentItem.productId && animalAction === 'produce')) && (
+                  <div className="p-3 rounded-xl bg-[#05080e] border border-rose-500/30 shadow-inner space-y-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <div>
+                        <div className="text-xs font-serif font-bold text-rose-200">
+                          Butcher Focus Slaughter (+59% Meat Yield)
+                        </div>
+                        <div className="text-[10px] font-mono text-slate-400">
+                          {useButcherFocus
+                            ? `Active: ${calc?.focus?.butcherFocusPerAnimal || 38} focus/animal (${calc?.focus?.totalButcherFocus || 0} total) ? ${calc?.focus?.butcherSilverPerFocus || 0}s/focus`
+                            : 'Base 38 focus/animal ? Max 55,000 FCE across Chef Mastery + Butcher + 8 peer specs'}
+                        </div>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={useButcherFocus}
+                        onChange={(e) => setUseButcherFocus(e.target.checked)}
+                        className="w-4 h-4 accent-rose-500 rounded cursor-pointer shrink-0"
+                      />
+                    </div>
+
+                    {useButcherFocus && (
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-slate-800/80 text-[10px] font-mono">
+                        <div>
+                          <div className="flex justify-between text-slate-400 mb-1">
+                            <span>Chef Mastery (+30)</span>
+                            <span className="text-rose-300 font-bold">{butcherMastery}/100</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={butcherMastery}
+                            onChange={(e) => setButcherMastery(parseInt(e.target.value) || 0)}
+                            className="w-full accent-rose-500 cursor-pointer"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex justify-between text-slate-400 mb-1">
+                            <span>Butcher Spec (+280)</span>
+                            <span className="text-rose-300 font-bold">{butcherSpec}/100</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={butcherSpec}
+                            onChange={(e) => setButcherSpec(parseInt(e.target.value) || 0)}
+                            className="w-full accent-rose-500 cursor-pointer"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex justify-between text-slate-400 mb-1">
+                            <span>8 Chef Peers (+240)</span>
+                            <span className="text-rose-300 font-bold">{otherChefSpecAvg}/100</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={otherChefSpecAvg}
+                            onChange={(e) => setOtherChefSpecAvg(parseInt(e.target.value) || 0)}
+                            className="w-full accent-rose-500 cursor-pointer"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 

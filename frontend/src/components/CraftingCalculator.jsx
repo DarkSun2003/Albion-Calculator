@@ -6,6 +6,10 @@ import {
   computeCrafting,
   getCraftingReturnRate,
   getArtifactQty,
+  getPrimaryQty,
+  getSecondaryQty,
+  resolveExtraMaterials,
+  getCraftingSpecRates,
   simulateCraftingFromMaterials,
 } from '../utils/craftingMath';
 import { CITIES } from '../utils/albionMath';
@@ -34,6 +38,7 @@ import {
   Utensils,
   ChevronDown,
   ChevronUp,
+  Shield,
   ShieldCheck,
   ShieldAlert,
   Dices,
@@ -51,6 +56,7 @@ import {
 } from 'lucide-react';
 import ItemIcon from './ItemIcon';
 import SpecLevelingPlanner from './SpecLevelingPlanner';
+import HideoutStationPanel from './HideoutStationPanel';
 
 const TIERS = [
   { level: 2, name: 'Novice', color: 'border-amber-700/80 text-amber-500 bg-amber-950/30' },
@@ -95,15 +101,163 @@ export const BASE_QUALITY_CHANCES = {
   5: 0.0002,
 };
 
+const DESTINY_BRANCH_MAP = {
+  bows: { branchName: 'Bow Crafter', siblingPlural: 'Other Bows' },
+  daggers: { branchName: 'Dagger Crafter', siblingPlural: 'Other Daggers' },
+  spears: { branchName: 'Spear Crafter', siblingPlural: 'Other Spears' },
+  quarterstaffs: { branchName: 'Quarterstaff Crafter', siblingPlural: 'Other Quarterstaffs' },
+  torches: { branchName: 'Torch Crafter', siblingPlural: 'Other Torches' },
+  nature_staves: { branchName: 'Nature Staff Crafter', siblingPlural: 'Other Nature Staves' },
+  shapeshifter: { branchName: 'Shapeshifter Staff Crafter', siblingPlural: 'Other Shapeshifter Staves' },
+  swords: { branchName: 'Sword Crafter', siblingPlural: 'Other Swords' },
+  axes: { branchName: 'Axe Crafter', siblingPlural: 'Other Axes' },
+  maces: { branchName: 'Mace Crafter', siblingPlural: 'Other Maces' },
+  hammers: { branchName: 'Hammer Crafter', siblingPlural: 'Other Hammers' },
+  crossbows: { branchName: 'Crossbow Crafter', siblingPlural: 'Other Crossbows' },
+  wargloves: { branchName: 'War Gloves Crafter', siblingPlural: 'Other War Gloves' },
+  shields: { branchName: 'Shield Crafter', siblingPlural: 'Other Shields' },
+  fire_staves: { branchName: 'Fire Staff Crafter', siblingPlural: 'Other Fire Staves' },
+  holy_staves: { branchName: 'Holy Staff Crafter', siblingPlural: 'Other Holy Staves' },
+  arcane_staves: { branchName: 'Arcane Staff Crafter', siblingPlural: 'Other Arcane Staves' },
+  frost_staves: { branchName: 'Frost Staff Crafter', siblingPlural: 'Other Frost Staves' },
+  cursed_staves: { branchName: 'Cursed Staff Crafter', siblingPlural: 'Other Cursed Staves' },
+  tomes: { branchName: 'Tome Crafter', siblingPlural: 'Other Tomes' },
+  plate_armor: { branchName: 'Plate Armor Crafter', siblingPlural: 'Other Plate Armors' },
+  plate_helmets: { branchName: 'Plate Helmet Crafter', siblingPlural: 'Other Plate Helmets' },
+  plate_shoes: { branchName: 'Plate Boots Crafter', siblingPlural: 'Other Plate Boots' },
+  leather_armor: { branchName: 'Leather Jacket Crafter', siblingPlural: 'Other Leather Jackets' },
+  leather_helmets: { branchName: 'Leather Hood Crafter', siblingPlural: 'Other Leather Hoods' },
+  leather_shoes: { branchName: 'Leather Shoes Crafter', siblingPlural: 'Other Leather Shoes' },
+  cloth_armor: { branchName: 'Cloth Robe Crafter', siblingPlural: 'Other Cloth Robes' },
+  cloth_helmets: { branchName: 'Cloth Cowl Crafter', siblingPlural: 'Other Cloth Cowls' },
+  cloth_shoes: { branchName: 'Cloth Sandals Crafter', siblingPlural: 'Other Cloth Sandals' },
+  bags: { branchName: 'Bag Tailor', siblingPlural: 'Other Bags' },
+  capes: { branchName: 'Cape Tailor', siblingPlural: 'Other Capes' },
+  tools: { branchName: 'Toolmaker', siblingPlural: 'Other Tools' },
+  gathering_gear: { branchName: 'Gathering Gear Crafter', siblingPlural: 'Other Pieces in Set' },
+};
+
+const DESTINY_STORAGE_KEY = 'albion_craft_destiny_board_v1';
+
+const GATHERING_PROF_LABELS = {
+  fiber: { branchName: 'Harvester Crafter', siblingPlural: 'Other Harvester Pieces' },
+  hide: { branchName: 'Skinner Crafter', siblingPlural: 'Other Skinner Pieces' },
+  ore: { branchName: 'Miner Crafter', siblingPlural: 'Other Miner Pieces' },
+  rock: { branchName: 'Quarrier Crafter', siblingPlural: 'Other Quarrier Pieces' },
+  wood: { branchName: 'Lumberjack Crafter', siblingPlural: 'Other Lumberjack Pieces' },
+  fish: { branchName: 'Fisherman Crafter', siblingPlural: 'Other Fisherman Pieces' },
+};
+
+function clampSpecLevel(val) {
+  const num = parseInt(val, 10);
+  if (Number.isNaN(num)) return 0;
+  return Math.max(0, Math.min(100, num));
+}
+
+function loadSavedDestinyState() {
+  try {
+    const raw = localStorage.getItem(DESTINY_STORAGE_KEY);
+    if (!raw) return { branchMasteries: {}, itemSpecsById: {} };
+    const parsed = JSON.parse(raw);
+    return {
+      branchMasteries: parsed?.branchMasteries && typeof parsed.branchMasteries === 'object' ? parsed.branchMasteries : {},
+      itemSpecsById: parsed?.itemSpecsById && typeof parsed.itemSpecsById === 'object' ? parsed.itemSpecsById : {},
+    };
+  } catch {
+    return { branchMasteries: {}, itemSpecsById: {} };
+  }
+}
+
+function getGatheringProfessionKey(itemDef) {
+  const id = String(itemDef?.id || '').toLowerCase();
+  const match = id.match(/_gatherer_(fiber|hide|ore|rock|wood|fish)$/);
+  return match ? match[1] : null;
+}
+
+function getDestinyBranchKey(itemDef) {
+  const sub = String(itemDef?.subcategory || itemDef?.category || 'other').toLowerCase();
+  if (sub === 'gathering_gear') {
+    const prof = getGatheringProfessionKey(itemDef);
+    if (prof) return `gathering_gear_${prof}`;
+  }
+  return sub;
+}
+
+function getDestinySiblings(itemDef, allItems = CRAFTABLE_ITEMS) {
+  if (!itemDef) return [];
+  const sub = String(itemDef.subcategory || '').toLowerCase();
+  const id = String(itemDef.id || '').toLowerCase();
+
+  if (sub === 'gathering_gear') {
+    const prof = getGatheringProfessionKey(itemDef);
+    if (prof) {
+      return allItems.filter(
+        (it) => it.subcategory === 'gathering_gear' && it.id !== itemDef.id && getGatheringProfessionKey(it) === prof
+      );
+    }
+  }
+
+  if (sub === 'tools') {
+    if (id === '2h_tool_siegehammer' || id === '2h_tool_siegehammer_avalon') {
+      return [];
+    }
+    return allItems.filter(
+      (it) =>
+        it.subcategory === 'tools' &&
+        it.id !== itemDef.id &&
+        it.id !== '2h_tool_siegehammer' &&
+        it.id !== '2h_tool_siegehammer_avalon'
+    );
+  }
+
+  return allItems.filter((it) => it.subcategory === itemDef.subcategory && it.id !== itemDef.id);
+}
+
+function getSiblingMutualWeight(sib) {
+  if (!sib) return 1;
+  const id = String(sib.id || '').toLowerCase();
+  // Non-artifact nodes (and Avalon/Fey parity items treated at full non-artifact mutual rate) carry 2x weight vs artifact nodes.
+  return !sib.isArtifact || id.includes('_fey') ? 2 : 1;
+}
+
+/**
+ * Resolves the single in-game Albion Destiny Board branch name and sibling count for an item.
+ */
+function getDestinyBranchMeta(itemDef, allItems = CRAFTABLE_ITEMS) {
+  const sub = String(itemDef?.subcategory || '').toLowerCase();
+  const siblings = getDestinySiblings(itemDef, allItems);
+  const siblingCount = siblings.length;
+
+  if (sub === 'gathering_gear') {
+    const prof = getGatheringProfessionKey(itemDef);
+    if (prof && GATHERING_PROF_LABELS[prof]) {
+      return { ...GATHERING_PROF_LABELS[prof], siblingCount };
+    }
+  }
+
+  const mapped = DESTINY_BRANCH_MAP[sub];
+  if (mapped) {
+    return { ...mapped, siblingCount };
+  }
+  const fallbackLabel = sub ? sub.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) : 'Category';
+  return {
+    branchName: `${fallbackLabel} Crafter`,
+    siblingPlural: `Other ${fallbackLabel}`,
+    siblingCount,
+  };
+}
+
 /**
  * Computes exact Albion Online Quality roll probabilities given player's
- * Destiny Board Mastery (+0.75/lvl), Spec (+6.0/lvl), Crafter's Salad (+150), and Focus (+50).
+ * Destiny Board Mastery, Item Spec, Mutual Peer Specs Avg, Crafter's Salad (+150), and Focus (+50).
  * In Albion, every 100 Quality Bonus gives an extra roll, taking the highest quality result.
  */
-export function computeDynamicQualityChances(mastery = 0, spec = 0, hasSalad = false, useFocus = false) {
+export function computeDynamicQualityChances(mastery = 0, spec = 0, otherSpecAvg = 0, hasSalad = false, useFocus = false, itemDef = null) {
   const m = Math.max(0, Math.min(100, Number(mastery) || 0));
-  const s = Math.max(0, Math.min(120, Number(spec) || 0));
-  const qualityPower = (m * 0.75) + (s * 6.0) + (hasSalad ? 150 : 0) + (useFocus ? 50 : 0);
+  const s = Math.max(0, Math.min(100, Number(spec) || 0));
+  const o = Math.max(0, Math.min(100, Number(otherSpecAvg) || 0));
+  const rates = getCraftingSpecRates(itemDef);
+  const qualityPower = (m * rates.masteryQ) + (s * rates.ownQ) + (o * rates.mutualQ) + (hasSalad ? 150 : 0) + (useFocus ? 50 : 0);
   
   const fullRolls = Math.floor(qualityPower / 100);
   const remainder = (qualityPower % 100) / 100.0;
@@ -178,16 +332,16 @@ const MOUNT_DEFAULT_PRICES = {
   mount_flame_basilisk: { primary: 480000, secondary: 5400, artifact: 13000, sell: 68000000 },
   mount_venom_basilisk: { primary: 480000, secondary: 5800, artifact: 13000, sell: 68000000 },
   mount_avalon_basilisk: { primary: 480000, secondary: 0, artifact: 2500, sell: 18000000 },
-  mount_siege_ballista: { primary: 730000, secondary: 1950, artifact: 13000, sell: 8500000 },
+  mount_siege_ballista: { primary: 730000, secondary: 1950, artifact: 13000, extra: { leather: 1950, planks: 1800 }, sell: 8500000 },
   mount_command_mammoth: { primary: 125000000, secondary: 17500, artifact: 13000, sell: 260000000 },
   mount_spectral_bonehorse: { primary: 7200000, secondary: 0, artifact: 16500000, sell: 27000000 },
   mount_rageclaw: { primary: 180000, secondary: 0, artifact: 7500000, sell: 9200000 },
   mount_morgana_nightmare: { primary: 8500000, secondary: 0, artifact: 12500000, sell: 23500000 },
   mount_armored_horse: {
-    5: { primary: 245000, secondary: 680, artifact: 620, sell: 280000 },
-    6: { primary: 730000, secondary: 1950, artifact: 1800, sell: 820000 },
-    7: { primary: 2180000, secondary: 5800, artifact: 5400, sell: 2400000 },
-    8: { primary: 6450000, secondary: 17500, artifact: 16500, sell: 7200000 },
+    5: { primary: 82000, secondary: 680, artifact: 0, extra: { cloth: 620 }, sell: 280000 },
+    6: { primary: 245000, secondary: 1950, artifact: 0, extra: { cloth: 1800 }, sell: 820000 },
+    7: { primary: 730000, secondary: 5800, artifact: 0, extra: { cloth: 5400 }, sell: 2400000 },
+    8: { primary: 2180000, secondary: 17500, artifact: 0, extra: { cloth: 16500 }, sell: 7200000 },
   },
   mount_riding_horse: {
     3: { primary: 6500, secondary: 80, artifact: 0, sell: 28000 },
@@ -225,6 +379,26 @@ const MOUNT_DEFAULT_PRICES = {
   mount_fw_greywolf_t5: { primary: 140000, secondary: 680, artifact: 42000, sell: 240000 },
   mount_fw_greywolf_t8: { primary: 3500000, secondary: 17500, artifact: 42000, sell: 5500000 },
 };
+
+function getDefaultExtraMatPrices(item, tier) {
+  const extras = resolveExtraMaterials(item, tier);
+  if (!extras.length) return {};
+  const mDef = item?.category === 'mounts' && MOUNT_DEFAULT_PRICES[item.id]
+    ? (MOUNT_DEFAULT_PRICES[item.id][tier] || MOUNT_DEFAULT_PRICES[item.id])
+    : null;
+  const tierDef = TIER_DEFAULT_PRICES[tier] || TIER_DEFAULT_PRICES[4];
+  const out = {};
+  extras.forEach((ex) => {
+    if (mDef?.extra && mDef.extra[ex.id] !== undefined) {
+      out[ex.id] = mDef.extra[ex.id];
+    } else if (ex.template.includes('ALCHEMY')) {
+      out[ex.id] = tier <= 3 ? 2500 : tier <= 6 ? 12000 : 35000;
+    } else {
+      out[ex.id] = tierDef?.secondary || tierDef?.primary || 200;
+    }
+  });
+  return out;
+}
 
 function getMaterialTactileClass(matName) {
   if (!matName) return 'bg-albion-bg/80 border-albion-border';
@@ -274,6 +448,11 @@ export default function CraftingCalculator({
   const [quantity, setQuantity] = useState(10);
   const [stationTax, setStationTax] = useState(500);
   const [dailyBonus, setDailyBonus] = useState(0);
+  const [locationMode, setLocationMode] = useState('city');
+  const [hoPowerLevel, setHoPowerLevel] = useState(1);
+  const [hoZoneQuality, setHoZoneQuality] = useState(1);
+  const [hoHasSpecialty, setHoHasSpecialty] = useState(false);
+  const [hoCustomBonusPct, setHoCustomBonusPct] = useState('');
 
   // Auto-switch to category or item from navigationOptions (e.g. from Agriculture War Mount link)
   useEffect(() => {
@@ -302,6 +481,7 @@ export default function CraftingCalculator({
   const [primaryPrice, setPrimaryPrice] = useState(35);
   const [secondaryPrice, setSecondaryPrice] = useState(30);
   const [artifactPrice, setArtifactPrice] = useState(12000);
+  const [extraMatPrices, setExtraMatPrices] = useState({});
   const [itemSellPrice, setItemSellPrice] = useState(950);
   const [isSellOrder, setIsSellOrder] = useState(true);
 
@@ -310,10 +490,19 @@ export default function CraftingCalculator({
   const [emptyJournalPrice, setEmptyJournalPrice] = useState(1500);
   const [fullJournalPrice, setFullJournalPrice] = useState(4200);
 
-  // Mastery & Specs
-  const [masteryLevel, setMasteryLevel] = useState(0);
-  const [specLevel, setSpecLevel] = useState(0);
+  // Per-branch & per-item Destiny Board levels (persisted so switching items preserves specs)
+  const [branchMasteries, setBranchMasteries] = useState(() => loadSavedDestinyState().branchMasteries);
+  const [itemSpecsById, setItemSpecsById] = useState(() => loadSavedDestinyState().itemSpecsById);
   const [isDestinyBoardOpen, setIsDestinyBoardOpen] = useState(true);
+  const [isSiblingListOpen, setIsSiblingListOpen] = useState(true);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(DESTINY_STORAGE_KEY, JSON.stringify({ branchMasteries, itemSpecsById }));
+    } catch (e) {
+      console.warn('Could not save Destiny Board specs:', e);
+    }
+  }, [branchMasteries, itemSpecsById]);
 
   // Workflow Phase & Pre-Craft Procurement States
   const [workflowPhase, setWorkflowPhase] = useState('plan'); // 'plan' (Pre-Craft Planning & Shopping) vs 'realized' (Post-Craft Accounting)
@@ -382,6 +571,26 @@ export default function CraftingCalculator({
     return CRAFTABLE_ITEMS.find((i) => i.id === selectedItemId) || CRAFTABLE_ITEMS[0];
   }, [selectedItemId]);
 
+  const applyDefaultPricesForItem = (item, tierLevel) => {
+    let def = TIER_DEFAULT_PRICES[tierLevel] || TIER_DEFAULT_PRICES[4];
+    if (item.category === 'mounts' && MOUNT_DEFAULT_PRICES[item.id]) {
+      const mDef = MOUNT_DEFAULT_PRICES[item.id];
+      def = (mDef[tierLevel] || mDef);
+    }
+    setPrimaryPrice(def.primary || 0);
+    setSecondaryPrice(def.secondary || 0);
+    setArtifactPrice(def.artifact || 0);
+    setExtraMatPrices(getDefaultExtraMatPrices(item, tierLevel));
+
+    if (def.sell) {
+      setItemSellPrice(def.sell);
+    } else if (item.isArtifact) {
+      setItemSellPrice(Math.round(((def.sell || 0) + (def.artifact || 0)) * 1.35));
+    } else {
+      setItemSellPrice(def.sell || 5000);
+    }
+  };
+
   // Handle Item Selection & minTier/maxTier enforcement
   const handleSelectItem = (item, overrideTier = null) => {
     setSelectedItemId(item.id);
@@ -394,25 +603,7 @@ export default function CraftingCalculator({
       nextTier = max;
     }
     setSelectedTier(nextTier);
-    
-    // Auto-fill prices
-    let def = TIER_DEFAULT_PRICES[nextTier] || TIER_DEFAULT_PRICES[4];
-    if (item.category === 'mounts' && MOUNT_DEFAULT_PRICES[item.id]) {
-      const mDef = MOUNT_DEFAULT_PRICES[item.id];
-      def = (mDef[nextTier] || mDef);
-    }
-    setPrimaryPrice(def.primary || 0);
-    setSecondaryPrice(def.secondary || 0);
-    setArtifactPrice(def.artifact || 0);
-    
-    // Default sell price
-    if (def.sell) {
-      setItemSellPrice(def.sell);
-    } else if (item.isArtifact) {
-      setItemSellPrice(Math.round(((def.sell || 0) + (def.artifact || 0)) * 1.35));
-    } else {
-      setItemSellPrice(def.sell || 5000);
-    }
+    applyDefaultPricesForItem(item, nextTier);
 
     if (item.allowEnchantment === false || nextTier < 4) {
       setSelectedEnchantment(0);
@@ -439,23 +630,7 @@ export default function CraftingCalculator({
     const max = selectedItem.maxTier || 8;
     if (tierLevel < min || tierLevel > max) return;
     setSelectedTier(tierLevel);
-
-    let def = TIER_DEFAULT_PRICES[tierLevel] || TIER_DEFAULT_PRICES[4];
-    if (selectedItem.category === 'mounts' && MOUNT_DEFAULT_PRICES[selectedItem.id]) {
-      const mDef = MOUNT_DEFAULT_PRICES[selectedItem.id];
-      def = (mDef[tierLevel] || mDef);
-    }
-    setPrimaryPrice(def.primary || 0);
-    setSecondaryPrice(def.secondary || 0);
-    setArtifactPrice(def.artifact || 0);
-
-    if (def.sell) {
-      setItemSellPrice(def.sell);
-    } else if (selectedItem.isArtifact) {
-      setItemSellPrice(Math.round(((def.sell || 0) + (def.artifact || 0)) * 1.35));
-    } else {
-      setItemSellPrice(def.sell || 5000);
-    }
+    applyDefaultPricesForItem(selectedItem, tierLevel);
 
     if (selectedItem.allowEnchantment === false || tierLevel < 4) {
       setSelectedEnchantment(0);
@@ -499,6 +674,17 @@ export default function CraftingCalculator({
         }
         if (res.artifact && res.artifact.sell_min > 0) {
           setArtifactPrice(res.artifact.sell_min);
+        }
+        if (res.extra_materials) {
+          setExtraMatPrices((prev) => {
+            const next = { ...prev };
+            Object.entries(res.extra_materials).forEach(([exId, info]) => {
+              if (info && info.sell_min > 0) {
+                next[exId] = info.sell_min;
+              }
+            });
+            return next;
+          });
         }
         if (res.journal_empty && res.journal_empty.sell_min > 0) {
           setEmptyJournalPrice(res.journal_empty.sell_min);
@@ -545,11 +731,68 @@ export default function CraftingCalculator({
     }
   }, [selectedItem.id, selectedTier, selectedEnchantment, selectedCity, server, autoFetchEnabled]);
 
-  // 1. Current Quality Odds (Buff-adjusted)
-  // 1. Current Dynamic Quality Odds (Destiny Board Mastery, Spec, Food & Focus adjusted)
+  const specRates = useMemo(() => getCraftingSpecRates(selectedItem), [selectedItem]);
+  const destinyBranchMeta = useMemo(() => getDestinyBranchMeta(selectedItem, CRAFTABLE_ITEMS), [selectedItem]);
+  const branchStorageKey = useMemo(() => getDestinyBranchKey(selectedItem), [selectedItem]);
+  const destinySiblings = useMemo(() => getDestinySiblings(selectedItem, CRAFTABLE_ITEMS), [selectedItem]);
+  const hasMutualBonus = specRates.mutualFce > 0 || specRates.mutualQ > 0;
+  const hasAnyDestinyBonus =
+    specRates.masteryFce > 0 ||
+    specRates.ownFce > 0 ||
+    specRates.mutualFce > 0 ||
+    specRates.masteryQ > 0 ||
+    specRates.ownQ > 0 ||
+    specRates.mutualQ > 0;
+
+  const masteryLevel = clampSpecLevel(branchMasteries[branchStorageKey] ?? 0);
+  const specLevel = clampSpecLevel(itemSpecsById[selectedItem?.id] ?? 0);
+
+  const otherSpecAvg = useMemo(() => {
+    if (!hasMutualBonus || destinySiblings.length === 0) return 0;
+    let weightedSum = 0;
+    let weightTotal = 0;
+    destinySiblings.forEach((sib) => {
+      const w = getSiblingMutualWeight(sib);
+      const val = clampSpecLevel(itemSpecsById[sib.id] ?? 0);
+      weightedSum += val * w;
+      weightTotal += w;
+    });
+    return weightTotal > 0 ? Math.round(weightedSum / weightTotal) : 0;
+  }, [hasMutualBonus, destinySiblings, itemSpecsById]);
+
+  const setMasteryLevel = (val) => {
+    const clamped = clampSpecLevel(val);
+    setBranchMasteries((prev) => ({ ...prev, [branchStorageKey]: clamped }));
+  };
+
+  const setSpecLevel = (val) => {
+    if (!selectedItem?.id) return;
+    const clamped = clampSpecLevel(val);
+    setItemSpecsById((prev) => ({ ...prev, [selectedItem.id]: clamped }));
+  };
+
+  const setSiblingSpecLevel = (siblingId, val) => {
+    if (!siblingId) return;
+    const clamped = clampSpecLevel(val);
+    setItemSpecsById((prev) => ({ ...prev, [siblingId]: clamped }));
+  };
+
+  const setOtherSpecAvg = (val) => {
+    if (destinySiblings.length === 0) return;
+    const clamped = clampSpecLevel(val);
+    setItemSpecsById((prev) => {
+      const next = { ...prev };
+      destinySiblings.forEach((sib) => {
+        next[sib.id] = clamped;
+      });
+      return next;
+    });
+  };
+
+  // 1. Current Dynamic Quality Odds (Destiny Board Mastery, Spec, Mutual Specs, Food & Focus adjusted)
   const qualityMetrics = useMemo(() => {
-    return computeDynamicQualityChances(masteryLevel, specLevel, hasCraftersSalad, useFocus);
-  }, [masteryLevel, specLevel, hasCraftersSalad, useFocus]);
+    return computeDynamicQualityChances(masteryLevel, specLevel, otherSpecAvg, hasCraftersSalad, useFocus, selectedItem);
+  }, [masteryLevel, specLevel, otherSpecAvg, hasCraftersSalad, useFocus, selectedItem]);
 
   const currentOdds = useMemo(() => {
     if (selectedItem?.category === 'mounts') {
@@ -655,6 +898,11 @@ export default function CraftingCalculator({
       city: selectedCity,
       useFocus,
       dailyBonusPct: dailyBonus,
+      locationMode,
+      hoPowerLevel,
+      hoZoneQuality,
+      hoHasSpecialty,
+      hoCustomBonusPct,
     });
   }, [
     selectedItem,
@@ -666,6 +914,11 @@ export default function CraftingCalculator({
     selectedCity,
     useFocus,
     dailyBonus,
+    locationMode,
+    hoPowerLevel,
+    hoZoneQuality,
+    hoHasSpecialty,
+    hoCustomBonusPct,
   ]);
 
   const effectiveBatchQuantity = useMemo(() => {
@@ -800,6 +1053,19 @@ export default function CraftingCalculator({
   };
 
   // Local calculation for immediate responsive feedback
+  const activePrimaryQty = useMemo(
+    () => getPrimaryQty(selectedItem, selectedTier),
+    [selectedItem, selectedTier]
+  );
+  const activeSecondaryQty = useMemo(
+    () => getSecondaryQty(selectedItem, selectedTier),
+    [selectedItem, selectedTier]
+  );
+  const activeExtraMaterials = useMemo(
+    () => resolveExtraMaterials(selectedItem, selectedTier),
+    [selectedItem, selectedTier]
+  );
+
   const localCalculation = useMemo(() => {
     return computeCrafting({
       item: selectedItem,
@@ -809,10 +1075,16 @@ export default function CraftingCalculator({
       primaryMatPrice: primaryPrice,
       secondaryMatPrice: secondaryPrice,
       artifactPrice,
+      extraMatPrices,
       itemSellPrice: activeSellPrice,
       city: selectedCity,
       useFocus,
       dailyBonusPct: dailyBonus,
+      locationMode,
+      hoPowerLevel,
+      hoZoneQuality,
+      hoHasSpecialty,
+      hoCustomBonusPct,
       stationTaxPer100: stationTax,
       hasPremium,
       isSellOrder,
@@ -821,6 +1093,7 @@ export default function CraftingCalculator({
       fullJournalPrice,
       masteryLevel,
       specLevel,
+      otherSpecAvg,
     });
   }, [
     selectedItem,
@@ -830,10 +1103,16 @@ export default function CraftingCalculator({
     primaryPrice,
     secondaryPrice,
     artifactPrice,
+    extraMatPrices,
     activeSellPrice,
     selectedCity,
     useFocus,
     dailyBonus,
+    locationMode,
+    hoPowerLevel,
+    hoZoneQuality,
+    hoHasSpecialty,
+    hoCustomBonusPct,
     stationTax,
     hasPremium,
     isSellOrder,
@@ -842,6 +1121,7 @@ export default function CraftingCalculator({
     fullJournalPrice,
     masteryLevel,
     specLevel,
+    otherSpecAvg,
   ]);
 
   // Query Authoritative Django Backend Engine
@@ -859,10 +1139,16 @@ export default function CraftingCalculator({
           primary_mat_price: primaryPrice,
           secondary_mat_price: secondaryPrice,
           artifact_price: artifactPrice,
+          extra_mat_prices: extraMatPrices,
           item_sell_price: activeSellPrice,
           city: selectedCity,
           use_focus: useFocus,
           daily_bonus_pct: dailyBonus,
+          location_mode: locationMode,
+          ho_power_level: hoPowerLevel,
+          ho_zone_quality: hoZoneQuality,
+          ho_has_specialty: hoHasSpecialty,
+          ho_custom_bonus_pct: hoCustomBonusPct === '' ? null : hoCustomBonusPct,
           station_tax_per_100: stationTax,
           has_premium: hasPremium,
           is_sell_order: isSellOrder,
@@ -871,6 +1157,7 @@ export default function CraftingCalculator({
           full_journal_price: fullJournalPrice,
           mastery_level: masteryLevel,
           spec_level: specLevel,
+          other_spec_avg: otherSpecAvg,
         };
 
         const backendResult = await calculateCraftingApi(payload);
@@ -901,10 +1188,16 @@ export default function CraftingCalculator({
     primaryPrice,
     secondaryPrice,
     artifactPrice,
+    extraMatPrices,
     activeSellPrice,
     selectedCity,
     useFocus,
     dailyBonus,
+    locationMode,
+    hoPowerLevel,
+    hoZoneQuality,
+    hoHasSpecialty,
+    hoCustomBonusPct,
     stationTax,
     hasPremium,
     isSellOrder,
@@ -913,6 +1206,7 @@ export default function CraftingCalculator({
     fullJournalPrice,
     masteryLevel,
     specLevel,
+    otherSpecAvg,
   ]);
 
   // Use authoritative backend calculation if available, otherwise local fallback
@@ -1020,7 +1314,7 @@ export default function CraftingCalculator({
     if (craftingInputMode !== 'materials' || !craftingMaterialSim) {
       return null;
     }
-    const secondaryToBuy = selectedItem.secondaryQty > 0
+    const secondaryToBuy = activeSecondaryQty > 0
       ? (compoundCraftRrr ? (craftingMaterialSim.secondaryToBuyTotal || 0) : (craftingMaterialSim.secondaryToBuyPass1 || 0))
       : 0;
     const secondaryCost = secondaryToBuy * (Number(secondaryPrice) || 0);
@@ -1030,13 +1324,21 @@ export default function CraftingCalculator({
       : 0;
     const artifactCost = artifactsToBuy * (Number(artifactPrice) || 0);
 
+    const extraMaterialsToBuy = (craftingMaterialSim.extraMaterials || []).map((ex) => {
+      const toBuy = compoundCraftRrr ? (ex.totalNeeded || 0) : (ex.neededPass1 || 0);
+      const unitPrice = Number(extraMatPrices[ex.id] ?? extraMatPrices[ex.template] ?? 0) || 0;
+      const cost = toBuy * unitPrice;
+      return { ...ex, toBuy, unitPrice, cost };
+    });
+    const extraCostTotal = extraMaterialsToBuy.reduce((sum, ex) => sum + ex.cost, 0);
+
     const journalsToBuy = (includeJournals && canUseJournals)
       ? (compoundCraftRrr ? (craftingMaterialSim.emptyJournalsToBuyTotal || 0) : (craftingMaterialSim.emptyJournalsToBuyPass1 || 0))
       : 0;
     const journalCost = journalsToBuy * (Number(emptyJournalPrice) || 0);
 
     const stationFee = calculation?.financials?.stationFee || 0;
-    const upfrontWalletCash = secondaryCost + artifactCost + journalCost + stationFee;
+    const upfrontWalletCash = secondaryCost + artifactCost + extraCostTotal + journalCost + stationFee;
 
     return {
       primaryOwned: primaryMatsHave,
@@ -1047,6 +1349,8 @@ export default function CraftingCalculator({
       secondaryCost,
       artifactsToBuy,
       artifactCost,
+      extraMaterialsToBuy,
+      extraCostTotal,
       journalsToBuy,
       journalCost,
       stationFee,
@@ -1056,9 +1360,11 @@ export default function CraftingCalculator({
     craftingInputMode,
     craftingMaterialSim,
     selectedItem,
+    activeSecondaryQty,
     compoundCraftRrr,
     secondaryPrice,
     artifactPrice,
+    extraMatPrices,
     includeJournals,
     canUseJournals,
     emptyJournalPrice,
@@ -1086,17 +1392,17 @@ export default function CraftingCalculator({
       lines = [
         `⚔️ ALBION ONLINE CRAFTING SHOPPING LIST (BAG MATERIALS MODE)`,
         `Target Batch: ${effectiveBatchQuantity}x ${selectedItem.name} (T${selectedTier}.${selectedEnchantment})`,
-        `City: ${selectedCity} (${calculation.returnRatePct}% Return Rate)`,
+        locationMode === 'hideout' ? `Station: Hideout (PL ${hoPowerLevel}${hoHasSpecialty ? ` • Q${hoZoneQuality} Spec` : ' • General'}, Market: ${selectedCity}) (${calculation.returnRatePct}% Return Rate)` : `City: ${selectedCity} (${calculation.returnRatePct}% Return Rate)`,
         `----------------------------------------`,
         `🎒 IN YOUR BAG (OWNED):`,
         `• ${primaryMatsHave.toLocaleString()}x ${selectedItem.primaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} (Already Owned - 0s market buy)`,
       ];
-      if (selectedItem.secondaryQty > 0 && secondaryMatsHave > 0) {
+      if (activeSecondaryQty > 0 && secondaryMatsHave > 0) {
         lines.push(`• ${secondaryMatsHave.toLocaleString()}x ${selectedItem.secondaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} (Already Owned in Bag)`);
       }
       lines.push(`----------------------------------------`);
       lines.push(`🛒 MARKET PURCHASES TO COMPLETE CRAFT:`);
-      if (selectedItem.secondaryQty > 0) {
+      if (activeSecondaryQty > 0) {
         if (materialsModeShopping.secondaryToBuy > 0) {
           lines.push(`• ${materialsModeShopping.secondaryToBuy.toLocaleString()}x ${selectedItem.secondaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} @ ${secondaryPrice.toLocaleString()}s = ${materialsModeShopping.secondaryCost.toLocaleString()}s`);
         } else {
@@ -1106,28 +1412,36 @@ export default function CraftingCalculator({
       if (selectedItem.isArtifact) {
         lines.push(`• ${materialsModeShopping.artifactsToBuy.toLocaleString()}x ${selectedItem.artifactName} @ ${artifactPrice.toLocaleString()}s = ${materialsModeShopping.artifactCost.toLocaleString()}s`);
       }
+      (materialsModeShopping.extraMaterialsToBuy || []).forEach((ex) => {
+        lines.push(`• ${ex.toBuy.toLocaleString()}x ${ex.name} @ ${ex.unitPrice.toLocaleString()}s = ${ex.cost.toLocaleString()}s`);
+      });
       if (includeJournals && canUseJournals && materialsModeShopping.journalsToBuy > 0) {
         lines.push(`• ${materialsModeShopping.journalsToBuy.toLocaleString()}x Empty ${selectedItem.journalName || 'Journals'} @ ${emptyJournalPrice.toLocaleString()}s = ${materialsModeShopping.journalCost.toLocaleString()}s`);
       }
     } else {
-      const primaryGross = calculation?.materials?.primaryGross || (effectiveBatchQuantity * (selectedItem.primaryQty || 0));
-      const secondaryGross = calculation?.materials?.secondaryGross || (effectiveBatchQuantity * (selectedItem.secondaryQty || 0));
+      const primaryGross = calculation?.materials?.primaryGross || (effectiveBatchQuantity * activePrimaryQty);
+      const secondaryGross = calculation?.materials?.secondaryGross || (effectiveBatchQuantity * activeSecondaryQty);
       const artCount = effectiveBatchQuantity * artifactCountPerUnit;
 
       lines = [
         `⚔️ ALBION ONLINE CRAFTING SHOPPING LIST`,
         `Item: ${effectiveBatchQuantity}x ${selectedItem.name} (T${selectedTier}.${selectedEnchantment})`,
-        `City: ${selectedCity} (${calculation.returnRatePct}% Return Rate)`,
+        locationMode === 'hideout' ? `Station: Hideout (PL ${hoPowerLevel}${hoHasSpecialty ? ` • Q${hoZoneQuality} Spec` : ' • General'}, Market: ${selectedCity}) (${calculation.returnRatePct}% Return Rate)` : `City: ${selectedCity} (${calculation.returnRatePct}% Return Rate)`,
         `----------------------------------------`,
         `📦 MATERIALS NEEDED:`,
         `• ${primaryGross}x ${selectedItem.primaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} @ ${primaryPrice.toLocaleString()}s = ${(primaryGross * primaryPrice).toLocaleString()}s`,
       ];
-      if (selectedItem.secondaryQty > 0) {
+      if (activeSecondaryQty > 0) {
         lines.push(`• ${secondaryGross}x ${selectedItem.secondaryMatName}${selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} @ ${secondaryPrice.toLocaleString()}s = ${(secondaryGross * secondaryPrice).toLocaleString()}s`);
       }
       if (selectedItem.isArtifact) {
         lines.push(`• ${artCount}x ${selectedItem.artifactName} @ ${artifactPrice.toLocaleString()}s = ${(artCount * artifactPrice).toLocaleString()}s`);
       }
+      activeExtraMaterials.forEach((ex) => {
+        const exGross = effectiveBatchQuantity * ex.qty;
+        const unitP = Number(extraMatPrices[ex.id] ?? extraMatPrices[ex.template] ?? 0) || 0;
+        lines.push(`• ${exGross}x ${ex.name} @ ${unitP.toLocaleString()}s = ${(exGross * unitP).toLocaleString()}s`);
+      });
       if (includeJournals && canUseJournals) {
         lines.push(`• ${calculation.journals.journalsFilled}x Empty ${selectedItem.journalName || 'Journals'} @ ${emptyJournalPrice.toLocaleString()}s = ${upfrontJournalsCost.toLocaleString()}s`);
       }
@@ -1300,7 +1614,13 @@ export default function CraftingCalculator({
               </label>
               
               <div className="flex items-center gap-2">
-                {selectedItem.bonusCity ? (
+                {locationMode === 'hideout' ? (
+                  <span className="text-[11px] font-mono text-slate-300 bg-[#0c121e] px-2 py-0.5 rounded-md border border-[#1e2a3c] shadow-sm">
+                    {selectedItem.bonusCity
+                      ? <>Outlands Biome Match Ref: <strong className="text-amber-300">{selectedItem.bonusCity}</strong> Biome</>
+                      : 'Universal Craft (General Power Level Only)'}
+                  </span>
+                ) : selectedItem.bonusCity ? (
                   <>
                     <span className="text-[11px] font-mono text-amber-300 bg-[#1c1405] px-2 py-0.5 rounded-md border border-amber-500/40 shadow-sm">
                       Bonus City: <strong>{selectedItem.bonusCity}</strong> (+15%)
@@ -1422,7 +1742,7 @@ export default function CraftingCalculator({
                         {item.maxTier && item.maxTier < 8 ? `T${item.minTier || 4}–T${item.maxTier}` : `T${min}+`}
                       </span>
                       <span className="text-[9px] font-mono text-slate-400 truncate">
-                        {item.primaryQty} {item.primaryMatName}
+                        {getPrimaryQty(item, Math.min(Math.max(selectedTier, item.minTier || 4), item.maxTier || 8))} {item.primaryMatName}
                       </span>
                     </div>
                   </button>
@@ -1594,7 +1914,7 @@ export default function CraftingCalculator({
                   </button>
                 )}
                 <span className="text-xs font-mono text-amber-300 font-bold hidden sm:inline bg-[#06090f] px-2.5 py-1 rounded-md border border-[#1e2a3c]">
-                  Mastery: {masteryLevel}/100 &bull; Spec: {specLevel}/120
+                  Main: {masteryLevel}/100 &bull; Item Spec: {specLevel}/100 &bull; Siblings: {otherSpecAvg}/100
                 </span>
                 <button
                   type="button"
@@ -1708,110 +2028,364 @@ export default function CraftingCalculator({
                 )}
 
                 {/* Sliders Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
-                  {/* Node Mastery */}
-                  <div className="bg-[#0b121d] p-3.5 rounded-xl border border-[#1e2a3c] space-y-2 shadow-inner">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-xs font-serif font-bold text-slate-100 block">
-                          Category Crafting Mastery
-                        </span>
-                        <span className="text-[10px] text-slate-400 font-mono">
-                          +0.75 Quality Power &bull; +30 Focus Eff / lvl
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1 font-mono">
-                        <NumberInput
-                          type="number"
-                          min="0"
-                          max="100"
-                          value={masteryLevel}
-                          onChange={(e) => setMasteryLevel(Math.max(0, Math.min(100, parseInt(e.target.value) || 0)))}
-                          className="w-14 text-center bg-[#06090f] border border-[#1e2a3c] rounded-md py-1 text-xs font-bold text-amber-300 focus:outline-none focus:border-amber-400 shadow-inner"
-                        />
-                        <span className="text-[10px] text-slate-400">/ 100</span>
-                      </div>
-                    </div>
-                    <input
-                      type="range"
-                      min="0"
-                      max="100"
-                      value={masteryLevel}
-                      onChange={(e) => setMasteryLevel(Number(e.target.value))}
-                      className="w-full accent-amber-400 cursor-pointer"
-                    />
-                    <div className="flex gap-1.5 pt-1">
-                      {[0, 25, 50, 75, 100].map((lvl) => (
-                        <button
-                          key={lvl}
-                          type="button"
-                          onClick={() => setMasteryLevel(lvl)}
-                          className={`flex-1 py-1 rounded-md text-[10px] font-mono border transition-all cursor-pointer ${
-                            masteryLevel === lvl 
-                              ? 'bg-amber-500/25 text-amber-300 border-amber-500/60 font-bold shadow-gold-glow'
-                              : 'bg-[#06090f] border-[#1e2a3c] text-slate-400 hover:text-slate-200'
-                          }`}
-                        >
-                          {lvl}
-                        </button>
-                      ))}
+                {!hasAnyDestinyBonus ? (
+                  <div className="bg-[#0b121d] p-4 rounded-xl border border-[#1e2a3c] flex items-start gap-3">
+                    <Info className="w-5 h-5 text-slate-300 shrink-0 mt-0.5" />
+                    <div className="space-y-1">
+                      <span className="text-sm font-serif font-bold text-slate-100 block">
+                        No Destiny Board Crafting Mastery Applies
+                      </span>
+                      <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                        Mounts, Furniture, and Siege Banners do not receive Focus Cost Efficiency or Quality roll bonuses from crafting mastery or specialization nodes.
+                      </p>
                     </div>
                   </div>
+                ) : (
+                  <div className="space-y-3 pt-1">
+                    <div className="rounded-xl bg-[#07101c] border border-sky-500/35 px-4 py-3 flex items-start gap-3">
+                      <Info className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                      <p className="text-xs sm:text-[13px] leading-relaxed text-slate-200 font-sans">
+                        <span className="font-bold text-amber-300">
+                          All 3 inputs come from ONE Destiny Board tree ({destinyBranchMeta.branchName}):
+                        </span>{' '}
+                        Albion splits one crafting branch into your{' '}
+                        <span className="text-amber-300 font-semibold">1. Main Branch Mastery</span>,{' '}
+                        <span className="text-emerald-300 font-semibold">2. This Item&apos;s Spec</span>, and{' '}
+                        <span className="text-sky-300 font-semibold">
+                          3. {destinyBranchMeta.siblingPlural} (Avg)
+                        </span>{' '}
+                        because sibling items in the same tree give passive Focus &amp; Quality bonuses.
+                      </p>
+                    </div>
 
-                  {/* Item Specialization */}
-                  <div className="bg-[#0b121d] p-3.5 rounded-xl border border-[#1e2a3c] space-y-2 shadow-inner">
-                    <div className="flex items-center justify-between">
-                      <div className="min-w-0 pr-2">
-                        <span className="text-xs font-serif font-bold text-slate-100 block truncate">
-                          {selectedItem.name} Specialization
-                        </span>
-                        <span className="text-[10px] text-slate-400 font-mono">
-                          +6.00 Quality Power &bull; +280 Focus Eff / lvl
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1 font-mono shrink-0">
-                        <NumberInput
-                          type="number"
-                          min="0"
-                          max="120"
-                          value={specLevel}
-                          onChange={(e) => setSpecLevel(Math.max(0, Math.min(120, parseInt(e.target.value) || 0)))}
-                          className="w-14 text-center bg-[#06090f] border border-[#1e2a3c] rounded-md py-1 text-xs font-bold text-emerald-400 focus:outline-none focus:border-emerald-400 shadow-inner"
-                        />
-                        <span className="text-[10px] text-slate-400">/ 120</span>
-                      </div>
-                    </div>
-                    <input
-                      type="range"
-                      min="0"
-                      max="120"
-                      value={specLevel}
-                      onChange={(e) => setSpecLevel(Number(e.target.value))}
-                      className="w-full accent-emerald-400 cursor-pointer"
-                    />
-                    <div className="flex gap-1.5 pt-1">
-                      {[
-                        { lvl: 0, label: '0' },
-                        { lvl: 50, label: '50' },
-                        { lvl: 100, label: '100' },
-                        { lvl: 120, label: '120 Elite' },
-                      ].map(({ lvl, label }) => (
-                        <button
-                          key={lvl}
-                          type="button"
-                          onClick={() => setSpecLevel(lvl)}
-                          className={`flex-1 py-1 rounded-md text-[10px] font-mono border transition-all cursor-pointer ${
-                            specLevel === lvl 
-                              ? 'bg-emerald-500/25 text-emerald-300 border-emerald-500/60 font-bold shadow-[0_0_8px_rgba(16,185,129,0.2)]'
-                              : 'bg-[#06090f] border-[#1e2a3c] text-slate-400 hover:text-slate-200'
+                    {[
+                      {
+                        key: 'mastery',
+                        step: '1',
+                        title: `${destinyBranchMeta.branchName} (Main Branch Mastery)`,
+                        subtitle:
+                          specRates.masteryFce === 0 && specRates.masteryQ === 0
+                            ? 'Inner branch node unlocks higher tiers only — gives no Focus or Quality bonus for this item.'
+                            : `Inner mastery node on your Destiny Board — covers every item in ${destinyBranchMeta.branchName}.`,
+                        value: masteryLevel,
+                        setter: setMasteryLevel,
+                        rateFce: specRates.masteryFce,
+                        rateQ: specRates.masteryQ,
+                        presets: [
+                          { lvl: 0, label: '0' },
+                          { lvl: 25, label: '25' },
+                          { lvl: 50, label: '50' },
+                          { lvl: 75, label: '75' },
+                          { lvl: 100, label: '100 Max' },
+                        ],
+                        stepBadge: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                        inputText: 'text-amber-300 focus:border-amber-400',
+                        rangeAccent: 'accent-amber-400',
+                        activeBtn: 'bg-amber-500/25 text-amber-300 border-amber-500/60 font-bold shadow-gold-glow',
+                      },
+                      {
+                        key: 'spec',
+                        step: '2',
+                        title: `${selectedItem.name} Crafting Specialist`,
+                        subtitle: `Outer specialization node directly for ${selectedItem.name} — largest Focus reduction and Quality boost.`,
+                        value: specLevel,
+                        setter: setSpecLevel,
+                        rateFce: specRates.ownFce,
+                        rateQ: specRates.ownQ,
+                        presets: [
+                          { lvl: 0, label: '0' },
+                          { lvl: 25, label: '25' },
+                          { lvl: 50, label: '50' },
+                          { lvl: 75, label: '75' },
+                          { lvl: 100, label: '100 Max' },
+                        ],
+                        stepBadge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+                        inputText: 'text-emerald-300 focus:border-emerald-400',
+                        rangeAccent: 'accent-emerald-400',
+                        activeBtn: 'bg-emerald-500/25 text-emerald-300 border-emerald-500/60 font-bold shadow-[0_0_8px_rgba(16,185,129,0.2)]',
+                      },
+                      {
+                        key: 'mutual',
+                        step: '3',
+                        title: `${destinyBranchMeta.siblingPlural}${
+                          destinySiblings.length > 0
+                            ? ` (${destinySiblings.length} ${destinySiblings.length === 1 ? 'Sibling' : 'Siblings'})`
+                            : ''
+                        }`,
+                        subtitle:
+                          specRates.mutualFce === 0 && specRates.mutualQ === 0
+                            ? 'This item receives no shared mutual bonus from sibling nodes in the branch.'
+                            : 'Enter your spec for each sibling item below (or use Quick Set All). The weighted mutual average is calculated automatically and saved per item.',
+                        value: otherSpecAvg,
+                        setter: setOtherSpecAvg,
+                        rateFce: specRates.mutualFce,
+                        rateQ: specRates.mutualQ,
+                        presets: [
+                          { lvl: 0, label: '0' },
+                          { lvl: 25, label: '25' },
+                          { lvl: 50, label: '50' },
+                          { lvl: 75, label: '75' },
+                          { lvl: 100, label: '100 Max' },
+                        ],
+                        stepBadge: 'bg-sky-500/20 text-sky-300 border-sky-500/40',
+                        inputText: 'text-sky-300 focus:border-sky-400',
+                        rangeAccent: 'accent-sky-400',
+                        activeBtn: 'bg-sky-500/25 text-sky-300 border-sky-500/60 font-bold',
+                      },
+                    ].map((node) => {
+                      const isNodeActive = node.rateFce > 0 || node.rateQ > 0;
+                      const isMutualNode = node.key === 'mutual';
+                      const totalFceContribution = Math.round(node.value * node.rateFce);
+                      const totalQContribution = Math.round(node.value * node.rateQ);
+                      return (
+                        <div
+                          key={node.key}
+                          className={`bg-[#0b121d] p-4 rounded-xl border border-[#1e2a3c] space-y-3 shadow-inner transition-opacity ${
+                            isNodeActive ? '' : 'opacity-65'
                           }`}
                         >
-                          {label}
-                        </button>
-                      ))}
-                    </div>
+                          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                            <div className="space-y-1.5 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span
+                                  className={`w-5 h-5 rounded-md border text-[11px] font-mono font-bold inline-flex items-center justify-center shrink-0 ${node.stepBadge}`}
+                                >
+                                  {node.step}
+                                </span>
+                                <span className="text-sm font-serif font-bold text-slate-50 leading-snug">
+                                  {node.title}
+                                </span>
+                                {!isNodeActive && (
+                                  <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800/80 border border-slate-700 text-slate-300">
+                                    No bonus for this item
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                                {node.subtitle}
+                              </p>
+                              {isNodeActive && (
+                                <div className="flex flex-wrap items-center gap-2 pt-0.5 text-xs font-mono">
+                                  <span className="px-2 py-0.5 rounded-md bg-[#06090f] border border-[#1e2a3c] text-slate-200">
+                                    +{node.rateFce} Focus Eff / lvl
+                                    {totalFceContribution > 0 && (
+                                      <span className="text-amber-300 font-bold ml-1.5">
+                                        ({totalFceContribution.toLocaleString()} active)
+                                      </span>
+                                    )}
+                                  </span>
+                                  <span className="px-2 py-0.5 rounded-md bg-[#06090f] border border-[#1e2a3c] text-slate-200">
+                                    +{node.rateQ} Quality / lvl
+                                    {totalQContribution > 0 && (
+                                      <span className="text-emerald-300 font-bold ml-1.5">
+                                        (+{totalQContribution} active)
+                                      </span>
+                                    )}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+
+                            {isNodeActive && !isMutualNode && (
+                              <div className="flex items-center gap-1.5 font-mono shrink-0 self-start">
+                                <NumberInput
+                                  type="number"
+                                  min="0"
+                                  max="100"
+                                  value={node.value}
+                                  onChange={(e) => node.setter(Math.max(0, Math.min(100, parseInt(e.target.value, 10) || 0)))}
+                                  className={`w-16 text-center bg-[#06090f] border border-[#2a3950] rounded-lg py-1.5 text-sm font-bold focus:outline-none shadow-inner ${node.inputText}`}
+                                />
+                                <span className="text-xs text-slate-300 font-semibold">/ 100</span>
+                              </div>
+                            )}
+
+                            {isNodeActive && isMutualNode && (
+                              <div className="flex items-center gap-2 shrink-0 self-start bg-[#06090f] border border-sky-500/40 rounded-lg px-3 py-1.5 font-mono">
+                                <span className="text-[11px] text-slate-300">Auto Avg:</span>
+                                <span className="text-sm font-bold text-sky-300">{node.value} / 100</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {isNodeActive && !isMutualNode && (
+                            <div className="space-y-2">
+                              <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                value={node.value}
+                                onChange={(e) => node.setter(Number(e.target.value))}
+                                className={`w-full h-2 rounded-lg cursor-pointer ${node.rangeAccent}`}
+                              />
+                              <div className="grid grid-cols-5 gap-2">
+                                {node.presets.map(({ lvl, label }) => (
+                                  <button
+                                    key={lvl}
+                                    type="button"
+                                    onClick={() => node.setter(lvl)}
+                                    className={`py-1.5 rounded-lg text-xs font-mono border transition-all cursor-pointer ${
+                                      node.value === lvl
+                                        ? node.activeBtn
+                                        : 'bg-[#06090f] border-[#1e2a3c] text-slate-300 hover:text-white hover:border-slate-500'
+                                    }`}
+                                  >
+                                    {label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {isNodeActive && isMutualNode && (
+                            <div className="space-y-3">
+                              <div className="flex flex-wrap items-center justify-between gap-2 bg-[#06090f]/75 p-2.5 rounded-xl border border-[#1e2a3c]">
+                                <div className="flex items-center flex-wrap gap-1.5">
+                                  <span className="text-xs font-mono text-slate-300 mr-1">
+                                    Quick Set All {destinySiblings.length}:
+                                  </span>
+                                  {node.presets.map(({ lvl, label }) => {
+                                    const allMatch =
+                                      destinySiblings.length > 0 &&
+                                      destinySiblings.every((sib) => clampSpecLevel(itemSpecsById[sib.id] ?? 0) === lvl);
+                                    return (
+                                      <button
+                                        key={lvl}
+                                        type="button"
+                                        onClick={() => node.setter(lvl)}
+                                        className={`px-2.5 py-1 rounded-md text-xs font-mono border transition-all cursor-pointer ${
+                                          allMatch
+                                            ? node.activeBtn
+                                            : 'bg-[#0b121d] border-[#1e2a3c] text-slate-300 hover:text-white hover:border-slate-500'
+                                        }`}
+                                      >
+                                        {label}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+
+                                {destinySiblings.length > 0 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => setIsSiblingListOpen(!isSiblingListOpen)}
+                                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono bg-[#0b121d] border border-sky-500/35 text-sky-300 hover:border-sky-400 cursor-pointer"
+                                  >
+                                    <span>
+                                      {isSiblingListOpen
+                                        ? `Hide Individual (${destinySiblings.length})`
+                                        : `Enter Each (${destinySiblings.length})`}
+                                    </span>
+                                    {isSiblingListOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                                  </button>
+                                )}
+                              </div>
+
+                              <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                value={node.value}
+                                onChange={(e) => node.setter(Number(e.target.value))}
+                                title="Slide to set all sibling specs at once"
+                                className={`w-full h-2 rounded-lg cursor-pointer ${node.rangeAccent}`}
+                              />
+
+                              {isSiblingListOpen && destinySiblings.length > 0 && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-2 border-t border-[#1e2a3c]/80">
+                                  {destinySiblings.map((sib) => {
+                                    const sibVal = clampSpecLevel(itemSpecsById[sib.id] ?? 0);
+                                    const sibTier = Math.min(sib.maxTier || 8, Math.max(sib.minTier || 4, selectedTier || 4));
+                                    const sibIcon = `/items/${sib.template.replace('{tier}', sibTier)}.png`;
+                                    const weight = getSiblingMutualWeight(sib);
+                                    return (
+                                      <div
+                                        key={sib.id}
+                                        className="bg-[#06090f] p-3 rounded-xl border border-[#1e2a3c] hover:border-sky-500/40 transition-colors space-y-2"
+                                      >
+                                        <div className="flex items-center justify-between gap-2">
+                                          <div className="flex items-center gap-2.5 min-w-0">
+                                            <div className="w-8 h-8 rounded-lg bg-[#0b121d] border border-[#1e2a3c] p-0.5 flex items-center justify-center shrink-0">
+                                              <ItemIcon
+                                                src={sibIcon}
+                                                alt={sib.name}
+                                                className="w-full h-full object-contain"
+                                              />
+                                            </div>
+                                            <div className="min-w-0">
+                                              <span className="text-xs sm:text-[13px] font-serif font-bold text-slate-100 block leading-tight">
+                                                {sib.name}
+                                              </span>
+                                              <span
+                                                className="text-[11px] font-mono text-slate-400 block"
+                                                title={
+                                                  weight === 2
+                                                    ? 'Non-artifact node grants full mutual bonus (2x weight vs artifact nodes)'
+                                                    : 'Artifact node grants standard artifact mutual bonus (1x weight)'
+                                                }
+                                              >
+                                                {sib.isArtifact ? (sib.artifactType || 'Artifact') : 'Non-Artifact (2x bonus)'}
+                                              </span>
+                                            </div>
+                                          </div>
+
+                                          <div className="flex items-center gap-1 font-mono shrink-0">
+                                            <NumberInput
+                                              type="number"
+                                              min="0"
+                                              max="100"
+                                              value={sibVal}
+                                              onChange={(e) => setSiblingSpecLevel(sib.id, e.target.value)}
+                                              className="w-14 text-center bg-[#0b121d] border border-[#2a3950] rounded-lg py-1 text-xs font-bold text-sky-300 focus:outline-none focus:border-sky-400"
+                                            />
+                                            <span className="text-[11px] text-slate-400">/100</span>
+                                          </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-2">
+                                          <input
+                                            type="range"
+                                            min="0"
+                                            max="100"
+                                            value={sibVal}
+                                            onChange={(e) => setSiblingSpecLevel(sib.id, e.target.value)}
+                                            className="flex-1 h-1.5 accent-sky-400 cursor-pointer"
+                                          />
+                                          <button
+                                            type="button"
+                                            onClick={() => setSiblingSpecLevel(sib.id, 0)}
+                                            className={`px-2 py-0.5 rounded text-[11px] font-mono border cursor-pointer ${
+                                              sibVal === 0
+                                                ? 'bg-slate-700/70 border-slate-500 text-white font-bold'
+                                                : 'bg-[#0b121d] border-[#1e2a3c] text-slate-400 hover:text-white'
+                                            }`}
+                                          >
+                                            0
+                                          </button>
+                                          <button
+                                            type="button"
+                                            onClick={() => setSiblingSpecLevel(sib.id, 100)}
+                                            className={`px-2 py-0.5 rounded text-[11px] font-mono border cursor-pointer ${
+                                              sibVal === 100
+                                                ? 'bg-sky-500/25 border-sky-500/60 text-sky-300 font-bold'
+                                                : 'bg-[#0b121d] border-[#1e2a3c] text-slate-400 hover:text-white'
+                                            }`}
+                                          >
+                                            Max
+                                          </button>
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
-                </div>
+                )}
               </div>
             )}
           </div>
@@ -1824,9 +2398,11 @@ export default function CraftingCalculator({
             currentSpec={specLevel}
             rrr={calculation?.returnRatePct ? calculation.returnRatePct / 100 : 0.248}
             sellPrice={activeSellPrice || itemSellPrice || 0}
+            hasPremium={hasPremium}
             primaryMatPrice={primaryPrice || 0}
             secondaryMatPrice={secondaryPrice || 0}
             artifactPrice={artifactPrice || 0}
+            extraMatPrices={extraMatPrices}
           />
 
           {/* 3. Visual Recipe & Material Cost Inputs (Refined Mats + Artifact Slot) */}
@@ -1935,7 +2511,7 @@ export default function CraftingCalculator({
                     </div>
                     <div className="flex-1 min-w-0">
                       <label className="text-[10px] uppercase tracking-wider text-emerald-300 font-bold block truncate">
-                        I Have {selectedItem.primaryMatName}{selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} ({selectedItem.primaryQty}/craft)
+                        I Have {selectedItem.primaryMatName}{selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} ({activePrimaryQty}/craft)
                       </label>
                       <NumberInput
                         type="number"
@@ -1947,7 +2523,7 @@ export default function CraftingCalculator({
                     </div>
                   </div>
 
-                  {selectedItem.secondaryQty > 0 && (
+                  {activeSecondaryQty > 0 && (
                     <div className="bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c] flex items-center gap-3 shadow-inner">
                       <div className="w-11 h-11 bg-[#0c121e] rounded-lg p-0.5 border border-[#1e2a3c] flex items-center justify-center shrink-0 shadow-md">
                         <ItemIcon
@@ -1959,7 +2535,7 @@ export default function CraftingCalculator({
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1">
                           <label className="text-[10px] uppercase tracking-wider text-slate-300 font-bold block truncate">
-                            I Also Have {selectedItem.secondaryMatName} ({selectedItem.secondaryQty}/craft)
+                            I Also Have {selectedItem.secondaryMatName} ({activeSecondaryQty}/craft)
                           </label>
                           <label className="flex items-center gap-1 text-[9px] text-amber-300 cursor-pointer shrink-0" title="If checked, caps your crafts to the Secondary Mats you currently own instead of buying missing ones">
                             <input
@@ -1991,7 +2567,7 @@ export default function CraftingCalculator({
                       1. Complementary Mats
                     </span>
                     <div className="mt-1 space-y-0.5">
-                      {selectedItem.secondaryQty > 0 ? (
+                      {activeSecondaryQty > 0 ? (
                         <span className="text-xs font-bold text-amber-300 block">
                           {compoundCraftRrr ? (craftingMaterialSim?.secondaryToBuyTotal ?? 0).toLocaleString() : (craftingMaterialSim?.secondaryToBuyPass1 ?? 0).toLocaleString()}x {selectedItem.secondaryMatName}
                         </span>
@@ -2005,6 +2581,11 @@ export default function CraftingCalculator({
                           + {compoundCraftRrr ? (craftingMaterialSim?.artifactsTotal ?? 0) : (craftingMaterialSim?.artifactsPass1 ?? 0)}x {selectedItem.artifactName}
                         </span>
                       )}
+                      {(craftingMaterialSim?.extraMaterials || []).map((ex) => (
+                        <span key={ex.id} className="text-[11px] font-bold text-amber-200 block">
+                          + {(compoundCraftRrr ? ex.totalNeeded : ex.neededPass1).toLocaleString()}x {ex.name}
+                        </span>
+                      ))}
                       {includeJournals && canUseJournals && (
                         <span className="text-[10px] text-slate-400 block">
                           + {compoundCraftRrr ? (craftingMaterialSim?.journalsFilledTotal ?? 0) : (craftingMaterialSim?.journalsFilledPass1 ?? 0)}x Empty Books
@@ -2045,7 +2626,7 @@ export default function CraftingCalculator({
                       {effectiveBatchQuantity.toLocaleString()}x {selectedItem.name}
                     </span>
                     <span className="text-[10px] text-slate-400 block mt-0.5">
-                      Leftover: {compoundCraftRrr ? (craftingMaterialSim?.leftoverPrimary ?? 0) : (primaryMatsHave - (craftingMaterialSim?.pass1Crafts ?? 0) * selectedItem.primaryQty + (craftingMaterialSim?.pass1PrimaryReturned ?? 0))} {selectedItem.primaryMatName}
+                      Leftover: {compoundCraftRrr ? (craftingMaterialSim?.leftoverPrimary ?? 0) : (primaryMatsHave - (craftingMaterialSim?.pass1Crafts ?? 0) * activePrimaryQty + (craftingMaterialSim?.pass1PrimaryReturned ?? 0))} {selectedItem.primaryMatName}
                     </span>
                   </div>
                 </div>
@@ -2085,8 +2666,8 @@ export default function CraftingCalculator({
             </div>
 
             <div className={`grid gap-3 ${
-              selectedItem.isArtifact 
-                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4' 
+              selectedItem.isArtifact || activeExtraMaterials.length > 0
+                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
                 : 'grid-cols-1 sm:grid-cols-3'
             }`}>
               {/* Primary Refined Material */}
@@ -2101,7 +2682,7 @@ export default function CraftingCalculator({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-1">
                     <label className="text-[11px] font-bold text-slate-100 block truncate">
-                      {selectedItem.primaryMatName}{selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} ({selectedItem.primaryQty}x)
+                      {selectedItem.primaryMatName}{selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} ({activePrimaryQty}x)
                     </label>
                     <span className="text-[8px] font-mono px-1.5 py-0.2 rounded bg-[#070b12] text-slate-400 border border-[#1e2a3c] shrink-0">
                       Normal (Q1)
@@ -2122,11 +2703,11 @@ export default function CraftingCalculator({
 
               {/* Secondary Refined Material */}
               <div className={`p-3.5 rounded-xl border flex items-start gap-3 transition-all ${
-                selectedItem.secondaryQty > 0 
+                activeSecondaryQty > 0 
                   ? getMaterialTactileClass(selectedItem.secondaryMatName) 
                   : 'bg-[#070b12]/40 border-[#1e2a3c]/40 opacity-40'
               }`}>
-                {selectedItem.secondaryQty > 0 ? (
+                {activeSecondaryQty > 0 ? (
                   <>
                     <div className="w-12 h-12 shrink-0 bg-[#070b12] rounded-lg p-0.5 border border-[#1e2a3c] flex items-center justify-center shadow-md">
                       <ItemIcon 
@@ -2138,7 +2719,7 @@ export default function CraftingCalculator({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-1">
                         <label className="text-[11px] font-bold text-slate-100 block truncate">
-                          {selectedItem.secondaryMatName}{selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} ({selectedItem.secondaryQty}x)
+                          {selectedItem.secondaryMatName}{selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} ({activeSecondaryQty}x)
                         </label>
                         <span className="text-[8px] font-mono px-1.5 py-0.2 rounded bg-[#070b12] text-slate-400 border border-[#1e2a3c] shrink-0">
                           Normal (Q1)
@@ -2195,6 +2776,53 @@ export default function CraftingCalculator({
                   </div>
                 </div>
               )}
+
+              {/* Extra 4th/5th Material Inputs (e.g. Animal Remains, Armored Horse Cloth, Ballista Leather/Planks) */}
+              {activeExtraMaterials.map((ex) => (
+                <div
+                  key={ex.id}
+                  className={`p-3.5 rounded-xl border flex items-start gap-3 transition-all ${
+                    ex.noReturn
+                      ? 'bg-[#120d1b]/90 border-purple-500/40'
+                      : getMaterialTactileClass(ex.name)
+                  }`}
+                >
+                  <div className="w-12 h-12 shrink-0 bg-[#070b12] rounded-lg p-0.5 border border-[#1e2a3c] flex items-center justify-center shadow-md">
+                    <ItemIcon
+                      src={`/items/${ex.template}.png`}
+                      alt={ex.name}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-1">
+                      <label className="text-[11px] font-bold text-slate-100 block truncate">
+                        {ex.name}{ex.isRefinedResource && selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''} ({ex.qty}x)
+                      </label>
+                      <span className={`text-[8px] font-mono px-1.5 py-0.2 rounded border shrink-0 ${
+                        ex.noReturn
+                          ? 'bg-purple-950/60 text-purple-300 border-purple-500/40'
+                          : 'bg-[#070b12] text-slate-400 border-[#1e2a3c]'
+                      }`}>
+                        {ex.noReturn ? '0% RRR' : 'Normal (Q1)'}
+                      </span>
+                    </div>
+                    <div className="relative mt-1.5">
+                      <NumberInput
+                        type="number"
+                        min="0"
+                        value={extraMatPrices[ex.id] ?? 0}
+                        onChange={(e) => {
+                          const val = Math.max(0, parseFloat(e.target.value) || 0);
+                          setExtraMatPrices((prev) => ({ ...prev, [ex.id]: val }));
+                        }}
+                        className="w-full bg-[#070b12] border border-[#1e2a3c] focus:border-amber-400 rounded-lg px-2.5 py-1 text-xs font-mono font-bold text-slate-100 focus:outline-none shadow-inner"
+                      />
+                      <span className="absolute right-2 top-1 text-[9px] text-slate-500 font-mono">silver</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
 
               {/* Output Item Sale Price */}
               <div className="bg-gradient-to-br from-[#1c1407] to-[#0d121c] p-3.5 rounded-xl border border-amber-500/60 flex items-start gap-3 shadow-[0_0_15px_rgba(217,119,6,0.15)]">
@@ -2769,13 +3397,20 @@ export default function CraftingCalculator({
                   </span>
                   <label className="text-xs uppercase tracking-wider text-slate-200 font-bold flex items-center gap-1.5 font-serif">
                     <MapPin className="w-4 h-4 text-albion-gold" />
-                    City Jurisdiction & Station Taxes
+                    {locationMode === 'hideout' ? 'Hideout Station & Market Price City' : 'City Jurisdiction & Station Taxes'}
                   </label>
                 </div>
                 <span className="text-[11px] font-mono">
                   {selectedItem.isNoReturn || selectedItem.isRoyal ? (
                     <span className="text-slate-400 font-semibold">
                       Transmute Recipe (0% Return Rate)
+                    </span>
+                  ) : locationMode === 'hideout' ? (
+                    <span className="text-amber-200 flex items-center gap-1 font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+                      <Shield className="w-3.5 h-3.5 text-amber-400" />
+                      {hoCustomBonusPct !== '' && hoCustomBonusPct !== null
+                        ? `Hideout Override (+${hoCustomBonusPct}%)`
+                        : `Hideout PL ${hoPowerLevel} • ${hoHasSpecialty ? `Q${hoZoneQuality} Biome Spec` : 'General Craft'}`}
                     </span>
                   ) : selectedItem.bonusCity ? (
                     selectedCity.toLowerCase() === selectedItem.bonusCity.toLowerCase() ? (
@@ -2797,28 +3432,99 @@ export default function CraftingCalculator({
                 </span>
               </div>
 
-              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 font-mono">
-                {CITIES.filter(c => c.name !== 'Island').map((c) => {
-                  const isSelected = selectedCity === c.name;
-                  const isSpecialty = Boolean(selectedItem.bonusCity && c.name.toLowerCase() === selectedItem.bonusCity.toLowerCase());
-                  return (
-                    <button
-                      key={c.name}
-                      type="button"
-                      onClick={() => setSelectedCity(c.name)}
-                      className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
-                        isSelected
-                          ? 'bg-[#0c121e] border-amber-500/80 text-amber-200 shadow-gold-glow'
-                          : 'bg-[#070b12] border-[#1e2a3c] text-slate-400 hover:text-slate-200 hover:border-slate-600'
-                      }`}
-                    >
-                      <div className="text-xs font-bold font-serif">{c.name}</div>
-                      {isSpecialty && <div className="text-[9px] text-emerald-400 font-bold mt-0.5">+15% Specialty</div>}
-                    </button>
-                  );
-                })}
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                  {locationMode === 'hideout' ? 'Market City (AODP Prices Only — No City Bonus Applied)' : 'Select Crafting City'}
+                </span>
+                <div className="flex items-center bg-[#06090f] p-0.5 rounded-lg border border-[#1e2a3c] text-[10px] font-mono">
+                  <button
+                    type="button"
+                    onClick={() => setLocationMode('city')}
+                    className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                      locationMode !== 'hideout'
+                        ? 'bg-amber-500/20 text-amber-200 border border-amber-500/50 font-bold'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    Royal City
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (selectedCity.toLowerCase() === 'island') setSelectedCity('Martlock');
+                      setLocationMode('hideout');
+                    }}
+                    className={`px-2.5 py-1 rounded-md flex items-center gap-1 transition-all cursor-pointer ${
+                      locationMode === 'hideout'
+                        ? 'bg-amber-500/20 text-amber-200 border border-amber-500/50 font-bold'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    <Shield className="w-3 h-3" />
+                    <span>Hideout (HO)</span>
+                  </button>
+                </div>
               </div>
+
+              {locationMode === 'hideout' ? (
+                <div className="bg-[#070b12] border border-[#1e2a3c] rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                  <div className="text-[10px] font-mono text-slate-400">
+                    Market prices fetched from <strong className="text-slate-200">{selectedCity}</strong>. Crafting bonuses come solely from the Hideout below.
+                  </div>
+                  <select
+                    value={selectedCity.toLowerCase() === 'island' ? 'Martlock' : selectedCity}
+                    onChange={(e) => setSelectedCity(e.target.value)}
+                    className="sm:w-52 px-3 py-2 rounded-lg bg-[#05080e] border border-[#1e2a3c] text-xs text-slate-100 font-serif focus:outline-none focus:border-amber-500/80 cursor-pointer"
+                  >
+                    {CITIES.filter(c => c.name !== 'Island').map((c) => (
+                      <option key={c.name} value={c.name}>
+                        {c.name} Market
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 font-mono">
+                  {CITIES.filter(c => c.name !== 'Island').map((c) => {
+                    const isSelected = selectedCity === c.name;
+                    const isSpecialty = Boolean(selectedItem.bonusCity && c.name.toLowerCase() === selectedItem.bonusCity.toLowerCase());
+                    return (
+                      <button
+                        key={c.name}
+                        type="button"
+                        onClick={() => setSelectedCity(c.name)}
+                        className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                          isSelected
+                            ? 'bg-[#0c121e] border-amber-500/80 text-amber-200 shadow-gold-glow'
+                            : 'bg-[#070b12] border-[#1e2a3c] text-slate-400 hover:text-slate-200 hover:border-slate-600'
+                        }`}
+                      >
+                        <div className="text-xs font-bold font-serif">{c.name}</div>
+                        {isSpecialty && <div className="text-[9px] text-emerald-400 font-bold mt-0.5">+15% Specialty</div>}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
+
+            {locationMode === 'hideout' && (
+              <HideoutStationPanel
+                hoPowerLevel={hoPowerLevel}
+                setHoPowerLevel={setHoPowerLevel}
+                hoZoneQuality={hoZoneQuality}
+                setHoZoneQuality={setHoZoneQuality}
+                hoHasSpecialty={hoHasSpecialty}
+                setHoHasSpecialty={setHoHasSpecialty}
+                hoCustomBonusPct={hoCustomBonusPct}
+                setHoCustomBonusPct={setHoCustomBonusPct}
+                dailyBonus={dailyBonus}
+                useFocus={useFocus}
+                specialtyMode="crafting"
+                specialtyLabel="Biome Specialty Match"
+                accent="amber"
+              />
+            )}
 
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-1">
               <div className="bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c]">
@@ -3095,7 +3801,7 @@ export default function CraftingCalculator({
                 </div>
 
                 {/* Secondary Material Item (if applicable) */}
-                {selectedItem.secondaryQty > 0 && (
+                {activeSecondaryQty > 0 && (
                   <div 
                     onClick={() => setShoppingChecked(prev => ({ ...prev, secondary: !prev.secondary }))}
                     className={`p-3 rounded-xl border flex items-center justify-between gap-2.5 cursor-pointer transition-all ${
@@ -3196,6 +3902,61 @@ export default function CraftingCalculator({
                     </div>
                   </div>
                 )}
+
+                {/* Extra 4th/5th Material Items (if applicable) */}
+                {activeExtraMaterials.map((ex) => {
+                  const simEx = (materialsModeShopping?.extraMaterialsToBuy || []).find((m) => m.id === ex.id);
+                  const calcEx = (calculation?.materials?.extraMaterials || []).find((m) => m.id === ex.id);
+                  const qtyNeeded = craftingInputMode === 'materials' && materialsModeShopping
+                    ? (simEx?.toBuy ?? 0)
+                    : (calcEx?.gross ?? effectiveBatchQuantity * ex.qty);
+                  const unitPrice = Number(extraMatPrices[ex.id] ?? extraMatPrices[ex.template] ?? 0) || 0;
+                  const totalCost = craftingInputMode === 'materials' && materialsModeShopping
+                    ? (simEx?.cost ?? 0)
+                    : (calcEx?.grossCost ?? Math.round(qtyNeeded * unitPrice));
+                  const checkKey = `extra_${ex.id}`;
+                  return (
+                    <div
+                      key={ex.id}
+                      onClick={() => setShoppingChecked((prev) => ({ ...prev, [checkKey]: !prev[checkKey] }))}
+                      className={`p-3 rounded-xl border flex items-center justify-between gap-2.5 cursor-pointer transition-all ${
+                        shoppingChecked[checkKey]
+                          ? 'bg-emerald-950/20 border-emerald-500/40 line-through opacity-75'
+                          : 'bg-[#070b12] border-[#1e2a3c] hover:border-slate-500'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <input
+                          type="checkbox"
+                          checked={!!shoppingChecked[checkKey]}
+                          onChange={() => {}}
+                          className="accent-amber-500 rounded cursor-pointer"
+                        />
+                        <div className="w-8 h-8 rounded-lg bg-[#0c121e] p-0.5 border border-[#1e2a3c] flex items-center justify-center shrink-0 shadow-sm">
+                          <ItemIcon
+                            src={`/items/${ex.template}.png`}
+                            alt={ex.name}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        <div className="min-w-0">
+                          <span className="text-xs font-bold text-slate-100 block truncate font-mono">
+                            {qtyNeeded.toLocaleString()}x {ex.name}{ex.isRefinedResource && selectedEnchantment > 0 ? ` .${selectedEnchantment}` : ''}
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-mono">
+                            @{unitPrice.toLocaleString()}s each{ex.noReturn ? ' (0% RRR)' : ''}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="font-mono text-right shrink-0">
+                        <span className="text-xs font-bold text-albion-gold">
+                          {Math.round(totalCost).toLocaleString()}s
+                        </span>
+                        <span className="block text-[8px] text-slate-500">extra mat</span>
+                      </div>
+                    </div>
+                  );
+                })}
 
                 {/* Empty Journals (if applicable) */}
                 {includeJournals && canUseJournals && (
@@ -3404,7 +4165,7 @@ export default function CraftingCalculator({
                     Quality Proc Upside (Pure Bonus):
                   </div>
                   <p className="text-[10.5px] text-slate-400 leading-relaxed font-sans">
-                    With your Destiny Board spec (+{Math.round((masteryLevel * 0.75) + (specLevel * 6.0))} QR) & Food, Normal quality drops to only ~{((currentOdds[1] || 0) * 100).toFixed(1)}%. Outstanding, Excellent, or Masterpiece procs will sell for significantly higher — <strong>pure extra profit above this forecast!</strong>
+                    With your Destiny Board spec (+{Math.max(0, qualityMetrics.qualityPower - (hasCraftersSalad ? 150 : 0) - (useFocus ? 50 : 0))} QR){hasCraftersSalad ? ' & Food' : ''}, Normal quality drops to only ~{((currentOdds[1] || 0) * 100).toFixed(1)}%. Outstanding, Excellent, or Masterpiece procs will sell for significantly higher — <strong>pure extra profit above this forecast!</strong>
                   </p>
                 </div>
               </div>
@@ -3506,7 +4267,7 @@ export default function CraftingCalculator({
                 </div>
               </div>
 
-              {selectedItem.secondaryQty > 0 && (
+              {activeSecondaryQty > 0 && (
                 <div className="flex justify-between items-center bg-[#070b12] p-3 rounded-xl border border-[#1e2a3c]">
                   <span className="text-slate-200 font-medium">
                     {selectedItem.secondaryMatName}
@@ -3517,6 +4278,32 @@ export default function CraftingCalculator({
                   </div>
                 </div>
               )}
+
+              {(calculation?.materials?.extraMaterials || []).map((ex) => (
+                <div
+                  key={ex.id}
+                  className={`flex justify-between items-center p-3 rounded-xl border ${
+                    ex.noReturn ? 'bg-purple-950/30 border-purple-500/40' : 'bg-[#070b12] border-[#1e2a3c]'
+                  }`}
+                >
+                  <span className={`${ex.noReturn ? 'text-purple-200' : 'text-slate-200'} font-medium`}>
+                    {ex.name}
+                  </span>
+                  <div className="font-mono text-right">
+                    {ex.noReturn ? (
+                      <>
+                        <span className="text-slate-400">{ex.gross} consumed &rarr; </span>
+                        <span className="text-rose-400 font-semibold">0 returned (100% used)</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-slate-400">{ex.gross} upfront &rarr; </span>
+                        <span className="text-emerald-400 font-bold">+{ex.returned} returned</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              ))}
 
               {selectedItem.isArtifact && (
                 <div className="flex justify-between items-center bg-purple-950/30 p-3 rounded-xl border border-purple-500/40">
@@ -3549,6 +4336,12 @@ export default function CraftingCalculator({
                 <span className="font-bold">{calculation.materials.artifactGrossCost.toLocaleString()} silver</span>
               </div>
             )}
+            {(calculation?.materials?.extraMaterials || []).map((ex) => (
+              <div key={ex.id} className="flex justify-between py-1.5 border-b border-[#1e2a3c] text-amber-200/90">
+                <span className="font-sans">{ex.name} ({ex.gross}x):</span>
+                <span className="font-bold">{Math.round(ex.grossCost).toLocaleString()} silver</span>
+              </div>
+            ))}
             <div className="flex justify-between py-1.5 border-b border-[#1e2a3c]">
               <span className="text-slate-400 font-sans">Station Nutrition Fee:</span>
               <span className="text-rose-300 font-bold">{calculation.financials.stationFee.toLocaleString()} silver</span>

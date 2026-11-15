@@ -3080,7 +3080,7 @@
     "isRare": false,
     "isIntermediate": true,
     "amountCrafted": 1,
-    "nutrition": 288,
+    "nutrition": 52.0,
     "baseFocus": 38,
     "ingredients": [
       {
@@ -3106,7 +3106,7 @@
     "isRare": false,
     "isIntermediate": true,
     "amountCrafted": 1,
-    "nutrition": 576,
+    "nutrition": 52.0,
     "baseFocus": 38,
     "ingredients": [
       {
@@ -3132,7 +3132,7 @@
     "isRare": false,
     "isIntermediate": true,
     "amountCrafted": 1,
-    "nutrition": 1152,
+    "nutrition": 52.0,
     "baseFocus": 38,
     "ingredients": [
       {
@@ -3158,7 +3158,7 @@
     "isRare": false,
     "isIntermediate": true,
     "amountCrafted": 1,
-    "nutrition": 18,
+    "nutrition": 0.0,
     "baseFocus": 0,
     "ingredients": [
       {
@@ -3184,7 +3184,7 @@
     "isRare": false,
     "isIntermediate": true,
     "amountCrafted": 1,
-    "nutrition": 18,
+    "nutrition": 0.0,
     "baseFocus": 0,
     "ingredients": [
       {
@@ -3210,7 +3210,7 @@
     "isRare": false,
     "isIntermediate": true,
     "amountCrafted": 1,
-    "nutrition": 18,
+    "nutrition": 0.0,
     "baseFocus": 0,
     "ingredients": [
       {

@@ -9,6 +9,7 @@ from .constants import (
     RAW_PER_TIER,
     BASE_FOCUS_COST,
     AODP_SERVERS,
+    parse_hideout_params,
 )
 from .engine import calculate_refining, calculate_return_rate, calculate_focus_cost
 from .services import (
@@ -78,6 +79,7 @@ class RefiningCalculateView(APIView):
                 is_sell_order=is_sell_order,
                 mastery_level=mastery_level,
                 spec_levels=spec_levels,
+                **parse_hideout_params(data),
             )
             return Response(result, status=status.HTTP_200_OK)
         except Exception as e:
@@ -222,6 +224,8 @@ class CraftingCalculateView(APIView):
                 mastery_level=int(data.get('mastery_level', 0)),
                 spec_level=int(data.get('spec_level', 0)),
                 other_spec_avg=int(data.get('other_spec_avg', 0)),
+                extra_mat_prices=data.get('extra_mat_prices') or data.get('extraMatPrices') or {},
+                **parse_hideout_params(data),
             )
             return Response(result, status=status.HTTP_200_OK)
         except Exception as e:
@@ -243,30 +247,40 @@ class CraftingPricesView(APIView):
         selected_city = data.get('city', 'Lymhurst')
 
         from .crafting_engine import get_craftable_item
+        from .crafting_constants import resolve_extra_materials
         item_def = get_craftable_item(item_id)
         if not item_def:
             return Response({'error': f"Item {item_id} not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        def to_aodp_mat_id(raw_tmpl: str) -> str:
+            if not raw_tmpl:
+                return ''
+            mid = raw_tmpl.replace('{tier}', str(tier))
+            if enchantment > 0:
+                if any(mid.endswith(suffix) for suffix in ('_CLOTH', '_LEATHER', '_METALBAR', '_PLANKS')):
+                    return f"{mid}_LEVEL{enchantment}@{enchantment}"
+                if item_def.get('is_royal') or item_def.get('isRoyal') or (mid.endswith('_CAPE') and not mid.endswith('_BP')):
+                    return f"{mid}@{enchantment}"
+            return mid
 
         # Build AODP Item ID for the crafted item
         base_item_id = item_def['template'].replace('{tier}', str(tier))
         crafted_aodp_id = f"{base_item_id}@{enchantment}" if enchantment > 0 and tier >= 4 else base_item_id
 
         # Build Material IDs
-        primary_mat_id = item_def.get('primaryMatIcon', '').replace('{tier}', str(tier))
-        if enchantment > 0 and 'STONE' not in primary_mat_id and primary_mat_id:
-            primary_mat_id = f"{primary_mat_id}_LEVEL{enchantment}@{enchantment}"
+        primary_mat_id = to_aodp_mat_id(item_def.get('primaryMatIcon', ''))
 
-        secondary_mat_id = None
-        if item_def.get('secondaryMatIcon'):
-            sec_id = item_def['secondaryMatIcon'].replace('{tier}', str(tier))
-            if enchantment > 0 and 'STONE' not in sec_id:
-                secondary_mat_id = f"{sec_id}_LEVEL{enchantment}@{enchantment}"
-            else:
-                secondary_mat_id = sec_id
+        secondary_mat_id = to_aodp_mat_id(item_def.get('secondaryMatIcon', '')) or None
 
         artifact_id = None
         if item_def.get('isArtifact') and item_def.get('artifactTemplate'):
             artifact_id = item_def['artifactTemplate'].replace('{tier}', str(tier))
+
+        extra_mats = resolve_extra_materials(item_def, tier)
+        extra_aodp_map = {
+            ex['id']: to_aodp_mat_id(ex['template']) if ex.get('is_refined_resource') else ex['template']
+            for ex in extra_mats
+        }
 
         journal_empty_id = None
         journal_full_id = None
@@ -274,8 +288,8 @@ class CraftingPricesView(APIView):
             journal_empty_id = item_def['journalTemplate'].replace('{tier}', str(tier))
             journal_full_id = f"{journal_empty_id}_FULL"
 
-        # 1. Fetch verified material, artifact & journal prices using strict qualities='1' + 24h history
-        mat_ids = [m for m in [primary_mat_id, secondary_mat_id, artifact_id, journal_empty_id, journal_full_id] if m]
+        # 1. Fetch verified material, artifact, extra & journal prices using strict qualities='1' + 24h history
+        mat_ids = [m for m in [primary_mat_id, secondary_mat_id, artifact_id, journal_empty_id, journal_full_id, *extra_aodp_map.values()] if m]
         mat_price_data = fetch_aodp_prices(mat_ids, server=server, qualities='1', include_history=True)
 
         def get_mat_price(mat_id):
@@ -423,6 +437,7 @@ class CraftingPricesView(APIView):
             'primary_mat': get_mat_price(primary_mat_id),
             'secondary_mat': get_mat_price(secondary_mat_id) if secondary_mat_id else None,
             'artifact': get_mat_price(artifact_id) if artifact_id else None,
+            'extra_materials': {ex_id: get_mat_price(aodp_id) for ex_id, aodp_id in extra_aodp_map.items()},
             'journal_empty': get_mat_price(journal_empty_id) if journal_empty_id else None,
             'journal_full': get_mat_price(journal_full_id) if journal_full_id else None,
             'server': server,
@@ -484,6 +499,7 @@ class FoodCalculateView(APIView):
                 mastery_level=int(data.get('mastery_level', 0)),
                 spec_level=int(data.get('spec_level', 0)),
                 other_spec_avg=int(data.get('other_spec_avg', 0)),
+                **parse_hideout_params(data),
             )
             return Response(result, status=status.HTTP_200_OK)
         except Exception as e:
@@ -597,6 +613,7 @@ class PotionCalculateView(APIView):
                 mastery_level=int(data.get('mastery_level', 0)),
                 spec_level=int(data.get('spec_level', 0)),
                 other_spec_avg=int(data.get('other_spec_avg', 0)),
+                **parse_hideout_params(data),
             )
             return Response(result, status=status.HTTP_200_OK)
         except Exception as e:
@@ -781,7 +798,19 @@ class LaborerPricesView(APIView):
         server = data.get('server', 'europe')
         selected_city = data.get('city', 'Martlock')
 
-        items_to_fetch = [iid for iid in [full_journal_id, empty_journal_id] + list(material_ids) if iid and iid != 'SILVER']
+        base_items = [iid for iid in [full_journal_id, empty_journal_id] + list(material_ids) if iid and iid != 'SILVER']
+        items_to_fetch = list(base_items)
+        for iid in material_ids:
+            if not iid or iid == 'SILVER' or 'ROCK' in iid or 'FISH' in iid:
+                continue
+            try:
+                tier_num = int(iid[1]) if iid.startswith('T') and len(iid) > 2 else 0
+            except ValueError:
+                tier_num = 0
+            if tier_num >= 4:
+                for ench in (1, 2, 3):
+                    items_to_fetch.append(f"{iid}_LEVEL{ench}@{ench}")
+
         price_data = fetch_aodp_prices(items_to_fetch, server=server, locations=[selected_city])
 
         def extract_prices(iid):

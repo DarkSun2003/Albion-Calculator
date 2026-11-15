@@ -189,8 +189,8 @@ export default function PlayerHandbookModal({
                     },
                     {
                       badge: 'Stage 02',
-                      title: 'Royal City Bonus & Station Tax',
-                      desc: 'Select your city (+40% RRR specialty badge), batch size, and nutrition fee.',
+                      title: 'Royal City & Hideout Station Rules',
+                      desc: 'Choose Royal Cities (+40% refining / +15% crafting specialty) or Hideouts (Outlands & Roads), plus batch size and nutrition tax.',
                       mod: 'refining',
                       sel: '#tour-city-controls',
                     },
@@ -202,9 +202,9 @@ export default function PlayerHandbookModal({
                       sel: '#tour-price-inputs',
                     },
                     {
-                      badge: 'Stage 04',
-                      title: 'Focus Mastery & Spec Sliders',
-                      desc: 'Use the 1-click 0 / 50 / Max 100 Spec buttons or adjust individual tier sliders.',
+                      badge: 'Stage 04 / 02',
+                      title: 'Destiny Board Mastery & Individual Specs',
+                      desc: 'Adjust Mastery and individual sibling item specs (saved automatically), or use quick presets and the Fame-to-Max-Spec Planner.',
                       mod: 'refining',
                       sel: '#tour-focus-spec',
                     },
@@ -252,29 +252,29 @@ export default function PlayerHandbookModal({
                   {[
                     {
                       name: '💎 Refining Workshop',
-                      bonus: '+40% Royal City Bonus',
-                      desc: 'Planks, Metal Bars, Leather, Cloth, and Stone Blocks with 6-city arbitrage.',
+                      bonus: 'Up to +40% Royal / Hideout Modes',
+                      desc: 'Planks, Metal Bars, Leather, Cloth, and Stone Blocks across 6 Royal Cities, Outlands, and Roads Hideouts.',
                       mod: 'refining',
                       sel: '#tour-resource-picker',
                     },
                     {
                       name: '⚔️ Gear & Weapon Forge',
-                      bonus: '3,400+ Craftable Items',
-                      desc: 'Pre-craft shopping list, Kraken Salad quality buffs, Journals, and Post-Craft quality procs.',
+                      bonus: '328 Base Items • City & Hideout',
+                      desc: "Pre-craft manifests, Crafter's Salad quality buffs (+150), individual Destiny Board spec sliders, Fame Planner, and Post-Craft procs.",
                       mod: 'crafting',
                       sel: '#tour-craft-categories',
                     },
                     {
                       name: "🍲 Chef's Hearth (Food)",
-                      bonus: '+15% Caerleon Bonus',
-                      desc: 'Stews, Omelettes, Pies, Salads, Roasts, Fish Sauces, and Butcher meat chopping.',
+                      bonus: '+15% Caerleon • 24.8% / 47.9% RRR',
+                      desc: 'Stews, Omelettes, Pies, Salads, Roasts, Fish Sauces, and Butchery across Caerleon, Royal Cities, Islands & Hideouts.',
                       mod: 'cooking',
                       sel: '#tour-food-course-picker',
                     },
                     {
                       name: "🧪 Alchemist's Lab (Potions)",
-                      bonus: '+15% Brecilien / Caerleon',
-                      desc: 'Healing, Energy, Poison, Resistance, Sticky, and Gigantify potions + Arcane extracts.',
+                      bonus: '+15% Brecilien • 24.8% / 47.9% RRR',
+                      desc: 'Healing, Energy, Poison, Resistance, Lifeward, and Cleansing potions + Arcane extracts across Brecilien, Cities & Hideouts.',
                       mod: 'potions',
                       sel: '#tour-potion-type-picker',
                     },
@@ -359,9 +359,9 @@ export default function PlayerHandbookModal({
                   <div className="w-8 h-8 rounded-lg bg-sky-950/70 border border-sky-500/50 flex items-center justify-center text-sky-400 font-mono font-bold text-sm">
                     1
                   </div>
-                  <h4 className="font-serif font-bold text-slate-200 text-sm">Refine & Craft in Bonus Cities</h4>
+                  <h4 className="font-serif font-bold text-slate-200 text-sm">Refine &amp; Craft in Bonus Zones</h4>
                   <p className="text-xs text-slate-400">
-                    Always manufacture in the city with the <strong>native local production bonus</strong>. This raises your Resource Return Rate from 15.2% up to <strong>36.7%</strong> (or <strong>53.9% with Focus</strong>)!
+                    Always craft in a matching bonus city or qualified Hideout. Bonus Cities raise Refining RRR to <strong>36.7%</strong> (<strong>53.9% Focus</strong>) and Gear/Food/Potion RRR to <strong>24.8%</strong> (<strong>47.9% Focus</strong>).
                   </p>
                 </div>
 
@@ -408,10 +408,10 @@ export default function PlayerHandbookModal({
               <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/30 to-albion-bg border border-amber-500/30 space-y-2">
                 <h3 className="font-serif text-base font-bold text-amber-300 flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-amber-400" />
-                  Royal Continent Resource Return Rate (RRR) Matrix
+                  Royal City, Caerleon &amp; Brecilien Resource Return Rate (RRR) Matrix
                 </h3>
                 <p className="text-slate-300 text-xs">
-                  Refining in the native bonus city gives a <strong>+15% local refining bonus</strong>, raising base RRR to <strong>36.7%</strong> and Focus RRR to <strong>53.9%</strong>:
+                  Refining in a specialty Royal City gives a <strong>+40% local refining bonus</strong> (<strong>36.7% base RRR</strong> / <strong>53.9% Focus RRR</strong>). Crafting gear, food, or potions in their specialty city gives <strong>+15%</strong> (<strong>24.8% base RRR</strong> / <strong>47.9% Focus RRR</strong>).
                 </p>
               </div>
 
@@ -421,9 +421,9 @@ export default function PlayerHandbookModal({
                     <tr>
                       <th className="py-2.5 px-3">City</th>
                       <th className="py-2.5 px-3">Primary Refining Resource</th>
-                      <th className="py-2.5 px-3">No-Focus RRR</th>
-                      <th className="py-2.5 px-3">With-Focus RRR</th>
-                      <th className="py-2.5 px-3">Equipment Crafting Bonus</th>
+                      <th className="py-2.5 px-3">Refining No-Focus</th>
+                      <th className="py-2.5 px-3">Refining Focus</th>
+                      <th className="py-2.5 px-3">Equipment / Consumable (+15%) Bonus</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-albion-border/40 font-mono">
@@ -432,7 +432,7 @@ export default function PlayerHandbookModal({
                       <td className="py-2.5 px-3 text-amber-300 font-bold">Hide &rarr; Leather</td>
                       <td className="py-2.5 px-3 text-sky-300">36.7%</td>
                       <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
-                      <td className="py-2.5 px-3 text-slate-300 font-sans">Axes, Quarterstaffs, Frost Staves, Plate Shoes, Off-Hands</td>
+                      <td className="py-2.5 px-3 text-slate-300 font-sans">Axes, Quarterstaffs, Frost Staves, Plate Shoes, Shields, Tomes, Torches</td>
                     </tr>
                     <tr className="hover:bg-slate-800/20">
                       <td className="py-2.5 px-3 font-serif font-bold text-slate-100">Fort Sterling</td>
@@ -462,8 +462,63 @@ export default function PlayerHandbookModal({
                       <td className="py-2.5 px-3 text-emerald-400 font-bold">53.9%</td>
                       <td className="py-2.5 px-3 text-slate-300 font-sans">Maces, Fire Staves, Nature Staves, Leather Armor (Jackets), Cloth Helmets (Cowls)</td>
                     </tr>
+                    <tr className="hover:bg-slate-800/20">
+                      <td className="py-2.5 px-3 font-serif font-bold text-rose-300">Caerleon</td>
+                      <td className="py-2.5 px-3 text-slate-400 font-sans">No Refining Bonus</td>
+                      <td className="py-2.5 px-3 text-slate-400">15.2%</td>
+                      <td className="py-2.5 px-3 text-slate-300">43.5%</td>
+                      <td className="py-2.5 px-3 text-slate-300 font-sans">Shapeshifter Staves, War Gloves, Tools, Gathering Gear, Cooking (Food)</td>
+                    </tr>
+                    <tr className="hover:bg-slate-800/20">
+                      <td className="py-2.5 px-3 font-serif font-bold text-teal-300">Brecilien</td>
+                      <td className="py-2.5 px-3 text-slate-400 font-sans">No Refining Bonus</td>
+                      <td className="py-2.5 px-3 text-slate-400">15.2%</td>
+                      <td className="py-2.5 px-3 text-slate-300">43.5%</td>
+                      <td className="py-2.5 px-3 text-slate-300 font-sans">Bags, Capes, Alchemy (Potions)</td>
+                    </tr>
                   </tbody>
                 </table>
+              </div>
+
+              {/* Outlands vs Roads Hideout Matrix */}
+              <div className="p-4 rounded-xl bg-gradient-to-r from-indigo-950/35 to-albion-bg border border-indigo-500/40 space-y-2.5 text-xs">
+                <h4 className="font-serif font-bold text-indigo-300 text-sm">
+                  Hideout Station Rules (Outlands Black Zone vs. Roads of Avalon)
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="bg-[#0b121d] p-3 rounded-lg border border-[#1e2a3c] space-y-1">
+                    <span className="font-bold text-amber-300 block">Refining Hideouts</span>
+                    <p className="text-slate-300">
+                      Hideout Power Level &amp; Zone Quality do <strong>not</strong> boost refining:
+                    </p>
+                    <ul className="text-slate-400 list-disc list-inside font-mono space-y-0.5">
+                      <li>Outlands HO / Rest: +15% (13.04% / 42.54% Focus)</li>
+                      <li>Roads HO Base: +10% (9.09% / 40.83% Focus)</li>
+                      <li>Roads Resource Specialty: +20% (16.67% / 44.13% Focus)</li>
+                    </ul>
+                  </div>
+                  <div className="bg-[#0b121d] p-3 rounded-lg border border-[#1e2a3c] space-y-1">
+                    <span className="font-bold text-sky-300 block">Gear Crafting Hideouts</span>
+                    <p className="text-slate-300">
+                      Scales dynamically with Hideout Power Level (PL 1–9) &amp; Biome Specialty:
+                    </p>
+                    <ul className="text-slate-400 list-disc list-inside space-y-0.5">
+                      <li>General PL 1–9: +0% up to +26%</li>
+                      <li>Zone Quality Q1–Q6: +1% to +26% (when specialty matches)</li>
+                      <li>Power Specialty: +(PL &minus; 1) &times; 3.75%</li>
+                    </ul>
+                  </div>
+                  <div className="bg-[#0b121d] p-3 rounded-lg border border-[#1e2a3c] space-y-1">
+                    <span className="font-bold text-emerald-300 block">Food &amp; Potion Hideouts</span>
+                    <p className="text-slate-300">
+                      Uses General Hideout Power Level only (no zone quality or biome specialty bonus):
+                    </p>
+                    <ul className="text-slate-400 list-disc list-inside font-mono space-y-0.5">
+                      <li>PL 1: +0% &bull; PL 5: +18% &bull; PL 9: +26%</li>
+                      <li>+59% Focus bonus applies on top</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
 
               {/* "I Have Materials" Mode & Multi-Pass RRR Guide */}
@@ -522,7 +577,7 @@ export default function PlayerHandbookModal({
                   <div className="flex items-center justify-between">
                     <span className="text-xs uppercase font-serif font-bold text-sky-300 flex items-center gap-1.5">
                       <ShoppingCart className="w-4 h-4 text-sky-400" />
-                      1. Pre-Craft Planner & Shopping List
+                      1. Pre-Craft Planner &amp; Shopping List
                     </span>
                     <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/40 font-bold">
                       Before Crafting
@@ -554,10 +609,31 @@ export default function PlayerHandbookModal({
                 </div>
               </div>
 
+              {/* Updated Stage 02 Destiny Board & Special Item Mechanics */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div className="p-4 rounded-xl bg-albion-card border border-sky-500/25 space-y-2">
+                  <h4 className="font-serif font-bold text-sky-300">Stage 02: 1-Tree Destiny Board &amp; Sibling Sliders</h4>
+                  <ul className="text-slate-300 space-y-1.5 list-disc list-inside">
+                    <li><strong className="text-slate-100">Single In-Game Branch:</strong> Every item line shares <strong>one Mastery node</strong> (for example, all 7 Shapeshifter Staves belong to <em>Shapeshifter Staff Crafter</em>).</li>
+                    <li><strong className="text-slate-100">Individual Sibling Spec Sliders:</strong> Set every peer item&apos;s exact Spec (`0–100`) or use <strong>Quick Set All</strong> instead of guessing an average. Non-artifact &amp; Fey peer nodes automatically carry <strong>2x mutual weight</strong> vs <strong>1x</strong> for artifact nodes, and all levels auto-save to browser storage.</li>
+                    <li><strong className="text-slate-100">Fame-to-Max-Spec Planner:</strong> Expand the planner below Stage 02 to project crafts, Study vs. Sell paths, Learning Points, and silver required to reach your target Spec.</li>
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-xl bg-albion-card border border-purple-500/25 space-y-2">
+                  <h4 className="font-serif font-bold text-purple-300">Cities, Hideouts, Shapeshifters &amp; Non-Returnables</h4>
+                  <ul className="text-slate-300 space-y-1.5 list-disc list-inside">
+                    <li><strong className="text-slate-100">Caerleon &amp; Brecilien Craft Bonuses:</strong> <strong>Caerleon (+15%)</strong> covers Tools, Gathering Gear, War Gloves, <strong>Shapeshifter Staves</strong>, and Food; <strong>Brecilien (+15%)</strong> covers Bags, Capes, and Potions.</li>
+                    <li><strong className="text-slate-100">Outlands &amp; Roads Hideouts:</strong> Switch between <em>Royal City / Island</em> and <em>Outlands / Roads Hideout</em> to combine Power Level (+0% to +26%), Zone Quality, or Roads Resource Specialty (+20%).</li>
+                    <li><strong className="text-slate-100">Strict 0% RRR Slots:</strong> Artifacts, <strong>Tracking Animal Remains</strong> (Shapeshifter Staves), <strong>Royal Sigils / Royal Armor</strong>, <strong>Avalonian Energy</strong>, and <strong>Grown Mounts</strong> are non-returnable (0% RRR even with Focus) and grant zero Item Value / Craft Fame.</li>
+                  </ul>
+                </div>
+              </div>
+
               <div className="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-500/30 text-xs text-emerald-300 flex items-start gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <p>
-                  <strong>The Quality Rule:</strong> With 100 Mastery, 100 Spec (+675 Quality Rating), and Crafter&apos;s Salad (+150 QR), Normal quality chance drops from 68.9% down to only ~2.7%! Outstanding and Excellent procs occur regularly, turning good crafts into massive silver windfalls.
+                  <strong>The Quality Rule:</strong> Every +100 Quality Rating adds another quality dice roll (keeping the highest outcome). Combining 100 Mastery (+75 QR), 100 Item Spec (+675 QR), Mutual Sibling Specs (+300 to +412.5 QR), and <strong>Crafter&apos;s Salad (+150 QR)</strong> yields 1,200+ QR, dropping Normal (Q1) probability below ~1% and turning Outstanding/Excellent/Masterpiece rolls into steady silver windfalls.
                 </p>
               </div>
             </div>
@@ -594,11 +670,13 @@ export default function PlayerHandbookModal({
                 <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
                   <h4 className="font-serif font-bold text-amber-300">Caerleon +15% Local Cooking Bonus</h4>
                   <p className="text-slate-300">
-                    Caerleon is the food capital of the Royal Continent. Cooking food in Caerleon awards a <strong>+15% local production bonus</strong>:
+                    Caerleon is the culinary capital of the Royal Continent. Cooking food in Caerleon awards a <strong>+15% local production bonus</strong> (33% total Bonus), while Hideouts can also boost cooking yields:
                   </p>
                   <ul className="text-slate-400 space-y-1 list-disc list-inside font-mono">
-                    <li>Royal Cities (No Bonus): 15.2% RRR (43.5% with Focus)</li>
-                    <li>Caerleon (Bonus Active): <strong>24.8% RRR (53.9% with Focus)</strong></li>
+                    <li>Caerleon (+15% Bonus): <strong className="text-amber-300">24.8% RRR (47.9% with Focus)</strong></li>
+                    <li>Other Royal Cities (0% Bonus): 15.25% RRR (43.5% with Focus)</li>
+                    <li>Personal / Guild Island: 0.0% RRR (37.1% with Focus)</li>
+                    <li>Outlands &amp; Roads Hideouts: +0% to +26% Power Level + Zone/Specialty</li>
                   </ul>
                 </div>
 
@@ -647,13 +725,15 @@ export default function PlayerHandbookModal({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                 <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
-                  <h4 className="font-serif font-bold text-teal-300">City Bonuses for Potions</h4>
+                  <h4 className="font-serif font-bold text-teal-300">Brecilien +15% Alchemy Bonus &amp; Hideouts</h4>
                   <p className="text-slate-300">
-                    Just like cooking, <strong>Caerleon</strong> and <strong>Brecilien</strong> have local production bonuses for alchemy:
+                    <strong>Brecilien</strong> is Albion&apos;s dedicated Alchemy capital (+15% local production bonus), not Caerleon:
                   </p>
-                  <ul className="text-slate-400 space-y-1 list-disc list-inside">
-                    <li>Brewing in Caerleon yields high return rates without requiring focus.</li>
-                    <li>Always check whether shipping herbs from Lymhurst to Caerleon yields higher arbitrage profit.</li>
+                  <ul className="text-slate-400 space-y-1 list-disc list-inside font-mono">
+                    <li>Brecilien (+15% Bonus): <strong className="text-teal-300">24.8% RRR (47.9% with Focus)</strong></li>
+                    <li>Royal Cities &amp; Caerleon: 15.25% RRR (43.5% with Focus)</li>
+                    <li>Personal / Guild Island: 0.0% RRR (37.1% with Focus)</li>
+                    <li>Dragonfire 16-Node Tree: up to <strong>55,000 FCE</strong> (~2.21% of base focus)</li>
                   </ul>
                 </div>
 
@@ -749,14 +829,14 @@ export default function PlayerHandbookModal({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                 <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
-                  <h4 className="font-serif font-bold text-purple-300">The 150% Happiness Formula</h4>
+                  <h4 className="font-serif font-bold text-purple-300">The 142.5% / 150% Happiness Formula</h4>
                   <p className="text-slate-300">
-                    A laborer with base happiness only returns ~100% of journal loot. With maximum happiness, they return <strong>150% loot</strong>!
+                    Base happiness yields ~100% of journal loot. Furniture &amp; trophies push returns up to <strong>142.5% in T8 houses</strong> or <strong>150%</strong> in higher-tier houses:
                   </p>
                   <ul className="text-slate-400 space-y-1 list-disc list-inside">
-                    <li>1 Bed of matching or higher Tier per laborer.</li>
-                    <li>1 Shared Table of matching or higher Tier (accommodates up to 4 laborers).</li>
-                    <li>Generalist Trophies of each tier up to your laborer tier.</li>
+                    <li>1 equal-or-higher Tier <strong>Bed</strong> per laborer + 1 shared equal-or-higher Tier <strong>Table</strong> (up to 4 laborers).</li>
+                    <li><strong>Profession Trophies</strong> (+5% happiness each, up to 7 tiers) matched to that craft/gathering type.</li>
+                    <li><strong>Generalist Trophies</strong> (+2.5% happiness each, up to 5) &mdash; T8 House + T8 Laborer caps at <strong>142.5% Max Yield</strong>.</li>
                   </ul>
                 </div>
 
@@ -872,14 +952,14 @@ export default function PlayerHandbookModal({
                 </div>
 
                 <div className="p-4 rounded-xl bg-albion-card border border-albion-border space-y-2">
-                  <h4 className="font-serif font-bold text-slate-200">How Mastery Reduces Focus Cost</h4>
+                  <h4 className="font-serif font-bold text-slate-200">How Mastery &amp; Mutual Specs Cut Focus Cost</h4>
                   <p className="text-slate-400">
-                    Base focus cost is halved every 10,000 Focus Efficiency points.
+                    Base Focus cost halves every <strong>10,000 Focus Efficiency (FCE)</strong> points via <code className="text-amber-300">0.5^(FCE/10,000)</code>.
                   </p>
                   <ul className="text-slate-300 space-y-1.5 list-disc list-inside">
-                    <li>At 0 spec: T8 item costs ~<strong>8,914 Focus</strong> to craft.</li>
-                    <li>At 100/100 mastery & spec: T8 item costs only ~<strong>423 Focus</strong> to craft!</li>
-                    <li>That means you can craft <strong>20x more items</strong> with the same 10,000 daily focus.</li>
+                    <li>Weapons scale up to <strong>43,000 FCE</strong> (100 Mastery + 100 Item Spec + 100 Mutual Siblings); Armors reach <strong>47,500 FCE</strong>; Alchemist potions (Dragonfire 16-node) reach <strong>55,000 FCE</strong>.</li>
+                    <li>Maxed efficiency cuts Focus cost by <strong>20x to 45x</strong> (~95%&ndash;97.8% reduction), letting 10,000 daily Focus cover huge profitable batches.</li>
+                    <li>In Crafting Stage 02, set <strong>each sibling weapon/armor Spec individually</strong> (auto-saved in browser storage) and open the <strong>Fame-to-Max-Spec Planner</strong> to chart your leveling cost.</li>
                   </ul>
                 </div>
               </div>
@@ -968,6 +1048,16 @@ export default function PlayerHandbookModal({
                 </h4>
                 <p className="text-slate-300">
                   <strong>Yes!</strong> On mobile or Chrome/Edge, click the <strong>Install App</strong> button in the top bar (or &ldquo;Add to Home Screen&rdquo;) to run it fullscreen with offline icon caching. If you downloaded our project folder on Windows, double-click <strong>Albion Desktop App.vbs</strong> (or the <strong>Albion Artisan Calculator</strong> desktop shortcut) to launch the zero-terminal native desktop window, or <strong>start-albion-local.bat</strong> for developer browser mode!
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-albion-card border border-purple-500/30 space-y-2">
+                <h4 className="font-serif font-bold text-purple-300 text-sm flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-purple-400" />
+                  How do Outlands vs. Roads of Avalon Hideouts (and Roads Resource Specialty) work?
+                </h4>
+                <p className="text-slate-300">
+                  Albion has <strong>2 Hideout environments</strong>: Outlands Black Zone (base <strong>+15%</strong> Bonus + Zone Quality) and Roads of Avalon (base <strong>+10%</strong> Bonus, or <strong>+20%</strong> if the Roads zone matches your craft via <strong>Roads Zone Resource Specialty</strong>). Both add your Hideout Power Level bonus (<strong>+0% to +26%</strong> across PL 1&ndash;9) &mdash; select <em>Outlands / Roads Hideout</em> in Refining, Gear Crafting, Food, or Potions to compute exact Focus and no-Focus RRR automatically.
                 </p>
               </div>
             </div>

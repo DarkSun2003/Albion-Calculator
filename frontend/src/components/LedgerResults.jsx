@@ -1,13 +1,9 @@
 import React from 'react';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Coins, 
-  RotateCcw, 
-  AlertCircle, 
-  Building,
-  CheckCircle,
-  Zap
+import {
+  Coins,
+  RotateCcw,
+  AlertCircle,
+  Zap,
 } from 'lucide-react';
 import { RESOURCES } from '../utils/albionMath';
 

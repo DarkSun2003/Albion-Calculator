@@ -1,4 +1,5 @@
 import POTION_ITEMS_DATA from '../data/potionItems.json';
+import { computeTotalRrr } from './albionMath';
 
 export const POTION_ITEMS = POTION_ITEMS_DATA;
 
@@ -41,7 +42,7 @@ export const POTION_ENCHANTMENTS = [
  * - Brecilien with Focus = 33% + 59% = 92% bonus (47.91% RRR)
  * - Islands have 0% base bonus (0% base RRR, 37.11% with Focus)
  */
-export function calculatePotionReturnRate(itemDef, city = 'Brecilien', useFocus = false, dailyBonusPct = 0) {
+export function calculatePotionReturnRate(itemDef, city = 'Brecilien', useFocus = false, dailyBonusPct = 0, hoOptions = {}) {
   const cityName = typeof city === 'string' ? city : city?.name || 'Brecilien';
   const isIsland = cityName.toLowerCase() === 'island';
   const baseBonus = isIsland ? 0.0 : 0.18;
@@ -50,26 +51,31 @@ export function calculatePotionReturnRate(itemDef, city = 'Brecilien', useFocus 
   const hasSpecialty = Boolean(bonusCity && cityName.toLowerCase() === bonusCity.toLowerCase() && !isIsland);
   const specialtyBonus = hasSpecialty ? 0.15 : 0.0;
 
-  const dailyBonus = (parseFloat(dailyBonusPct) || 0.0) / 100.0;
-  const focusBonus = useFocus ? 0.59 : 0.0;
-
-  const totalBonus = baseBonus + specialtyBonus + dailyBonus + focusBonus;
-  return totalBonus > 0 ? totalBonus / (1.0 + totalBonus) : 0.0;
+  return computeTotalRrr({
+    baseCityBonus: baseBonus,
+    citySpecialtyBonus: specialtyBonus,
+    dailyBonusPct,
+    useFocus,
+    specialtyMode: 'potion',
+    ...hoOptions,
+  });
 }
 
 /**
- * Calculates Focus Cost per potion craft batch with Alchemist Mastery and Specialization.
- * In Albion Online:
- * - Alchemist Mastery (1-100): +30 efficiency/level
- * - Target Specialization (1-100): +280 efficiency/level (+250 specific + 30 shared)
- * - Other 12 Potion Specializations (1-100): +30 efficiency/level each (up to 12 * 100 * 30 = 36,000)
+ * Calculates Focus Cost per potion craft batch using Dragonfire Update (16-node Alchemist tree).
+ * - Alchemist Mastery (1-100): +30 efficiency/level (3,000 max)
+ * - Target Specialization (1-100): +250 unique/level + own mutual (+22.5 simple/Bootlegger, +11.25 rare/Lifeward)
+ * - Other 15 Potion Specializations (1-100): remaining mutual efficiency summing to 270/lvl total mutual
+ *   -> Max efficiency (1600/1600) = 55,000 (~2.21% of base focus).
  */
-export function calculatePotionFocusCost(baseFocus, mastery = 0, spec = 0, otherSpecAvg = 0) {
+export function calculatePotionFocusCost(baseFocus, mastery = 0, spec = 0, otherSpecAvg = 0, isRare = false) {
   if (!baseFocus || baseFocus <= 0) return 0;
   const m = Math.max(0, Math.min(100, parseInt(mastery || 0, 10)));
   const s = Math.max(0, Math.min(100, parseInt(spec || 0, 10)));
   const oth = Math.max(0, Math.min(100, parseInt(otherSpecAvg || 0, 10)));
-  const efficiency = m * 30 + s * 280 + 12 * oth * 30;
+  const ownMutual = isRare ? 11.25 : 22.5;
+  const otherMutualSum = 270.0 - ownMutual;
+  const efficiency = m * 30.0 + s * (250.0 + ownMutual) + oth * otherMutualSum;
   const actualFocus = baseFocus * Math.pow(0.5, efficiency / 10000.0);
   return Math.max(1, Math.floor(actualFocus + 0.5));
 }
@@ -92,6 +98,11 @@ export function computePotionCrafting({
   masteryLevel = 0,
   specLevel = 0,
   otherSpecAvg = 0,
+  locationMode = 'city',
+  hoPowerLevel = 1,
+  hoZoneQuality = 1,
+  hoHasSpecialty = false,
+  hoCustomBonusPct = null,
 }) {
   if (!item) return null;
 
@@ -99,9 +110,17 @@ export function computePotionCrafting({
   const batchCount = Math.max(1, parseInt(batches || 1, 10));
   const ench = Math.max(0, Math.min(item.maxEnchantment || 0, parseInt(enchantment || 0, 10)));
 
+  const hoOptions = {
+    locationMode,
+    hoPowerLevel,
+    hoZoneQuality,
+    hoHasSpecialty,
+    hoCustomBonusPct,
+  };
+
   // Return rates
-  const rrrCurrent = calculatePotionReturnRate(item, cityName, useFocus, dailyBonusPct);
-  const rrrNoFocus = calculatePotionReturnRate(item, cityName, false, dailyBonusPct);
+  const rrrCurrent = calculatePotionReturnRate(item, cityName, useFocus, dailyBonusPct, hoOptions);
+  const rrrNoFocus = calculatePotionReturnRate(item, cityName, false, dailyBonusPct, hoOptions);
 
   // Active ingredients (Base + Arcane Extract if enchanted)
   const activeIngredients = (item.ingredients || []).map((ing) => ({
@@ -126,6 +145,7 @@ export function computePotionCrafting({
   // Material calculations
   let upfrontCost = 0;
   let netCost = 0;
+  let netCostNoFocus = 0;
 
   const breakdown = activeIngredients.map((ing) => {
     const unitPrice = parseFloat(ingredientPrices[ing.uniqueName] || 0);
@@ -136,9 +156,11 @@ export function computePotionCrafting({
 
     const grossIngCost = grossNeeded * unitPrice;
     const netIngCost = netConsumed * unitPrice;
+    const netIngCostNoFocus = isRefundable ? grossNeeded * (1.0 - rrrNoFocus) * unitPrice : grossIngCost;
 
     upfrontCost += grossIngCost;
     netCost += netIngCost;
+    netCostNoFocus += netIngCostNoFocus;
 
     return {
       uniqueName: ing.uniqueName,
@@ -155,17 +177,18 @@ export function computePotionCrafting({
     };
   });
 
-  // Station Fee (nutrition)
+  // Station Fee (nutrition — Tier <= 2 exempt in Albion Online)
+  const itemTier = Number(item.tier || 1);
   const nutritionPerBatch = parseFloat(item.nutrition || 0);
   const stationTaxRate = parseFloat(stationTaxPer100 || 0) / 100.0;
-  const stationFee = nutritionPerBatch * stationTaxRate * batchCount;
+  const stationFee = itemTier <= 2 ? 0 : nutritionPerBatch * stationTaxRate * batchCount;
 
   // Focus
   let baseFocus = item.baseFocus || 0;
   if (ench > 0 && item.enchantments?.[ench]?.focus) {
     baseFocus = item.enchantments[ench].focus;
   }
-  const focusPerBatch = calculatePotionFocusCost(baseFocus, masteryLevel, specLevel, otherSpecAvg);
+  const focusPerBatch = calculatePotionFocusCost(baseFocus, masteryLevel, specLevel, otherSpecAvg, Boolean(item.isRare));
   const totalFocusUsed = useFocus ? focusPerBatch * batchCount : 0;
   const focusPerUnit = Math.round((focusPerBatch / Math.max(1, item.amountCrafted || 5)) * 100) / 100;
 
@@ -185,6 +208,10 @@ export function computePotionCrafting({
   const profitMarginPct = totalCost > 0 ? (netProfit / totalCost) * 100.0 : 0.0;
   const profitPerBatch = netProfit / batchCount;
   const profitPerUnit = totalUnitsProduced > 0 ? netProfit / totalUnitsProduced : 0.0;
+  const silverPerFocus =
+    useFocus && totalFocusUsed > 0
+      ? Math.round(((netCostNoFocus - netCost) / totalFocusUsed) * 100) / 100
+      : 0;
 
   return {
     item: {
@@ -202,8 +229,9 @@ export function computePotionCrafting({
       rrrCurrentPct: Math.round(rrrCurrent * 10000) / 100,
       rrrNoFocus,
       rrrNoFocusPct: Math.round(rrrNoFocus * 10000) / 100,
-      hasCitySpecialty: cityName.toLowerCase() === (item.bonusCity || 'brecilien').toLowerCase() && cityName.toLowerCase() !== 'island',
+      hasCitySpecialty: String(locationMode || 'city').toLowerCase() !== 'hideout' && cityName.toLowerCase() === (item.bonusCity || 'brecilien').toLowerCase() && cityName.toLowerCase() !== 'island',
       city: cityName,
+      locationMode,
       bonusCity: item.bonusCity || 'Brecilien',
     },
     focus: {
@@ -212,7 +240,7 @@ export function computePotionCrafting({
       focusPerBatch,
       focusPerUnit,
       totalFocusUsed,
-      silverPerFocus: 0,
+      silverPerFocus,
     },
     materials: {
       upfrontCost: Math.round(upfrontCost * 100) / 100,
@@ -248,12 +276,23 @@ export function simulatePotionCraftingFromMaterials({
   city = 'Brecilien',
   useFocus = false,
   dailyBonusPct = 0,
+  locationMode = 'city',
+  hoPowerLevel = 1,
+  hoZoneQuality = 1,
+  hoHasSpecialty = false,
+  hoCustomBonusPct = null,
 }) {
   if (!item || !item.ingredients || item.ingredients.length === 0) return null;
   const ench = Math.max(0, Math.min(item.maxEnchantment || 0, parseInt(enchantment || 0, 10)));
   const primary = item.ingredients[0];
   const primaryCount = primary.count || primary.quantity || 1;
-  const rrr = calculatePotionReturnRate(item, city, useFocus, dailyBonusPct);
+  const rrr = calculatePotionReturnRate(item, city, useFocus, dailyBonusPct, {
+    locationMode,
+    hoPowerLevel,
+    hoZoneQuality,
+    hoHasSpecialty,
+    hoCustomBonusPct,
+  });
   const yieldPerBatch = item.amountCrafted || 5;
 
   // Active ingredients list including extract if enchanted
